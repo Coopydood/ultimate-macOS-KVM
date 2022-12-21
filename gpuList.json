@@ -451,17 +451,8 @@
             "quirks": "GP104/GDDR5X variants are not supported by the web drivers"
         },
         {
-            "name": "GTX 1050 Ti",
-            "fullName": "NVIDIA GTX 1050 Ti",
-            "vendor": "NVIDIA",
-            "supported": true,
-            "minOS": "10.12.4",
-            "maxOS": "10.13.6",
-            "quirks": "0"
-        },
-        {
             "name": "GTX 1050",
-            "fullName": "NVIDIA GTX 1050",
+            "fullName": "NVIDIA GTX 1050 / 1050 Ti",
             "vendor": "NVIDIA",
             "supported": true,
             "minOS": "10.12.4",

@@ -93,75 +93,75 @@ def autoRun():
                 gpuQuirks = "This GPU is NOT supported in macOS at all. Sorry :["
 
             gpuMaxOSF = "N/A"
-            if gpuMaxOS == "10.2":
+            if gpuMaxOS in "10.2":
                 gpuMaxOSF = "Jaguar ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.3":
+            elif gpuMaxOS in "10.3":
                 gpuMaxOSF = "Panther ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.4":
+            elif gpuMaxOS in "10.4":
                 gpuMaxOSF = "Tiger ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.5":
+            elif gpuMaxOS in "10.5":
                 gpuMaxOSF = "Leopard ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.6":
+            elif gpuMaxOS in "10.6":
                 gpuMaxOSF = "Snow Leopard ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.7":
+            elif gpuMaxOS in "10.7":
                 gpuMaxOSF = "Lion ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.8":
+            elif gpuMaxOS in "10.8":
                 gpuMaxOSF = "Mountain Lion ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.9":
+            elif gpuMaxOS in "10.9":
                 gpuMaxOSF = "Mavericks ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.10":
+            elif gpuMaxOS in "10.10":
                 gpuMaxOSF = "Yosemite ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.11":
+            elif gpuMaxOS in "10.11":
                 gpuMaxOSF = "El Capitan ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.12":
+            elif gpuMaxOS in "10.12":
                 gpuMaxOSF = "Sierra ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.13":
+            elif gpuMaxOS in "10.13":
                 gpuMaxOSF = "High Sierra ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.14":
+            elif gpuMaxOS in "10.14":
                 gpuMaxOSF = "Mojave ("+gpuMaxOS+")"
-            elif gpuMaxOS == "10.15":
+            elif gpuMaxOS in "10.15":
                 gpuMaxOSF = "Catalina ("+gpuMaxOS+")"
-            elif gpuMaxOS == "11":
+            elif gpuMaxOS in "11":
                 gpuMaxOSF = "Big Sur ("+gpuMaxOS+")"
-            elif gpuMaxOS == "12":
+            elif gpuMaxOS in "12":
                 gpuMaxOSF = "Monterey ("+gpuMaxOS+")"
-            elif gpuMaxOS == "13":
+            elif gpuMaxOS in "13":
                 gpuMaxOSF = "Ventura ("+gpuMaxOS+")"
             
             gpuMinOSF = "N/A"
-            if gpuMinOS == "10.2":
+            if gpuMinOS in "10.2":
                 gpuMinOSF = "Jaguar ("+gpuMinOS+")"
-            elif gpuMinOS == "10.3":
+            elif gpuMinOS in "10.3":
                 gpuMinOSF = "Panther ("+gpuMinOS+")"
-            elif gpuMinOS == "10.4":
+            elif gpuMinOS in "10.4":
                 gpuMinOSF = "Tiger ("+gpuMinOS+")"
-            elif gpuMinOS == "10.5":
+            elif gpuMinOS in "10.5":
                 gpuMinOSF = "Leopard ("+gpuMinOS+")"
-            elif gpuMinOS == "10.6":
+            elif gpuMinOS in "10.6":
                 gpuMinOSF = "Snow Leopard ("+gpuMinOS+")"
-            elif gpuMinOS == "10.7":
+            elif gpuMinOS in "10.7":
                 gpuMinOSF = "Lion ("+gpuMinOS+")"
-            elif gpuMinOS == "10.8":
+            elif gpuMinOS in "10.8":
                 gpuMinOSF = "Mountain Lion ("+gpuMinOS+")"
-            elif gpuMinOS == "10.9":
+            elif gpuMinOS in "10.9":
                 gpuMinOSF = "Mavericks ("+gpuMinOS+")"
-            elif gpuMinOS == "10.10":
+            elif gpuMinOS in "10.10":
                 gpuMinOSF = "Yosemite ("+gpuMinOS+")"
-            elif gpuMinOS == "10.11":
+            elif gpuMinOS in "10.11":
                 gpuMinOSF = "El Capitan ("+gpuMinOS+")"
-            elif gpuMinOS == "10.12":
+            elif gpuMinOS in "10.12":
                 gpuMinOSF = "Sierra ("+gpuMinOS+")"
-            elif gpuMinOS == "10.13":
+            elif gpuMinOS in "10.13":
                 gpuMinOSF = "High Sierra ("+gpuMinOS+")"
-            elif gpuMinOS == "10.14":
+            elif gpuMinOS in "10.14":
                 gpuMinOSF = "Mojave ("+gpuMinOS+")"
-            elif gpuMinOS == "10.15":
+            elif gpuMinOS in "10.15":
                 gpuMinOSF = "Catalina ("+gpuMinOS+")"
-            elif gpuMinOS == "11":
+            elif gpuMinOS in "11":
                 gpuMinOSF = "Big Sur ("+gpuMinOS+")"
-            elif gpuMinOS == "12":
+            elif gpuMinOS in "12":
                 gpuMinOSF = "Monterey ("+gpuMinOS+")"
-            elif gpuMinOS == "13":
+            elif gpuMinOS in "13":
                 gpuMinOSF = "Ventura ("+gpuMinOS+")"
 
             #print("it was!")
