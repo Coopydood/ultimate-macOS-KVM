@@ -4,6 +4,8 @@ import time
 import subprocess
 import re 
 import json
+import sys
+
 detectChoice = 1
 latestOSName = "Ventura"
 latestOSVer = "13"
@@ -30,7 +32,9 @@ def startup():
     print(color.END+"3. Exit\n")
     detectChoice = int(input(color.BOLD+"Select> "+color.END))
 
-startup()
+
+
+
 #debug
 
 def clear(): print("\n" * 150)
@@ -67,7 +71,8 @@ def autoRun():
     for gpu in gpus:
        # print("trying to find",gpu["name"])
        # print("seeing if",gpu["name"],"is contained within",model)
-        if (gpu["name"]+"]") in model:
+        #if (gpu["name"]) in "GTX 650]": #<---- use to override real GPU for testing
+        if (gpu["name"]) in model:
             gpuCount = gpuCount + 1
             gpuName = gpu["fullName"]
             gpuSupport = gpu["supported"]
@@ -170,8 +175,10 @@ def autoRun():
             print("───────────────────────────────")
             if gpuSupport == True:
                 print(color.BOLD+color.GREEN+"●",color.END+"Supported\n")
-            else:
+            elif gpuSupport == False:
                 print(color.BOLD+color.RED+"●",color.END+"Unsupported\n")
+            else:
+                print(color.BOLD+color.YELLOW+"●",color.END+"Problematic\n")
             
             if gpuMaxOS == "9999":
                 print(color.BOLD+"Maximum macOS:"+color.END,"Latest /",latestOSName,"("+latestOSVer+")")
