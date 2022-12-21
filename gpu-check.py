@@ -34,8 +34,6 @@ def startup():
     print(color.END+"3. Exit\n")
     detectChoice = int(input(color.BOLD+"Select> "+color.END))
 
-  
-
 startup()
 #debug
 
