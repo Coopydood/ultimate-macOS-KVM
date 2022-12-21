@@ -62,7 +62,7 @@ def autoRun():
         val = re.findall('\[.*?\]', x)
         vgaGrepT.append(val)
     #print(vgaGrepT)
-    gpuList = open("./gpuList.json")
+    gpuList = open("./gpulist.json")
     data = json.load(gpuList)
     #for x in vgaGrepT:
     model = str(vgaGrepT)
