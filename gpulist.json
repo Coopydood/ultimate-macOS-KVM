@@ -19,7 +19,7 @@
             "quirks": "0"
         },
         {
-            "name": "RTX 4090]",
+            "name": "RTX 4090",
             "fullName": "NVIDIA RTX 4090",
             "vendor": "NVIDIA",
             "supported": false,
@@ -28,7 +28,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 4080]",
+            "name": "RTX 4080",
             "fullName": "NVIDIA RTX 4080",
             "vendor": "NVIDIA",
             "supported": false,
@@ -37,7 +37,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 4070 Ti]",
+            "name": "RTX 4070 Ti",
             "fullName": "NVIDIA RTX 4070 Ti",
             "vendor": "NVIDIA",
             "supported": false,
@@ -46,7 +46,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 3090 Ti]",
+            "name": "RTX 3090 Ti",
             "fullName": "NVIDIA RTX 3090 Ti",
             "vendor": "NVIDIA",
             "supported": false,
@@ -55,7 +55,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 3090]",
+            "name": "RTX 3090",
             "fullName": "NVIDIA RTX 3090",
             "vendor": "NVIDIA",
             "supported": false,
@@ -64,7 +64,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 3080 Ti]",
+            "name": "RTX 3080 Ti",
             "fullName": "NVIDIA RTX 3080 Ti",
             "vendor": "NVIDIA",
             "supported": false,
@@ -73,7 +73,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 3080]",
+            "name": "RTX 3080",
             "fullName": "NVIDIA RTX 3080",
             "vendor": "NVIDIA",
             "supported": false,
@@ -82,7 +82,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 3070 Ti]",
+            "name": "RTX 3070 Ti",
             "fullName": "NVIDIA RTX 3070 Ti",
             "vendor": "NVIDIA",
             "supported": false,
@@ -91,7 +91,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 3070]",
+            "name": "RTX 3070",
             "fullName": "NVIDIA RTX 3070",
             "vendor": "NVIDIA",
             "supported": false,
@@ -100,7 +100,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 3060 Ti]",
+            "name": "RTX 3060 Ti",
             "fullName": "NVIDIA RTX 3060 Ti",
             "vendor": "NVIDIA",
             "supported": false,
@@ -109,7 +109,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 3060]",
+            "name": "RTX 3060",
             "fullName": "NVIDIA RTX 3060",
             "vendor": "NVIDIA",
             "supported": false,
@@ -118,7 +118,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 3050]",
+            "name": "RTX 3050",
             "fullName": "NVIDIA RTX 3050",
             "vendor": "NVIDIA",
             "supported": false,
@@ -127,7 +127,7 @@
             "quirks": "-1"
         },
         {
-            "name": "TITAN RTX]",
+            "name": "TITAN RTX",
             "fullName": "NVIDIA TITAN RTX",
             "vendor": "NVIDIA",
             "supported": false,
@@ -136,7 +136,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 2080 Ti]",
+            "name": "RTX 2080 Ti",
             "fullName": "NVIDIA RTX 2080 Ti",
             "vendor": "NVIDIA",
             "supported": false,
@@ -145,7 +145,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 2080 Super]",
+            "name": "RTX 2080 Super",
             "fullName": "NVIDIA RTX 2080 Super",
             "vendor": "NVIDIA",
             "supported": false,
@@ -154,7 +154,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 2080]",
+            "name": "RTX 2080",
             "fullName": "NVIDIA RTX 2080",
             "vendor": "NVIDIA",
             "supported": false,
@@ -163,7 +163,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 2070 Super]",
+            "name": "RTX 2070 Super",
             "fullName": "NVIDIA RTX 2070 Super",
             "vendor": "NVIDIA",
             "supported": false,
@@ -172,7 +172,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 2070]",
+            "name": "RTX 2070",
             "fullName": "NVIDIA RTX 2070",
             "vendor": "NVIDIA",
             "supported": false,
@@ -181,7 +181,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 2060 Super]",
+            "name": "RTX 2060 Super",
             "fullName": "NVIDIA RTX 2060 Super",
             "vendor": "NVIDIA",
             "supported": false,
@@ -190,7 +190,7 @@
             "quirks": "-1"
         },
         {
-            "name": "RTX 2060]",
+            "name": "RTX 2060",
             "fullName": "NVIDIA RTX 2060",
             "vendor": "NVIDIA",
             "supported": false,
@@ -199,7 +199,7 @@
             "quirks": "-1"
         },
         {
-            "name": "GTX 1660 Ti]",
+            "name": "GTX 1660 Ti",
             "fullName": "NVIDIA GTX 1660 Ti",
             "vendor": "NVIDIA",
             "supported": false,
@@ -208,7 +208,7 @@
             "quirks": "-1"
         },
         {
-            "name": "GTX 1660 Super]",
+            "name": "GTX 1660 Super",
             "fullName": "NVIDIA GTX 1660 Super",
             "vendor": "NVIDIA",
             "supported": false,
@@ -217,7 +217,7 @@
             "quirks": "-1"
         },
         {
-            "name": "GTX 1660]",
+            "name": "GTX 1660",
             "fullName": "NVIDIA GTX 1660",
             "vendor": "NVIDIA",
             "supported": false,
@@ -226,7 +226,7 @@
             "quirks": "-1"
         },
         {
-            "name": "GTX 1650 Super]",
+            "name": "GTX 1650 Super",
             "fullName": "NVIDIA GTX 1650 Super",
             "vendor": "NVIDIA",
             "supported": false,
@@ -235,7 +235,7 @@
             "quirks": "-1"
         },
         {
-            "name": "GTX 1650]",
+            "name": "GTX 1650",
             "fullName": "NVIDIA GTX 1650",
             "vendor": "NVIDIA",
             "supported": false,
@@ -244,7 +244,7 @@
             "quirks": "-1"
         },
         {
-            "name": "GTX 1630]",
+            "name": "GTX 1630",
             "fullName": "NVIDIA GTX 1630",
             "vendor": "NVIDIA",
             "supported": false,
@@ -253,7 +253,7 @@
             "quirks": "-1"
         },
         {
-            "name": "TITAN V]",
+            "name": "TITAN V",
             "fullName": "TITAN V",
             "vendor": "NVIDIA",
             "supported": false,
@@ -262,7 +262,7 @@
             "quirks": "-1"
         },
         {
-            "name": "GTX 740]",
+            "name": "GTX 740",
             "fullName": "NVIDIA GTX 740",
             "vendor": "NVIDIA",
             "supported": "0",
@@ -271,7 +271,7 @@
             "quirks": "Serious issue regarding high VRAM leakage - extreme instability likely"
         },
         {
-            "name": "GTX 660]",
+            "name": "GTX 660",
             "fullName": "NVIDIA GTX 660",
             "vendor": "NVIDIA",
             "supported": "0",
@@ -280,7 +280,7 @@
             "quirks": "Serious issue regarding high VRAM leakage - extreme instability likely"
         },
         {
-            "name": "GTX 650 Ti]",
+            "name": "GTX 650 Ti",
             "fullName": "NVIDIA GTX 650 Ti",
             "vendor": "NVIDIA",
             "supported": "0",
@@ -289,7 +289,7 @@
             "quirks": "Serious issue regarding high VRAM leakage - extreme instability likely"
         },
         {
-            "name": "GTX 650]",
+            "name": "GTX 650",
             "fullName": "NVIDIA GTX 650",
             "vendor": "NVIDIA",
             "supported": "0",
@@ -298,7 +298,7 @@
             "quirks": "Serious issue regarding high VRAM leakage - extreme instability likely"
         },
         {
-            "name": "GTX 645]",
+            "name": "GTX 645",
             "fullName": "NVIDIA GTX 645",
             "vendor": "NVIDIA",
             "supported": "0",
@@ -307,7 +307,7 @@
             "quirks": "Serious issue regarding high VRAM leakage - extreme instability likely"
         },
         {
-            "name": "K4000]",
+            "name": "K4000",
             "fullName": "NVIDIA Quadro K4000",
             "vendor": "NVIDIA",
             "supported": "0",
@@ -316,7 +316,7 @@
             "quirks": "Serious issue regarding high VRAM leakage - extreme instability likely"
         },
         {
-            "name": "GT 730]",
+            "name": "GT 730",
             "fullName": "NVIDIA GT 730",
             "vendor": "NVIDIA",
             "supported": true,
@@ -325,7 +325,7 @@
             "quirks": "GF108 variant only"
         },
         {
-            "name": "GT 720A]",
+            "name": "GT 720A",
             "fullName": "NVIDIA GT 720A",
             "vendor": "NVIDIA",
             "supported": true,
@@ -334,7 +334,7 @@
             "quirks": "0"
         },
         {
-            "name": "GT 710]",
+            "name": "GT 710",
             "fullName": "NVIDIA GT 710",
             "vendor": "NVIDIA",
             "supported": true,
@@ -343,7 +343,7 @@
             "quirks": "GF119 variant only"
         },
         {
-            "name": "GT 705]",
+            "name": "GT 705",
             "fullName": "NVIDIA GT 705",
             "vendor": "NVIDIA",
             "supported": true,
@@ -352,7 +352,7 @@
             "quirks": "0"
         },
         {
-            "name": "GT 640]",
+            "name": "GT 640",
             "fullName": "NVIDIA GT 640",
             "vendor": "NVIDIA",
             "supported": true,
@@ -361,7 +361,7 @@
             "quirks": "GF108 and GF116 variants only"
         },
         {
-            "name": "GT 630]",
+            "name": "GT 630",
             "fullName": "NVIDIA GT 630",
             "vendor": "NVIDIA",
             "supported": true,
@@ -370,7 +370,7 @@
             "quirks": "GF108 variant only"
         },
         {
-            "name": "GT 620]",
+            "name": "GT 620",
             "fullName": "NVIDIA GT 620",
             "vendor": "NVIDIA",
             "supported": true,
@@ -379,7 +379,7 @@
             "quirks": "0"
         },
         {
-            "name": "GT 610]",
+            "name": "GT 610",
             "fullName": "NVIDIA GT 610",
             "vendor": "NVIDIA",
             "supported": true,
@@ -388,7 +388,7 @@
             "quirks": "0"
         },
         {
-            "name": "GTX TITAN X]",
+            "name": "GTX TITAN X",
             "fullName": "NVIDIA GTX TITAN X",
             "vendor": "NVIDIA",
             "supported": true,
@@ -397,7 +397,7 @@
             "quirks": "GP 102-400 Pascal core variants only"
         },
         {
-            "name": "GTX TITAN Xp]",
+            "name": "GTX TITAN Xp",
             "fullName": "NVIDIA GTX TITAN Xp",
             "vendor": "NVIDIA",
             "supported": true,
@@ -406,7 +406,7 @@
             "quirks": "GP 102-450 Pascal core variants only"
         },
         {
-            "name": "GTX 1080 Ti]",
+            "name": "GTX 1080 Ti",
             "fullName": "NVIDIA GTX 1080 Ti",
             "vendor": "NVIDIA",
             "supported": true,
@@ -415,7 +415,7 @@
             "quirks": "0"
         },
         {
-            "name": "GTX 1080]",
+            "name": "GTX 1080",
             "fullName": "NVIDIA GTX 1080",
             "vendor": "NVIDIA",
             "supported": true,
@@ -424,7 +424,7 @@
             "quirks": "0"
         },
         {
-            "name": "GTX 1070 Ti]",
+            "name": "GTX 1070 Ti",
             "fullName": "NVIDIA GTX 1070 Ti",
             "vendor": "NVIDIA",
             "supported": true,
@@ -433,7 +433,7 @@
             "quirks": "0"
         },
         {
-            "name": "GTX 1070]",
+            "name": "GTX 1070",
             "fullName": "NVIDIA GTX 1070",
             "vendor": "NVIDIA",
             "supported": true,
@@ -442,7 +442,7 @@
             "quirks": "0"
         },
         {
-            "name": "GTX 1060]",
+            "name": "GTX 1060",
             "fullName": "NVIDIA GTX 1060",
             "vendor": "NVIDIA",
             "supported": true,
@@ -451,7 +451,7 @@
             "quirks": "GP104/GDDR5X variants are not supported by the web drivers"
         },
         {
-            "name": "GTX 1050 Ti]",
+            "name": "GTX 1050 Ti",
             "fullName": "NVIDIA GTX 1050 Ti",
             "vendor": "NVIDIA",
             "supported": true,
@@ -460,7 +460,7 @@
             "quirks": "0"
         },
         {
-            "name": "GTX 1050]",
+            "name": "GTX 1050",
             "fullName": "NVIDIA GTX 1050",
             "vendor": "NVIDIA",
             "supported": true,
@@ -469,7 +469,7 @@
             "quirks": "0"
         },
         {
-            "name": "GT 1030]",
+            "name": "GT 1030",
             "fullName": "NVIDIA GT 1030",
             "vendor": "NVIDIA",
             "supported": true,
@@ -478,7 +478,7 @@
             "quirks": "0"
         },
         {
-            "name": "GT 1010]",
+            "name": "GT 1010",
             "fullName": "GT 1010",
             "vendor": "NVIDIA",
             "supported": true,
