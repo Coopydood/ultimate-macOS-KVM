@@ -28,13 +28,13 @@ def startup():
     print("\nThe purpose of this script is to prepare you for GPU passthrough by \nchecking your exact system's GPU model against a macOS compatibility \nlist created and provided by"+color.BOLD,"Dortania.\n"+color.END)
     print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-osx-kvm")
-    print("\nI can attempt to check what GPU you have automatically, or you can manually enter it. Which would you prefer?")
+    print("\nI can attempt to check what GPU you have automatically, or you can manually enter it.\nWhich would you prefer?")
     print(color.BOLD+"\n1. Detect automatically (recommended)")
     print(color.END+"2. Enter manually")
     print(color.END+"3. Exit\n")
     detectChoice = int(input(color.BOLD+"Select> "+color.END))
 
-
+ 
 
 startup()
 #debug
