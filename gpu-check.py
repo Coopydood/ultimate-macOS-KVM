@@ -25,7 +25,7 @@ def startup():
     global detectChoice
     print("Welcome to"+color.BOLD+color.YELLOW,"gpu-check v0.1"+color.END,"(BETA)")
     print("Created by",color.BOLD+"Coopydood\n"+color.END)
-    print("\nThe purpose of this script is to prepare you for GPU passthrough by checking`1 your exact system's GPU model against a macOS compatibility list created and provided by"+color.BOLD,"Dortania.\n"+color.END)
+    print("\nThe purpose of this script is to prepare you for GPU passthrough by \nchecking your exact system's GPU model against a macOS compatibility \nlist created and provided by"+color.BOLD,"Dortania.\n"+color.END)
     print("\nI can attempt to check what GPU you have automatically, or you can manually enter it. Which would you prefer?")
     print(color.BOLD+"\n1. Detect automatically (recommended)")
     print(color.END+"2. Enter manually")
