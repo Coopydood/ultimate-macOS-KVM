@@ -113,9 +113,9 @@ def autoRun():
                 gpuMaxOSF = "Yosemite ("+gpuMaxOS+")"
             elif gpuMaxOS in "10.11":
                 gpuMaxOSF = "El Capitan ("+gpuMaxOS+")"
-            elif gpuMaxOS in "10.12":
+            elif "10.12" in gpuMaxOS:
                 gpuMaxOSF = "Sierra ("+gpuMaxOS+")"
-            elif gpuMaxOS in "10.13":
+            elif "10.13" in gpuMaxOS:
                 gpuMaxOSF = "High Sierra ("+gpuMaxOS+")"
             elif gpuMaxOS in "10.14":
                 gpuMaxOSF = "Mojave ("+gpuMaxOS+")"
@@ -149,7 +149,7 @@ def autoRun():
                 gpuMinOSF = "Yosemite ("+gpuMinOS+")"
             elif gpuMinOS in "10.11":
                 gpuMinOSF = "El Capitan ("+gpuMinOS+")"
-            elif gpuMinOS in "10.12":
+            elif "10.12" in gpuMinOS:
                 gpuMinOSF = "Sierra ("+gpuMinOS+")"
             elif gpuMinOS in "10.13":
                 gpuMinOSF = "High Sierra ("+gpuMinOS+")"
