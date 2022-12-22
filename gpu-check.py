@@ -68,10 +68,8 @@ def autoRun():
     model = str(vgaGrepT)
     gpus = [y for y in data['gpuList']]
     gpuCount = -1
+    model = "[GTX 1050 Ti]" #<-- Uncomment to override GPU for testing
     for gpu in gpus:
-       # print("trying to find",gpu["name"])
-       # print("seeing if",gpu["name"],"is contained within",model)
-        #if (gpu["name"]) in "GTX 650]": #<---- use to override real GPU for testing
         if (gpu["name"]) in model:
             gpuCount = gpuCount + 1
             gpuName = gpu["fullName"]
@@ -169,6 +167,8 @@ def autoRun():
             elif "13" in gpuMinOS:
                 gpuMinOSF = "Ventura ("+gpuMinOS+")"
 
+            if "Ti" in model:
+                gpuName = gpuName + " Ti"
             #print("it was!")
             #print("GPU"+str(gpuCount),gpuName)
             print(color.BOLD+gpuName+color.END)
