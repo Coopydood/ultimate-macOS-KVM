@@ -67,11 +67,20 @@ def autoRun():
     #for x in vgaGrepT:
     model = str(vgaGrepT)
     gpus = [y for y in data['gpuList']]
-    gpuCount = -1
-    model = "[GTX 1050 Ti]" #<-- Uncomment to override GPU for testing
+    gpuCount = 0
+    #model = "[GTX 1050 Ti]" #<-- Uncomment to override GPU for testing
     for gpu in gpus:
         if (gpu["name"]) in model:
             gpuCount = gpuCount + 1
+    
+    if gpuCount >= 2:
+        print("I successfully detected"+color.BOLD,gpuCount,"GPUs"+color.END,"in your system:\n")
+    else:
+        print("I successfully detected"+color.BOLD,gpuCount,"GPU"+color.END,"in your system:\n")
+
+
+    for gpu in gpus:
+        if (gpu["name"]) in model:
             gpuName = gpu["fullName"]
             gpuSupport = gpu["supported"]
             gpuVendor = gpu["vendor"]
@@ -91,7 +100,7 @@ def autoRun():
             
 
             if gpuQuirks == "0":
-                gpuQuirks = "This GPU should work fine as-is under macOS!"
+                gpuQuirks = "This GPU should work fine."
             elif gpuQuirks == "-1":
                 gpuQuirks = "This GPU is NOT supported in macOS at all. Sorry :["
 
@@ -169,8 +178,13 @@ def autoRun():
 
             if "Ti" in model:
                 gpuName = gpuName + " Ti"
-            #print("it was!")
-            #print("GPU"+str(gpuCount),gpuName)
+
+            if "SUPER" in model:
+                gpuName = gpuName + " Super"
+
+            if "XT" in model:
+                gpuName = gpuName + " XT" 
+
             print(color.BOLD+gpuName+color.END)
             print("───────────────────────────────")
             if gpuSupport == True:

@@ -476,6 +476,15 @@
             "minOS": "10.12.4",
             "maxOS": "10.13.6",
             "quirks": "0"
+        },
+        {
+            "name": "DEBUG",
+            "fullName": "DEBUG",
+            "vendor": "Coopydood",
+            "supported": "0",
+            "minOS": "10.4",
+            "maxOS": "11",
+            "quirks": "FOR TESTING PURPOSES ONLY. YOU SHOULD NOT BE SEEING THIS!"
         }
     ]
 }
