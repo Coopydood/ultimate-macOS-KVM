@@ -19,6 +19,15 @@
             "quirks": "0"
         },
         {
+            "name": "R9 255",
+            "fullName": "AMD Radeon R9 255",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
             "name": "RTX 4090",
             "fullName": "NVIDIA RTX 4090",
             "vendor": "NVIDIA",
