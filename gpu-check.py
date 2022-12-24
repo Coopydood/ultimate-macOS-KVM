@@ -49,7 +49,7 @@ class color:
 
 def startup():
     global detectChoice
-    print("Welcome to"+color.BOLD+color.YELLOW,"gpu-check v0.1"+color.END,"(BETA)")
+    print("\n\nWelcome to"+color.BOLD+color.YELLOW,"gpu-check v0.1"+color.END,"(BETA)")
     print("Created by",color.BOLD+"Coopydood\n"+color.END)
     print("\nThe purpose of this script is to prepare you for GPU passthrough by \nchecking your exact system's GPU model against a macOS compatibility \nlist created and provided by"+color.BOLD,"Dortania.\n"+color.END)
     print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
@@ -270,14 +270,13 @@ def manualRun():
         print(color.END+"           You would type"+color.BOLD,"RX 550")
         print(color.BOLD+color.CYAN+"\nTIP:"+color.END,"You can see a list of GPUs installed in your system by running "+color.BOLD+"lspci -v | grep \"VGA\"")
         print(color.BOLD+"\n")
-        gpuList = open("./gpulist.json")
-        data = json.load(gpuList)
         model = str(input(color.BOLD+"Model> "+color.END))
 
-        if "RX" in model:
-            model = "Radeon "+model
+    if "RX" in model and "Radeon" not in model:
+        model = "Radeon "+model
     clear()
-
+    gpuList = open("./gpulist.json")
+    data = json.load(gpuList)
     gpus = [y for y in data['gpuList']]
     gpuCount = 0
     for gpu in gpus:
@@ -421,6 +420,9 @@ if args.manual is not None and runs == 0:
 elif args.auto is not False and runs == 0:
         runs = 1
         autoRun()  
+elif args.forceModel is not None and runs == 0:
+        runs = 1
+        autoRun()
 else:
     runs = 1
     startup()
