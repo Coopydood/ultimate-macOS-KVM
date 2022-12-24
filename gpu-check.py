@@ -58,26 +58,50 @@ def autoRun():
 
     for x in vgaGrep:
         #val = x.split('[', 1)[1].split(']')
-        
+        a = "aaaa"
         val = re.findall('\[.*?\]', x)
         vgaGrepT.append(val)
-    #print(vgaGrepT)
     gpuList = open("./gpulist.json")
     data = json.load(gpuList)
-    #for x in vgaGrepT:
-    model = str(vgaGrepT)
+    model = str(vgaGrep)
+
+    # EXPERIMENTAL VENDOR SEGMENTATION 
+    """
+    vendorList = []
+
+    if "NVIDIA" in model:
+        vendorList.append("nvidia")
+    if "AMD" or "ATI" in model:
+        vendorList.append("amd")
+    else:
+        vendorList.append("other")
+
+    #vendorList = str(vendorList)
+    #vendorList = vendorList.replace('[','').replace(']','').replace(' ','')
+
+    #vendorList = "['amd'],['nvidia']" #DEBUG
+
+    for vendX in vendorList:
+        gpus = [y for y in data['gpuList'][vendX]]
+        gpuCount = 0
+        for gpu in gpus:
+            if (gpu["name"]) in model:
+                gpuCount = gpuCount + 1
+    """
+
+
+    #model = "[GTX 1050 Ti]" #<-- Uncomment to override GPU for testing
+
     gpus = [y for y in data['gpuList']]
     gpuCount = 0
-    #model = "[GTX 1050 Ti]" #<-- Uncomment to override GPU for testing
     for gpu in gpus:
         if (gpu["name"]) in model:
             gpuCount = gpuCount + 1
-    
+
     if gpuCount >= 2:
         print("I successfully detected"+color.BOLD,gpuCount,"GPUs"+color.END,"in your system:\n")
     else:
         print("I successfully detected"+color.BOLD,gpuCount,"GPU"+color.END,"in your system:\n")
-
 
     for gpu in gpus:
         if (gpu["name"]) in model:
@@ -88,16 +112,8 @@ def autoRun():
             gpuMaxOS = gpu["maxOS"]
             gpuQuirks = gpu["quirks"]
 
-           # if gpuSupport == False:
-           #     gpuSupport = "Supported"
-           # else:
-            #    gpuSupport = "Unsupported"
-
-
             if gpuMinOS == "-1":
                 gpuMinOS = "N/A"
-
-            
 
             if gpuQuirks == "0":
                 gpuQuirks = "This GPU should work fine."
