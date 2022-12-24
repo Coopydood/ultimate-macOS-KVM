@@ -1,4 +1,16 @@
 # GPU-CHECK v0.1 BY COOPYDOOD
+
+"""
+This script was created by Coopydood as part of the ultimate-osx-kvm project.
+You are free to distribute this script however you see fit as long as credit is given.
+Enjoy!
+
+"""
+
+
+
+
+
 import os
 import time
 import subprocess
@@ -241,7 +253,7 @@ def autoRun():
 
             print("\n")
             exit
-            
+
 def manualRun():
     clear()
     if args.manual is not None:
