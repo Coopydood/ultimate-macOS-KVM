@@ -482,8 +482,8 @@
             "fullName": "DEBUG",
             "vendor": "Coopydood",
             "supported": "0",
-            "minOS": "10.4",
-            "maxOS": "11",
+            "minOS": "-1",
+            "maxOS": "-1",
             "quirks": "FOR TESTING PURPOSES ONLY. YOU SHOULD NOT BE SEEING THIS!"
         }
     ]
