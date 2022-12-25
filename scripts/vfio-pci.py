@@ -47,4 +47,4 @@ else:
 print("\n",vgaGrep)
 
 print(color.BOLD+color.CYAN+"HOW TO:"+color.END,"For each device you intend on passing through, you must \"stub\" it\n        to the"+color.BOLD+" vfio-pci kernel driver."+color.END+" This is done by modifying your "+color.BOLD+"\n        mkinitcpio.conf and boot-args. "+color.END+"See GitHub for instructions!")
-print("\n"+color.BOLD+"         Example:"+color.END,"...loglevel=3 intel_iommu=1..."+color.BOLD+" vfio-pci.ids=1002:67ff,1002:aae0"+color.END+"\n")
+print("\n"+color.BOLD+"         Example:"+color.END,"...loglevel=3 intel_iommu=1..."+color.BOLD+color.YELLOW+color.UNDERLINE+"vfio-pci.ids=1002:67ff,1002:aae0"+color.END+"\n")
