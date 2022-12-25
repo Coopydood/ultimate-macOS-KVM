@@ -57,7 +57,8 @@ def startup():
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print("Select an option to continue.")
-    print(color.BOLD+"\n   1. Automatic setup (Experimental!)")
+    print(color.BOLD+"\n   1. Automatic setup wizard (Experimental)")
+    print(color.END+"      Quickly sets up a QEMU VM based on your personal preferences\n")
     print(color.END+"   2. Download and convert macOS image")
     print(color.END+"   3. Check GPU compatibility")
     print(color.END+"   4. Check IOMMU grouping")
@@ -78,12 +79,13 @@ def clear(): print("\n" * 150)
 
 os.system("chmod +x scripts/*.py")
 os.system("chmod +x scripts/*.sh")
+os.system("chmod +x resources/dmg2img")
 
 startup()
 clear()
 
 if detectChoice == 1:
-    print(color.BOLD+color.PURPLE+"Not yet implemented! I'm working on it- I swear!\n"+color.END)
+    print(color.BOLD+color.PURPLE+"Not implemented yet! I'm working on it- I swear!\n"+color.END)
 elif detectChoice == 2:
     os.system('./scripts/dlosx.py')
 
