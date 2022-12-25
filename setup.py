@@ -2,10 +2,10 @@
 # pylint: disable=C0301,C0116,C0103,R0903
 
 """
-This script was created by Coopydood as part of the ultimate-macOS-kvm project.
+This script was created by Coopydood as part of the ultimate-macOS-KVM project.
 
 https://github.com/user/Coopydood
-https://github.com/Coopydood/ultimate-macOS-kvm
+https://github.com/Coopydood/ultimate-macOS-KVM
 Signature: 4CD28348A3DD016F
 
 """
@@ -55,7 +55,7 @@ def startup():
     print("Created by",color.BOLD+"Coopydood\n"+color.END)
     print("This script can assist you in some often-tedious setup, including\nprocesses like"+color.BOLD,"checking your GPU, getting vfio-ids, downloading macOS, and more.\n"+color.END+"Think of it like your personal KVM swiss army knife.\n")
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
-    #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-kvm")
+    #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print("Select an option to continue.")
     print(color.BOLD+"\n   1. Automatic setup (Experimental!)")
     print(color.END+"   2. Download and convert macOS image")
@@ -83,8 +83,7 @@ startup()
 clear()
 
 if detectChoice == 1:
-    import autopilot
-    autopilot
+    print(color.BOLD+color.PURPLE+"Not yet implemented! I'm working on it- I swear!\n"+color.END)
 elif detectChoice == 2:
     os.system('./scripts/dlosx.py')
 

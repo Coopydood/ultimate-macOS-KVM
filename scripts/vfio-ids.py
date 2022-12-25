@@ -2,12 +2,12 @@
 # pylint: disable=C0301,C0116,C0103,R0903
 
 """
-This script was created by Coopydood as part of the ultimate-macOS-kvm project.
+This script was created by Coopydood as part of the ultimate-macOS-KVM project.
 You are free to distribute this script however you see fit as long as credit is given.
 Enjoy!
 
 https://github.com/user/Coopydood
-https://github.com/Coopydood/ultimate-macOS-kvm
+https://github.com/Coopydood/ultimate-macOS-KVM
 Signature: 4CD28348A3DD016F
 
 """
