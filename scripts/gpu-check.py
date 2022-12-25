@@ -1,12 +1,15 @@
+#!/usr/bin/env python3
+# pylint: disable=C0301,C0116,C0103,R0903
+
 # GPU-CHECK v0.1 BY COOPYDOOD
 
 """
-This script was created by Coopydood as part of the ultimate-osx-kvm project.
+This script was created by Coopydood as part of the ultimate-macOS-kvm project.
 You are free to distribute this script however you see fit as long as credit is given.
 Enjoy!
 
 https://github.com/user/Coopydood
-https://github.com/Coopydood/ultimate-osx-kvm
+https://github.com/Coopydood/ultimate-macOS-kvm
 Signature: 4CD28348A3DD016F
 
 """
@@ -53,11 +56,11 @@ def startup():
     print("Created by",color.BOLD+"Coopydood\n"+color.END)
     print("\nThe purpose of this script is to prepare you for GPU passthrough by \nchecking your exact system's GPU model against a macOS compatibility \nlist created and provided by"+color.BOLD,"Dortania.\n"+color.END)
     print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
-    print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-osx-kvm")
+    print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-kvm")
     print("\nI can attempt to check what GPU you have automatically, or you can manually enter it.\nWhich would you prefer?")
-    print(color.BOLD+"\n1. Detect automatically (recommended)")
-    print(color.END+"2. Enter manually")
-    print(color.END+"3. Exit\n")
+    print(color.BOLD+"\n   1. Detect automatically (recommended)")
+    print(color.END+"   2. Enter manually")
+    print(color.END+"   3. Exit\n")
     detectChoice = int(input(color.BOLD+"Select> "+color.END))
 
        

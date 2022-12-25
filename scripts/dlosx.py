@@ -6,13 +6,7 @@ Gather recovery information for Macs.
 
 Copyright (c) 2019, vit9696
 
-macrecovery is a tool that helps to automate recovery interaction. It can be
-used to download diagnostics and recovery as well as analyse MLB.
-
-Requires python to run. Run with `-h` argument to see all available arguments.
-
-Upstream: https://github.com/acidanthera/OpenCorePkg/tree/master/Utilities/macrecovery
-pylint -> Your code has been rated at -0.08/10 ;(
+MODIFIED BY COOPYDOOD
 """
 
 import os
@@ -20,6 +14,18 @@ import sys
 import json
 import random
 import argparse
+
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
 
 try:
     from urllib.request import Request, urlopen
@@ -149,6 +155,8 @@ def get_image_info(session, bid, mlb=MLB_ZERO, diag=False, os_type='default', ci
 
     return info
 
+def passon():
+    os.system('./scripts/cvtosx.sh')
 
 def save_image(url, sess, filename='', directory=''):
     purl = urlparse(url)
@@ -165,6 +173,7 @@ def save_image(url, sess, filename='', directory=''):
         raise RuntimeError('Invalid save path ' + filename)
 
     print('Saving ' + url + ' to ' + filename + '...')
+    
 
     with open(os.path.join(directory, filename), 'wb') as fhandle:
         response = run_query(url, headers, raw=True)
@@ -186,6 +195,8 @@ def save_image(url, sess, filename='', directory=''):
             print('\r{} MBs downloaded...'.format(size / (2 ** 20)), end='')
             sys.stdout.flush()
         print('\rDownload complete!' + ' ' * 32)
+        passon()
+        
 
 
 def action_download(args):
@@ -224,8 +235,6 @@ def action_download(args):
     print('Downloading ' + info[INFO_PRODUCT] + '...')
     dmgname = '' if args.basename == '' else args.basename + '.dmg'
     save_image(info[INFO_IMAGE_LINK], info[INFO_IMAGE_SESS], dmgname, args.outdir)
-    cnkname = '' if args.basename == '' else args.basename + '.chunklist'
-    save_image(info[INFO_SIGN_LINK], info[INFO_SIGN_SESS], cnkname, args.outdir)
     return 0
 
 
@@ -463,18 +472,22 @@ def main():
             {"name": "High Sierra (10.13)", "b": "Mac-7BA5B2D9E42DDD94", "m": "00000000000J80300", "short": "high-sierra"},
             {"name": "Mojave (10.14)", "b": "Mac-7BA5B2DFE22DDD8C", "m": "00000000000KXPG00", "short": "mojave"},
             {"name": "Catalina (10.15)", "b": "Mac-00BE6ED71E35EB86", "m": "00000000000000000", "short": "catalina"},
-            {"name": "Big Sur (11.7) - RECOMMENDED", "b": "Mac-2BD1B31983FE1663", "m": "00000000000000000", "short": "big-sur"},
+            {"name": "Big Sur (11.7)", "b": "Mac-2BD1B31983FE1663", "m": "00000000000000000", "short": "big-sur"},
             {"name": "Monterey (12.6)", "b": "Mac-B809C3757DA9BB8D", "m": "00000000000000000", "os_type": "latest", "short": "monterey"},
             {"name": "Ventura (13)", "b": "Mac-7BA5B2D9E42DDD94", "m": "00000000000000000", "os_type": "latest", "short": "ventura"}
     ]
 
+    print("\n\nWelcome to"+color.BOLD+color.YELLOW,"macOS Image Downloader"+color.END,"")
+    print("Created by",color.BOLD+"vit9696"+color.END,"and modified by"+color.BOLD,"Coopydood\n"+color.END)
+    print("\nThis script will"+color.BOLD,"download and convert a macOS base image for you.\n"+color.END+"It will be placed in your"+color.BOLD,"ultimate-macOS-kvm"+color.END,"directory.\n")
+    
     for index, product in enumerate(products):
         name = product["name"]
         print('%s. %12s' % (index + 1, name))
 
     # test locally using args.shortname = 'mojave'
     if not args.shortname or args.shortname == '':
-        answer = input('\nChoose a product to download (1-%s): ' % len(products))
+        answer = input((color.BOLD+"\nSelect> "))
         try:
             index = int(answer) - 1
             if index < 0:
