@@ -90,7 +90,7 @@ def autoRun():
         a = "aaaa"
         val = re.findall('\[.*?\]', x)
         vgaGrepT.append(val)
-    gpuList = open("./gpulist.json")
+    gpuList = open("scripts/gpulist.json")
     data = json.load(gpuList)
     model = str(vgaGrep)
 
@@ -278,7 +278,7 @@ def manualRun():
     if "RX" in model and "Radeon" not in model:
         model = "Radeon "+model
     clear()
-    gpuList = open("./gpulist.json")
+    gpuList = open("scripts/gpulist.json")
     data = json.load(gpuList)
     gpus = [y for y in data['gpuList']]
     gpuCount = 0
