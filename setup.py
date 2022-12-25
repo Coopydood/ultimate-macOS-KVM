@@ -76,6 +76,9 @@ def startup():
 
 def clear(): print("\n" * 150)
 
+os.system("chmod +x scripts/*.py")
+os.system("chmod +x scripts/*.sh")
+
 startup()
 clear()
 
