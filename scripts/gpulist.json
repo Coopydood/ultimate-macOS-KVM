@@ -494,7 +494,6 @@
             "minOS": "-1",
             "maxOS": "-1",
             "quirks": "FOR TESTING PURPOSES ONLY. YOU SHOULD NOT BE SEEING THIS!"
-<<<<<<< HEAD
         },
         {
             "name": "VMware SVGA",
@@ -504,8 +503,6 @@
             "minOS": "-1",
             "maxOS": "-1",
             "quirks": "That's cute."
-=======
->>>>>>> parent of d277202 (Autopilot beta)
         }
     ]
 }
