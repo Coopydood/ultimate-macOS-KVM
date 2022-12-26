@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2054
+
+ID="$USR_ID"
+NAME="$USR_NAME"
+
+ALLOCATED_RAM="$USR_RAM"
+CPU_SOCKETS="$USR_CPU_SOCKS"
+CPU_CORES="$USR_CPU_CORES"
+CPU_THREADS="$USR_CPU_THREADS"
+CPU_MODEL="$USR_CPU_MODEL"
+CPU_FEATURE_ARGS="$USR_CPU_FEATURE_ARGS" #+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check
+
+REPO_PATH="$USR_REPO_PATH"
+OVMF_DIR="$USR_REPO_PATH/ovmf"
+VFIO_ID_0="$USR_VFIO_ID_0"
+VFIO_ID_1="$USR_VFIO_ID_1"
+VFIO_ROM="$USR_VFIO_ROM"
+
+USB_DEVICES="$USR_USB_DEVICES"
+NETWORK_DEVICE="$USR_NETWORK_DEVICE" #-device vmxnet3,netdev=net0,id=net0,mac=52:54:00:c9:18:27
+
+
+args=(
+-global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=off
+-enable-kvm -m "$ALLOCATED_RAM" -cpu "$CPU_MODEL",kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,"$CPU_FEATURE_ARGS"
+-machine q35
+-usb -device usb-kbd -device usb-tablet "$USB_DEVICES"
+-smp "$CPU_THREADS",cores="$CPU_CORES",sockets="$CPU_SOCKETS"
+-device usb-ehci,id=ehci
+-device pcie-root-port,bus=pcie.0,id=rp1,slot=1,x-speed=16,x-width=32
+-device vfio-pci,host="$VFIO_ID_0",multifunction=on,romfile="$VFIO_ROM",bus=rp1,addr=0x0.0
+-device vfio-pci,host="$VFIO_ID_1",bus=rp1,addr=0x0.1
+-device isa-applesmc,osk="ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"
+-drive if=pflash,format=raw,readonly=on,file="$REPO_PATH/$OVMF_DIR/OVMF_CODE.fd"
+-drive if=pflash,format=raw,file="$REPO_PATH/$OVMF_DIR/OVMF_VARS-1024x768.fd"
+-smbios type=2
+-device ich9-intel-hda -device hda-duplex
+-device ich9-ahci,id=sata
+-drive id=OpenCoreBoot,if=none,snapshot=on,format=qcow2,file="$REPO_PATH/OpenCore/OpenCore.qcow2"
+-device ide-hd,bus=sata.2,drive=OpenCoreBoot
+-device ide-hd,bus=sata.3,drive=InstallMedia
+-drive id=InstallMedia,if=none,file="$REPO_PATH/BaseSystem.img",format=raw
+-drive id=MacHDD,if=none,file="$REPO_PATH/HDD.qcow2",format=qcow2
+-device ide-hd,bus=sata.4,drive=MacHDD
+-netdev user,id=net0 "$NETWORK_DEVICE"
+-vga qxl
+-monitor stdio
+
+)
+
+qemu-system-x86_64 "${args[@]}"
