@@ -85,7 +85,7 @@ startup()
 clear()
 
 if detectChoice == 1:
-    print(color.BOLD+color.PURPLE+"Not implemented yet! I'm working on it- I swear!\n"+color.END)
+    os.system('./scripts/autopilot.py')
 elif detectChoice == 2:
     os.system('./scripts/dlosx.py')
 

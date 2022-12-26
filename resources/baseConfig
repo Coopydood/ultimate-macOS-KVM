@@ -15,7 +15,7 @@
 	Repo: https://github.com/Coopydood/ultimate-macOS-KVM
 
 	Adapted from OSX-KVM among others.
-	Greetz to TheNickDude, Dortania, and other contributors ^.^
+	Greetz to TheNickDude, Dortania, khoalia, foxlet, and other contributors ^.^
 """
 
 
@@ -27,7 +27,7 @@ CPU_SOCKETS="$USR_CPU_SOCKS"
 CPU_CORES="$USR_CPU_CORES"
 CPU_THREADS="$USR_CPU_THREADS"
 CPU_MODEL="$USR_CPU_MODEL"
-CPU_FEATURE_ARGS="$USR_CPU_FEATURE_ARGS" #+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check
+CPU_FEATURE_ARGS="$USR_CPU_FEATURE_ARGS"
 
 REPO_PATH="$USR_REPO_PATH"
 OVMF_DIR="$USR_REPO_PATH/ovmf"
@@ -61,7 +61,7 @@ args=(
 -drive id=InstallMedia,if=none,file="$REPO_PATH/BaseSystem.img",format=raw
 -drive id=MacHDD,if=none,file="$REPO_PATH/HDD.qcow2",format=qcow2
 -device ide-hd,bus=sata.4,drive=MacHDD
--netdev user,id=net0 "$NETWORK_DEVICE"
+-netdev user,id=net0 -device "$NETWORK_DEVICE",netdev=net0,id=net0,mac=00:16:cb:00:21:09
 -vga qxl
 -monitor stdio
 
