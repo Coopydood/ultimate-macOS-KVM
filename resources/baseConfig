@@ -1,6 +1,24 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2054
 
+# THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!
+# It is intended to be used by the automatic setup wizard.
+# To use the wizard, run the included "setup.py" file;
+
+# ./setup.py
+
+"""
+	baseConfig
+	Created by Coopydood as part of the ultimate-macOS-KVM project.
+
+	Profile: https://github.com/Coopydood
+	Repo: https://github.com/Coopydood/ultimate-macOS-KVM
+
+	Adapted from OSX-KVM among others.
+	Greetz to TheNickDude, Dortania, and other contributors ^.^
+"""
+
+
 ID="$USR_ID"
 NAME="$USR_NAME"
 
