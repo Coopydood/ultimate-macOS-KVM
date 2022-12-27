@@ -161,7 +161,7 @@ def autopilot():
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
    
       if stageSelect == "1":
-         generate()
+         handoff()
 
       elif stageSelect == "2":
          stage10()
@@ -207,6 +207,9 @@ def autopilot():
             USR_BOOT_FILE = "-1"
             blob = open("./blobs/USR_BOOT_FILE.apb","w")
             blob.write(USR_BOOT_FILE)
+            blob.close()
+            blob = open("./blobs/CDN_CONTROL","w")
+            blob.write("fresh_cdn")
             blob.close()
             currentStage = currentStage + 1
             stage11()
@@ -625,6 +628,7 @@ def autopilot():
 
       # remove stale blobs
       os.system("mv -f ./blobs/*.apb ./blobs/stale/")
+      os.system("mv -f /blobs/CDN_CONTROL ./blobs/stale/")
 
       clear()
 
@@ -664,6 +668,224 @@ def autopilot():
 
          elif stageSelect == "q" or stageSelect == "Q":
             exit
+
+
+   global PROC_PREPARE
+   global PROC_CHECKBLOBS
+   global PROC_GENCONFIG
+   global PROC_LOCALCOPY
+   global PROC_FETCHDL
+   global PROC_GENHDD
+   global PROC_APPLYPREFS
+   global PROC_FIXPERMS
+   global PROC_CLEANUP
+
+   PROC_PREPARE = 0
+   PROC_CHECKBLOBS = 0
+   PROC_GENCONFIG = 0
+   PROC_LOCALCOPY = -1
+   PROC_FETCHDL = -1
+   PROC_GENHDD = 0
+   PROC_APPLYPREFS = 0
+   PROC_FIXPERMS = 0
+   PROC_CLEANUP = 0
+
+
+   def handoff():
+      global PROC_PREPARE
+      global PROC_CHECKBLOBS
+      global PROC_GENCONFIG
+      global PROC_LOCALCOPY
+      global PROC_FETCHDL
+      global PROC_GENHDD
+      global PROC_APPLYPREFS
+      global PROC_FIXPERMS
+      global PROC_CLEANUP
+
+      PROC_PREPARE = 0
+      PROC_CHECKBLOBS = 0
+      PROC_GENCONFIG = 0
+      PROC_LOCALCOPY = -1
+      PROC_FETCHDL = -1
+      PROC_GENHDD = 0
+      PROC_APPLYPREFS = 0
+      PROC_FIXPERMS = 0
+      PROC_CLEANUP = 0
+
+      clear()
+      time.sleep(3)
+
+
+      if USR_BOOT_FILE == "-1":
+         PROC_FETCHDL = 0
+         PROC_LOCALCOPY = -1
+      elif USR_BOOT_FILE != "-2":
+         PROC_FETCHDL = -1
+         PROC_LOCALCOPY = 0
+
+      def refreshStatusGUI():
+         clear()
+         print("   "+"\n   "+color.BOLD+"Status"+color.END)
+         print("   "+"AutoPilot is performing the requested actions.")
+         print("   "+"\n   This may take a few moments."+color.END)
+         print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+
+         if PROC_PREPARE == 0:
+            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Preparing files"+color.END)
+         elif PROC_PREPARE == 1:
+            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Preparing files"+color.END)
+         elif PROC_PREPARE == 2:
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Preparing files"+color.END)
+
+         if PROC_CHECKBLOBS == 0:
+            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Checking preferences"+color.END)
+         elif PROC_CHECKBLOBS == 1:
+            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Checking preferences"+color.END)
+         elif PROC_CHECKBLOBS == 2:
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Checking preferences"+color.END)
+
+         if PROC_GENCONFIG == 0:
+            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Generating config script"+color.END)
+         elif PROC_GENCONFIG == 1:
+            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Generating config script"+color.END)
+         elif PROC_GENCONFIG == 2:
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Generating config script"+color.END)
+
+         if PROC_LOCALCOPY == 0:
+            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
+         elif PROC_LOCALCOPY == 1:
+            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Copying recovery image into place"+color.END)
+         elif PROC_LOCALCOPY == 2:
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
+
+         if PROC_FETCHDL == 0:
+            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Downloading recovery image"+color.END)
+         elif PROC_FETCHDL == 1:
+            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Downloading recovery image"+color.END)
+         elif PROC_FETCHDL == 2:
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Downloading recovery image"+color.END)
+
+         if PROC_GENHDD == 0:
+            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
+         elif PROC_GENHDD == 1:
+            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Creating virtual hard disk"+color.END)
+         elif PROC_GENHDD == 2:
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
+
+         if PROC_APPLYPREFS == 0:
+            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Applying preferences"+color.END)
+         elif PROC_APPLYPREFS == 1:
+            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Applying preferences"+color.END)
+         elif PROC_APPLYPREFS == 2:
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Applying preferences"+color.END)
+
+         if PROC_FIXPERMS == 0:
+            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Fixing up permissions"+color.END)
+         elif PROC_FIXPERMS == 1:
+            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Fixing up permissions"+color.END)
+         elif PROC_FIXPERMS == 2:
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Fixing up permissions"+color.END)
+
+         if PROC_CLEANUP == 0:
+            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Cleaning up"+color.END)
+         elif PROC_CLEANUP == 1:
+            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Cleaning up"+color.END)
+         elif PROC_CLEANUP == 2:
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Cleaning up"+color.END)
+
+         print("   "+color.BOLD+"──────────────────────────────────────────────────────────────\n\n\n",color.END)
+
+      refreshStatusGUI()
+
+      time.sleep(3)
+
+      def apcPrepare():# PREPARE
+         global PROC_PREPARE
+         PROC_PREPARE = 1
+         global errorMessage
+         errorMessage = "Couldn't prepare files. (Insufficient permissions?)"
+         refreshStatusGUI()
+         os.system("cp resources/baseConfig resources/config.sh")
+         time.sleep(2)
+         integrityConfig = 1
+         if os.path.exists("resources/config.sh"):
+            integrityConfig = integrityConfig + 0
+         else:
+            integrityConfig = integrityConfig - 1
+            throwFail()
+         PROC_PREPARE = 2
+         refreshStatusGUI()
+
+      def apcBlobCheck():      # CHECK BLOBS
+         global PROC_CHECKBLOBS
+         PROC_CHECKBLOBS = 1
+         global errorMessage
+         errorMessage = "The integrity of the wizard preference files could not be verified."
+         integrity = 1
+         refreshStatusGUI()
+         time.sleep(4)
+         if os.path.exists("blobs/USR_ALLOCATED_RAM.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+            #print("DEBUG: FOUND")
+         if os.path.exists("blobs/USR_BOOT_FILE.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+         if os.path.exists("blobs/USR_CFG.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+         if os.path.exists("blobs/USR_CPU_CORES.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+         if os.path.exists("blobs/USR_CPU_FEATURE_ARGS.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+         if os.path.exists("blobs/USR_CPU_MODEL.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+         if os.path.exists("blobs/USR_CPU_THREADS.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+         if os.path.exists("blobs/USR_HDD_SIZE.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+         if os.path.exists("blobs/USR_NETWORK_DEVICE.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+         if os.path.exists("blobs/USR_TARGET_OS.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+
+         if integrity == 1:
+            PROC_CHECKBLOBS = 2
+            refreshStatusGUI()
+         else:
+            throwFail()
+
+      def apcGenConfig():
+         global PROC_GENCONFIG
+         PROC_GENCONFIG = 1
+         global errorMessage
+         errorMessage = "The config file could not be written to."
+         integrity = 1
+         refreshStatusGUI()
+         time.sleep(4)
+
+
+
+      apcPrepare()
+      apcBlobCheck()
+      apcGenConfig()
 
    stage1()
 
