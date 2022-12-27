@@ -121,6 +121,7 @@ def autopilot():
       global USR_TARGET_OS
       global USR_HDD_SIZE
       global USR_BOOT_FILE
+      global USR_TARGET_OS_F
 
       USR_ALLOCATED_RAM_F = USR_ALLOCATED_RAM.replace("G","")
       USR_HDD_SIZE_F = USR_HDD_SIZE.replace("G","")
@@ -799,7 +800,7 @@ def autopilot():
 
       time.sleep(3)
 
-      def apcPrepare():# PREPARE
+      def apcPrepare():    # PREPARE
          global PROC_PREPARE
          PROC_PREPARE = 1
          global errorMessage
@@ -816,7 +817,7 @@ def autopilot():
          PROC_PREPARE = 2
          refreshStatusGUI()
 
-      def apcBlobCheck():      # CHECK BLOBS
+      def apcBlobCheck():  # CHECK BLOBS
          global PROC_CHECKBLOBS
          PROC_CHECKBLOBS = 1
          global errorMessage
@@ -872,16 +873,42 @@ def autopilot():
          else:
             throwFail()
 
-      def apcGenConfig():
+      def apcGenConfig():  # GENERATE CONFIG
          global PROC_GENCONFIG
          PROC_GENCONFIG = 1
          global errorMessage
          errorMessage = "The config file could not be written to."
-         integrity = 1
+         integrityCfg = 1
          refreshStatusGUI()
          time.sleep(4)
+         with open("resources/config.sh","r") as file:
+            configData = file.read()
+         configData = configData.replace("$USR_CPU_SOCKS",str(USR_CPU_SOCKS))
+         configData = configData.replace("$USR_CPU_CORES",str(USR_CPU_CORES))
+         configData = configData.replace("$USR_CPU_THREADS",str(USR_CPU_THREADS))
+         configData = configData.replace("$USR_CPU_MODEL",str(USR_CPU_MODEL))
+         configData = configData.replace("$USR_CPU_FEATURE_ARGS",str(USR_CPU_FEATURE_ARGS))
+         configData = configData.replace("$USR_ALLOCATED_RAM",str(USR_ALLOCATED_RAM))
+         configData = configData.replace("$USR_REPO_PATH",".")
+         configData = configData.replace("$USR_NETWORK_DEVICE",str(USR_NETWORK_DEVICE))
+         configData = configData.replace("$USR_NAME","macOS "+str(USR_TARGET_OS_F))
+         configData = configData.replace("$USR_ID","macOS")
+         configData = configData.replace("baseConfig",str(USR_CFG))
+         configData = configData.replace("$USR_CFG",str(USR_CFG))
+         with open ("resources/config.sh","w") as file:
+            file.write(configData)
 
+         with open("resources/config.sh","r") as file:
+            configDataTest = file.read()
+         if "ALLOCATED_RAM=\""+str(USR_ALLOCATED_RAM) in configDataTest:
+            integrityCfg + 0
+         else:
+            integrityCfg - 1
+            throwFail()
 
+         time.sleep(2)
+         PROC_GENCONFIG = 2
+         refreshStatusGUI()
 
       apcPrepare()
       apcBlobCheck()
