@@ -79,6 +79,7 @@ def autopilot():
    global USR_CFG
    global USR_TARGET_OS
    global USR_HDD_SIZE
+   global USR_BOOT_FILE
 
    USR_CPU_SOCKS = 1
    USR_CPU_CORES = 2 
@@ -93,7 +94,9 @@ def autopilot():
    USR_CFG = "boot.sh"
    USR_TARGET_OS = 1015
    USR_HDD_SIZE = "80G"
+   USR_BOOT_FILE = "BaseSystem.img"
    
+
    global currentStage
    currentStage = 1
    
@@ -103,7 +106,7 @@ def autopilot():
    def generate():
       print(color.BOLD+color.PURPLE+"Not implemented yet! I'm working on it- I swear!\n"+color.END)
 
-   def stage10():
+   def stage11():
       global USR_CPU_SOCKS
       global USR_CPU_CORES
       global USR_CPU_THREADS
@@ -117,6 +120,7 @@ def autopilot():
       global USR_CFG
       global USR_TARGET_OS
       global USR_HDD_SIZE
+      global USR_BOOT_FILE
 
       USR_ALLOCATED_RAM_F = USR_ALLOCATED_RAM.replace("G","")
       USR_HDD_SIZE_F = USR_HDD_SIZE.replace("G","")
@@ -125,30 +129,42 @@ def autopilot():
 
       USR_TARGET_OS_F = USR_TARGET_OS / 100
 
+      if USR_BOOT_FILE == "-1":
+         USR_BOOT_FILE_F = "Download from Apple..."
+      else:
+         USR_BOOT_FILE_F = "Local image file"
+
       clear()
-      print("    "+"\n    "+color.BOLD+"Generate config file"+color.END)
-      print("    "+"Review your preferences")
-      print("    "+"\n    The config wizard is complete.\n    You should review your preferences below and make sure\n    they are satisfactory. When ready, generate the config."+color.END)
-      print("    "+"\n    "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
-      print("    "+color.BOLD+color.PURPLE+"FILE    ",color.END+color.BOLD+USR_CFG+color.END)
-      print("    "+color.BOLD+color.GREEN+"OS      ",color.END+color.BOLD+"macOS",USR_TARGET_OS_F,color.END)
-      print("    "+color.BOLD+color.CYAN+"CPU     ",color.END+color.BOLD+USR_CPU_MODEL+",",USR_CPU_CORES,"cores,",USR_CPU_THREADS,"threads","("+USR_CPU_TOTAL_F+")"+color.END)
-      print("    "+color.BOLD+color.CYAN+"        ",color.END+color.BOLD+USR_CPU_FEATURE_ARGS+color.END)
-      print("    "+color.BOLD+color.CYAN+"RAM     ",color.END+color.BOLD+USR_ALLOCATED_RAM_F+" GB"+color.END)
-      print("    "+color.BOLD+color.CYAN+"DISK    ",color.END+color.BOLD+USR_HDD_SIZE_F+" GB (dynamic)"+color.END)
-      print("    "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.BOLD+USR_NETWORK_DEVICE+color.END+"")
-      print("    "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
-      print(color.BOLD+"\n       1. Generate!")
-      print("    "+color.END+"   2. Back")
-      print("    "+color.END+"   X. Start Over")
-      print("    "+color.END+"   Q. Exit\n")
+      print("   "+"\n   "+color.BOLD+"Ready to generate config file"+color.END)
+      print("   "+"Review your preferences")
+      print("   "+"\n   The config wizard is complete.\n   Review your preferences below and continue when ready."+color.END)
+      print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+      print("   "+color.BOLD+color.PURPLE+"FILE    ",color.END+color.END+USR_CFG+color.END)
+      print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"macOS",USR_TARGET_OS_F,color.END)
+      print("   "+color.BOLD+color.YELLOW+"BOOT    ",color.END+color.END+USR_BOOT_FILE_F,color.END)
+      print("   "+color.BOLD+color.CYAN+"CPU     ",color.END+color.END+USR_CPU_MODEL+",",USR_CPU_CORES,"cores,",USR_CPU_THREADS,"threads","("+USR_CPU_TOTAL_F+")"+color.END)  
+      #print("   "+color.BOLD+color.CYAN+"        ",color.END+color.BOLD+USR_CPU_FEATURE_ARGS+color.END)
+      print("   "+color.BOLD+color.CYAN+"RAM     ",color.END+color.END+USR_ALLOCATED_RAM_F+" GB"+color.END)
+      print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_SIZE_F+" GB (dynamic)"+color.END)
+      print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+"")
+      print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+      if USR_BOOT_FILE == "-1":
+         print(color.BOLD+"\n      1. Download and generate...")
+         print(color.END+"         Fetch a new recovery image, then create the config\n         and hard disk file in the repo folder\n")
+      else:
+         print(color.BOLD+"\n      1. Generate")
+         print(color.END+"         Copy the local recovery image, then create the config\n         and hard disk file in the repo folder\n")
+      
+      print("    "+color.END+"  2. Back")
+      print("    "+color.END+"  X. Start Over")
+      print("    "+color.END+"  Q. Exit\n")
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
    
       if stageSelect == "1":
          generate()
 
       elif stageSelect == "2":
-         stage9()
+         stage10()
 
       elif stageSelect == "x" or stageSelect == "X":
          currentStage = 1
@@ -156,6 +172,58 @@ def autopilot():
          
       elif stageSelect == "q" or stageSelect == "Q":
          exit   
+
+   def stage10():
+      global customValue
+      global currentStage
+      global USR_BOOT_FILE
+      defaultValue = "BaseSystem.img"
+
+      clear()
+      print("\n   "+color.BOLD+"macOS Recovery image file"+color.END)
+      print("   Step 10")
+      print("\n   Choose a bootable image file the virtual machine should boot to. \n   You need a macOS Recovery image (BaseSystem.img). You can either\n   select an existing one or the wizard can download one for you.\n   It must be in the *.img file format."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      if customValue == 1:
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<file>"+color.YELLOW+".img"+color.END+"\n   Enter a custom value.\n   \n   ")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:",color.YELLOW+""+color.END+color.BOLD+"<file>"+color.YELLOW+".img"+color.END+"\n   Enter the full path to a bootable macOS Recovery image file.\n   It will be automatically copied into the root repo directory, or you\n   can place it there now and type \"BaseSystem.img\" without a path.\n   You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n      "+color.BOLD+"TIP:"+color.END,"You can drag and drop a file onto this window.\n   \n   ")
+         customInput = str(input(color.BOLD+"Value> "+color.END))
+         USR_BOOT_FILE = customInput               #+".sh" #<--- change required prefix/suffix
+         currentStage = currentStage + 1
+         customValue = 0
+         blob = open("./blobs/USR_BOOT_FILE.apb","w")
+         blob.write(USR_BOOT_FILE)
+         blob.close()
+         stage11()
+      else:
+         print(color.BOLD+"\n      1. Download from Apple...")
+         print(color.END+"      2. Select existing...")
+         print(color.END+"      3. Skip")
+         print(color.END+"      4. Back")
+         print(color.END+"      Q. Exit\n   ")
+         stageSelect = str(input(color.BOLD+"Select> "+color.END))
+      
+         if stageSelect == "1":
+            USR_BOOT_FILE = "-1"
+            blob = open("./blobs/USR_BOOT_FILE.apb","w")
+            blob.write(USR_BOOT_FILE)
+            blob.close()
+            currentStage = currentStage + 1
+            stage11()
+
+         elif stageSelect == "2":
+            customValue = 1
+            stage10()
+
+         elif stageSelect == "3":
+            stage11()
+
+         elif stageSelect == "4":
+            currentStage = 1
+            stage9()
+            
+         elif stageSelect == "q" or stageSelect == "Q":
+            exit   
 
    def stage9():
       global USR_NETWORK_DEVICE
@@ -169,31 +237,31 @@ def autopilot():
          defaultValue = "vmxnet3"
 
       clear()
-      print("\n"+color.BOLD+"Set network adapter model"+color.END)
-      print("Step 9")
-      print("\nSet the model of the virtual network adapter. \nThe default below has been selected based on your target OS,\nso there shouldn't be a need to change it."+color.END)
-      print("\n"+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      print("\n   "+color.BOLD+"Set network adapter model"+color.END)
+      print("   Step 9")
+      print("\n   Set the model of the virtual network adapter. \n   The default below has been selected based on your target OS,\n   so there shouldn't be a need to change it."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
       if customValue == 1:
-         print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<model name>"+color.YELLOW+""+color.END+"\nEnter a custom value.\n\n")
-      #   print(color.BOLD+color.PURPLE+"\nFORMAT:",color.YELLOW+""+color.END+color.BOLD+"<model name>"+color.YELLOW+""+color.END+"\nEnter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<model name>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:",color.YELLOW+""+color.END+color.BOLD+"<model name>"+color.YELLOW+""+color.END+"\n   Enter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n   \n   ")
          customInput = str(input(color.BOLD+"Value> "+color.END))
          USR_NETWORK_DEVICE = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = currentStage + 1
          customValue = 0
-         blob = open("./blobs/USR_NETWORK_DEVICE","w")
+         blob = open("./blobs/USR_NETWORK_DEVICE.apb","w")
          blob.write(USR_NETWORK_DEVICE)
          blob.close()
          stage10()
       else:
-         print(color.BOLD+"\n   1. Use default value")
-         print(color.END+"   2. Custom value...")
-         print(color.END+"   3. Back")
-         print(color.END+"   Q. Exit\n")
+         print(color.BOLD+"\n      1. Use default value")
+         print(color.END+"      2. Custom value...")
+         print(color.END+"      3. Back")
+         print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
          if stageSelect == "1":
             USR_NETWORK_DEVICE = defaultValue
-            blob = open("./blobs/USR_NETWORK_DEVICE","w")
+            blob = open("./blobs/USR_NETWORK_DEVICE.apb","w")
             blob.write(USR_NETWORK_DEVICE)
             blob.close()
             currentStage = currentStage + 1
@@ -208,7 +276,7 @@ def autopilot():
             stage8()
             
          elif stageSelect == "q" or stageSelect == "Q":
-            exit   
+            exit    
 
    def stage8():
       global USR_HDD_SIZE
@@ -217,31 +285,31 @@ def autopilot():
       defaultValue = "80G"
 
       clear()
-      print("\n"+color.BOLD+"Set hard disk capacity"+color.END)
-      print("Step 8")
-      print("\nSet the maximum virtual hard disk size (capacity). \nChange this based on how much storage you think you'll need.\nNOTE: The file will grow dynamically, and is not allocated in full."+color.END)
-      print("\n"+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      print("\n   "+color.BOLD+"Set hard disk capacity"+color.END)
+      print("   Step 8")
+      print("\n   Set the maximum virtual hard disk size (capacity). \n   Change this based on how much storage you think you'll need.\n   NOTE: The file will grow dynamically, and is not allocated in full."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
       if customValue == 1:
-      #   print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<>"+color.YELLOW+""+color.END+"\nEnter a custom value.\n\n")
-         print(color.BOLD+color.PURPLE+"\nFORMAT:",color.YELLOW+""+color.END+color.BOLD+"<number>"+color.YELLOW+"G"+color.END+"\nEnter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n")
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:",color.YELLOW+""+color.END+color.BOLD+"<number>"+color.YELLOW+"G"+color.END+"\n   Enter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n   \n   ")
          customInput = str(input(color.BOLD+"Value> "+color.END))
          USR_HDD_SIZE = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = currentStage + 1
          customValue = 0
-         blob = open("./blobs/USR_HDD_SIZE","w")
+         blob = open("./blobs/USR_HDD_SIZE.apb","w")
          blob.write(USR_HDD_SIZE)
          blob.close()
          stage9()
       else:
-         print(color.BOLD+"\n   1. Use default value")
-         print(color.END+"   2. Custom value...")
-         print(color.END+"   3. Back")
-         print(color.END+"   Q. Exit\n")
+         print(color.BOLD+"\n      1. Use default value")
+         print(color.END+"      2. Custom value...")
+         print(color.END+"      3. Back")
+         print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
          if stageSelect == "1":
             USR_HDD_SIZE = defaultValue
-            blob = open("./blobs/USR_HDD_SIZE","w")
+            blob = open("./blobs/USR_HDD_SIZE.apb","w")
             blob.write(USR_HDD_SIZE)
             blob.close()
             currentStage = currentStage + 1
@@ -265,31 +333,31 @@ def autopilot():
       defaultValue = "4G"
 
       clear()
-      print("\n"+color.BOLD+"Set amount of allocated RAM"+color.END)
-      print("Step 7")
-      print("\nSet how much memory the guest can use. \nAs a general rule and for max performance, use no\nmore than half of your total host memory."+color.END)
-      print("\n"+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      print("\n   "+color.BOLD+"Set amount of allocated RAM"+color.END)
+      print("   Step 7")
+      print("\n   Set how much memory the guest can use. \n   As a general rule and for max performance, use no\n   more than half of your total host memory."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
       if customValue == 1:
-      #   print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<>"+color.YELLOW+""+color.END+"\nEnter a custom value.\n\n")
-         print(color.BOLD+color.PURPLE+"\nFORMAT:",color.YELLOW+""+color.END+color.BOLD+"<number>"+color.YELLOW+"G"+color.END+"\nEnter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n")
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:",color.YELLOW+""+color.END+color.BOLD+"<number>"+color.YELLOW+"G"+color.END+"\n   Enter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n   \n   ")
          customInput = str(input(color.BOLD+"Value> "+color.END))
          USR_ALLOCATED_RAM = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = currentStage + 1
          customValue = 0
-         blob = open("./blobs/USR_ALLOCATED_RAM","w")
+         blob = open("./blobs/USR_ALLOCATED_RAM.apb","w")
          blob.write(USR_ALLOCATED_RAM)
          blob.close()
          stage8()
       else:
-         print(color.BOLD+"\n   1. Use default value")
-         print(color.END+"   2. Custom value...")
-         print(color.END+"   3. Back")
-         print(color.END+"   Q. Exit\n")
+         print(color.BOLD+"\n      1. Use default value")
+         print(color.END+"      2. Custom value...")
+         print(color.END+"      3. Back")
+         print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
          if stageSelect == "1":
             USR_ALLOCATED_RAM = defaultValue
-            blob = open("./blobs/USR_ALLOCATED_RAM","w")
+            blob = open("./blobs/USR_ALLOCATED_RAM.apb","w")
             blob.write(USR_ALLOCATED_RAM)
             blob.close()
             currentStage = currentStage + 1
@@ -304,7 +372,7 @@ def autopilot():
             stage6()
             
          elif stageSelect == "q" or stageSelect == "Q":
-            exit   
+            exit     
 
    def stage6():
       global USR_CPU_FEATURE_ARGS
@@ -313,31 +381,31 @@ def autopilot():
       defaultValue = "+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check"
 
       clear()
-      print("\n"+color.BOLD+"Set CPU feature arguments"+color.END)
-      print("Step 6")
-      print("\nSet the virtual CPU's feature arguments. \nDo not change this unless you know what you're doing.\nThe default is more than enough for most people."+color.END)
-      print("\n"+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      print("\n   "+color.BOLD+"Set CPU feature arguments"+color.END)
+      print("   Step 6")
+      print("\n   Set the virtual CPU's feature arguments. \n   Do not change this unless you know what you're doing.\n   The default is more than enough for most people."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
       if customValue == 1:
-      #   print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<>"+color.YELLOW+""+color.END+"\nEnter a custom value.\n\n")
-         print(color.BOLD+color.PURPLE+"\nFORMAT:",color.YELLOW+"+"+color.END+color.BOLD+"<arg>"+color.YELLOW+","+color.END+"\nEnter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n")
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:",color.YELLOW+"+"+color.END+color.BOLD+"<arg>"+color.YELLOW+","+color.END+"\n   Enter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n   \n   ")
          customInput = str(input(color.BOLD+"Value> "+color.END))
          USR_CPU_FEATURE_ARGS = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = currentStage + 1
          customValue = 0
-         blob = open("./blobs/USR_CPU_FEATURE_ARGS","w")
+         blob = open("./blobs/USR_CPU_FEATURE_ARGS.apb","w")
          blob.write(USR_CPU_FEATURE_ARGS)
          blob.close()
          stage7()
       else:
-         print(color.BOLD+"\n   1. Use default value")
-         print(color.END+"   2. Custom value...")
-         print(color.END+"   3. Back")
-         print(color.END+"   Q. Exit\n")
+         print(color.BOLD+"\n      1. Use default value")
+         print(color.END+"      2. Custom value...")
+         print(color.END+"      3. Back")
+         print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
          if stageSelect == "1":
             USR_CPU_FEATURE_ARGS = defaultValue
-            blob = open("./blobs/USR_CPU_FEATURE_ARGS","w")
+            blob = open("./blobs/USR_CPU_FEATURE_ARGS.apb","w")
             blob.write(USR_CPU_FEATURE_ARGS)
             blob.close()
             currentStage = currentStage + 1
@@ -352,7 +420,7 @@ def autopilot():
             stage5()
             
          elif stageSelect == "q" or stageSelect == "Q":
-            exit   
+            exit    
 
    def stage5():
       global USR_CPU_MODEL
@@ -361,31 +429,31 @@ def autopilot():
       defaultValue = "Penryn"
 
       clear()
-      print("\n"+color.BOLD+"Set CPU model"+color.END)
-      print("Step 5")
-      print("\nSet the model of the virtual CPU. \nUnless your host CPU is supported in macOS, leave this alone.\nUse \"host\" to expose the host CPU model to the guest."+color.END)
-      print("\n"+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      print("\n   "+color.BOLD+"Set CPU model"+color.END)
+      print("   Step 5")
+      print("\n   Set the model of the virtual CPU. \n   Unless your host CPU is supported in macOS, leave this alone.\n   Use \"host\" to expose the host CPU model to the guest."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
       if customValue == 1:
-         print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<model name>"+color.YELLOW+""+color.END+"\nEnter a custom value.\n\n")
-      #   print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\nEnter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<model name>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n   \n   ")
          customInput = str(input(color.BOLD+"Value> "+color.END))
          USR_CPU_MODEL = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = currentStage + 1
          customValue = 0
-         blob = open("./blobs/USR_CPU_MODEL","w")
+         blob = open("./blobs/USR_CPU_MODEL.apb","w")
          blob.write(USR_CPU_MODEL)
          blob.close()
          stage6()
       else:
-         print(color.BOLD+"\n   1. Use default value")
-         print(color.END+"   2. Custom value...")
-         print(color.END+"   3. Back")
-         print(color.END+"   Q. Exit\n")
+         print(color.BOLD+"\n      1. Use default value")
+         print(color.END+"      2. Custom value...")
+         print(color.END+"      3. Back")
+         print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
          if stageSelect == "1":
             USR_CPU_MODEL = defaultValue
-            blob = open("./blobs/USR_CPU_MODEL","w")
+            blob = open("./blobs/USR_CPU_MODEL.apb","w")
             blob.write(USR_CPU_MODEL)
             blob.close()
             currentStage = currentStage + 1
@@ -400,7 +468,7 @@ def autopilot():
             stage4()
             
          elif stageSelect == "q" or stageSelect == "Q":
-            exit   
+            exit    
 
    def stage4():
       global USR_CPU_THREADS
@@ -409,31 +477,31 @@ def autopilot():
       defaultValue = 2
 
       clear()
-      print("\n"+color.BOLD+"Set number of CPU threads"+color.END)
-      print("Step 4")
-      print("\nSet the desired number of virtual CPU threads. \nLike cores, more threads can dramatically improve guest performance if\nyour host can handle it."+color.END)
-      print("\n"+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
+      print("\n   "+color.BOLD+"Set number of CPU threads"+color.END)
+      print("   Step 4")
+      print("\n   Set the desired number of virtual CPU threads. \n   Like cores, more threads can dramatically improve guest performance if\n   your host can handle it."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
       if customValue == 1:
-         print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\nEnter a custom value.\n\n")
-      #   print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\nEnter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n   \n   ")
          customInput = int(input(color.BOLD+"Value> "+color.END))
          USR_CPU_THREADS = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = currentStage + 1
          customValue = 0
-         blob = open("./blobs/USR_CPU_THREADS","w")
+         blob = open("./blobs/USR_CPU_THREADS.apb","w")
          blob.write(str(USR_CPU_THREADS))
          blob.close()
          stage5()
       else:
-         print(color.BOLD+"\n   1. Use default value")
-         print(color.END+"   2. Custom value...")
-         print(color.END+"   3. Back")
-         print(color.END+"   Q. Exit\n")
+         print(color.BOLD+"\n      1. Use default value")
+         print(color.END+"      2. Custom value...")
+         print(color.END+"      3. Back")
+         print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
          if stageSelect == "1":
             USR_CPU_THREADS = defaultValue
-            blob = open("./blobs/USR_CPU_THREADS","w")
+            blob = open("./blobs/USR_CPU_THREADS.apb","w")
             blob.write(str(USR_CPU_THREADS))
             blob.close()
             currentStage = currentStage + 1
@@ -448,7 +516,7 @@ def autopilot():
             stage3()
             
          elif stageSelect == "q" or stageSelect == "Q":
-            exit   
+            exit
 
    def stage3():
       global USR_CPU_CORES
@@ -462,31 +530,31 @@ def autopilot():
          USR_TARGET_OS = USR_TARGET_OS * 100
 
       clear()
-      print("\n"+color.BOLD+"Set number of CPU cores"+color.END)
-      print("Step 3")
-      print("\nSet the desired number of virtual CPU cores. \nMore cores can dramatically improve guest performance if\nyour host can handle it."+color.END)
-      print("\n"+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
+      print("\n   "+color.BOLD+"Set number of CPU cores"+color.END)
+      print("   Step 3")
+      print("\n   Set the desired number of virtual CPU cores. \n   More cores can dramatically improve guest performance if\n   your host can handle it."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
       if customValue == 1:
-         print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\nEnter a custom value.\n\n")
-      #   print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\nEnter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n   \n   ")
          customInput = int(input(color.BOLD+"Value> "+color.END))
          USR_CPU_CORES = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = currentStage + 1
          customValue = 0
-         blob = open("./blobs/USR_CPU_CORES","w")
+         blob = open("./blobs/USR_CPU_CORES.apb","w")
          blob.write(str(USR_CPU_CORES))
          blob.close()
          stage4()
       else:
-         print(color.BOLD+"\n   1. Use default value")
-         print(color.END+"   2. Custom value...")
-         print(color.END+"   3. Back")
-         print(color.END+"   Q. Exit\n")
+         print(color.BOLD+"\n      1. Use default value")
+         print(color.END+"      2. Custom value...")
+         print(color.END+"      3. Back")
+         print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
          if stageSelect == "1":
             USR_CPU_CORES = defaultValue
-            blob = open("./blobs/USR_CPU_CORES","w")
+            blob = open("./blobs/USR_CPU_CORES.apb","w")
             blob.write(str(USR_CPU_CORES))
             blob.close()
             currentStage = currentStage + 1
@@ -501,7 +569,7 @@ def autopilot():
             stage2()
             
          elif stageSelect == "q" or stageSelect == "Q":
-            exit   
+            exit
 
    def stage2():
       global USR_TARGET_OS
@@ -510,30 +578,30 @@ def autopilot():
       defaultValue = 1015
 
       clear()
-      print("\n"+color.BOLD+"Set target OS"+color.END)
-      print("Step 2")
-      print("\nThis is only really important for networking. \nIf you are installing macOS Mojave (10.14) or later, you can leave this alone.\nIf you are installing macOS High Sierra (10.13) or earlier, enter it as a custom value."+color.END)
-      print("\n"+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
+      print("\n   "+color.BOLD+"Set target OS"+color.END)
+      print("   Step 2")
+      print("\n   This is only really important for networking. \n   If you are installing macOS Mojave (10.14) or later, you can leave this alone.\n   If you are installing macOS High Sierra (10.13) or earlier, enter it as a custom value."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
       if customValue == 1:
-         print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\nEnter a custom value.\n\n")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
          customInput = int(input(color.BOLD+"Value> "+color.END))
          USR_TARGET_OS = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = 3
          customValue = 0
-         blob = open("./blobs/USR_TARGET_OS","w")
+         blob = open("./blobs/USR_TARGET_OS.apb","w")
          blob.write(str(USR_TARGET_OS))
          blob.close()
          stage3()
       else:
-         print(color.BOLD+"\n   1. Use default value")
-         print(color.END+"   2. Custom value...")
-         print(color.END+"   3. Back")
-         print(color.END+"   Q. Exit\n")
+         print(color.BOLD+"\n      1. Use default value")
+         print(color.END+"      2. Custom value...")
+         print(color.END+"      3. Back")
+         print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
          if stageSelect == "1":
             USR_TARGET_OS = defaultValue
-            blob = open("./blobs/USR_TARGET_OS","w")
+            blob = open("./blobs/USR_TARGET_OS.apb","w")
             blob.write(str(USR_TARGET_OS))
             blob.close()
             currentStage = 3
@@ -555,33 +623,36 @@ def autopilot():
       global customValue
       global currentStage
 
+      # remove stale blobs
+      os.system("mv -f ./blobs/*.apb ./blobs/stale/")
+
       clear()
 
-      print("\n"+color.BOLD+"Name your config file"+color.END)
-      print("Step 1")
-      print("\nThis is simply the name of your config file. \nYou can name it whatever you want. It's used to boot your\nVM and will be the basis of this AutoPilot configuration."+color.END)
+      print("\n   "+color.BOLD+"Name your config file"+color.END)
+      print("   Step 1")
+      print("\n   This is simply the name of your config file. \n   You can name it whatever you want. It's used to boot your\n   VM and will be the basis of this AutoPilot configuration."+color.END)
       if customValue == 1:
-         print("\n"+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+"boot.sh"+color.END)
-         print(color.BOLD+color.PURPLE+"\nFORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<filename>"+color.YELLOW+".sh"+color.END+"\nEnter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n")
+         print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+"boot.sh"+color.END)
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<filename>"+color.YELLOW+".sh"+color.END+"\n   Enter a custom value. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n")
          customInput = str(input(color.BOLD+"Value> "+color.END))
          USR_CFG = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = 2
          customValue = 0
-         blob = open("./blobs/USR_CFG","w")
+         blob = open("./blobs/USR_CFG.apb","w")
          blob.write(USR_CFG)
          blob.close()
          stage2()
 
       else:
-         print("\n"+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+"boot.sh"+color.END)
-         print(color.BOLD+"\n   1. Use default value")
-         print(color.END+"   2. Custom value...")
-         print(color.END+"   Q. Exit\n")
+         print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+"boot.sh"+color.END)
+         print(color.BOLD+"\n      1. Use default value")
+         print(color.END+"      2. Custom value...")
+         print(color.END+"      Q. Exit\n")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
          if stageSelect == "1":
             USR_CFG = "boot.sh"
-            blob = open("./blobs/USR_CFG","w")
+            blob = open("./blobs/USR_CFG.apb","w")
             blob.write(USR_CFG)
             blob.close()
             currentStage = 2

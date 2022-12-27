@@ -1,3 +1,4 @@
 gpu-check1.py
 BaseSystem.img
-blobs/
+.blobs/*
+.blobs/stale/*
