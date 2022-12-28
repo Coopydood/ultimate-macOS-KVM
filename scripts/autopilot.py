@@ -1007,7 +1007,7 @@ def autopilot():
          integrityImg = 1
          refreshStatusGUI()
          time.sleep(2)
-         os.system("python scripts/dlosx.py")
+         os.system("./scripts/dlosx.py")
          #subprocess.Popen(cmd).wait()
          if os.path.exists("./BaseSystem.img"):
             integrityImg = 1
