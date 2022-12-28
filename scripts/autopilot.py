@@ -732,6 +732,27 @@ def autopilot():
          PROC_FETCHDL = -1
          PROC_LOCALCOPY = 0
 
+      def throwError():
+         clear()
+         print("\n   "+color.BOLD+color.RED+"✖ FAILED"+color.END)
+         print("   Unable to continue")
+         print("\n   Sorry, something happened and AutoPilot cannot recover. \n   You may try again, or start over from the beginning.\n   If you think this was a bug, please report it on GitHub."+color.END)
+         print("\n   "+color.BOLD+color.RED+"ERROR:",color.END+color.BOLD,errorMessage,color.END)
+         print(color.BOLD+"\n      1. Try again")
+         print(color.END+"      2. Start over")
+         print(color.END+"      Q. Cancel and Quit\n")
+         stageSelectE = str(input(color.BOLD+"Select> "+color.END))
+         clear()
+         if stageSelectE == "1":
+            time.sleep(2)
+            handoff()
+
+         elif stageSelectE == "2":
+            os.system("./scripts/autopilot.py")
+
+         elif stageSelectE == "q" or stageSelectE == "Q":
+            exit
+
       def refreshStatusGUI():
          clear()
          print("   "+"\n   "+color.BOLD+"Status"+color.END)
@@ -818,7 +839,7 @@ def autopilot():
          global USR_TARGET_OS
          PROC_PREPARE = 1
          global errorMessage
-         errorMessage = "Couldn't prepare files. (Insufficient permissions?)"
+         errorMessage = "Couldn't prepare files. You may have insufficient\n           permissions or damaged files."
          refreshStatusGUI()
          os.system("cp resources/baseConfig resources/config.sh")
          time.sleep(1)
@@ -845,13 +866,13 @@ def autopilot():
             integrityConfig = integrityConfig + 0
          else:
             integrityConfig = integrityConfig - 1
-            throwFail()
+            throwError()
 
          if os.path.exists("boot/OpenCore.qcow2"):
             integrityConfig = integrityConfig + 0
          else:
             integrityConfig = integrityConfig - 1
-            throwFail()
+            throwError()
 
          PROC_PREPARE = 2
          refreshStatusGUI()
@@ -860,7 +881,7 @@ def autopilot():
          global PROC_CHECKBLOBS
          PROC_CHECKBLOBS = 1
          global errorMessage
-         errorMessage = "The integrity of the wizard preference files could not be verified."
+         errorMessage = "The integrity of the wizard preference files\n           could not be verified."
          integrity = 1
          refreshStatusGUI()
          time.sleep(4)
@@ -910,7 +931,7 @@ def autopilot():
             PROC_CHECKBLOBS = 2
             refreshStatusGUI()
          else:
-            throwFail()
+            throwError()
 
       def apcGenConfig():  # GENERATE CONFIG
          global PROC_GENCONFIG
@@ -919,7 +940,7 @@ def autopilot():
          global customValue
          global customInput
          global errorMessage
-         errorMessage = "The config file could not be written to."
+         errorMessage = "The config file could not be written to.\n           You may have insufficient permissions."
          integrityCfg = 1
 
          def existingWarning():
@@ -927,7 +948,7 @@ def autopilot():
             global customValue
             global customInput
             clear()
-            print("\n   "+color.BOLD+color.YELLOW+"PROBLEM DETECTED"+color.END)
+            print("\n   "+color.BOLD+color.YELLOW+"⚠ PROBLEM DETECTED"+color.END)
             print("   Resolve the issue to continue")
             print("\n   This is not an error and can be resolved with your input. \n   You must select an option to continue. Once selected,\n   the process can continue from where it was left."+color.END)
             if customValue == 1:
@@ -963,6 +984,9 @@ def autopilot():
 
                elif stageSelect == "q" or stageSelect == "Q":
                   exit
+                  exit
+                  exit
+
 
          refreshStatusGUI()
          time.sleep(4)
@@ -994,7 +1018,7 @@ def autopilot():
             integrityCfg + 0
          else:
             integrityCfg - 1
-            throwFail()
+            throwError()
 
          time.sleep(2)
          PROC_GENCONFIG = 2
@@ -1003,7 +1027,7 @@ def autopilot():
       def apcFetchDL():  # FETCH RECOVERY ONLINE
          global PROC_FETCHDL
          PROC_FETCHDL = 1
-         errorMessage = "The download script could not be executed."
+         errorMessage = "The download script could not be executed.\n           You may have insufficient permissions or damaged files."
          integrityImg = 1
          refreshStatusGUI()
          time.sleep(2)
@@ -1023,7 +1047,7 @@ def autopilot():
          global PROC_LOCALCOPY_CVTN
          PROC_LOCALCOPY = 1
          PROC_LOCALCOPY_CVTN = 0
-         errorMessage = "The local recovery image could not be found, or it cannot be accessed."
+         errorMessage = "The local recovery image could not be found,\n           or it cannot be accessed."
          integrityImg = 1
          refreshStatusGUI()
          time.sleep(2)
@@ -1055,13 +1079,13 @@ def autopilot():
          global PROC_GENHDD
          global USR_HDD_SIZE
          PROC_GENHDD = 1
-         errorMessage = "The virtual hard disk file could not be created."
+         errorMessage = "The virtual hard disk file could not be created.\n           You may have insufficient permissions."
          integrityImg = 1
          refreshStatusGUI()
          time.sleep(2)
          def existingWarning1():
             clear()
-            print("\n   "+color.BOLD+color.YELLOW+"PROBLEM DETECTED"+color.END)
+            print("\n   "+color.BOLD+color.YELLOW+"⚠ PROBLEM DETECTED"+color.END)
             print("   Resolve the issue to continue")
             print("\n   This is not an error and can be resolved with your input. \n   You must select an option to continue. Once selected,\n   the process can continue from where it was left."+color.END)
             print("\n   "+color.BOLD+color.YELLOW+"PROBLEM:",color.END+"A virtual hard disk with the name \"HDD.qcow2\" already exists."+color.END)
@@ -1094,7 +1118,7 @@ def autopilot():
          global PROC_APPLYPREFS
          global USR_CFG
          PROC_APPLYPREFS = 1
-         errorMessage = "Could not apply preferences to generated files."
+         errorMessage = "Could not apply preferences to generated files.\n           You may have insufficient permissions."
          integrityImg = 1
          refreshStatusGUI()
          time.sleep(2)
@@ -1123,7 +1147,7 @@ def autopilot():
             integrityImg + 0
          else:
             integrityImg - 1
-            throwFail()
+            throwError()
 
          os.system("mv resources/config.sh ./"+USR_CFG)
          
@@ -1141,7 +1165,7 @@ def autopilot():
          global PROC_FIXPERMS
          global USR_CFG
          PROC_FIXPERMS = 1
-         errorMessage = "Could not set permissions on generated files."
+         errorMessage = "Could not set permissions on generated files.\n           You can attempt to do this manually."
          integrityImg = 1
          refreshStatusGUI()
          time.sleep(2)
@@ -1199,7 +1223,7 @@ def autopilot():
       exTime = round(stopTime - startTime)
 
       clear()
-      print("   "+"\n   "+color.BOLD+color.GREEN+"AUTOPILOT COMPLETE!"+color.END)
+      print("   "+"\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END)
       print("   "+"All processes finished successfully")
       print("   "+"\n   Your customised boot file is now ready.\n   You can now start using macOS."+color.END)
       print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
@@ -1218,6 +1242,7 @@ def autopilot():
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
    
       if stageSelect == "1":
+         clear()
          os.system("./"+USR_CFG)
 
       elif stageSelect == "2":
