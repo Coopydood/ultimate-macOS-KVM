@@ -4,3 +4,7 @@ blobs/*
 blobs/stale/*
 resources/config.sh
 baseConfig
+scripts/__pycache__/dlosx.cpython-310.pyc
+HDD.qcow2
+boot.sh
+scripts/BaseSystem.dmg

@@ -21,6 +21,8 @@ import re
 import json
 import sys
 import argparse
+from datetime import datetime
+import timeit
 
 #parser = argparse.ArgumentParser("gpu-check")
 #parser.add_argument("-a", "--auto", dest="auto", help="Detect GPU(s) automatically",action="store_true")
@@ -103,9 +105,7 @@ def autopilot():
    global customValue
    customValue = 0
 
-   def generate():
-      print(color.BOLD+color.PURPLE+"Not implemented yet! I'm working on it- I swear!\n"+color.END)
-
+   
    def stage11():
       global USR_CPU_SOCKS
       global USR_CPU_CORES
@@ -122,6 +122,7 @@ def autopilot():
       global USR_HDD_SIZE
       global USR_BOOT_FILE
       global USR_TARGET_OS_F
+      global USR_CPU_TOTAL_F
 
       USR_ALLOCATED_RAM_F = USR_ALLOCATED_RAM.replace("G","")
       USR_HDD_SIZE_F = USR_HDD_SIZE.replace("G","")
@@ -680,6 +681,7 @@ def autopilot():
    global PROC_APPLYPREFS
    global PROC_FIXPERMS
    global PROC_CLEANUP
+   global startTime
 
    PROC_PREPARE = 0
    PROC_CHECKBLOBS = 0
@@ -702,11 +704,16 @@ def autopilot():
       global PROC_APPLYPREFS
       global PROC_FIXPERMS
       global PROC_CLEANUP
+      global PROC_LOCALCOPY_CVTN 
+      global startTime
+
+      startTime = 0
 
       PROC_PREPARE = 0
       PROC_CHECKBLOBS = 0
       PROC_GENCONFIG = 0
       PROC_LOCALCOPY = -1
+      PROC_LOCALCOPY_CVTN = 0
       PROC_FETCHDL = -1
       PROC_GENHDD = 0
       PROC_APPLYPREFS = 0
@@ -714,8 +721,9 @@ def autopilot():
       PROC_CLEANUP = 0
 
       clear()
-      time.sleep(3)
+      time.sleep(2)
 
+      startTime = timeit.default_timer()
 
       if USR_BOOT_FILE == "-1":
          PROC_FETCHDL = 0
@@ -754,10 +762,16 @@ def autopilot():
 
          if PROC_LOCALCOPY == 0:
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
-         elif PROC_LOCALCOPY == 1:
+         elif PROC_LOCALCOPY == 1 and PROC_LOCALCOPY_CVTN == 0:
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Copying recovery image into place"+color.END)
+         elif PROC_LOCALCOPY == 1 and PROC_LOCALCOPY_CVTN == 1:
+            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
          elif PROC_LOCALCOPY == 2:
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
+
+         if PROC_LOCALCOPY_CVTN == 1:
+            print("      "+color.BOLD+"      ↳ "+"Converting image format"+color.END)
+         
 
          if PROC_FETCHDL == 0:
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Downloading recovery image"+color.END)
@@ -797,7 +811,6 @@ def autopilot():
          print("   "+color.BOLD+"──────────────────────────────────────────────────────────────\n\n\n",color.END)
 
       refreshStatusGUI()
-
       time.sleep(3)
 
       def apcPrepare():    # PREPARE
@@ -807,7 +820,7 @@ def autopilot():
          errorMessage = "Couldn't prepare files. (Insufficient permissions?)"
          refreshStatusGUI()
          os.system("cp resources/baseConfig resources/config.sh")
-         time.sleep(2)
+         time.sleep(1)
          integrityConfig = 1
          if os.path.exists("resources/config.sh"):
             integrityConfig = integrityConfig + 0
@@ -876,16 +889,67 @@ def autopilot():
       def apcGenConfig():  # GENERATE CONFIG
          global PROC_GENCONFIG
          PROC_GENCONFIG = 1
+         global USR_CFG
+         global customValue
+         global customInput
          global errorMessage
          errorMessage = "The config file could not be written to."
          integrityCfg = 1
+
+         def existingWarning():
+            global USR_CFG
+            global customValue
+            global customInput
+            clear()
+            print("\n   "+color.BOLD+color.YELLOW+"PROBLEM DETECTED"+color.END)
+            print("   Resolve the issue to continue")
+            print("\n   This is not an error and can be resolved with your input. \n   You must select an option to continue. Once selected,\n   the process can continue from where it was left."+color.END)
+            if customValue == 1:
+               print("\n   "+color.BOLD+color.YELLOW+"PROBLEM:",color.END+"A boot script with the name you selected exists."+color.END)
+               print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<filename>"+color.YELLOW+".sh"+color.END+"\n   Enter a new file name. You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n")
+               customInput = str(input(color.BOLD+"Value> "+color.END))
+               USR_CFG = customInput               #+".sh" #<--- change required prefix/suffix
+               currentStage = 2
+               customValue = 0
+               blob = open("./blobs/USR_CFG.apb","w")
+               blob.write(USR_CFG)
+               blob.close()
+               apcGenConfig()
+
+            else:
+               print("\n   "+color.BOLD+color.YELLOW+"PROBLEM:",color.END+"A boot script with the name you selected exists."+color.END)
+               print(color.BOLD+"\n      1. Automatically rename existing file")
+               print(color.END+"      2. Choose a new name")
+               print(color.END+"      3. Overwrite")
+               print(color.END+"      Q. Cancel and Quit\n")
+               stageSelect = str(input(color.BOLD+"Select> "+color.END))
+            
+               if stageSelect == "1":
+                  os.system("mv ./"+USR_CFG+" ./"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"_"+USR_CFG)
+                  apcGenConfig()
+
+               elif stageSelect == "2":
+                  customValue = 1
+                  existingWarning()
+
+               elif stageSelect == "3":
+                  refreshStatusGUI() 
+
+               elif stageSelect == "q" or stageSelect == "Q":
+                  exit
+
          refreshStatusGUI()
          time.sleep(4)
+         if os.path.exists("./"+USR_CFG):
+            customInput = 0
+            customValue = 0
+            existingWarning()
+
          with open("resources/config.sh","r") as file:
             configData = file.read()
          configData = configData.replace("$USR_CPU_SOCKS",str(USR_CPU_SOCKS))
          configData = configData.replace("$USR_CPU_CORES",str(USR_CPU_CORES))
-         configData = configData.replace("$USR_CPU_THREADS",str(USR_CPU_THREADS))
+         configData = configData.replace("$USR_CPU_THREADS",str(USR_CPU_TOTAL_F))
          configData = configData.replace("$USR_CPU_MODEL",str(USR_CPU_MODEL))
          configData = configData.replace("$USR_CPU_FEATURE_ARGS",str(USR_CPU_FEATURE_ARGS))
          configData = configData.replace("$USR_ALLOCATED_RAM",str(USR_ALLOCATED_RAM))
@@ -910,9 +974,232 @@ def autopilot():
          PROC_GENCONFIG = 2
          refreshStatusGUI()
 
+      def apcFetchDL():  # FETCH RECOVERY ONLINE
+         global PROC_FETCHDL
+         PROC_FETCHDL = 1
+         errorMessage = "The download script could not be executed."
+         integrityImg = 1
+         refreshStatusGUI()
+         time.sleep(2)
+         os.system("python scripts/dlosx.py")
+         #subprocess.Popen(cmd).wait()
+         if os.path.exists("./BaseSystem.img"):
+            integrityImg = 1
+         else:
+            integrityImg = 0
+            throwError()
+         PROC_FETCHDL = 2
+         refreshStatusGUI()
+         time.sleep(3)
+
+      def apcLocalCopy():  # FETCH RECOVERY LOCALLY
+         global PROC_LOCALCOPY
+         global PROC_LOCALCOPY_CVTN
+         PROC_LOCALCOPY = 1
+         PROC_LOCALCOPY_CVTN = 0
+         errorMessage = "The local recovery image could not be found, or it cannot be accessed."
+         integrityImg = 1
+         refreshStatusGUI()
+         time.sleep(2)
+         os.system("cp "+USR_BOOT_FILE+" ./")
+         os.system("mv ./*.dmg BaseSystem.dmg")
+         os.system("mv ./*.img BaseSystem.img")
+
+         if os.path.exists("./BaseSystem.dmg"):
+            PROC_LOCALCOPY_CVTN = 1
+            refreshStatusGUI()
+            time.sleep(1)
+            os.system("resources/dmg2img ./BaseSystem.dmg")
+            os.system("rm ./BaseSystem.dmg")
+            time.sleep(1)
+            PROC_LOCALCOPY_CVTN = 0
+            refreshStatusGUI()
+            time.sleep(1)
+
+         if os.path.exists("./BaseSystem.img"):
+            integrityImg = 1
+         else:
+            integrityImg = 0
+            throwError()
+         PROC_LOCALCOPY = 2
+         refreshStatusGUI()
+         time.sleep(3)
+
+      def apcGenHDD():  # CREATE VIRTUAL HARD DISK FILE
+         global PROC_GENHDD
+         global USR_HDD_SIZE
+         PROC_GENHDD = 1
+         errorMessage = "The virtual hard disk file could not be created."
+         integrityImg = 1
+         refreshStatusGUI()
+         time.sleep(2)
+         def existingWarning1():
+            clear()
+            print("\n   "+color.BOLD+color.YELLOW+"PROBLEM DETECTED"+color.END)
+            print("   Resolve the issue to continue")
+            print("\n   This is not an error and can be resolved with your input. \n   You must select an option to continue. Once selected,\n   the process can continue from where it was left."+color.END)
+            print("\n   "+color.BOLD+color.YELLOW+"PROBLEM:",color.END+"A virtual hard disk with the name \"HDD.qcow2\" already exists."+color.END)
+            print(color.BOLD+"\n      1. Automatically rename existing file")
+            print(color.END+"      2. Overwrite")
+            print(color.END+"      Q. Cancel and Quit\n")
+            stageSelect = str(input(color.BOLD+"Select> "+color.END))
+         
+            if stageSelect == "1":
+               os.system("mv ./HDD.qcow2"+" ./"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"_HDD.qcow2")
+               apcGenHDD()
+
+            elif stageSelect == "2":
+               refreshStatusGUI() 
+
+            elif stageSelect == "q" or stageSelect == "Q":
+               exit
+
+         if os.path.exists("./HDD.qcow2"):
+            existingWarning1()
+         else:
+            os.system("qemu-img create -f qcow2 HDD.qcow2 "+USR_HDD_SIZE)
+            time.sleep(3)
+         
+         PROC_GENHDD = 2
+         refreshStatusGUI()
+         time.sleep(2)
+
+      def apcApplyPrefs():  # APPLY USER PREFERENCES
+         global PROC_APPLYPREFS
+         global USR_CFG
+         PROC_APPLYPREFS = 1
+         errorMessage = "Could not apply preferences to generated files."
+         integrityImg = 1
+         refreshStatusGUI()
+         time.sleep(2)
+         
+         if os.path.exists("resources/config.sh"):
+            integrityImg = 1
+         else:
+            integrityImg = 0
+            throwError()
+         
+
+         with open("resources/config.sh","r") as file:
+            configData = file.read()
+         configData = configData.replace("baseConfig",str(USR_NAME))
+         configData = configData.replace("# THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!","# APC-RUN"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"\n\n# THIS FILE WAS GENERATED USING AUTOPILOT.")
+         configData = configData.replace("# It is intended to be used by the automatic setup wizard.","")
+         configData = configData.replace("# To use the wizard, run the included \"setup.py\" file;","\n# To boot this script, run the following command:\n# ./"+str(USR_CFG))
+         configData = configData.replace("# ./setup.py","")
+
+         with open ("resources/config.sh","w") as file:
+            file.write(configData)
+
+         with open("resources/config.sh","r") as file:
+            configDataTest = file.read()
+         if "# THIS FILE WAS GENERATED USING AUTOPILOT." in configDataTest:
+            integrityImg + 0
+         else:
+            integrityImg - 1
+            throwFail()
+
+         os.system("mv resources/config.sh ./"+USR_CFG)
+         
+         if os.path.exists("./"+USR_CFG):
+            integrityImg = 1
+         else:
+            integrityImg = 0
+            throwError()
+         
+         PROC_APPLYPREFS = 2
+         refreshStatusGUI()
+         time.sleep(2)
+      
+      def apcFixPerms():  # FIX PERMISSIONS
+         global PROC_FIXPERMS
+         global USR_CFG
+         PROC_FIXPERMS = 1
+         errorMessage = "Could not set permissions on generated files."
+         integrityImg = 1
+         refreshStatusGUI()
+         time.sleep(2)
+
+         os.system("chmod +x ./"+USR_CFG)
+         os.system("chmod +rw ./BaseSystem.img")
+
+         PROC_FIXPERMS = 2
+         refreshStatusGUI()
+         time.sleep(2)
+         
+      def apcCleanUp():  # CLEAN BLOBS AND TEMP
+         global PROC_CLEANUP
+         global USR_CFG
+         PROC_CLEANUP = 1
+         refreshStatusGUI()
+         time.sleep(1)
+
+         os.system("mv blobs/*.apb /blobs/stale/")
+
+         PROC_CLEANUP = 2
+         refreshStatusGUI()
+         time.sleep(1)
+
       apcPrepare()
       apcBlobCheck()
       apcGenConfig()
+      if PROC_FETCHDL == 0:
+         apcFetchDL()
+      elif PROC_LOCALCOPY == 0:
+         apcLocalCopy()
+      apcGenHDD()
+      apcApplyPrefs()
+      apcFixPerms()
+      apcCleanUp()
+      stopTime = timeit.default_timer()
+      time.sleep(3)
+
+      global USR_CPU_SOCKS
+      global USR_CPU_CORES
+      global USR_CPU_THREADS
+      global USR_CPU_MODEL
+      global USR_CPU_FEATURE_ARGS
+      global USR_ALLOCATED_RAM
+      global USR_REPO_PATH
+      global USR_NETWORK_DEVICE
+      global USR_ID
+      global USR_NAME
+      global USR_CFG
+      global USR_TARGET_OS
+      global USR_HDD_SIZE
+      global USR_TARGET_OS_F
+      global USR_CPU_TOTAL_F
+
+      exTime = round(stopTime - startTime)
+
+      clear()
+      print("   "+"\n   "+color.BOLD+color.GREEN+"AUTOPILOT COMPLETE!"+color.END)
+      print("   "+"All processes finished successfully")
+      print("   "+"\n   Your customised boot file is now ready.\n   You can now start using macOS."+color.END)
+      print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+      print("   "+color.BOLD+color.PURPLE+"FILE     ",color.END+color.END+USR_CFG+color.END)
+      print("   "+color.BOLD+color.RED+"COMMAND  ",color.END+color.END+"./"+USR_CFG,color.END)
+      print("   "+color.BOLD+color.CYAN+"TIME    ",color.END+color.END,str(exTime),"seconds",color.END+"")
+      print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+      print("   "+color.BOLD+"\n   Created by Coopydood"+color.END)
+      print("   "+"Helpful? Consider supporting the project on GitHub! <3"+color.END)
+
+      print(color.BOLD+"\n      1. Boot")
+      print(color.END+"         Run your",USR_CFG,"file now.\n")
+      
+      print("    "+color.END+"  2. Main menu")
+      print("    "+color.END+"  Q. Exit\n")
+      stageSelect = str(input(color.BOLD+"Select> "+color.END))
+   
+      if stageSelect == "1":
+         os.system("./"+USR_CFG)
+
+      elif stageSelect == "2":
+         os.system("python ./setup.py")
+         
+      elif stageSelect == "q" or stageSelect == "Q":
+         exit
+
 
    stage1()
 
