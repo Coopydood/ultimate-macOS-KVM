@@ -1133,7 +1133,7 @@ def autopilot():
          with open("resources/config.sh","r") as file:
             configData = file.read()
          configData = configData.replace("baseConfig",str(USR_NAME))
-         configData = configData.replace("# THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!","# APC-RUN"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"\n\n# THIS FILE WAS GENERATED USING AUTOPILOT.")
+         configData = configData.replace("# THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!","# APC-RUN_"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"\n\n# THIS FILE WAS GENERATED USING AUTOPILOT.")
          configData = configData.replace("# It is intended to be used by the automatic setup wizard.","")
          configData = configData.replace("# To use the wizard, run the included \"setup.py\" file;","\n# To boot this script, run the following command:\n# ./"+str(USR_CFG))
          configData = configData.replace("# ./setup.py","")
