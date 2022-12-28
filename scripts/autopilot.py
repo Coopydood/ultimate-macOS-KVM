@@ -815,18 +815,44 @@ def autopilot():
 
       def apcPrepare():    # PREPARE
          global PROC_PREPARE
+         global USR_TARGET_OS
          PROC_PREPARE = 1
          global errorMessage
          errorMessage = "Couldn't prepare files. (Insufficient permissions?)"
          refreshStatusGUI()
          os.system("cp resources/baseConfig resources/config.sh")
          time.sleep(1)
+         
+         if os.path.exists("boot/OpenCore.qcow2"):
+            backupOCPath = str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))
+            os.system("mkdir boot/"+backupOCPath)
+            os.system("mv boot/*.qcow2 boot/"+backupOCPath+"/")
+            os.system("mv boot/*.plist boot/"+backupOCPath+"/")
+            os.system("mv boot/EFI boot/"+backupOCPath+"/EFI")
+            #os.system("rm -rf boot/EFI")
+            time.sleep(2)
+         if USR_TARGET_OS >= 1014:
+            os.system("cp resources/oc_store/compat_new/OpenCore.qcow2 boot/OpenCore.qcow2")
+            os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
+            os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
+         else:
+            os.system("cp resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
+            os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
+            os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
+         
          integrityConfig = 1
          if os.path.exists("resources/config.sh"):
             integrityConfig = integrityConfig + 0
          else:
             integrityConfig = integrityConfig - 1
             throwFail()
+
+         if os.path.exists("boot/OpenCore.qcow2"):
+            integrityConfig = integrityConfig + 0
+         else:
+            integrityConfig = integrityConfig - 1
+            throwFail()
+
          PROC_PREPARE = 2
          refreshStatusGUI()
 

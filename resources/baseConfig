@@ -56,7 +56,7 @@ args=(
 -smbios type=2
 -device ich9-intel-hda -device hda-duplex
 -device ich9-ahci,id=sata
--drive id=OpenCore,if=none,snapshot=on,format=qcow2,file="$REPO_PATH/OpenCore/OpenCore.qcow2"
+-drive id=OpenCore,if=none,snapshot=on,format=qcow2,file="$REPO_PATH/boot/OpenCore.qcow2"
 -drive id=BaseSystem,if=none,file="$REPO_PATH/BaseSystem.img",format=raw
 -drive id=HDD,if=none,file="$REPO_PATH/HDD.qcow2",format=qcow2
 -device ide-hd,bus=sata.2,drive=OpenCore
