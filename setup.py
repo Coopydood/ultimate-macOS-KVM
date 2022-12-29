@@ -58,7 +58,7 @@ def startup():
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print("   Select an option to continue.")
     print(color.BOLD+"\n      1. AutoPilot config wizard (Experimental)")
-    print(color.END+"         Quickly and easily set up a macOS VM based on your personal preferences\n")
+    print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
     print(color.END+"      2. Download and convert macOS image")
     print(color.END+"      3. Check GPU compatibility")
     print(color.END+"      4. Check IOMMU grouping")
