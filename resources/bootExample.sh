@@ -5,7 +5,7 @@
 
 ############################################################
 #	YOU CAN USE THIS FILE TO MANUALLY CREATE A BOOT SCRIPT #
-#	INSTEAD OF USING AUTOPILOT.							   #
+#	INSTEAD OF USING AUTOPILOT.                            #
 ############################################################
 
 #

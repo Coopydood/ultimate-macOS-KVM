@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2054
 
-# THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!
-# It is intended to be used by the automatic setup wizard.
-# To use the wizard, run the included "setup.py" file;
-
-# ./setup.py
+############################################################
+#    THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!    #
+#                                                          #
+# It is intended to be used by the automatic setup wizard. #
+#   To use the wizard, run the included "setup.py" file;   #
+#                                                          #
+#                      $ ./setup.py                        #
+############################################################
 
 #
 #	baseConfig

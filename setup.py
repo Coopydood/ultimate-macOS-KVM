@@ -64,10 +64,7 @@ def startup():
     print(color.END+"      4. Check IOMMU grouping")
     print(color.END+"      5. Get and display vfio-pci IDs")
     print(color.END+"      6. Verify devices bound to vfio-pci")
-    print(color.END+"      7. Add GPU passthrough to config")
-    print(color.END+"      8. Create a backup of config files")
-    print(color.END+"      9. Import config file into virt-manager")
-    print(color.END+"      R. Reset OpenCore image")
+    print(color.END+"      E. Extras...")
     print(color.RED+"      X. Download and restore all (DANGEROUS!)")
     print(color.END+"      Q. Exit\n")
     detectChoice = int(input(color.BOLD+"Select> "+color.END))
@@ -97,3 +94,7 @@ elif detectChoice == 5:
     os.system('./scripts/vfio-ids.py')
 elif detectChoice == 6:
     os.system('./scripts/vfio-pci.py')
+elif detectChoice == "e" or detectChoice == "E":
+    os.system('./scripts/extras.py')
+elif detectChoice == "q" or detectChoice == "Q":
+    exit

@@ -2,6 +2,7 @@
 # pylint: disable=C0301,C0116,C0103,R0903
 
 # AUTOPILOT BY COOPYDOOD
+# (c) Copyright Coopydood 2022-2023
 
 """
 This script was created by Coopydood as part of the ultimate-macOS-KVM project.
@@ -1133,17 +1134,21 @@ def autopilot():
          with open("resources/config.sh","r") as file:
             configData = file.read()
          configData = configData.replace("baseConfig",str(USR_NAME))
-         configData = configData.replace("# THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!","# APC-RUN_"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"\n\n# THIS FILE WAS GENERATED USING AUTOPILOT.")
-         configData = configData.replace("# It is intended to be used by the automatic setup wizard.","")
-         configData = configData.replace("# To use the wizard, run the included \"setup.py\" file;","\n# To boot this script, run the following command:\n# ./"+str(USR_CFG))
-         configData = configData.replace("# ./setup.py","")
+         configData = configData.replace("#    THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!    #","#   APC-RUN_"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"\n#\n#   THIS FILE WAS GENERATED USING AUTOPILOT.")
+         configData = configData.replace("#                                                          #\n","")
+         configData = configData.replace("# It is intended to be used by the automatic setup wizard. #\n","")
+         configData = configData.replace("#   To use the wizard, run the included \"setup.py\" file;   #\n","")
+         configData = configData.replace("#                                                          #","#")
+         configData = configData.replace("#                      $ ./setup.py                        #","#\n#   To boot this script, run the following command:\n#   $ ./"+str(USR_CFG))
+         configData = configData.replace("#   ./setup.py","")
+         configData = configData.replace("############################################################","#")
 
          with open ("resources/config.sh","w") as file:
             file.write(configData)
 
          with open("resources/config.sh","r") as file:
             configDataTest = file.read()
-         if "# THIS FILE WAS GENERATED USING AUTOPILOT." in configDataTest:
+         if "#   THIS FILE WAS GENERATED USING AUTOPILOT." in configDataTest:
             integrityImg + 0
          else:
             integrityImg - 1
@@ -1226,11 +1231,11 @@ def autopilot():
       print("   "+"\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END)
       print("   "+"All processes finished successfully")
       print("   "+"\n   Your customised boot file is now ready.\n   You can now start using macOS."+color.END)
-      print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+      print("   "+"\n   "+color.BOLD+"────────────────────────────────────────────",color.END)
       print("   "+color.BOLD+color.PURPLE+"FILE     ",color.END+color.END+USR_CFG+color.END)
-      print("   "+color.BOLD+color.RED+"COMMAND  ",color.END+color.END+"./"+USR_CFG,color.END)
+      print("   "+color.BOLD+color.RED+"COMMAND  ",color.END+color.END+"$ ./"+USR_CFG,color.END)
       print("   "+color.BOLD+color.CYAN+"TIME    ",color.END+color.END,str(exTime),"seconds",color.END+"")
-      print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+      print("   "+color.BOLD+"───────────────────────────────────────────",color.END)
       print("   "+color.BOLD+"\n   Created by Coopydood"+color.END)
       print("   "+"Helpful? Consider supporting the project on GitHub! <3"+color.END)
 

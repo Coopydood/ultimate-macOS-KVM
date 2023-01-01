@@ -9,3 +9,4 @@ HDD.qcow2
 boot.sh
 scripts/BaseSystem.dmg
 boot/*
+.vscode
