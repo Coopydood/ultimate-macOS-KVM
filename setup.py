@@ -65,7 +65,6 @@ def startup():
     print(color.END+"      5. Get and display vfio-pci IDs")
     print(color.END+"      6. Verify devices bound to vfio-pci")
     print(color.END+"      E. Extras...")
-    print(color.RED+"      X. Download and restore all (DANGEROUS!)")
     print(color.END+"      Q. Exit\n")
     detectChoice = int(input(color.BOLD+"Select> "+color.END))
 

@@ -52,7 +52,7 @@ class color:
 
 def startup():
     global detectChoice
-    print("\n\nWelcome to"+color.BOLD+color.YELLOW,"gpu-check v0.1"+color.END,"(BETA)")
+    print("\n\nWelcome to"+color.BOLD+color.YELLOW,"GPU Compatibility Checker"+color.END,"")
     print("Created by",color.BOLD+"Coopydood\n"+color.END)
     print("\nThe purpose of this script is to prepare you for GPU passthrough by \nchecking your exact system's GPU model against a macOS compatibility \nlist created and provided by"+color.BOLD,"Dortania.\n"+color.END)
     print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
