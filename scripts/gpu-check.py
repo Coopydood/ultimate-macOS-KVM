@@ -289,7 +289,7 @@ def manualRun():
     if gpuCount == 1:
         print("I"+color.BOLD+color.GREEN,"successfully"+color.END,"found a match for "+color.BOLD+"\""+model+"\""+color.END+" in the database:\n")
     else:
-        print("I"+color.BOLD+color.RED,"failed"+color.END,"to find a match for "+color.BOLD+"\""+model+"\""+color.END+" in the database.\nPlease check your"+color.BOLD,"spelling"+color.END,"and ensure you're not imagining a GPU's existence.\n")
+        print("I"+color.BOLD+color.RED,"failed"+color.END,"to find a match for "+color.BOLD+"\""+model+"\""+color.END+" in the database.\nPlease check your"+color.BOLD,"spealing"+color.END,"and ensure you're not imagining a GPU's existence.\n")
         exit
 
     for gpu in gpus:
