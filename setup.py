@@ -49,7 +49,7 @@ class color:
    UNDERLINE = '\033[4m'
    END = '\033[0m'
 
-os.system('./scripts/vmcheck.py')
+
 
 def startup():
     global detectChoice
@@ -78,6 +78,7 @@ def clear(): print("\n" * 150)
 os.system("chmod +x scripts/*.py")
 os.system("chmod +x scripts/*.sh")
 os.system("chmod +x resources/dmg2img")
+os.system('./scripts/vmcheck.py')
 
 startup()
 clear()

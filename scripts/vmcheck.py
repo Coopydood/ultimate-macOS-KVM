@@ -32,13 +32,13 @@ class color:
    UNDERLINE = '\033[4m'
    END = '\033[0m'
 
-output_stream = os.popen('lspci |  grep "VMWare"')
+output_stream = os.popen('lspci')
 vmc1 = output_stream.read().splitlines()
 
-output_stream1 = os.popen('lspci |  grep "VirtualBox\|Oracle"')
+output_stream1 = os.popen('lspci')
 vmc2 = output_stream1.read().splitlines()
 
-output_stream2 = os.popen('lspci |  grep "Redhat\|RedHat"')
+output_stream2 = os.popen('lspci')
 vmc3 = output_stream2.read().splitlines()
 
 detected = 0
