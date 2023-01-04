@@ -25,10 +25,8 @@ import argparse
 
 sys.path.insert(0, 'scripts')
 
-parser = argparse.ArgumentParser("gpu-check")
-parser.add_argument("-a", "--auto", dest="auto", help="Detect GPU(s) automatically",action="store_true")
-parser.add_argument("-m", "--manual", dest="manual", help="Enter GPU model manually", metavar="<model>", type=str)
-parser.add_argument("-f", "--force", dest="forceModel", metavar="<model>", help="Override auto-detected GPU with a custom model. Pretty useless, mostly for debugging.", type=str)
+parser = argparse.ArgumentParser("setup")
+parser.add_argument("-svmc", "--skip-vm-check", dest="svmc", help="Skip the arbitrary VM check",action="store_true")
 
 args = parser.parse_args()
 
@@ -68,33 +66,48 @@ def startup():
     print(color.END+"      6. Verify devices bound to vfio-pci")
     print(color.END+"      E. Extras...")
     print(color.END+"      Q. Exit\n")
-    detectChoice = int(input(color.BOLD+"Select> "+color.END))
+    detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
        
 
 
 def clear(): print("\n" * 150)
 
+global isVM
+global skipVMCheck
+isVM = False
+
 os.system("chmod +x scripts/*.py")
 os.system("chmod +x scripts/*.sh")
 os.system("chmod +x resources/dmg2img")
-os.system('./scripts/vmcheck.py')
 
-startup()
-clear()
+if args.svmc == True:
+    clear()
+    startup()
+else:
+    os.system('./scripts/vmcheck.py')
+    clear()
+    startup()
 
-if detectChoice == 1:
+
+if isVM == True:
+    exit
+
+
+
+
+if detectChoice == "1":
     os.system('./scripts/autopilot.py')
-elif detectChoice == 2:
+elif detectChoice == "2":
     os.system('./scripts/dlosx.py')
 
-elif detectChoice == 3:
+elif detectChoice == "3":
     os.system('./scripts/gpu-check.py')
-elif detectChoice == 4:
+elif detectChoice == "4":
     os.system('./scripts/iommu.sh')
-elif detectChoice == 5:
+elif detectChoice == "5":
     os.system('./scripts/vfio-ids.py')
-elif detectChoice == 6:
+elif detectChoice == "6":
     os.system('./scripts/vfio-pci.py')
 elif detectChoice == "e" or detectChoice == "E":
     os.system('./scripts/extras.py')

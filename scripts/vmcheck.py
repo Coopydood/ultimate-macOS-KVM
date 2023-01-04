@@ -43,6 +43,10 @@ vmc3 = output_stream2.read()
 
 detected = 0
 
+global isVM
+
+isVM = False
+
 #for x in vmc1:
 if "VMware" in vmc1:
    detected = 1
@@ -59,6 +63,7 @@ if "Redhat" in vmc3 or "RedHat" in vmc3:
 clear()
 
 if detected == 1:
+   isVM = True
    print("\n   "+color.BOLD+color.YELLOW+"⚠ VIRTUAL MACHINE DETECTED"+color.END)
    print("   Virtualised devices detected")
    print("\n   I've determined that it's more than likely that \n   you're using a virtual machine to run this. I won't\n   stop you, but there really isn't much point in continuing."+color.END)
@@ -69,9 +74,8 @@ if detected == 1:
    stageSelect = str(input(color.BOLD+"Select> "+color.END))
    
    if stageSelect == "1":
-      exit
-      exit
-      exit
+      isVM = True
 
-   elif stageSelect == "2":
-      exit
+   elif stageSelect == "2": 
+      isVM = False
+      os.system("./setup.py -svmc")
