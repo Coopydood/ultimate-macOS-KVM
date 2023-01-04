@@ -49,6 +49,8 @@ class color:
    UNDERLINE = '\033[4m'
    END = '\033[0m'
 
+os.system('./scripts/vmcheck.py')
+
 def startup():
     global detectChoice
     print("\n\n   Welcome to"+color.BOLD+color.YELLOW,"Ultimate macOS KVM Setup"+color.END,"(BETA)")

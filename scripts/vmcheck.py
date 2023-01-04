@@ -17,6 +17,8 @@ import json
 import sys
 import argparse
 
+def clear(): print("\n" * 150)
+
 
 class color:
    PURPLE = '\033[95m'
@@ -39,5 +41,37 @@ vmc2 = output_stream1.read().splitlines()
 output_stream2 = os.popen('lspci |  grep "Redhat\|RedHat"')
 vmc3 = output_stream2.read().splitlines()
 
-for x in vgaGrep:
-    print("\n",x)
+detected = 0
+
+for x in vmc1:
+    if "VMware" in vmc1:
+      detected = 1
+
+for x in vmc2:
+   if "VirtualBox" in vmc2 or "Oracle" in vmc2:
+      detected = 1
+
+for x in vmc3:
+   if "Redhat" in vmc3 or "RedHat" in vmc3:
+      detected = 1
+
+
+clear()
+
+if detected == 1:
+   print("\n   "+color.BOLD+color.YELLOW+"⚠ VIRTUAL MACHINE DETECTED"+color.END)
+   print("   Virtualised devices detected")
+   print("\n   I've determined that it's more than likely that \n   you're using a virtual machine to run this. I won't\n   stop you, but there really isn't much point in continuing."+color.END)
+   
+   print("\n   "+color.BOLD+color.YELLOW+"PROBLEM:",color.END+"Virtual hardware detected"+color.END)
+   print(color.BOLD+"\n      1. Exit")
+   print(color.END+"      2. Continue anyway")
+   stageSelect = str(input(color.BOLD+"Select> "+color.END))
+   
+   if stageSelect == "1":
+      exit
+      exit
+      exit
+
+   elif stageSelect == "2":
+      exit
