@@ -43,17 +43,17 @@ vmc3 = output_stream2.read().splitlines()
 
 detected = 0
 
-for x in vmc1:
-    if "VMware" in vmc1:
-      detected = 1
+#for x in vmc1:
+if "VMware" in vmc1:
+   detected = 1
 
-for x in vmc2:
-   if "VirtualBox" in vmc2 or "Oracle" in vmc2:
-      detected = 1
+#for x in vmc2:
+if "VirtualBox" in vmc2 or "Oracle" in vmc2:
+   detected = 1
 
-for x in vmc3:
-   if "Redhat" in vmc3 or "RedHat" in vmc3:
-      detected = 1
+#for x in vmc3:
+if "Redhat" in vmc3 or "RedHat" in vmc3:
+   detected = 1
 
 
 clear()
