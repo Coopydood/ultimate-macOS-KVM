@@ -33,13 +33,13 @@ class color:
    END = '\033[0m'
 
 output_stream = os.popen('lspci')
-vmc1 = output_stream.read().splitlines()
+vmc1 = output_stream.read()
 
 output_stream1 = os.popen('lspci')
-vmc2 = output_stream1.read().splitlines()
+vmc2 = output_stream1.read()
 
 output_stream2 = os.popen('lspci')
-vmc3 = output_stream2.read().splitlines()
+vmc3 = output_stream2.read()
 
 detected = 0
 
@@ -65,7 +65,7 @@ if detected == 1:
    
    print("\n   "+color.BOLD+color.YELLOW+"PROBLEM:",color.END+"Virtual hardware detected"+color.END)
    print(color.BOLD+"\n      1. Exit")
-   print(color.END+"      2. Continue anyway")
+   print(color.END+"      2. Continue anyway\n")
    stageSelect = str(input(color.BOLD+"Select> "+color.END))
    
    if stageSelect == "1":
