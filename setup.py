@@ -51,19 +51,30 @@ class color:
 
 def startup():
     global detectChoice
-    print("\n\n   Welcome to"+color.BOLD+color.YELLOW,"Ultimate macOS KVM Setup"+color.END,"(BETA)")
+    print("\n\n   Welcome to"+color.BOLD+color.CYAN,"Ultimate macOS KVM Setup"+color.END,"")
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+    if isVM == True:
+        print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
     print("   This script can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, getting vfio-ids, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.\n")
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print("   Select an option to continue.")
-    print(color.BOLD+"\n      1. AutoPilot config wizard (Experimental)")
-    print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
-    print(color.END+"      2. Download and convert macOS image")
-    print(color.END+"      3. Check GPU compatibility")
-    print(color.END+"      4. Check IOMMU grouping")
-    print(color.END+"      5. Get and display vfio-pci IDs")
-    print(color.END+"      6. Verify devices bound to vfio-pci")
+    if isVM == True:
+        print(color.BOLD+"\n      1. AutoPilot config wizard (Experimental)")
+        print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
+        print(color.END+"      2. Download and convert macOS image")
+        print(color.END+"      3. Check GPU compatibility"+color.YELLOW,"⚠")
+        print(color.END+"      4. Check IOMMU grouping"+color.YELLOW,"⚠")
+        print(color.END+"      5. Get and display vfio-pci IDs"+color.YELLOW,"⚠")
+        print(color.END+"      6. Verify devices bound to vfio-pci"+color.YELLOW,"⚠")
+    else:
+        print(color.BOLD+"\n      1. AutoPilot config wizard (Experimental)")
+        print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
+        print(color.END+"      2. Download and convert macOS image")
+        print(color.END+"      3. Check GPU compatibility")
+        print(color.END+"      4. Check IOMMU grouping")
+        print(color.END+"      5. Get and display vfio-pci IDs")
+        print(color.END+"      6. Verify devices bound to vfio-pci")
     print(color.END+"      E. Extras...")
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
@@ -73,25 +84,67 @@ def startup():
 
 def clear(): print("\n" * 150)
 
-global isVM
-global skipVMCheck
-isVM = False
+
 
 os.system("chmod +x scripts/*.py")
 os.system("chmod +x scripts/*.sh")
 os.system("chmod +x resources/dmg2img")
 
-if args.svmc == True:
-    clear()
-    startup()
+
+
+output_stream = os.popen('lspci')
+vmc1 = output_stream.read()
+
+detected = 0
+
+global isVM
+
+isVM = False
+
+if "VMware" in vmc1:
+   detected = 1
+
+if "VirtualBox" in vmc1 or "Oracle" in vmc1:
+   detected = 1
+
+if "Redhat" in vmc1 or "RedHat" in vmc1:
+   detected = 1
+
+if "Bochs" in vmc1 or "Sea BIOS" in vmc1 or "SeaBIOS" in vmc1:
+   detected = 1
+
+clear()
+
+if detected == 1:
+    if args.svmc == True:
+        clear()
+        startup()
+    else:
+        isVM = True
+        print("\n   "+color.BOLD+color.YELLOW+"⚠ VIRTUAL MACHINE DETECTED"+color.END)
+        print("   Virtualized devices detected")
+        print("\n   I've determined that it's more than likely that \n   you're using a virtual machine to run this. I won't\n   stop you, but there really isn't much point in continuing."+color.END)
+        
+        print("\n   "+color.BOLD+color.YELLOW+"PROBLEM:",color.END+"Virtual hardware detected"+color.END)
+        print(color.BOLD+"\n      1. Exit")
+        print(color.END+"      2. Continue anyway\n")
+        stageSelect = str(input(color.BOLD+"Select> "+color.END))
+   
+        if stageSelect == "1":
+            sys.exit
+
+        elif stageSelect == "2": 
+            clear()
+            startup()
 else:
-    os.system('./scripts/vmcheck.py')
     clear()
     startup()
 
 
-if isVM == True:
-    exit
+
+
+
+
 
 
 

@@ -48,7 +48,7 @@ global isVM
 isVM = False
 
 #for x in vmc1:
-if "VMware" in vmc1:
+if "NVIDIA" in vmc1:
    detected = 1
 
 #for x in vmc2:
@@ -65,7 +65,7 @@ clear()
 if detected == 1:
    isVM = True
    print("\n   "+color.BOLD+color.YELLOW+"⚠ VIRTUAL MACHINE DETECTED"+color.END)
-   print("   Virtualised devices detected")
+   print("   Virtualized devices detected")
    print("\n   I've determined that it's more than likely that \n   you're using a virtual machine to run this. I won't\n   stop you, but there really isn't much point in continuing."+color.END)
    
    print("\n   "+color.BOLD+color.YELLOW+"PROBLEM:",color.END+"Virtual hardware detected"+color.END)
@@ -75,6 +75,10 @@ if detected == 1:
    
    if stageSelect == "1":
       isVM = True
+      sys.exit
+      sys.exit
+      sys.exit
+      sys.exit
 
    elif stageSelect == "2": 
       isVM = False
