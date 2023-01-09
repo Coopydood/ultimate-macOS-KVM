@@ -53,12 +53,133 @@ def startup():
     print(color.END+"      2. Check GPU compatibility")
     print(color.END+"      B. Back...")
     print(color.END+"      Q. Exit\n")
-    detectChoice = int(input(color.BOLD+"Select> "+color.END))
+    detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
        
 
 
 def clear(): print("\n" * 150)
+
+
+
+def stage2():
+    clear()
+    print("Detecting devices, please wait...")
+    time.sleep(0.5)
+
+    output_stream = os.popen('lspci -k | grep -B 2 "vfio-pci"')
+    vgaGrep = output_stream.read()
+
+    output_stream1 = os.popen('lspci -k | awk \'/vfio-pci/ {print a} {a=b;b=$0}\'')
+    vgaGrepIDOnly = output_stream1.read()
+
+    vfioCount = vgaGrep.count("vfio-pci")
+    #vfioCount = 0 #<--- uncomment to force-disable detection for error debugging
+    clear()
+    if vfioCount >= 1:
+        print("\n\n   "+color.BOLD+color.GREEN+"VFIO-PCI Devices Detected!"+color.END,"")
+        print("   The following devices are ready for passthrough\n")
+        print("   The devices listed below have been correctly configured to use\n   VFIO-PCI and are ready for full passthrough.\n")
+
+        outputStyle = ("\n   "+vgaGrep)
+        outputStyle = outputStyle.replace("--\n","\n   ")
+        outputStyle = outputStyle.replace("Audio device: ","")
+        outputStyle = outputStyle.replace("Multimedia controller: ","")
+        outputStyle = outputStyle.replace("VGA compatible controller: ","")
+
+        print(outputStyle)
+        print("   You can now choose how many virtual PCI slots you need.\n   Each entry you want to use needs its own slot. Type the\n   number of slots you want below now, or \"-1\" to exit.\n"+color.END)
+
+        slotCount = int(input(color.BOLD+"Value> "+color.END))
+        clear()
+
+        global slotContainer
+        slotContainer = []
+
+        #print(slotContainer)
+
+        for x in range(slotCount):
+            #global slotContainer
+            xF = str(x)
+
+         
+                
+
+            clear()
+            print("\n\n   "+color.BOLD+"Assign Device to Slot #"+xF+color.END,"")
+            print("   Choose a listed device to assign\n")
+            print("   Type the 5-digit ID now. Do NOT include punctuation.\n   Example: 04:00.1 -> 04001")
+
+            outputStyle = ("\n"+vgaGrepIDOnly)
+            outputStyle = outputStyle.replace("\n","\n   ")
+            outputStyle = outputStyle.replace("Audio device: ","")
+            outputStyle = outputStyle.replace("Multimedia controller: ","")
+            outputStyle = outputStyle.replace("VGA compatible controller: ","")
+
+            print(outputStyle)
+            print("   You should only enter one entry consisting of 5 digits.\n"+color.END)
+            thisSlot = str(input(color.BOLD+"Assign ID to Slot>  "+color.END))
+            slotContainer.append(thisSlot)
+
+            #print(slotContainer)
+        
+        clear()
+        print("\n\n   "+color.BOLD+"Slot Configuration Summary",color.END,"")
+        print("   Check your slot allocations\n")
+        print("   The slots listed below will be used with their assigned devices.\n   For each, you'll be asked what kind of device it is.\n")
+        slotContainerPT = []
+        currentSlotEdit = -1
+        for i in slotContainer:
+            currentSlotEdit = currentSlotEdit + 1
+            editValue = str(slotContainer[currentSlotEdit])
+            #print(editValue)
+            editValue = editValue.replace(editValue[:2],(editValue[:2]+":"),1)
+            editValue = editValue.replace(editValue[:5],(editValue[:5]+"."),1)
+            #print(editValue)
+
+
+            slotContainerPT.append(editValue)
+            #print("slotContainerPT is now",slotContainerPT)
+
+
+        currentSlotDisplay = -1
+        
+        for y in range(slotCount):
+
+            currentSlotDisplay = currentSlotDisplay + 1
+            print("   ",color.BOLD+"SLOT #"+str(y)+":",color.END+slotContainerPT[currentSlotDisplay])
+        print("\n   Continue when you're ready, or you can change slots and IDs.\n"+color.END)
+
+        print(color.BOLD+"\n      1. Continue")
+        print(color.END+"      2. Reconfigure...")
+        print(color.END+"      Q. Exit\n")
+        detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
+        if detectChoice1 == "1":
+            stage3()
+        elif detectChoice1 == "2":
+            stage2()
+        elif detectChoice1 == "q" or detectChoice1 == "Q":
+            exit
+        
+    
+    
+    
+    else:
+        print("\n\n   "+color.BOLD+color.RED+"No VFIO-PCI Devices Found"+color.END,"")
+        print("   There are no devices ready for passthrough\n")
+        print("   No devices have been configured for use with VFIO-PCI. You must \n   consult the guide on how to do this. Until then, this\n   tool can't be used just yet.")
+        #print("\n")
+        #print("   \n   Type the VFIO-ID of the device now. (XX:XX.XX)\n"+color.END)
+        print(color.BOLD+"\n      1. Try again")
+        print(color.END+"      B. Back...")
+        print(color.END+"      Q. Exit\n")
+        detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
+        if detectChoice1 == "1":
+            stage2()
+        elif detectChoice1 == "B" or detectChoice1 == "b":
+            stage1()
+        elif detectChoice1 == "q" or detectChoice1 == "Q":
+            exit
 
 
 def stage1():
@@ -79,26 +200,27 @@ def stage1():
     print("      The PCI devices in question must be stubbed correctly.")
     print(color.BOLD+"   5. Unwavering patience"+color.END)
     print("      You NEED to expect a LOT of trial and error. No I'm serious.")
-    print(color.BOLD+"\n      1. Continue")
+    print(color.BOLD+"\n      1. Continue and detect devices")
     print(color.END+"      B. Back...")
     print(color.END+"      Q. Exit\n")
-    detectChoice1 = int(input(color.BOLD+"Select> "+color.END))
-    if detectChoice1 == 1:
+    detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
+    if detectChoice1 == "1":
         stage2()
-    elif detectChoice1 == "B" or detectChoice == "b":
+    elif detectChoice1 == "B" or detectChoice1 == "b":
         startup()
-    elif detectChoice1 == "q" or detectChoice == "Q":
+    elif detectChoice1 == "q" or detectChoice1 == "Q":
         exit
 
 
 startup()
 
 
-if detectChoice == 1:
+if detectChoice == "1":
     clear()
     time.sleep(1)
     stage1()
-elif detectChoice == 2:
+elif detectChoice == "2":
+    clear()
     os.system('./scripts/gpu-check.py')
 
 elif detectChoice == "B" or detectChoice == "b":

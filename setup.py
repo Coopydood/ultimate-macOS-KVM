@@ -107,7 +107,7 @@ if "VMware" in vmc1:
 if "VirtualBox" in vmc1 or "Oracle" in vmc1:
    detected = 1
 
-if "Redhat" in vmc1 or "RedHat" in vmc1:
+if "Redhat" in vmc1 or "RedHat" in vmc1 or "QEMU" in vmc1:
    detected = 1
 
 if "Bochs" in vmc1 or "Sea BIOS" in vmc1 or "SeaBIOS" in vmc1:
