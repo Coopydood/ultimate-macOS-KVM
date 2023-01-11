@@ -10,3 +10,6 @@ boot.sh
 scripts/BaseSystem.dmg
 boot/*
 .vscode
+rx550_67ff.rom
+vfio-args.txt
+willthisbedetected.sh
