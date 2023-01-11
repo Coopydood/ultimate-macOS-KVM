@@ -76,7 +76,7 @@ clear()
 if detectChoice == 1:
     os.system('./scripts/autopilot.py')
 elif detectChoice == 2:
-    os.system('./scripts/dlosx.py')
+    os.system('./scripts/extras/vfio-passthrough.py')
 
 elif detectChoice == 3:
     os.system('./scripts/extras/backupassist.py')
