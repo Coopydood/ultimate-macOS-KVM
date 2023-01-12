@@ -155,14 +155,19 @@ elif detectChoice == "2":
     os.system('./scripts/dlosx.py')
 
 elif detectChoice == "3":
+    clear()
     os.system('./scripts/gpu-check.py')
 elif detectChoice == "4":
+    clear()
     os.system('./scripts/iommu.sh')
 elif detectChoice == "5":
+    clear()
     os.system('./scripts/vfio-ids.py')
 elif detectChoice == "6":
+    clear()
     os.system('./scripts/vfio-pci.py')
 elif detectChoice == "e" or detectChoice == "E":
+    clear()
     os.system('./scripts/extras.py')
 elif detectChoice == "q" or detectChoice == "Q":
     exit
