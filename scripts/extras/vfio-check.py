@@ -44,8 +44,8 @@ class color:
 def clear(): print("\n" * 150)
 
 
-print("This script will check your system to ensure it is ready for passthrough. Checks will begin in 5 seconds, press CTRL+C to cancel.")
-time.sleep(6)
+print("\nThis script will check your system to ensure it is ready for passthrough. \nChecks will begin in 5 seconds. \nPress CTRL+C to cancel.")
+#time.sleep(6)
 clear()
 
 vfcKernel = 0
@@ -62,27 +62,27 @@ output_stream = os.popen("lsmod | grep \"vfio_pci\"")
 checkStream = output_stream.read()
 if "vfio_pci" in checkStream and "vfio_pci_core" in checkStream and "vfio_iommu_type1" in checkStream:
     vfcKernel = 1
-    vfcScore = vfcScore + 1
+    vfcScore = vfcScore + 2
 else:
     vfcKernel = -1
 
 # vfcUefi
 if os.path.exists("/sys/firmware/efi"):
     vfcUefi = 1
-    vfcScore = vfcScore + 1
+    vfcScore = vfcScore + 2
 else:
     vfcUefi = -1
 
-#vfcIommu
+# vfcIommu
 output_stream = os.popen("./scripts/iommu.sh")
 checkStream = output_stream.read()
 if "Group" in checkStream:
     vfcIommu = 1
-    vfcScore = vfcScore + 1
+    vfcScore = vfcScore + 2
 else:
     vfcIommu = -1
 
-#vfcStubbing
+# vfcStubbing
 output_stream = os.popen("lspci -k | grep -B2 \"vfio-pci\"")
 checkStream = output_stream.read()
 if "Kernel driver in use: vfio-pci" in checkStream:
@@ -91,15 +91,44 @@ if "Kernel driver in use: vfio-pci" in checkStream:
 else:
     vfcStubbing = -1
 
-#vfcLibvirtd
+# vfcLibvirtd
 output_stream = os.popen("systemctl status libvirtd")
 checkStream = output_stream.read()
 if "active (running)" in checkStream:
     vfcLibvirtd = 1
     vfcScore = vfcScore + 1
+elif "enabled" in checkStream:
+    vfcLibvirtd = 2
+    vfcScore = vfcScore + 1
 else:
     vfcLibvirtd = -1
 
+# vfcIntegrity
+if os.path.exists("./scripts/autopilot.py") and os.path.exists("./scripts/vfio-ids.py") and os.path.exists("./scripts/vfio-pci.py") and os.path.exists("./resources/baseConfig") and os.path.exists("./ovmf/OVMF_CODE.fd") and os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2"):
+    vfcIntegrity = 1
+    vfcScore = vfcScore + 1
+else:
+    vfcIntegrity = -1
+
+# vfcConfig 
+if os.path.exists("./blobs/USR_CFG.apb"):
+            apFilePath = open("./blobs/USR_CFG.apb")
+            apFilePath = apFilePath.read()
+            if os.path.exists("./"+apFilePath):
+                apFile = open("./"+apFilePath,"r")
+            
+                if "APC-RUN" in apFile.read():
+                    vfcConfig = 1
+                    vfcScore = vfcScore + 1
+                else:
+                    vfcConfig = -1
+
+            else:
+                vfcConfig = -1
+
+
+else:
+    vfcConfig = -1
 
 # force for debug
 #vfcKernel = -1
@@ -142,11 +171,25 @@ else:
     print("   "+color.RED+"   ✘ "+color.END+" No devices bound to VFIO-PCI kernel driver")
 
 if vfcLibvirtd == 1:
-    print("   "+color.GREEN+"   ✔ "+color.END+" Libvirt daemon is running")
+    print("   "+color.GREEN+"   ✔ "+color.END+" Libvirt daemon is enabled and running")
+elif vfcLibvirtd == 2:
+    print("   "+color.GREEN+"   ✔ "+color.END+" Libvirt daemon is enabled")
 elif vfcLibvirtd == 0:
     print("   "+color.YELLOW+"   ⚠ "+color.END+" Unable to determine status of libvirtd")
 else:
-    print("   "+color.RED+"   ✘ "+color.END+" Libvirt daemon is disabled or not running")
+    print("   "+color.RED+"   ✘ "+color.END+" Libvirt daemon is disabled or not working")
+
+if vfcIntegrity == 1:
+    print("   "+color.GREEN+"   ✔ "+color.END+" Repository file integrity passed")
+elif vfcIntegrity == 0:
+    print("   "+color.YELLOW+"   ⚠ "+color.END+" Couldn't check repository integrity")
+else:
+    print("   "+color.RED+"   ✘ "+color.END+" Repository file integrity damaged")
+
+if vfcConfig == 1:
+    print("   "+color.GREEN+"   ✔ "+color.END+" Compatible boot config script found")
+elif vfcConfig <= 0:
+    print("   "+color.YELLOW+"   ⚠ "+color.END+" Couldn't find boot config script")
 
 #print("   "+"   Lorem ipsum et delor ")
 print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
@@ -168,11 +211,11 @@ elif vfcScore == 6:
 elif vfcScore == 7:
     print("   "+color.BOLD+"   ALMOST READY   "+color.YELLOW+"❚❚❚❚❚❚❚"+color.GRAY+"❚❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 8:
-    print("   "+color.BOLD+"   ALMOST READY   "+color.YELLOW+"❚❚❚❚❚❚❚❚"+color.GRAY+"❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   ALMOST READY   "+color.GREEN+"❚❚❚❚❚❚❚❚"+color.GRAY+"❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 9:
     print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚"+color.GRAY+"❚"+color.END+color.BOLD+"")
 elif vfcScore == 10:
-    print("   "+color.BOLD+"   READY   "+color.GREENLIGHT+"❚❚❚❚❚❚❚❚❚❚"+color.GRAY+""+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚❚"+color.GRAY+""+color.END+color.BOLD+"")
 
 
 print("   "+color.BOLD+"──────────────────────────────────────────────────────────────\n",color.END)
