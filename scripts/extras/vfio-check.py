@@ -67,6 +67,7 @@ if "vfio_pci" in checkStream and "vfio_pci_core" in checkStream and "vfio_iommu_
     vfcScore = vfcScore + 2
 else:
     vfcKernel = -1
+    vfcScore = vfcScore - 4
 
 # vfcUefi
 if os.path.exists("/sys/firmware/efi"):
@@ -74,6 +75,7 @@ if os.path.exists("/sys/firmware/efi"):
     vfcScore = vfcScore + 2
 else:
     vfcUefi = -1
+    vfcScore = vfcScore - 2
 
 # vfcIommu
 output_stream = os.popen("./scripts/iommu.sh")
@@ -83,6 +85,7 @@ if "Group" in checkStream:
     vfcScore = vfcScore + 2
 else:
     vfcIommu = -1
+    vfcScore = vfcScore - 1 
 
 # vfcStubbing
 output_stream = os.popen("lspci -k | grep -B2 \"vfio-pci\"")
@@ -92,6 +95,7 @@ if "Kernel driver in use: vfio-pci" in checkStream:
     vfcScore = vfcScore + 1
 else:
     vfcStubbing = -1
+    vfcScore = vfcScore - 2
 
 # vfcLibvirtd
 output_stream = os.popen("systemctl status libvirtd")
@@ -104,6 +108,7 @@ elif "enabled" in checkStream:
     vfcScore = vfcScore + 1
 else:
     vfcLibvirtd = -1
+    vfcScore = vfcScore - 1
 
 # vfcIntegrity
 if os.path.exists("./scripts/autopilot.py") and os.path.exists("./scripts/vfio-ids.py") and os.path.exists("./scripts/vfio-pci.py") and os.path.exists("./resources/baseConfig") and os.path.exists("./ovmf/OVMF_CODE.fd") and os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2"):
@@ -211,9 +216,9 @@ elif vfcScore == 5:
 elif vfcScore == 6:
     print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚❚❚"+color.GRAY+"❚❚❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 7:
-    print("   "+color.BOLD+"   ALMOST READY   "+color.YELLOW+"❚❚❚❚❚❚❚"+color.GRAY+"❚❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   PARTLY READY   "+color.YELLOW+"❚❚❚❚❚❚❚"+color.GRAY+"❚❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 8:
-    print("   "+color.BOLD+"   ALMOST READY   "+color.GREEN+"❚❚❚❚❚❚❚❚"+color.GRAY+"❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   PARTLY READY   "+color.GREEN+"❚❚❚❚❚❚❚❚"+color.GRAY+"❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 9:
     print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚"+color.GRAY+"❚"+color.END+color.BOLD+"")
 elif vfcScore == 10:
