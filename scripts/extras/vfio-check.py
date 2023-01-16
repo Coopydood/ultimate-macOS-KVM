@@ -145,6 +145,7 @@ else:
 #vfcScore = 9
 
 # TUI frontend to user
+clear()
 print("   "+"\n   "+color.BOLD+"Results"+color.END)
 print("   "+"All checks have been completed")
 print("   "+"\n   Your system has been reviewed. The results for each check\n   are listed below. You can re-run this test at any time\n   for new results."+color.END)
