@@ -196,7 +196,7 @@ else:
 if vfcConfig == 1:
     print("   "+color.GREEN+"   ✔ "+color.END+" Compatible boot config script found")
 elif vfcConfig <= 0:
-    print("   "+color.YELLOW+"   ⚠ "+color.END+" Couldn't find boot config script")
+    print("   "+color.YELLOW+"   ⚠ "+color.END+" Couldn't find compatible boot config script")
 
 #print("   "+"   Lorem ipsum et delor ")
 print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
