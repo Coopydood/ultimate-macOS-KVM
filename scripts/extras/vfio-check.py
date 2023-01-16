@@ -80,7 +80,7 @@ else:
 # vfcIommu
 output_stream = os.popen("./scripts/iommu.sh")
 checkStream = output_stream.read()
-if "Group" in checkStream:
+if "Group 0" in checkStream:
     vfcIommu = 1
     vfcScore = vfcScore + 2
 else:
