@@ -203,7 +203,7 @@ elif vfcConfig <= 0:
 print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
 
 if vfcScore <= 0:
-    print("   "+color.BOLD+"   NOT READY   "+color.GRAY+"❚❚❚❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚"+color.GRAY+"❚❚❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 1:
     print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚"+color.GRAY+"❚❚❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 2:
