@@ -201,7 +201,7 @@ elif vfcConfig <= 0:
 #print("   "+"   Lorem ipsum et delor ")
 print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
 
-if vfcScore == 0:
+if vfcScore <= 0:
     print("   "+color.BOLD+"   NOT READY   "+color.GRAY+"❚❚❚❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 1:
     print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚"+color.GRAY+"❚❚❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
@@ -214,14 +214,14 @@ elif vfcScore == 4:
 elif vfcScore == 5:
     print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚❚"+color.GRAY+"❚❚❚❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 6:
-    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚❚❚"+color.GRAY+"❚❚❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   NOT READY   "+color.YELLOW+"❚❚❚❚❚❚"+color.GRAY+"❚❚❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 7:
     print("   "+color.BOLD+"   PARTLY READY   "+color.YELLOW+"❚❚❚❚❚❚❚"+color.GRAY+"❚❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 8:
-    print("   "+color.BOLD+"   PARTLY READY   "+color.GREEN+"❚❚❚❚❚❚❚❚"+color.GRAY+"❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   PARTLY READY   "+color.YELLOW+"❚❚❚❚❚❚❚❚"+color.GRAY+"❚❚"+color.END+color.BOLD+"")
 elif vfcScore == 9:
     print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚"+color.GRAY+"❚"+color.END+color.BOLD+"")
-elif vfcScore == 10:
+elif vfcScore >= 10:
     print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚❚"+color.GRAY+""+color.END+color.BOLD+"")
 
 
