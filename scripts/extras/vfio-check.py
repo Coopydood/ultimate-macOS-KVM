@@ -36,6 +36,9 @@ class color:
    BOLD = '\033[1m'
    UNDERLINE = '\033[4m'
    END = '\033[0m'
+   GRAY = '\u001b[38;5;245m'
+   ORANGE = '\u001b[38;5;202m'
+   GREENLIGHT = '\u001b[38;5;46m'
 
 
 def clear(): print("\n" * 150)
@@ -52,28 +55,58 @@ vfcStubbing = 0
 vfcLibvirtd = 0
 vfcIntegrity = 0
 vfcConfig = 0
+vfcScore = 0
 
 # vfcKernel
 output_stream = os.popen("lsmod | grep \"vfio_pci\"")
 checkStream = output_stream.read()
 if "vfio_pci" in checkStream and "vfio_pci_core" in checkStream and "vfio_iommu_type1" in checkStream:
     vfcKernel = 1
+    vfcScore = vfcScore + 1
 else:
     vfcKernel = -1
 
 # vfcUefi
 if os.path.exists("/sys/firmware/efi"):
     vfcUefi = 1
+    vfcScore = vfcScore + 1
 else:
     vfcUefi = -1
 
-# vfcIommu
+#vfcIommu
+output_stream = os.popen("./scripts/iommu.sh")
+checkStream = output_stream.read()
+if "Group" in checkStream:
+    vfcIommu = 1
+    vfcScore = vfcScore + 1
+else:
+    vfcIommu = -1
 
+#vfcStubbing
+output_stream = os.popen("lspci -k | grep -B2 \"vfio-pci\"")
+checkStream = output_stream.read()
+if "Kernel driver in use: vfio-pci" in checkStream:
+    vfcStubbing = 1
+    vfcScore = vfcScore + 1
+else:
+    vfcStubbing = -1
+
+#vfcLibvirtd
+output_stream = os.popen("systemctl status libvirtd")
+checkStream = output_stream.read()
+if "active (running)" in checkStream:
+    vfcLibvirtd = 1
+    vfcScore = vfcScore + 1
+else:
+    vfcLibvirtd = -1
 
 
 # force for debug
 #vfcKernel = -1
-#vfcUefi = 0
+#vfcUefi = -1
+#vfcIommu = -1
+
+#vfcScore = 9
 
 # TUI frontend to user
 print("   "+"\n   "+color.BOLD+"Results"+color.END)
@@ -86,11 +119,60 @@ elif vfcKernel == 0:
     print("   "+color.YELLOW+"   ⚠ "+color.END+" Kernel set up could not be evaluated")
 else:
     print("   "+color.RED+"   ✘ "+color.END+" Kernel is not set up correctly")
+
 if vfcUefi == 1:
     print("   "+color.GREEN+"   ✔ "+color.END+" Booted in UEFI mode")
 elif vfcUefi == 0:
     print("   "+color.YELLOW+"   ⚠ "+color.END+" Boot mode unknown")
 else:
     print("   "+color.RED+"   ✘ "+color.END+" Booted in legacy BIOS mode")
+
+if vfcIommu == 1:
+    print("   "+color.GREEN+"   ✔ "+color.END+" IOMMU groups available")
+elif vfcIommu == 0:
+    print("   "+color.YELLOW+"   ⚠ "+color.END+" IOMMU availability unknown")
+else:
+    print("   "+color.RED+"   ✘ "+color.END+" IOMMU groups inaccessible/disabled")
+
+if vfcStubbing == 1:
+    print("   "+color.GREEN+"   ✔ "+color.END+" VFIO-PCI devices detected")
+elif vfcStubbing == 0:
+    print("   "+color.YELLOW+"   ⚠ "+color.END+" Couldn't check for VFIO-PCI devices")
+else:
+    print("   "+color.RED+"   ✘ "+color.END+" No devices bound to VFIO-PCI kernel driver")
+
+if vfcLibvirtd == 1:
+    print("   "+color.GREEN+"   ✔ "+color.END+" Libvirt daemon is running")
+elif vfcLibvirtd == 0:
+    print("   "+color.YELLOW+"   ⚠ "+color.END+" Unable to determine status of libvirtd")
+else:
+    print("   "+color.RED+"   ✘ "+color.END+" Libvirt daemon is disabled or not running")
+
 #print("   "+"   Lorem ipsum et delor ")
-print("   "+color.BOLD+"──────────────────────────────────────────────────────────────\n\n\n",color.END)
+print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+
+if vfcScore == 0:
+    print("   "+color.BOLD+"   NOT READY   "+color.GRAY+"❚❚❚❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
+elif vfcScore == 1:
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚"+color.GRAY+"❚❚❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
+elif vfcScore == 2:
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚❚"+color.GRAY+"❚❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
+elif vfcScore == 3:
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚❚❚"+color.GRAY+"❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
+elif vfcScore == 4:
+    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚"+color.GRAY+"❚❚❚❚❚❚"+color.END+color.BOLD+"")
+elif vfcScore == 5:
+    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚❚"+color.GRAY+"❚❚❚❚❚"+color.END+color.BOLD+"")
+elif vfcScore == 6:
+    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚❚❚"+color.GRAY+"❚❚❚❚"+color.END+color.BOLD+"")
+elif vfcScore == 7:
+    print("   "+color.BOLD+"   ALMOST READY   "+color.YELLOW+"❚❚❚❚❚❚❚"+color.GRAY+"❚❚❚"+color.END+color.BOLD+"")
+elif vfcScore == 8:
+    print("   "+color.BOLD+"   ALMOST READY   "+color.YELLOW+"❚❚❚❚❚❚❚❚"+color.GRAY+"❚❚"+color.END+color.BOLD+"")
+elif vfcScore == 9:
+    print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚"+color.GRAY+"❚"+color.END+color.BOLD+"")
+elif vfcScore == 10:
+    print("   "+color.BOLD+"   READY   "+color.GREENLIGHT+"❚❚❚❚❚❚❚❚❚❚"+color.GRAY+""+color.END+color.BOLD+"")
+
+
+print("   "+color.BOLD+"──────────────────────────────────────────────────────────────\n",color.END)
