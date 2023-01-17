@@ -44,7 +44,7 @@ class color:
 def clear(): print("\n" * 150)
 
 print("\nThis script will check your system to ensure it is ready for passthrough. \nChecks will begin in 5 seconds. \nPress CTRL+C to cancel.")
-#time.sleep(6)
+time.sleep(6)
 clear()
 
 os.system("chmod +x ./scripts/*.py")
