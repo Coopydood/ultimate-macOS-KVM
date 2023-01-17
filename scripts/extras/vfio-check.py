@@ -43,8 +43,16 @@ class color:
 
 def clear(): print("\n" * 150)
 
-print("\nThis script will check your system to ensure it is ready for passthrough. \nChecks will begin in 5 seconds. \nPress CTRL+C to cancel.")
-time.sleep(6)
+cS = 5
+
+clear()
+
+for x in range(1,6):
+    print("\nThis script will check your system to ensure it is ready for passthrough. \nChecks will begin in",cS,"seconds. \nPress CTRL+C to cancel.")
+    cS = cS - 1
+    time.sleep(1)
+    clear()
+
 clear()
 
 os.system("chmod +x ./scripts/*.py")
@@ -59,6 +67,10 @@ vfcIntegrity = 0
 vfcConfig = 0
 vfcScore = 0
 
+
+clear()
+print("Checking your system... (1/7)")
+
 # vfcKernel
 output_stream = os.popen("lsmod | grep \"vfio_pci\"")
 checkStream = output_stream.read()
@@ -68,6 +80,8 @@ if "vfio_pci" in checkStream and "vfio_pci_core" in checkStream and "vfio_iommu_
 else:
     vfcKernel = -1
     vfcScore = vfcScore - 4
+clear()
+print("Checking your system... (2/7)")
 
 # vfcUefi
 if os.path.exists("/sys/firmware/efi"):
@@ -76,6 +90,8 @@ if os.path.exists("/sys/firmware/efi"):
 else:
     vfcUefi = -1
     vfcScore = vfcScore - 2
+clear()
+print("Checking your system... (3/7)")
 
 # vfcIommu
 output_stream = os.popen("./scripts/iommu.sh")
@@ -86,6 +102,8 @@ if "Group 0" in checkStream:
 else:
     vfcIommu = -1
     vfcScore = vfcScore - 1 
+clear()
+print("Checking your system... (4/7)")
 
 # vfcStubbing
 output_stream = os.popen("lspci -k | grep -B2 \"vfio-pci\"")
@@ -96,6 +114,8 @@ if "Kernel driver in use: vfio-pci" in checkStream:
 else:
     vfcStubbing = -1
     vfcScore = vfcScore - 2
+clear()
+print("Checking your system... (5/7)")
 
 # vfcLibvirtd
 output_stream = os.popen("systemctl status libvirtd")
@@ -109,6 +129,8 @@ elif "enabled" in checkStream:
 else:
     vfcLibvirtd = -1
     vfcScore = vfcScore - 1
+clear()
+print("Checking your system... (6/7)")
 
 # vfcIntegrity
 if os.path.exists("./scripts/autopilot.py") and os.path.exists("./scripts/vfio-ids.py") and os.path.exists("./scripts/vfio-pci.py") and os.path.exists("./resources/baseConfig") and os.path.exists("./ovmf/OVMF_CODE.fd") and os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2"):
@@ -116,6 +138,8 @@ if os.path.exists("./scripts/autopilot.py") and os.path.exists("./scripts/vfio-i
     vfcScore = vfcScore + 1
 else:
     vfcIntegrity = -1
+clear()
+print("Checking your system... (7/7)")
 
 # vfcConfig 
 if os.path.exists("./blobs/USR_CFG.apb"):
@@ -143,6 +167,8 @@ else:
 #vfcIommu = -1
 
 #vfcScore = 9
+
+time.sleep(1)
 
 # TUI frontend to user
 clear()
@@ -203,27 +229,27 @@ elif vfcConfig <= 0:
 print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
 
 if vfcScore <= 0:
-    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚"+color.GRAY+"❚❚❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚"+color.GRAY+"❚❚❚❚❚❚❚❚❚"+color.END+" 0%")
 elif vfcScore == 1:
-    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚"+color.GRAY+"❚❚❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚"+color.GRAY+"❚❚❚❚❚❚❚❚❚"+color.END+" 10%")
 elif vfcScore == 2:
-    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚❚"+color.GRAY+"❚❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚❚"+color.GRAY+"❚❚❚❚❚❚❚❚"+color.END+" 20%")
 elif vfcScore == 3:
-    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚❚❚"+color.GRAY+"❚❚❚❚❚❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚❚❚"+color.GRAY+"❚❚❚❚❚❚❚"+color.END+" 30%")
 elif vfcScore == 4:
-    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚"+color.GRAY+"❚❚❚❚❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚"+color.GRAY+"❚❚❚❚❚❚"+color.END+" 40%")
 elif vfcScore == 5:
-    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚❚"+color.GRAY+"❚❚❚❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚❚"+color.GRAY+"❚❚❚❚❚"+color.END+" 50%")
 elif vfcScore == 6:
-    print("   "+color.BOLD+"   NOT READY   "+color.YELLOW+"❚❚❚❚❚❚"+color.GRAY+"❚❚❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   NOT READY   "+color.YELLOW+"❚❚❚❚❚❚"+color.GRAY+"❚❚❚❚"+color.END+" 60%")
 elif vfcScore == 7:
-    print("   "+color.BOLD+"   PARTLY READY   "+color.YELLOW+"❚❚❚❚❚❚❚"+color.GRAY+"❚❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   PARTLY READY   "+color.YELLOW+"❚❚❚❚❚❚❚"+color.GRAY+"❚❚❚"+color.END+" 70%")
 elif vfcScore == 8:
-    print("   "+color.BOLD+"   PARTLY READY   "+color.YELLOW+"❚❚❚❚❚❚❚❚"+color.GRAY+"❚❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   PARTLY READY   "+color.YELLOW+"❚❚❚❚❚❚❚❚"+color.GRAY+"❚❚"+color.END+" 80%")
 elif vfcScore == 9:
-    print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚"+color.GRAY+"❚"+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚"+color.GRAY+"❚"+color.END+" 90%")
 elif vfcScore >= 10:
-    print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚❚"+color.GRAY+""+color.END+color.BOLD+"")
+    print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚❚"+color.GRAY+""+color.END+" 100%")
 
 
 print("   "+color.BOLD+"──────────────────────────────────────────────────────────────\n",color.END)
