@@ -13,3 +13,4 @@ boot/*
 rx550_67ff.rom
 vfio-args.txt
 willthisbedetected.sh
+resources/WEBVERSION
