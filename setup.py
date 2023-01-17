@@ -35,6 +35,9 @@ latestOSName = "Ventura"
 latestOSVer = "13"
 runs = 0
 
+version = open("./VERSION")
+version = version.read()
+
 class color:
    PURPLE = '\033[95m'
    CYAN = '\033[96m'
@@ -51,7 +54,7 @@ class color:
 
 def startup():
     global detectChoice
-    print("\n\n   Welcome to"+color.BOLD+color.CYAN,"Ultimate macOS KVM Setup"+color.END,"")
+    print("\n\n   Welcome to"+color.BOLD+color.CYAN,"Ultimate macOS KVM"+color.END,"(v"+version+")")
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
     if isVM == True:
         print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
@@ -60,7 +63,7 @@ def startup():
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print("   Select an option to continue.")
     if isVM == True:
-        print(color.BOLD+"\n      1. AutoPilot config wizard (Experimental)")
+        print(color.BOLD+"\n      1. AutoPilot (Experimental)")
         print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
         print(color.END+"      2. Download and convert macOS image")
         print(color.END+"      3. Check GPU compatibility"+color.YELLOW,"⚠")
@@ -68,14 +71,16 @@ def startup():
         print(color.END+"      5. Get and display vfio-pci IDs"+color.YELLOW,"⚠")
         print(color.END+"      6. Verify devices bound to vfio-pci"+color.YELLOW,"⚠")
     else:
-        print(color.BOLD+"\n      1. AutoPilot config wizard (Experimental)")
+        print(color.BOLD+"\n      1. AutoPilot (Experimental)")
         print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
         print(color.END+"      2. Download and convert macOS image")
         print(color.END+"      3. Check GPU compatibility")
         print(color.END+"      4. Check IOMMU grouping")
         print(color.END+"      5. Get and display vfio-pci IDs")
         print(color.END+"      6. Verify devices bound to vfio-pci")
+    
     print(color.END+"      E. Extras...")
+    print(color.END+"      U. Check for updates...")
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
 

@@ -28,6 +28,9 @@ latestOSName = "Ventura"
 latestOSVer = "13"
 runs = 0
 
+version = open("./VERSION")
+version = version.read()
+
 class color:
    PURPLE = '\033[95m'
    CYAN = '\033[96m'
@@ -42,23 +45,44 @@ class color:
 
 def startup():
     global detectChoice
-    print("\n\n   Welcome to"+color.BOLD+color.RED,"Ultimate macOS KVM Extras"+color.END,"")
-    print("   Created by",color.BOLD+"Coopydood\n"+color.END)
-    print("   This script can assist you in more advanced post-install\n   processes like"+color.BOLD,"PCI/GPU passthrough, dumping your VBIOS,\n   "+color.END+"and"+color.BOLD,"importing your VM into virt-manager.\n"+color.END)
-    #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
-    #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    print("   Select an option to continue.")
-    print(color.BOLD+"\n      1. Create and import XML file")
-    print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
-    print(color.END+"      2. Add GPU passthrough to config")
-    
-    print(color.END+"      3. Create a backup of config files")
-    print(color.YELLOW+"      4. Dump VBIOS to ROM file")
-    #print(color.END+"      4. Import config file into virt-manager")
-    print(color.RED+"      R. Reset OpenCore image")
-    print(color.RED+"      X. Download and restore all (DANGEROUS!)")
-    print(color.END+"      B. Back...")
-    print(color.END+"      Q. Exit\n")
+    if detected == 0:
+        print("\n\n   Welcome to"+color.BOLD+color.BLUE,"Ultimate macOS KVM Extras"+color.END,"")
+        print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+        print("   This script can assist you in more advanced post-install\n   processes like"+color.BOLD,"PCI/GPU passthrough, dumping your VBIOS,\n   "+color.END+"and"+color.BOLD,"importing your VM into virt-manager.\n"+color.END)
+        #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
+        #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
+        print("   Select an option to continue.")
+        print(color.BOLD+"\n      1. Create and import XML file")
+        print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
+        print(color.END+"      2. Add GPU passthrough to config")
+        
+        print(color.END+"      3. Create a backup of config files")
+        print(color.END+"      4. Dump VBIOS to ROM file")
+        #print(color.END+"      4. Import config file into virt-manager")
+        print(color.RED+"      R. Reset OpenCore image and vNVRAM")
+        print(color.RED+"      X. Download and restore all (DANGEROUS!)")
+        print(color.END+"      B. Back...")
+        print(color.END+"      Q. Exit\n")
+    else:
+        print("\n\n   Welcome to"+color.BOLD+color.BLUE,"Ultimate macOS KVM Extras"+color.END,"")
+        print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+        if detected == True:
+            print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
+        print("   This script can assist you in more advanced post-install\n   processes like"+color.BOLD,"PCI/GPU passthrough, dumping your VBIOS,\n   "+color.END+"and"+color.BOLD,"importing your VM into virt-manager.\n"+color.END)
+        #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
+        #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
+        print("   Select an option to continue.")
+        print(color.BOLD+"\n      1. Create and import XML file"+color.END+color.YELLOW,"⚠")
+        print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
+        print(color.END+"      2. Add GPU passthrough to config"+color.YELLOW,"⚠")
+        
+        print(color.END+"      3. Create a backup of config files")
+        print(color.END+"      4. Dump VBIOS to ROM file"+color.YELLOW,"⚠")
+        #print(color.END+"      4. Import config file into virt-manager")
+        print(color.RED+"      R. Reset OpenCore image and vNVRAM")
+        print(color.RED+"      X. Download and restore all (DANGEROUS!)")
+        print(color.END+"      B. Back...")
+        print(color.END+"      Q. Exit\n")
     detectChoice = int(input(color.BOLD+"Select> "+color.END))
 
        
@@ -69,6 +93,28 @@ def clear(): print("\n" * 150)
 os.system("chmod +x scripts/*.py")
 os.system("chmod +x scripts/*.sh")
 os.system("chmod +x resources/dmg2img")
+
+output_stream = os.popen('lspci')
+vmc1 = output_stream.read()
+
+detected = 1
+
+global isVM
+
+isVM = False
+
+if "VMware" in vmc1:
+   detected = 1
+
+if "VirtualBox" in vmc1 or "Oracle" in vmc1:
+   detected = 1
+
+if "Redhat" in vmc1 or "RedHat" in vmc1 or "QEMU" in vmc1:
+   detected = 1
+
+if "Bochs" in vmc1 or "Sea BIOS" in vmc1 or "SeaBIOS" in vmc1:
+   detected = 1
+
 
 startup()
 clear()
