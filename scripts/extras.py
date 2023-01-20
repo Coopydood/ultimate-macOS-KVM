@@ -83,7 +83,7 @@ def startup():
         print(color.RED+"      X. Download and restore all (DANGEROUS!)")
         print(color.END+"      B. Back...")
         print(color.END+"      Q. Exit\n")
-    detectChoice = int(input(color.BOLD+"Select> "+color.END))
+    detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
        
 
@@ -119,12 +119,12 @@ if "Bochs" in vmc1 or "Sea BIOS" in vmc1 or "SeaBIOS" in vmc1:
 startup()
 clear()
 
-if detectChoice == 1:
+if detectChoice == "1":
     os.system('./scripts/autopilot.py')
-elif detectChoice == 2:
+elif detectChoice == "2":
     os.system('./scripts/extras/vfio-passthrough.py')
 
-elif detectChoice == 3:
+elif detectChoice == "3":
     os.system('./scripts/extras/backupassist.py')
 
 elif detectChoice == "r" or detectChoice == "R":
