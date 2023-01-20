@@ -97,7 +97,7 @@ os.system("chmod +x resources/dmg2img")
 output_stream = os.popen('lspci')
 vmc1 = output_stream.read()
 
-detected = 1
+detected = 0
 
 global isVM
 
