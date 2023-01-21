@@ -137,6 +137,13 @@ elif versionInt < webVersionInt:
       print("   The update you requested is being downloaded and installed.\n   Do NOT terminate this script or close the window.\n\n")
       time.sleep(3)
       os.system("git maintenance run --auto --quiet")
+      os.system("chmod +x scripts/*.py")
+      os.system("chmod +x scripts/*.sh")
+      os.system("chmod +x ./*.sh")
+      os.system("chmod +x ./*.py")
+      os.system("chmod +x scripts/extras/*.py")
+      os.system("chmod +x scripts/extras/*.sh")
+      os.system("chmod +x resources/dmg2img")
       clear()
 
 
