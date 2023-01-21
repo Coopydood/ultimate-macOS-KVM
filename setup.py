@@ -174,5 +174,8 @@ elif detectChoice == "6":
 elif detectChoice == "e" or detectChoice == "E":
     clear()
     os.system('./scripts/extras.py')
+elif detectChoice == "u" or detectChoice == "U":
+    clear()
+    os.system('./scripts/repo-update.py')
 elif detectChoice == "q" or detectChoice == "Q":
     exit
