@@ -2,6 +2,35 @@
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
 ## Requirements
+As with all other virtual machines / hypervisors, you don't need an *uber-powerful* PC, but you should expect guest performance to be relative to your host's. Performance *can* change dramatically based on guest properties, such as virtual cores, allocated memory, and virtual CPU threads - but it really does boil down to how beefy your host's hardware is.
+Here's a table with my best judgement on minimum, recommended, and best system requirements:
+|                 |                   **Minimum**                  |                           **Recommended**                          |                                   **Optimal**                                  |
+|-----------------|:----------------------------------------------:|:------------------------------------------------------------------:|:---------------------------------------------------------------------------:|
+| **OS**          |                    linux-5.x                   |                             Linux Mint                             |                                  Arch Linux                                 |
+| **Motherboard** |             Virtualisation<br>UEFI             |        Virtualisation<br>UEFI<br>IOMMU<br>Intel VT-D / AMD-V       | Virtualisation<br>UEFI<br>IOMMU<br>Intel VT-D / AMD-V<br>Isolated PCI Lanes |
+| **CPU**         | ~2014 Intel / AMD<br>Virtualisation<br>2 cores | Intel i5 / Ryzen 5<br>Virtualisation<br>4-8 cores<br>Hyperthreaded |     Intel i9 / Ryzen 9<br>Virtualisation<br>8-16 cores<br>Hyperthreaded     |
+| **Memory**      |                      4 GB                      |                                16 GB                               |                                    32 GB+                                   |
+| **Disk Type**   |                    SATA HDD                    |                              SATA SSD                              |                                   NVMe SSD                                  |
+| **Disk Space**  |                      40 GB                     |                               120 GB                               |                                   500 GB+                                   |
+| **Resolution**  |                  1280x720                 |                           2560x1440                          |                                3840x2160                               |
+| **GPU (VFIO)**  |                        -                       |                             AMD RX 580                             |                                AMD RX 6600 XT                               |
+
+**You must also have all the required dependencies installed before starting - and any optional ones too along the way. Click the dropdown below to see the list.**
+<details>
+<summary><b>Dependencies</b></summary>
+<br>
+<b>Required</b>
+<ul>
+<li><b>Git</b> 》 <code>git</code></li>
+<li><b>QEMU</b> 》 <code>qemu-base</code> or <code>qemu-full</code></li>
+<li><b>Libvirt</b> 》 <code>libvirt</code></li>
+<li><b>Python</b> 》 <code>python</code></li>
+</ul>
+<b>Optional / Recommended</b>
+<ul>
+<li><b>Virtual Machine Manager (GUI)</b> 》 <code>virt-manager</code></li>
+</ul>
+</details>
 
 ## Features
 <ul>
@@ -68,3 +97,15 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 - I'm by no means an expert on this stuff nor would I claim to be.
 - I've simply made *what I had to go through* **easier** for you. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
+
+## Credits / Greetz
+While I am the creator of these automation/ease-of-use scripts, this project is not possible without both the prior and current works of some very talented people. Although, the testing done voluntarily (no, really) by my very best online friends cannot be overstated either and so they're in here too. Hi guys.
+- **[Dortania](https://github.com/Dortania)** 》 Extensive documentation and Hackintosh development
+- **[Kholia](https://github.com/kholia)** 》 Development of scripts and documentation. ultimate-macOS-KVM is intended as an extension to [OSX-KVM](https://github.com/kholia/OSX-KVM).
+- **[thenickdude](https://github.com/thenickdude)** 》 Personal support throughout my KVM misadventures and countless community contribs. Cheers man.
+- **[vu1tur](to@vu1tur.eu.org)** 》 Open source dmg to img conversion tool; used and bundled by this project.
+- **[Eversiege](https://github.com/eversiege)** 》 Support and testing, і моя улюблена українська.
+- **[CyberneticSquid](https://github.com/cyberneticsquid)** 》 Testing for me at stupid-o'-clock because he's a cool Aussie.
+- **[Cake](https://github.com/cam-jm)** 》 Another Aussie testing for me in the middle of my sleep-deprived nights, with a slight obsession over cake.
+- **[DomTrues](https://github.com/domtrues)** 》 My personal constitution-munching American. Legend has it that I live in his attic, although even I'm not sure. Love this guy either way.
+- **[GigantTech](https://twitter.com/TechGigant)** 》 Moderately annoying German guy that I convinced to install Linux subsequently letting him test my project. It's free real estate!
