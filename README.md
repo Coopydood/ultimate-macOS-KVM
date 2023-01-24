@@ -91,9 +91,9 @@ More detailed write-ups on the project and the scripts included, as well as some
 This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't expect much as this is a passion-project and not a priority in my life.
 - I'm not responsible for any time you waste using this project.
 - I'm not responsible if you make an oopsie whoopsie. 
-- Do NOT run anything as ``sudo``. If you have an urge to then you need to break that habit __**asap.**__ None of my scripts require superuser priviledges.
+- Do NOT run anything as ``sudo``. If you have an urge to then you need to break that habit _**asap.**_ None of my scripts require superuser privileges.
 - Expect headaches. Some severe.
-- You need a LOT of patience. I mean it. Despite trying to alleviate some of the hassle, you WILL run into stupid gotchas that require trial and error out of my control. 
+- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassle, you WILL run into stupid gotchas that require trial and error out of my control. 
 - I'm by no means an expert on this stuff nor would I claim to be.
 - I've simply made *what I had to go through* **easier** for you. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
@@ -102,7 +102,7 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 While I am the creator of these automation/ease-of-use scripts, this project is not possible without both the prior and current works of some very talented people. Although, the testing done voluntarily (no, really) by my very best online friends cannot be overstated either and so they're in here too. Hi guys.
 - **[Dortania](https://github.com/Dortania)** 》 Extensive documentation and Hackintosh development
 - **[Kholia](https://github.com/kholia)** 》 Development of scripts and documentation. ultimate-macOS-KVM is intended as an extension to [OSX-KVM](https://github.com/kholia/OSX-KVM).
-- **[thenickdude](https://github.com/thenickdude)** 》 Personal support throughout my KVM misadventures and countless community contribs. Cheers man.
+- **[thenickdude](https://github.com/thenickdude)** 》 Personal support throughout my KVM misadventures and countless community contribs. Cheers.
 - **[vu1tur](to@vu1tur.eu.org)** 》 Open source dmg to img conversion tool; used and bundled by this project.
 - **[Eversiege](https://github.com/eversiege)** 》 Support and testing, та мій улюблений українець.
 - **[CyberneticSquid](https://github.com/cyberneticsquid)** 》 Testing for me at stupid-o'-clock because he's a cool Aussie.
