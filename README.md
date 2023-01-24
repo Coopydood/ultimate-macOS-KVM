@@ -1,6 +1,13 @@
 # ultimate-macOS-KVM
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
+## Introduction
+Tired of all the restraints and poor performance of macOS VMs in hypervisors like VirtualBox or VMware? Well, the story changes when you run your virtual machines in **kernel space**. Welcome to the world of **K**ernel **V**irtual **M**achines.
+
+You might be new to QEMU/KVM, or a long-time veteran - either way this project aims to help you build a macOS virtual machine that can take full advantage of the power of KVM - but in a user-friendly and approachable way.
+
+Scripts? Configs? QEMU arguments? A *"qcow"* file? Moo? If you need a little help wrapping your head around this stuff, feel free to check out the FAQs for some quick knowledge on the basics.
+
 ## Requirements
 As with all other virtual machines / hypervisors, you don't need an *uber-powerful* PC, but you should expect guest performance to be relative to your host's. Performance *can* change dramatically based on guest properties, such as virtual cores, allocated memory, and virtual CPU threads - but it really does boil down to how beefy your host's hardware is.
 Here's a table with my best judgement on minimum, recommended, and best system requirements:
@@ -32,6 +39,11 @@ Here's a table with my best judgement on minimum, recommended, and best system r
 </ul>
 </details>
 
+### Oh, and you NEED Linux.
+Shocker; KVM is a module built into the *Linux kernel*. Not **Windows Subsystem for Linux** or some UNIX-like terminal. You need a full install of at least base Linux **on your host**. Don't try any of that VM inception shenanigans.
+
+The easiest way to do this is by grabbing some mainstream Linux distro, like **Ubuntu, Linux Mint, Manjaro, endeavourOS** - among many, many others. You can pick any one you like. If it's Linux - you can use this project. *I use Arch BTW.*
+
 ## Features
 <ul>
 <li><b>AutoPilot</b></li>
@@ -54,9 +66,9 @@ Easily convert any AutoPilot-generated QEMU scripts into an importable XML file 
 
 </ul>
 
-## Installation
+## Getting Started
 It's easy to get up and running. Simply clone the repo, fix permissions, and run.
-Make sure you have **all** dependencies installed before using.
+Make sure you have **all** [dependencies](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/README.md#requirements) installed before getting started.
 
 ```
 git clone https://github.com/Coopydood/ultimate-macOS-KVM
@@ -78,10 +90,16 @@ and/or check the status of the daemon with
 systemctl status libvirtd
 ```
 
-Okay, now you're ready to use **ultimate-macOS-KVM**. Use the main ``setup.py`` file. This is your main menu / central hub for the project and everything can be accessed from here. Most sub-scripts included in the project should *not* be run on their own.
+Okay, now you're ready to use **ultimate-macOS-KVM**. Use the main ``setup.py`` file. 
+
+This is your main menu / central hub for the project and everything can be accessed from here. Most sub-scripts included in the project should *not* be run on their own.
 ```
 ./setup.py
 ```
+## I'm here for GPU passthrough!
+...and you've come to the right place. ultimate-macOS-KVM includes several handy built-in tools to make VFIO-PCI passthrough (including GPUs) as painfree as possible. Please see the documentation on how to get started with these tools.
+
+Oh, and speaking of...
 
 ## Documentation
 More detailed write-ups on the project and the scripts included, as well as some tutorials can be found on this repo's wiki.
