@@ -51,16 +51,16 @@ class color:
 
 def startup():
     global detectChoice
-    print("\n\nWelcome to"+color.BOLD+color.PURPLE,"AutoPilot"+color.END,"(BETA)")
-    print("Created by",color.BOLD+"Coopydood\n"+color.END)
-    print("\nThe purpose of this script is to automatically guide you through \nthe process of",color.BOLD+"creating and running a basic macOS VM",color.END+"using settings \nbased on answers to a number of questions. \n\nMany of the values can be left to default - especially if you are unsure.\nIt won't be perfect, but it's supposed to make it as"+color.BOLD,"easy as possible.\n"+color.END)
-    print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
-    print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    print("\nContinue whenever you're ready, or return to the main menu.")
-    print(color.BOLD+"\n   1. Start")
-    print(color.END+"      Begin creating a new QEMU-based macOS config file \n")
-    print(color.END+"   2. Main menu")
-    print(color.END+"   3. Exit\n")
+    print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"AutoPilot"+color.END,"(BETA)")
+    print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+    print("\n   The purpose of this script is to automatically guide you through \n   the process of",color.BOLD+"creating and running a basic macOS VM",color.END+"using settings \n   based on answers to a number of questions. \n\n   Many of the values can be left to default - especially if you are unsure.\n   It won't be perfect, but it's supposed to make it as"+color.BOLD,"easy as possible.\n"+color.END)
+    print(color.BOLD+"\n"+"   Profile:"+color.END,"https://github.com/Coopydood")
+    print(color.BOLD+"      Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
+    print("\n   Continue whenever you're ready, or return to the main menu.")
+    print(color.BOLD+"\n      1. Start")
+    print(color.END+"         Begin creating a new QEMU-based macOS config file \n")
+    print(color.END+"      2. Main menu")
+    print(color.END+"      3. Exit\n")
     detectChoice = int(input(color.BOLD+"Select> "+color.END))
 
 def clear(): print("\n" * 150)
@@ -237,7 +237,7 @@ def autopilot():
       global currentStage
       global USR_TARGET_OS
 
-      if USR_TARGET_OS >= 1014:
+      if USR_TARGET_OS >= 1014 and USR_TARGET_OS <= 1015:
          defaultValue = "e1000-82545em"
       else:
          defaultValue = "vmxnet3"
@@ -586,7 +586,7 @@ def autopilot():
       clear()
       print("\n   "+color.BOLD+"Set target OS"+color.END)
       print("   Step 2")
-      print("\n   This is only really important for networking. \n   If you are installing macOS Mojave (10.14) or later, you can leave this alone.\n   If you are installing macOS High Sierra (10.13) or earlier, enter it as a custom value."+color.END)
+      print("\n   This is only really important for networking. \n   The most suitable network adapter will be automatically\n   selected for you based on this later."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
       if customValue == 1:
          print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
@@ -594,6 +594,8 @@ def autopilot():
          USR_TARGET_OS = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = 3
          customValue = 0
+         #if USR_TARGET_OS > 110 and USR_TARGET_OS < 999:
+         #   USR_TARGET_OS = USR_TARGET_OS * 10
          blob = open("./blobs/USR_TARGET_OS.apb","w")
          blob.write(str(USR_TARGET_OS))
          blob.close()
@@ -1110,6 +1112,12 @@ def autopilot():
          else:
             os.system("qemu-img create -f qcow2 HDD.qcow2 "+USR_HDD_SIZE)
             time.sleep(3)
+
+
+         # Hard disk creation error catcher - thanks Cyber!
+         if os.path.exists("./HDD.qcow2"):
+            errorMessage = "The virtual hard disk file could not be created.\n           Did you install QEMU + tools?"
+            throwError()
          
          PROC_GENHDD = 2
          refreshStatusGUI()
