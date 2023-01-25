@@ -1116,7 +1116,7 @@ def autopilot():
 
 
          # Hard disk creation error catcher - thanks Cyber!
-         if os.path.exists("./HDD.qcow2"):
+         if not os.path.exists("./HDD.qcow2"):
             errorMessage = "The virtual hard disk file could not be created.\n           Did you install QEMU + tools?"
             throwError()
          
