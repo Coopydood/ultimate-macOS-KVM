@@ -488,6 +488,7 @@ def main():
     # test locally using args.shortname = 'mojave'
     if not args.shortname or args.shortname == '':
         answer = input((color.BOLD+"\nSelect> "))
+        print(color.END+"")
         try:
             index = int(answer) - 1
             if index < 0:

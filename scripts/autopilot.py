@@ -944,7 +944,7 @@ def autopilot():
          global customInput
          global errorMessage
          errorMessage = "The config file could not be written to.\n           You may have insufficient permissions."
-         integrityCfg = 1
+         integrityCfg3 = 1
 
          def existingWarning():
             global USR_CFG
@@ -1018,9 +1018,9 @@ def autopilot():
          with open("resources/config.sh","r") as file:
             configDataTest = file.read()
          if "ALLOCATED_RAM=\""+str(USR_ALLOCATED_RAM) in configDataTest:
-            integrityCfg + 0
+            integrityCfg3 = 0
          else:
-            integrityCfg - 1
+            integrityCfg3 - 1
             throwError()
 
          time.sleep(2)
