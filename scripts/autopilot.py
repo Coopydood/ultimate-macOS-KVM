@@ -744,6 +744,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Try again")
          print(color.END+"      2. Start over")
          print(color.END+"      Q. Cancel and Quit\n")
+         detectChoice = None
          stageSelectE = str(input(color.BOLD+"Select> "+color.END))
          clear()
          if stageSelectE == "1":
