@@ -1031,6 +1031,7 @@ def autopilot():
       def apcFetchDL():  # FETCH RECOVERY ONLINE
          global PROC_FETCHDL
          PROC_FETCHDL = 1
+         global errorMessage
          errorMessage = "The download script could not be executed.\n           You may have insufficient permissions or damaged files."
          integrityImg = 1
          refreshStatusGUI()
@@ -1051,6 +1052,7 @@ def autopilot():
          global PROC_LOCALCOPY_CVTN
          PROC_LOCALCOPY = 1
          PROC_LOCALCOPY_CVTN = 0
+         global errorMessage
          errorMessage = "The local recovery image could not be found,\n           or it cannot be accessed."
          integrityImg = 1
          refreshStatusGUI()
@@ -1083,6 +1085,7 @@ def autopilot():
          global PROC_GENHDD
          global USR_HDD_SIZE
          PROC_GENHDD = 1
+         global errorMessage
          errorMessage = "The virtual hard disk file could not be created.\n           You may have insufficient permissions."
          integrityImg = 1
          refreshStatusGUI()
@@ -1128,6 +1131,7 @@ def autopilot():
          global PROC_APPLYPREFS
          global USR_CFG
          PROC_APPLYPREFS = 1
+         global errorMessage
          errorMessage = "Could not apply preferences to generated files.\n           You may have insufficient permissions."
          integrityImg = 1
          refreshStatusGUI()
@@ -1179,6 +1183,7 @@ def autopilot():
          global PROC_FIXPERMS
          global USR_CFG
          PROC_FIXPERMS = 1
+         global errorMessage
          errorMessage = "Could not set permissions on generated files.\n           You can attempt to do this manually."
          integrityImg = 1
          refreshStatusGUI()
@@ -1194,6 +1199,7 @@ def autopilot():
       def apcCleanUp():  # CLEAN BLOBS AND TEMP
          global PROC_CLEANUP
          global USR_CFG
+         global errorMessage
          PROC_CLEANUP = 1
          refreshStatusGUI()
          time.sleep(1)
