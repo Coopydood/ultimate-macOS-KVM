@@ -129,9 +129,12 @@ def stage5():
             currentAddr = currentAddr + 1
 
             if currentROM != "skip" and currentROM != None and currentType == "gpu":
-                currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",multifunction=on,romfile=\""+currentROM+"\","+"bus=rp1,addr=0x0."+str(currentAddr))
+                #currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",multifunction=on,romfile=\""+currentROM+"\","+"bus=rp1,addr=0x0."+str(currentAddr))
+                currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",multifunction=on,romfile=\""+currentROM+"\"")
             else: 
-                currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",bus=rp1,addr=0x0."+str(currentAddr))
+                #currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",bus=rp1,addr=0x0."+str(currentAddr))
+                currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\"")
+
 
             deviceLines.append(str(currentDeviceString))
             #print(currentDeviceString)
@@ -185,13 +188,44 @@ def stage5():
                     print(color.END+"      2. Select another file...")
                     print(color.END+"      Q. Exit\n")
                     apFile.close()
-                    detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
+                    detectChoice2 = str(input(color.BOLD+"Select> "+color.END))
 
-                    if detectChoice1 == "1":
-                        apFile = apFile.read()
+                    if detectChoice2 == "1":
+                        #apFileR = apFile.read()
                         apFileChosen = 1
+                        
                         clear()
-                    if detectChoice1 == "2":
+                        if apFilePath is not None:
+                            
+                            print("\n\n   "+color.BOLD+color.BLUE+"⌛ APPLYING..."+color.END,"")
+                            print("   Please wait\n")
+                            print("   The assistant is now configuring your AutoPilot config file\n   for use with your VFIO-PCI devices.")
+                            print(color.BOLD+"\n   This may take a few moments.\n   Your current config will be backed up.\n")
+                            time.sleep(2)
+                            apFilePathNoExt = apFilePath.replace(".sh","")
+                            os.system("cp ./"+apFilePath+" ./"+apFilePathNoExt+"-noPT.sh")
+                            with open("./"+apFilePath,"r") as file1:
+                                apFileM = file1.read()
+                                currentDispVal = slotCount
+                                for y in range(slotCount):
+                                    currentDispVal = currentDispVal - 1
+                                    devLineF = str(deviceLines[currentDispVal])
+                                    apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+devLineF)
+                                    apFileM = apFileM.replace("-vga qxl","-vga none")
+                                    apFileM = apFileM.replace("-monitor stdio","-monitor none")
+                            file1.close
+
+                            with open("./"+apFilePath,"w") as file:
+                                file.write(apFileM)
+
+                        apFile = open("./"+apFilePath,"r")
+                        if devLineF in apFile.read():
+                            clear()
+                            print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
+                            print("   QEMU arguments have been added\n")
+                            print("   The QEMU argument lines were successfully added to\n   "+color.BOLD+apFilePath+color.END+"\n\n\n\n\n\n\n")
+
+                    if detectChoice2 == "2":
                         clear()
                         manualAPSelect()
                 else:
@@ -234,6 +268,7 @@ def stage5():
     elif detectChoice1 == "q" or detectChoice1 == "Q":
         exit
     #detectChoice3 = int(input(color.BOLD+"Select> "+color.END))
+    
     #clear()
             #-device vfio-pci,host="$VFIO_ID_0",multifunction=on,romfile="$VFIO_ROM",bus=rp1,addr=0x0.0
 
