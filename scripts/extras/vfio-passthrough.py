@@ -197,7 +197,7 @@ def stage5():
                         clear()
                         if apFilePath is not None:
                             
-                            print("\n\n   "+color.BOLD+color.BLUE+"⌛ APPLYING..."+color.END,"")
+                            print("\n\n   "+color.BOLD+color.BLUE+"⧖ APPLYING..."+color.END,"")
                             print("   Please wait\n")
                             print("   The assistant is now configuring your AutoPilot config file\n   for use with your VFIO-PCI devices.")
                             print(color.BOLD+"\n   This may take a few moments.\n   Your current config will be backed up.\n")
