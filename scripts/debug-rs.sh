@@ -5,6 +5,9 @@ rm ./boot.sh
 rm ./resources/config.sh
 rm ./blobs/*.apb
 rm ./HDD.qcow2
+rm ./boot-noPT.sh
+rm ./vfio-args.txt
+rm -rf ./boot/*
 echo  
 echo AutoPilot working files reset.
 echo  

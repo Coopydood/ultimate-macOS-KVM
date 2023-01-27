@@ -125,15 +125,15 @@ def stage5():
             currentVID = str(slotContainerPT[currentEditVal])
             currentType = str(slotContainerType[currentEditVal])
             currentROM = str(slotContainerROM[currentEditVal])
-
+            currentROM = currentROM.replace("./","$REPO_PATH/")
             currentAddr = currentAddr + 1
 
             if currentROM != "skip" and currentROM != None and currentType == "gpu":
                 #currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",multifunction=on,romfile=\""+currentROM+"\","+"bus=rp1,addr=0x0."+str(currentAddr))
-                currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",multifunction=on,romfile=\""+currentROM+"\"")
+                currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",multifunction=on,romfile=\""+currentROM+"\",bus=pcie.0")
             else: 
                 #currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",bus=rp1,addr=0x0."+str(currentAddr))
-                currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\"")
+                currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",bus=pcie.0")
 
 
             deviceLines.append(str(currentDeviceString))
@@ -213,6 +213,7 @@ def stage5():
                                     apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+devLineF)
                                     apFileM = apFileM.replace("-vga qxl","-vga none")
                                     apFileM = apFileM.replace("-monitor stdio","-monitor none")
+                                    apFileM = apFileM.replace("#-display none","-display none")
                             file1.close
 
                             with open("./"+apFilePath,"w") as file:

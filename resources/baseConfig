@@ -53,7 +53,7 @@ args=(
 -usb -device usb-kbd -device usb-tablet #USB_DEV
 -smp "$CPU_THREADS",cores="$CPU_CORES",sockets="$CPU_SOCKETS"
 -device usb-ehci,id=ehci
--device pcie-root-port,bus=pcie.0,id=rp1,slot=1,x-speed=16,x-width=32
+-device pcie-root-port,bus=pcie.0,slot=1,x-speed=16,x-width=32
 #VFIO_DEV_BEGIN
 #VFIO_DEV_END
 -device isa-applesmc,osk="ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"
@@ -75,7 +75,7 @@ args=(
 -netdev user,id=net0 -device "$NETWORK_DEVICE",netdev=net0,id=net0,mac=00:16:cb:00:21:09
 -vga qxl
 -monitor stdio
-
+#-display none
 )
 
 qemu-system-x86_64 "${args[@]}"
