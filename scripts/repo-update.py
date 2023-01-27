@@ -64,6 +64,8 @@ webVersionInt = webVersion.replace(".","")
 versionInt = int(versionInt)
 webVersionInt = int(webVersionInt)
 
+if versionInt < 100: versionInt = versionInt * 10
+if webVersionInt < 100: webVersionInt = webVersionInt * 10
 
 if webVersionInt is str:
    webVersionInt = "UNKNOWN"
