@@ -106,6 +106,15 @@ Oh, and speaking of...
 More detailed write-ups on the project and the scripts included, as well as some tutorials can be found on this repo's wiki.
 [I'm working on it...](https://github.com/Coopydood/ultimate-macOS-KVM/wiki)
 
+Or, you can find some in the included **docs** folder.
+
+## Updates
+This project has been designed to be updated and made better over time. 
+
+As you use it to generate your personal files, having to re-clone the entire repo yourself while preserving your files would be a right pain in the backside. Therefore, there's an automated updater script built right-in that you can use to safely update in-place to newer versions of this project, without affecting any of your personal config files, virtual hard drives, or anything else not part of the project files. And, if an update changes dramatically changes directory structures from your current version, the updater automatically disables its in-place update mechanism to prevent data loss.
+
+Of course, if you're just testing the project, then a "clean install" is probably still preferable.
+
 ## Disclaimer
 This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't expect much as this is a passion-project and not a priority in my life.
 - I'm not responsible for any time you waste using this project.

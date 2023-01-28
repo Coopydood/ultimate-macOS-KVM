@@ -101,9 +101,45 @@ def stage5():
                 detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
 
                 if detectChoice1 == "1":
+                    apFilePath = apFileSelect
                     apFile = apFile.read()
                     apFileChosen = 1
                     clear()
+                    #apFileR = apFile.read()
+                    apFileChosen = 1
+                    
+                    clear()
+                    if apFilePath is not None:
+                        
+                        print("\n\n   "+color.BOLD+color.BLUE+"⧖ APPLYING..."+color.END,"")
+                        print("   Please wait\n")
+                        print("   The assistant is now configuring your AutoPilot config file\n   for use with your VFIO-PCI devices.")
+                        print(color.BOLD+"\n   This may take a few moments.\n   Your current config will be backed up.\n")
+                        time.sleep(2)
+                        apFilePathNoExt = apFilePath.replace(".sh","")
+                        os.system("cp ./"+apFilePath+" ./"+apFilePathNoExt+"-noPT.sh")
+                        with open("./"+apFilePath,"r") as file1:
+                            apFileM = file1.read()
+                            currentDispVal = slotCount
+                            for y in range(slotCount):
+                                currentDispVal = currentDispVal - 1
+                                devLineF = str(deviceLines[currentDispVal])
+                                apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+devLineF)
+                                apFileM = apFileM.replace("-vga qxl","-vga none")
+                                apFileM = apFileM.replace("-monitor stdio","-monitor none")
+                                apFileM = apFileM.replace("#-display none","-display none")
+                                os.system("cp ./ovmf/var/* ./ovmf/")
+                        file1.close
+
+                        with open("./"+apFilePath,"w") as file:
+                            file.write(apFileM)
+
+                    apFile = open("./"+apFilePath,"r")
+                    if devLineF in apFile.read():
+                        clear()
+                        print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
+                        print("   QEMU arguments have been added\n")
+                        print("   The QEMU argument lines were successfully added to\n   "+color.BOLD+apFilePath+color.END+"\n\n\n\n\n\n\n")
                 if detectChoice1 == "2":
                     clear()
                     manualAPSelect()
@@ -214,6 +250,7 @@ def stage5():
                                     apFileM = apFileM.replace("-vga qxl","-vga none")
                                     apFileM = apFileM.replace("-monitor stdio","-monitor none")
                                     apFileM = apFileM.replace("#-display none","-display none")
+                                    os.system("cp ./ovmf/var/* ./ovmf/")
                             file1.close
 
                             with open("./"+apFilePath,"w") as file:

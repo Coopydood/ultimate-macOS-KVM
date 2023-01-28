@@ -8,6 +8,8 @@ rm ./HDD.qcow2
 rm ./boot-noPT.sh
 rm ./vfio-args.txt
 rm -rf ./boot/*
+rm ./ovmf/OVMF_CODE.fd
+rm ./ovmf/OVMF_VARS.fd
 echo  
 echo AutoPilot working files reset.
 echo  

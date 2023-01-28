@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2054
 
-############################################################
+############################################################.
 #    THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!    #
 #                                                          #
 # It is intended to be used by the automatic setup wizard. #
 #   To use the wizard, run the included "setup.py" file;   #
 #                                                          #
 #                      $ ./setup.py                        #
-############################################################
+############################################################.
 
 #
 #	baseConfig
@@ -41,6 +41,7 @@ VFIO_ROM="$USR_VFIO_ROM"
 
 USB_DEVICES="$USR_USB_DEVICES"
 NETWORK_DEVICE="$USR_NETWORK_DEVICE"
+MAC_ADDRESS="$USR_MAC_ADDRESS"
 
 
 #   You should not have to touch anything below this line, especially if you
@@ -72,10 +73,11 @@ args=(
 -device ide-hd,bus=sata.4,drive=BaseSystem
 ##########################################################################
 
--netdev user,id=net0 -device "$NETWORK_DEVICE",netdev=net0,id=net0,mac=00:16:cb:00:21:09
+-netdev user,id=net0 -device "$NETWORK_DEVICE",netdev=net0,id=net0,mac="$MAC_ADDRESS"
 -vga qxl
 -monitor stdio
 #-display none
+#-vnc 0.0.0.0:1,password=on -k en-us
 )
 
 qemu-system-x86_64 "${args[@]}"

@@ -24,6 +24,7 @@ import sys
 import argparse
 from datetime import datetime
 import timeit
+import random
 
 #parser = argparse.ArgumentParser("gpu-check")
 #parser.add_argument("-a", "--auto", dest="auto", help="Detect GPU(s) automatically",action="store_true")
@@ -83,6 +84,7 @@ def autopilot():
    global USR_TARGET_OS
    global USR_HDD_SIZE
    global USR_BOOT_FILE
+   global USR_MAC_ADDRESS
 
    USR_CPU_SOCKS = 1
    USR_CPU_CORES = 2 
@@ -98,6 +100,7 @@ def autopilot():
    USR_TARGET_OS = 1015
    USR_HDD_SIZE = "80G"
    USR_BOOT_FILE = "BaseSystem.img"
+   USR_MAC_ADDRESS = "00:16:cb:00:21:09"
    
 
    global currentStage
@@ -107,7 +110,7 @@ def autopilot():
    customValue = 0
 
    
-   def stage11():
+   def stage12():
       global USR_CPU_SOCKS
       global USR_CPU_CORES
       global USR_CPU_THREADS
@@ -124,6 +127,7 @@ def autopilot():
       global USR_BOOT_FILE
       global USR_TARGET_OS_F
       global USR_CPU_TOTAL_F
+      global USR_MAC_ADDRESS
 
       USR_ALLOCATED_RAM_F = USR_ALLOCATED_RAM.replace("G","")
       USR_HDD_SIZE_F = USR_HDD_SIZE.replace("G","")
@@ -134,6 +138,8 @@ def autopilot():
 
       if USR_BOOT_FILE == "-1":
          USR_BOOT_FILE_F = "Download from Apple..."
+      elif USR_BOOT_FILE == "-2":
+         USR_BOOT_FILE_F = "Not configured"
       else:
          USR_BOOT_FILE_F = "Local image file"
 
@@ -149,7 +155,11 @@ def autopilot():
       #print("   "+color.BOLD+color.CYAN+"        ",color.END+color.BOLD+USR_CPU_FEATURE_ARGS+color.END)
       print("   "+color.BOLD+color.CYAN+"RAM     ",color.END+color.END+USR_ALLOCATED_RAM_F+" GB"+color.END)
       print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_SIZE_F+" GB (dynamic)"+color.END)
-      print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+"")
+      
+      if USR_MAC_ADDRESS != "00:16:cb:00:21:09":
+         print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+" ("+USR_MAC_ADDRESS+")")
+      else:
+         print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+"")
       print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
       if USR_BOOT_FILE == "-1":
          print(color.BOLD+"\n      1. Download and generate...")
@@ -167,7 +177,7 @@ def autopilot():
          handoff()
 
       elif stageSelect == "2":
-         stage10()
+         stage11()
 
       elif stageSelect == "x" or stageSelect == "X":
          currentStage = 1
@@ -176,7 +186,7 @@ def autopilot():
       elif stageSelect == "q" or stageSelect == "Q":
          exit   
 
-   def stage10():
+   def stage11():
       global customValue
       global currentStage
       global USR_BOOT_FILE
@@ -184,7 +194,7 @@ def autopilot():
 
       clear()
       print("\n   "+color.BOLD+"macOS Recovery image file"+color.END)
-      print("   Step 10")
+      print("   Step 11")
       print("\n   Choose a bootable image file the virtual machine should boot to. \n   You need a macOS Recovery image (BaseSystem.img). You can either\n   select an existing one or the wizard can download one for you.\n   It must be in the *.img file format."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
       if customValue == 1:
@@ -197,7 +207,7 @@ def autopilot():
          blob = open("./blobs/USR_BOOT_FILE.apb","w")
          blob.write(USR_BOOT_FILE)
          blob.close()
-         stage11()
+         stage12()
       else:
          print(color.BOLD+"\n      1. Download from Apple...")
          print(color.END+"      2. Select existing...")
@@ -215,13 +225,86 @@ def autopilot():
             blob.write("fresh_cdn")
             blob.close()
             currentStage = currentStage + 1
-            stage11()
+            stage12()
 
          elif stageSelect == "2":
             customValue = 1
-            stage10()
+            stage11()
 
          elif stageSelect == "3":
+            USR_BOOT_FILE = "-2"
+            blob = open("./blobs/USR_BOOT_FILE.apb","w")
+            blob.write(USR_BOOT_FILE)
+            blob.close()
+            blob = open("./blobs/CDN_CONTROL","w")
+            blob.write("fresh_cdn")
+            blob.close()
+            currentStage = currentStage + 1
+            stage12()
+
+         elif stageSelect == "4":
+            currentStage = 1
+            stage10()
+            
+         elif stageSelect == "q" or stageSelect == "Q":
+            exit   
+
+   def stage10():
+      global customValue
+      global currentStage
+      global USR_MAC_ADDRESS
+      defaultValue = "00:16:cb:00:21:09"
+
+      clear()
+      print("\n   "+color.BOLD+"Network MAC address"+color.END)
+      print("   Step 10")
+      print("\n   The network adapter needs a virtual MAC address. \n   The default is fine unless you intend on using features such\n   as iMessage and FaceTime, as these services require specific\n   MAC address values. In this case, you should use one\n   generated by this script or your own custom one."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      if customValue == 1:
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<file>"+color.YELLOW+".img"+color.END+"\n   Enter a custom value.\n   \n   ")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:",color.YELLOW+""+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.END+"\n   Enter the full path to a bootable macOS Recovery image file.\n   It will be automatically copied into the root repo directory, or you\n   can place it there now and type \"BaseSystem.img\" without a path.\n   You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n      "+color.BOLD+"TIP:"+color.END,"You can drag and drop a file onto this window.\n   \n   ")
+         customInput = str(input(color.BOLD+"Value> "+color.END))
+         USR_MAC_ADDRESS = customInput               #+".sh" #<--- change required prefix/suffix
+         currentStage = currentStage + 1
+         customValue = 0
+         blob = open("./blobs/USR_MAC_ADDRESS.apb","w")
+         blob.write(USR_MAC_ADDRESS)
+         blob.close()
+         stage11()
+      else:
+         print(color.BOLD+"\n      1. Use default value")
+         print(color.END+"      2. Generate automatically")
+         print(color.END+"      3. Custom value...")
+         print(color.END+"      4. Back")
+         print(color.END+"      Q. Exit\n   ")
+         stageSelect = str(input(color.BOLD+"Select> "+color.END))
+      
+         if stageSelect == "1":
+            USR_MAC_ADDRESS = "00:16:cb:00:21:09"
+            blob = open("./blobs/USR_MAC_ADDRESS.apb","w")
+            blob.write(USR_MAC_ADDRESS)
+            blob.close()
+            blob = open("./blobs/CDN_CONTROL","w")
+            blob.write("fresh_cdn")
+            blob.close()
+            currentStage = currentStage + 1
+            stage11()
+
+         elif stageSelect == "3":
+            customValue = 1
+            stage10()
+
+         elif stageSelect == "2":
+            macp1 = str(random.randint(10,50))
+            macp2 = str(random.randint(10,50))
+            USR_MAC_ADDRESS = str("00:16:cb:00:"+macp1+":"+macp2)
+            blob = open("./blobs/USR_MAC_ADDRESS.apb","w")
+            blob.write(USR_MAC_ADDRESS)
+            blob.close()
+            blob = open("./blobs/CDN_CONTROL","w")
+            blob.write("fresh_cdn")
+            blob.close()
+            currentStage = currentStage + 1
             stage11()
 
          elif stageSelect == "4":
@@ -785,24 +868,24 @@ def autopilot():
          elif PROC_GENCONFIG == 2:
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Generating config script"+color.END)
 
-         if PROC_LOCALCOPY == 0:
+         if PROC_LOCALCOPY == 0 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
-         elif PROC_LOCALCOPY == 1 and PROC_LOCALCOPY_CVTN == 0:
+         elif PROC_LOCALCOPY == 1 and PROC_LOCALCOPY_CVTN == 0 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Copying recovery image into place"+color.END)
-         elif PROC_LOCALCOPY == 1 and PROC_LOCALCOPY_CVTN == 1:
+         elif PROC_LOCALCOPY == 1 and PROC_LOCALCOPY_CVTN == 1 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
-         elif PROC_LOCALCOPY == 2:
+         elif PROC_LOCALCOPY == 2 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
 
          if PROC_LOCALCOPY_CVTN == 1:
             print("      "+color.BOLD+"      ↳ "+"Converting image format"+color.END)
          
 
-         if PROC_FETCHDL == 0:
+         if PROC_FETCHDL == 0 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Downloading recovery image"+color.END)
-         elif PROC_FETCHDL == 1:
+         elif PROC_FETCHDL == 1 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Downloading recovery image"+color.END)
-         elif PROC_FETCHDL == 2:
+         elif PROC_FETCHDL == 2 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Downloading recovery image"+color.END)
 
          if PROC_GENHDD == 0:
@@ -856,14 +939,17 @@ def autopilot():
             os.system("mv boot/EFI boot/"+backupOCPath+"/EFI")
             #os.system("rm -rf boot/EFI")
             time.sleep(2)
-         if USR_TARGET_OS >= 1014:
-            os.system("cp resources/oc_store/compat_new/OpenCore.qcow2 boot/OpenCore.qcow2")
-            os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
-            os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
-         else:
+         if USR_TARGET_OS <= 1015:
             os.system("cp resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
             os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
             os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
+         else:
+            os.system("cp resources/oc_store/compat_new/OpenCore.qcow2 boot/OpenCore.qcow2")
+            os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
+            os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
+         
+         os.system("cp ovmf/var/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
+         os.system("cp ovmf/var/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
          
          integrityConfig = 1
          if os.path.exists("resources/config.sh"):
@@ -873,6 +959,12 @@ def autopilot():
             throwError()
 
          if os.path.exists("boot/OpenCore.qcow2"):
+            integrityConfig = integrityConfig + 0
+         else:
+            integrityConfig = integrityConfig - 1
+            throwError()
+         
+         if os.path.exists("ovmf/OVMF_CODE.fd"):
             integrityConfig = integrityConfig + 0
          else:
             integrityConfig = integrityConfig - 1
@@ -1013,6 +1105,10 @@ def autopilot():
          configData = configData.replace("$USR_ID","macOS")
          configData = configData.replace("baseConfig",str(USR_CFG))
          configData = configData.replace("$USR_CFG",str(USR_CFG))
+         configData = configData.replace("$USR_MAC_ADDRESS",str(USR_MAC_ADDRESS))
+         if USR_BOOT_FILE == "-2":
+            configData = configData.replace("-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw","#-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw")
+            configData = configData.replace("-device ide-hd,bus=sata.4,drive=BaseSystem","#-device ide-hd,bus=sata.4,drive=BaseSystem")
          with open ("resources/config.sh","w") as file:
             file.write(configData)
 
@@ -1097,7 +1193,8 @@ def autopilot():
             print("\n   This is not an error and can be resolved with your input. \n   You must select an option to continue. Once selected,\n   the process can continue from where it was left."+color.END)
             print("\n   "+color.BOLD+color.YELLOW+"PROBLEM:",color.END+"A virtual hard disk with the name \"HDD.qcow2\" already exists."+color.END)
             print(color.BOLD+"\n      1. Automatically rename existing file")
-            print(color.END+"      2. Overwrite")
+            print(color.END+"      2. Use existing file")
+            print(color.END+color.RED+"      X. Delete"+color.END)
             print(color.END+"      Q. Cancel and Quit\n")
             stageSelect = str(input(color.BOLD+"Select> "+color.END))
          
@@ -1107,6 +1204,10 @@ def autopilot():
 
             elif stageSelect == "2":
                refreshStatusGUI() 
+
+            elif stageSelect == "x" or stageSelect == "X":
+               os.system("rm HDD.qcow2")
+               apcGenHDD()
 
             elif stageSelect == "q" or stageSelect == "Q":
                exit
@@ -1154,7 +1255,7 @@ def autopilot():
          configData = configData.replace("#                                                          #","#")
          configData = configData.replace("#                      $ ./setup.py                        #","#\n#   To boot this script, run the following command:\n#   $ ./"+str(USR_CFG))
          configData = configData.replace("#   ./setup.py","")
-         configData = configData.replace("############################################################","#")
+         configData = configData.replace("############################################################.","#")
 
          with open ("resources/config.sh","w") as file:
             file.write(configData)
@@ -1213,9 +1314,9 @@ def autopilot():
       apcPrepare()
       apcBlobCheck()
       apcGenConfig()
-      if PROC_FETCHDL == 0:
+      if PROC_FETCHDL == 0 and USR_BOOT_FILE != "-2":
          apcFetchDL()
-      elif PROC_LOCALCOPY == 0:
+      elif PROC_LOCALCOPY == 0 and USR_BOOT_FILE != "-2":
          apcLocalCopy()
       apcGenHDD()
       apcApplyPrefs()
