@@ -60,7 +60,7 @@ def startup():
         print(color.END+"      4. Dump VBIOS to ROM file")
         #print(color.END+"      4. Import config file into virt-manager")
         print(color.RED+"      R. Reset OpenCore image and vNVRAM")
-        print(color.RED+"      X. Download and restore all (DANGEROUS!)")
+        print(color.RED+"      X. Download and restore all")
         print(color.END+"      B. Back...")
         print(color.END+"      Q. Exit\n")
     else:
@@ -80,7 +80,7 @@ def startup():
         print(color.END+"      5. Dump VBIOS to ROM file"+color.YELLOW,"⚠")
         #print(color.END+"      4. Import config file into virt-manager")
         print(color.RED+"      R. Reset OpenCore image and vNVRAM")
-        print(color.RED+"      X. Download and restore all (DANGEROUS!)")
+        print(color.RED+"      X. Download and restore all")
         print(color.END+"      B. Back...")
         print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
