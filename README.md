@@ -4,9 +4,9 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 ## Introduction
 Tired of all the restraints and poor performance of macOS VMs in hypervisors like VirtualBox or VMware? Well, the story changes when you run your virtual machines in **kernel space**. Welcome to the world of **K**ernel **V**irtual **M**achines.
 
-You might be new to QEMU/KVM, or a long-time veteran - either way this project aims to help you build a macOS virtual machine that can take full advantage of the power of KVM - but in a user-friendly and approachable way.
+This project aims to help you build a macOS virtual machine that can take full advantage of the power of KVM regardless of you being new to QEMU/KVM, or a long-time veteran, in a user-friendly and approachable way.
 
-Scripts? Configs? QEMU arguments? A *"qcow"* file? Moo? If you need a little help wrapping your head around this stuff, feel free to check out the FAQs for some quick knowledge on the basics.
+Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little help wrapping your head around this stuff, feel free to [check out the FAQs](https://github.com/Coopydood/ultimate-macOS-KVM/wiki) for some quick knowledge on the basics.
 
 ## Requirements
 As with all other virtual machines / hypervisors, you don't need an *uber-powerful* PC, but you should expect guest performance to be relative to your host's. Performance *can* change dramatically based on guest properties, such as virtual cores, allocated memory, and virtual CPU threads - but it really does boil down to how beefy your host's hardware is.
@@ -19,10 +19,10 @@ Here's a table with my best judgement on minimum, recommended, and best system r
 | **Memory**      |                      4 GB                      |                                16 GB                               |                                    32 GB+                                   |
 | **Disk Type**   |                    SATA HDD                    |                              SATA SSD                              |                                   NVMe SSD                                  |
 | **Disk Space**  |                      40 GB                     |                               120 GB                               |                                   500 GB+                                   |
-| **Resolution**  |                  1280x720                 |                           2560x1440                          |                                3840x2160                               |
+| **Resolution**  |                  1280x720                 |                           1920x1080 (2560x1440 preferable)                          |                                3840x2160                               |
 | **GPU (VFIO)**  |                        -                       |                             AMD RX 580                             |                                AMD RX 6600 XT                               |
 
-**You must also have all the required dependencies installed before starting - and any optional ones too along the way. Click the dropdown below to see the list.**
+**You *must* also have all the required dependencies installed before starting - and any optional ones too along the way. Click the dropdown below to see the list.**
 <details>
 <summary><b>Dependencies</b></summary>
 <br>
@@ -32,7 +32,7 @@ Here's a table with my best judgement on minimum, recommended, and best system r
 <li><b>Wget</b> 》 <code>wget</code></li>
 <li><b>QEMU</b> 》 <code>qemu-base</code> or <code>qemu-full</code></li>
 <li><b>Libvirt</b> 》 <code>libvirt</code></li>
-<li><b>Python</b> 》 <code>python</code></li>
+<li><b>Python 3.8+</b> 》 <code>python</code></li>
 </ul>
 <b>Optional / Recommended</b>
 <ul>
@@ -54,7 +54,7 @@ Automatically generates a valid, customised, and ready-to-use QEMU config script
 Several check scripts can be used to make sure your system is correctly prepared for both passthrough and non-passthrough KVM.
 
 <li><b>GPU Compatibility Checker</b></li>
-Detects GPUs in your host system and checks them against a list of known compatible and incompatible macOS GPUs, providing a summary including any extra card-specific quirks.
+Detects GPUs in your host system and checks them against a list of known compatible and incompatible macOS GPUs, providing a clear and easy-to-understand summary, including any extra card-specific quirks.
 
 <li><b>VFIO-IDs and IOMMU Helpers</b></li>
 Auto-detects and lists IOMMU groups, VFIO-IDs, and checks if devices are stubbed to kernel driver correctly.
@@ -121,7 +121,7 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 - I'm not responsible if you make an oopsie whoopsie. 
 - Do NOT run anything as ``sudo``. If you have an urge to then you need to break that habit _**asap.**_ None of my scripts require superuser privileges.
 - Expect headaches. Some severe.
-- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassle, you WILL run into stupid gotchas that require trial and error out of my control. 
+- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassle, you WILL run into stupid *gotchas* that require trial and error out of my control. 
 - I'm by no means an expert on this stuff nor would I claim to be.
 - I've simply made *what I had to go through* **easier** for you. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
@@ -131,7 +131,7 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[Dortania](https://github.com/Dortania)** 》 Extensive documentation and Hackintosh development
 - **[Kholia](https://github.com/kholia)** 》 Development of scripts and documentation. ultimate-macOS-KVM is intended as an extension to [OSX-KVM](https://github.com/kholia/OSX-KVM).
 - **[thenickdude](https://github.com/thenickdude)** 》 Personal support throughout my KVM misadventures and countless community contribs. Cheers.
-- **[vu1tur](to@vu1tur.eu.org)** 》 Open source dmg to img conversion tool; used and bundled by this project.
+- **[vu1tur](vu1tur.eu.org)** 》 Open source dmg to img conversion tool; used and bundled by this project.
 - **[Eversiege](https://github.com/eversiege)** 》 Support and testing, та мій улюблений українець.
 - **[CyberneticSquid](https://github.com/cyberneticsquid)** 》 Testing for me at stupid-o'-clock because he's a cool Aussie.
 - **[Cake](https://github.com/cam-jm)** 》 Another Aussie testing for me in the middle of my sleep-deprived nights, with a slight obsession over cake.
