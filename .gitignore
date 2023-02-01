@@ -13,9 +13,5 @@ boot/*
 vfio-args.txt
 willthisbedetected.sh
 resources/WEBVERSION
-ovmf/OVMF_VARS.fd
-ovmf/OVMF_VARS.fd
 boot-noPT.sh
-ovmf/OVMF_VARS.fd
-ovmf/OVMF_CODE.fd
 ovmf/OVMF_VARS-1280x720.fd
