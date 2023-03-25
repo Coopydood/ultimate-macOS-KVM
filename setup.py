@@ -30,10 +30,13 @@ parser.add_argument("-svmc", "--skip-vm-check", dest="svmc", help="Skip the arbi
 
 args = parser.parse_args()
 
+global apFilePath
+
 detectChoice = 1
 latestOSName = "Ventura"
 latestOSVer = "13"
 runs = 0
+apFilePath = ""
 
 version = open("./VERSION")
 version = version.read()
@@ -58,21 +61,46 @@ def startup():
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
     if isVM == True:
         print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
-    print("   This script can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, getting vfio-ids, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.\n")
+    if os.path.exists("blobs/USR_CFG.apb"):
+            tainted = 1
+    else:
+        print("   This script can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, getting vfio-ids, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.\n")
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print("   Select an option to continue.")
-    if isVM == True:
+    if os.path.exists("./blobs/USR_CFG.apb"):
+            global apFilePath
+            apFilePath = open("./blobs/USR_CFG.apb")
+            apFilePath = apFilePath.read()
+            macOSVer = open("./blobs/USR_TARGET_OS.apb")
+            macOSVer = macOSVer.read()
+            macOSVer = str(int(macOSVer) / 100)
+            if os.path.exists("./"+apFilePath):
+                apFile = open("./"+apFilePath,"r")
+            
+                if "APC-RUN" in apFile.read():
+                    print(color.BOLD+"\n      B. Boot macOS "+macOSVer+"")
+                    print(color.END+"         Start macOS using the detected "+apFilePath+" script.")
+                    print(color.END+"\n      1. AutoPilot")
+
+                else:
+                    print(color.BOLD+"\n      1. AutoPilot (Experimental)")
+                    print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
+
+            else:
+                print(color.BOLD+"\n      1. AutoPilot (Experimental)")
+                print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
+    else:
         print(color.BOLD+"\n      1. AutoPilot (Experimental)")
         print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
+    if isVM == True:
+        
         print(color.END+"      2. Download and convert macOS image")
         print(color.END+"      3. Check GPU compatibility"+color.YELLOW,"⚠")
         print(color.END+"      4. Check IOMMU grouping"+color.YELLOW,"⚠")
         print(color.END+"      5. Get and display vfio-pci IDs"+color.YELLOW,"⚠")
         print(color.END+"      6. Verify devices bound to vfio-pci"+color.YELLOW,"⚠")
     else:
-        print(color.BOLD+"\n      1. AutoPilot (Experimental)")
-        print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
         print(color.END+"      2. Download and convert macOS image")
         print(color.END+"      3. Check GPU compatibility")
         print(color.END+"      4. Check IOMMU grouping")
@@ -179,3 +207,6 @@ elif detectChoice == "u" or detectChoice == "U":
     os.system('./scripts/repo-update.py')
 elif detectChoice == "q" or detectChoice == "Q":
     exit
+elif detectChoice == "b" or detectChoice == "B":
+    clear()
+    os.system("./"+apFilePath)
