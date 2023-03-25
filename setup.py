@@ -74,7 +74,8 @@ def startup():
             apFilePath = apFilePath.read()
             macOSVer = open("./blobs/USR_TARGET_OS.apb")
             macOSVer = macOSVer.read()
-            macOSVer = str(int(macOSVer) / 100)
+            if int(macOSVer) >= 999:
+                macOSVer = str(int(macOSVer) / 100)
             if os.path.exists("./"+apFilePath):
                 apFile = open("./"+apFilePath,"r")
             
