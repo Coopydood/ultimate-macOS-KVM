@@ -948,8 +948,8 @@ def autopilot():
             os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
             os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
          
-         os.system("cp ovmf/var/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
-         os.system("cp ovmf/var/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
+         os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
+         os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
          
          integrityConfig = 1
          if os.path.exists("resources/config.sh"):
@@ -1215,7 +1215,7 @@ def autopilot():
          if os.path.exists("./HDD.qcow2"):
             existingWarning1()
          else:
-            os.system("qemu-img create -f qcow2 HDD.qcow2 "+USR_HDD_SIZE)
+            os.system("qemu-img create -f qcow2 HDD.qcow2 "+USR_HDD_SIZE+" > /dev/null 2>&1")
             time.sleep(3)
 
 

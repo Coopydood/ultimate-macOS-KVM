@@ -23,6 +23,7 @@ detectChoice = 1
 latestOSName = "Ventura"
 latestOSVer = "13"
 runs = 0
+global errorMessage
 
 version = open("./VERSION")
 version = version.read()
@@ -44,10 +45,10 @@ class color:
 
 
 clear()
-print("\n\n   "+color.BOLD+color.RED+"↺  RESET OPENCORE AND vNVRAM"+color.END,"")
+print("\n\n   "+color.BOLD+color.RED+"↺  RESET OVMF CODE"+color.END,"")
 print("   Please wait\n")
 print(color.END+"\n\n\n   Checking integrity...\n\n\n\n\n")
-if os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2") and os.path.exists("./resources/oc_store/compat_old/OpenCore.qcow2") and os.path.exists("./ovmf/var/OVMF_CODE.fd") and os.path.exists("./ovmf/var/OVMF_VARS.fd") and os.path.exists("./ovmf/var/OVMF_VARS-1280x720.fd") and os.path.exists("./resources/oc_store/compat_new/config.plist"):
+if os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS-1280x720.fd"):
     integrity = 1
 else:
     integrity = 0
@@ -59,7 +60,7 @@ else:
 
 
 clear()
-print("\n\n   "+color.BOLD+color.RED+"↺  RESET OPENCORE AND vNVRAM"+color.END,"")
+print("\n\n   "+color.BOLD+color.RED+"↺  RESET OVMF CODE"+color.END,"")
 print("   Restore to default state\n")
 
 print(color.BOLD+"   Integrity Check")
@@ -70,30 +71,62 @@ else:
 
 if integrity == 1:
     print(color.END+color.BOLD+"\n   THIS TOOL:")
-    print(color.BOLD+color.GREEN+"       WILL "+color.END+"reset the virtual NVRAM")
-    print(color.BOLD+color.GREEN+"       WILL "+color.END+"reset the OpenCore image back to default")
     print(color.BOLD+color.GREEN+"       WILL "+color.END+"replace the OVMF code with a new copy")
-    print(color.BOLD+color.YELLOW+"      MIGHT "+color.END+"fix common boot issues")
-    print(color.BOLD+color.RED+"   WILL NOT "+color.END+"delete your configs or vHDD files")
+    print(color.BOLD+color.YELLOW+"      MIGHT "+color.END+"fix some boot issues")
+    print(color.BOLD+color.RED+"   WILL NOT "+color.END+"reset the virtual NVRAM")
     print(color.BOLD+color.RED+"   WILL NOT "+color.END+"create a backup of reset files")
 
     #print(color.END+color.BOLD+"\n                 THIS TOOL")
     #print(color.BOLD+color.GREEN+"          WILL       "+color.END+"|"+color.BOLD+color.RED+"       WILL NOT"+color.END)
-    #print("      Reset vNVRAM   |     Delete vHDDs")
-    #print("      Reset vNVRAM   |     Delete vHDDs")
+    #print("      RESET OVMF CODE   |     Delete vHDDs")
+    #print("      RESET OVMF CODE   |     Delete vHDDs")
     print("\n   ARE YOU SURE YOU WANT TO RESET?\n   This cannot be undone.\n"+color.END)
     print(color.BOLD+color.RED+"      X. RESET")
-    print(color.END+"      Q. Exit to extras menu\n")
+    print(color.END+"      Q. Exit to restore tools...\n")
     detectChoice2 = str(input(color.BOLD+"Select> "+color.END))
 else:
     print("\n\n   The repo integrity could not be verified.\n   One or more files required to restore are damaged or missing.\n\n   The script cannot continue.\n\n")
 
-if detectChoice2 == "X" or detectChoice2 == "x":
+def success():
     clear()
-    print("\n\n   "+color.BOLD+color.RED+"↺  RESET OPENCORE AND vNVRAM"+color.END,"")
+    print("\n\n   "+color.BOLD+color.GREEN+"✔ RESTORE COMPLETE"+color.END,"")
+    print("   OVMF code has been reset\n")
+    print("   OVMF boot code file has been reset.\n   You can safely use the new file."+color.END+"\n\n\n\n\n\n\n")
+
+def throwError():
+    global errorMessage
+    clear()
+    print("\n   "+color.BOLD+color.RED+"✖ FAILED"+color.END)
+    print("   Unable to continue")
+    print("\n   Sorry, something happened and the restoration failed. \n   You may need to reinstall the repository.\n   If you think this was a bug, please report it on GitHub."+color.END)
+    print("\n   "+color.BOLD+color.RED+"ERROR:",color.END+color.BOLD,errorMessage,color.END+"\n\n\n\n")
+
+
+if detectChoice2 == "X" or detectChoice2 == "x":
+    
+    clear()
+    print("\n\n   "+color.BOLD+color.RED+"↺  RESET OVMF CODE"+color.END,"")
     print("   Restoring...\n\n\n")
     print("   Please wait while the restore process is in progress.\n   This may take a few moments.\n\n   DO NOT INTERRUPT THIS OPERATION.\n\n\n")
     time.sleep(5)
+    os.system("rm ./ovmf/OVMF_CODE.fd > /dev/null 2>&1")
+    time.sleep(2)
+    os.system("cp ./resources/ovmf/OVMF_CODE.fd ./ovmf/OVMF_CODE.fd")
+
+    
+    errorMessage = "Restoration failed. You may not have sufficient\n           permissions or damaged files."
+
+    if os.path.exists("./ovmf/OVMF_CODE.fd"):
+        success()
+    else:
+        throwError()
+    
+    
+
+
+
+
+
 elif detectChoice2 == "Q" or detectChoice2 == "q":
     clear()
-    os.system("./scripts/extras.py")
+    os.system("./scripts/restoretools.py")

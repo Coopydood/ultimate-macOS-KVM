@@ -128,7 +128,7 @@ def stage5():
                                 apFileM = apFileM.replace("-vga qxl","-vga none")
                                 apFileM = apFileM.replace("-monitor stdio","-monitor none")
                                 apFileM = apFileM.replace("#-display none","-display none")
-                                os.system("cp ./ovmf/var/* ./ovmf/")
+                                os.system("cp ./resources/ovmf/* ./ovmf/")
                         file1.close
 
                         with open("./"+apFilePath,"w") as file:
@@ -250,7 +250,7 @@ def stage5():
                                     apFileM = apFileM.replace("-vga qxl","-vga none")
                                     apFileM = apFileM.replace("-monitor stdio","-monitor none")
                                     apFileM = apFileM.replace("#-display none","-display none")
-                                    os.system("cp ./ovmf/var/* ./ovmf/")
+                                    os.system("cp ./resources/ovmf/* ./ovmf/")
                             file1.close
 
                             with open("./"+apFilePath,"w") as file:

@@ -8,7 +8,9 @@ scripts/__pycache__/dlosx.cpython-310.pyc
 HDD.qcow2
 boot.sh
 scripts/BaseSystem.dmg
-boot/*
+boot/EFI/*
+boot/OpenCore.qcow2
+boot/config.plist
 .vscode
 vfio-args.txt
 willthisbedetected.sh

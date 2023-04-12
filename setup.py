@@ -120,8 +120,8 @@ def clear(): print("\n" * 150)
 
 
 
-os.system("chmod +x scripts/*.py")
-os.system("chmod +x scripts/*.sh")
+os.system("chmod +x -R scripts/*.py")
+os.system("chmod +x -R scripts/*.sh")
 os.system("chmod +x resources/dmg2img")
 
 

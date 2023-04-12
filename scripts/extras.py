@@ -59,8 +59,7 @@ def startup():
         print(color.END+"      3. Create a backup of config files")
         print(color.END+"      4. Dump VBIOS to ROM file")
         #print(color.END+"      4. Import config file into virt-manager")
-        print(color.RED+"      R. Reset OpenCore image and vNVRAM")
-        print(color.RED+"      X. Download and restore all")
+        print(color.RED+"      R. Restore tools...")
         print(color.END+"      B. Back...")
         print(color.END+"      Q. Exit\n")
     else:
@@ -79,8 +78,7 @@ def startup():
         print(color.END+"      4. Create a backup of config files")
         print(color.END+"      5. Dump VBIOS to ROM file"+color.YELLOW,"⚠")
         #print(color.END+"      4. Import config file into virt-manager")
-        print(color.RED+"      R. Reset OpenCore image and vNVRAM")
-        print(color.RED+"      X. Download and restore all")
+        print(color.RED+"      R. Reset...")
         print(color.END+"      B. Back...")
         print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
@@ -130,8 +128,6 @@ elif detectChoice == "4":
     os.system('./scripts/extras/backupassist.py')
 
 elif detectChoice == "r" or detectChoice == "R":
-    os.system('./scripts/extras/ocreset.py')
-elif detectChoice == "x" or detectChoice == "X":
-    os.system('./scripts/extras/obliterator.py')
+    os.system('./scripts/restoretools.py')
 elif detectChoice == "q" or detectChoice == "Q":
     exit
