@@ -262,7 +262,7 @@ def autopilot():
       print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
       if customValue == 1:
       #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<file>"+color.YELLOW+".img"+color.END+"\n   Enter a custom value.\n   \n   ")
-         print(color.BOLD+color.PURPLE+"\n   FORMAT:",color.YELLOW+""+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.END+"   You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n      "+color.BOLD+"TIP:"+color.END,"You can drag and drop a file onto this window.\n   \n   ")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:",color.YELLOW+""+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.YELLOW+":"+color.END+color.BOLD+"XX"+color.END+"\n   You",color.UNDERLINE+color.BOLD+"must"+color.END,"include any text in"+color.YELLOW,"yellow"+color.END+".\n\n      ")
          customInput = str(input(color.BOLD+"Value> "+color.END))
          USR_MAC_ADDRESS = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = currentStage + 1
