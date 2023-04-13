@@ -59,6 +59,11 @@ def startup():
     global detectChoice
     print("\n\n   Welcome to"+color.BOLD+color.CYAN,"Ultimate macOS KVM"+color.END,"(v"+version+")")
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+
+    if not os.path.exists("resources/script_store/setup.py"): # BACKUP ORIGINAL FILES TO STORE
+        os.system("cp -R ./scripts/* ./resources/script_store/")
+        os.system("cp ./setup.py ./resources/script_store/")
+
     if isVM == True:
         print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
     if os.path.exists("blobs/USR_CFG.apb"):
@@ -121,6 +126,9 @@ def clear(): print("\n" * 150)
 
 
 os.system("chmod +x -R scripts/*.py")
+os.system("chmod +x -R scripts/extras/*.py")
+#os.system("chmod +x -R scripts/extras/*.sh")
+os.system("chmod +x -R scripts/restore/*.py")
 os.system("chmod +x -R scripts/*.sh")
 os.system("chmod +x resources/dmg2img")
 

@@ -63,7 +63,7 @@ clear()
 print("\n\n   "+color.BOLD+color.RED+"↺  RESET OPENCORE AND vNVRAM"+color.END,"")
 print("   Restore to default state\n")
 
-print(color.BOLD+"   Integrity Check")
+print(color.BOLD+"   Integrity")
 if integrity == 1:
    print(color.GREEN+color.BOLD+"   ●"+color.END+" PASSED")
 else:

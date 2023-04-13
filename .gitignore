@@ -17,3 +17,11 @@ willthisbedetected.sh
 resources/WEBVERSION
 boot-noPT.sh
 ovmf/OVMF_VARS-1280x720.fd
+setup.py
+resources/script_store/*.py
+resources/script_store/*.sh
+resources/script_store/*.json
+resources/script_store/extras/*.py
+resources/script_store/extras/*.sh
+resources/script_store/restore/*.py
+resources/script_store/restore/*.sh

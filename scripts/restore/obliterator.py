@@ -86,7 +86,7 @@ else:
 
 if integrity == 1:
     print(color.END+color.BOLD+"\n   THIS TOOL:")
-    print(color.BOLD+color.BLUE+"   DOWNLOADS "+color.END+"a full copy of the latest project")
+    print(color.BOLD+color.BLUE+"   DOWNLOADS "+color.END+"a full copy of the latest repository")
     print(color.BOLD+color.GREEN+"        WILL "+color.END+color.BOLD+"reset ALL non-user repository files")
     print(color.BOLD+color.GREEN+"        WILL "+color.END+"fix permissions on resources")
     print(color.BOLD+color.GREEN+"        WILL "+color.END+"repair any component corruption")

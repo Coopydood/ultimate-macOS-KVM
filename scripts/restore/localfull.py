@@ -48,7 +48,7 @@ clear()
 print("\n\n   "+color.BOLD+color.RED+"↺  RESET ALL COMPONENTS LOCALLY"+color.END,"")
 print("   Please wait\n")
 print(color.END+"\n\n\n   Checking integrity...\n\n\n\n\n")
-if os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2") and os.path.exists("./resources/oc_store/compat_old/OpenCore.qcow2") and os.path.exists("./resources/ovmf/OVMF_CODE.fd") and os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS-1280x720.fd") and os.path.exists("./resources/oc_store/compat_new/config.plist"):
+if os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2") and os.path.exists("./resources/oc_store/compat_old/OpenCore.qcow2") and os.path.exists("./resources/ovmf/OVMF_CODE.fd") and os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS-1280x720.fd") and os.path.exists("./resources/oc_store/compat_new/config.plist") and os.path.exists("./resources/script_store/extras.py") and os.path.exists("./resources/script_store/setup.py"):
     integrity = 1
 else:
     integrity = 0
@@ -63,7 +63,7 @@ clear()
 print("\n\n   "+color.BOLD+color.RED+"↺  RESET ALL COMPONENTS LOCALLY"+color.END,"")
 print("   Restore to default state\n")
 
-print(color.BOLD+"   Integrity Check")
+print(color.BOLD+"   Integrity")
 if integrity == 1:
    print(color.GREEN+color.BOLD+"   ●"+color.END+" PASSED")
 else:
@@ -77,6 +77,7 @@ if integrity == 1:
     print(color.BOLD+color.GREEN+"       WILL "+color.END+"replace the OVMF code with a new copy")
     print(color.BOLD+color.GREEN+"       WILL "+color.END+"fix permissions on resources")
     print(color.BOLD+color.YELLOW+"      MIGHT "+color.END+"fix some quirky issues")
+    print(color.BOLD+color.YELLOW+"      MIGHT "+color.END+"restore older versions of repository files")
     print(color.BOLD+color.RED+"   WILL NOT "+color.END+"delete your configs or vHDD files")
     print(color.BOLD+color.RED+"   WILL NOT "+color.END+"create a backup of reset files")
 
@@ -122,9 +123,10 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     #os.system("rm ./blobs/*.apb > /dev/null 2>&1")
     #os.system("rm ./blobs/stale/*.apb > /dev/null 2>&1")
     os.system("rm ./resources/config.sh > /dev/null 2>&1")
-    os.system("chmod +x -R scripts/*.py")
-    os.system("chmod +x -R scripts/*.sh")
-    os.system("chmod +x resources/dmg2img")
+    os.system("rm ./setup.py > /dev/null 2>&1")
+    os.system("rm ./scripts/* > /dev/null 2>&1")
+    os.system("rm ./scripts/restore/* > /dev/null 2>&1")
+    os.system("rm ./scripts/extras/* > /dev/null 2>&1")
     time.sleep(4)
 
     global USR_TARGET_OS
@@ -150,7 +152,8 @@ if detectChoice2 == "X" or detectChoice2 == "x":
         os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
 
 
-
+    os.system("cp -R ./resources/script_store/* ./scripts/")
+    os.system("mv ./scripts/setup.py ./setup.py")
     os.system("cp ./resources/ovmf/OVMF_CODE.fd ./ovmf/OVMF_CODE.fd")
     os.system("cp ./ovmf/var/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
 
@@ -160,7 +163,10 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     if os.path.exists("boot/OpenCore.qcow2"):
         if os.path.exists("ovmf/OVMF_CODE.fd"):
             if os.path.exists("boot/EFI/"):
-                success()
+                if os.path.exists("scripts/extras.py"):
+                    success()
+                else:
+                    throwError()
             else:
                 throwError()
         else:
