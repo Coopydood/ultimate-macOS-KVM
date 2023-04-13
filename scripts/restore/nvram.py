@@ -87,6 +87,7 @@ if integrity == 1:
     print(color.END+"      Q. Exit to restore tools...\n")
     detectChoice2 = str(input(color.BOLD+"Select> "+color.END))
 else:
+    detectChoice2 = "F"
     print("\n\n   The repo integrity could not be verified.\n   One or more files required to restore are damaged or missing.\n\n   The script cannot continue.\n\n")
 
 def success():
@@ -132,3 +133,5 @@ if detectChoice2 == "X" or detectChoice2 == "x":
 elif detectChoice2 == "Q" or detectChoice2 == "q":
     clear()
     os.system("./scripts/restoretools.py")
+elif detectChoice2 == "F":
+    time.sleep(5)

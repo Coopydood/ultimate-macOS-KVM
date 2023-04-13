@@ -74,11 +74,10 @@ def startup():
         print(color.BOLD+"\n      1. Create and import XML file"+color.END+color.YELLOW,"⚠")
         print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
         print(color.END+"      2. VFIO-PCI passthrough assistant"+color.YELLOW,"⚠")
-        print(color.END+"      3. "+color.YELLOW,"")
-        print(color.END+"      4. Create a backup of config files")
-        print(color.END+"      5. Dump VBIOS to ROM file"+color.YELLOW,"⚠")
+        print(color.END+"      3. Create a backup of config files")
+        print(color.END+"      4. Dump VBIOS to ROM file"+color.YELLOW,"⚠")
         #print(color.END+"      4. Import config file into virt-manager")
-        print(color.RED+"      R. Reset...")
+        print(color.RED+"      R. Restore tools...")
         print(color.END+"      B. Back...")
         print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
@@ -121,7 +120,7 @@ if detectChoice == "1":
     os.system('./scripts/autopilot.py')
 elif detectChoice == "2":
     os.system('./scripts/extras/vfio-passthrough.py')
-elif detectChoice == "2":
+elif detectChoice == "3":
     os.system('./scripts/extras/smbios.py')
 
 elif detectChoice == "4":
@@ -129,5 +128,7 @@ elif detectChoice == "4":
 
 elif detectChoice == "r" or detectChoice == "R":
     os.system('./scripts/restoretools.py')
+elif detectChoice == "b" or detectChoice == "B":
+    os.system('./setup.py')
 elif detectChoice == "q" or detectChoice == "Q":
     exit

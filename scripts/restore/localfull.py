@@ -45,10 +45,10 @@ class color:
 
 
 clear()
-print("\n\n   "+color.BOLD+color.RED+"↺  RESET OVMF CODE"+color.END,"")
+print("\n\n   "+color.BOLD+color.RED+"↺  RESET ALL COMPONENTS LOCALLY"+color.END,"")
 print("   Please wait\n")
 print(color.END+"\n\n\n   Checking integrity...\n\n\n\n\n")
-if os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS-1280x720.fd"):
+if os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2") and os.path.exists("./resources/oc_store/compat_old/OpenCore.qcow2") and os.path.exists("./resources/ovmf/OVMF_CODE.fd") and os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS-1280x720.fd") and os.path.exists("./resources/oc_store/compat_new/config.plist"):
     integrity = 1
 else:
     integrity = 0
@@ -60,7 +60,7 @@ else:
 
 
 clear()
-print("\n\n   "+color.BOLD+color.RED+"↺  RESET OVMF CODE"+color.END,"")
+print("\n\n   "+color.BOLD+color.RED+"↺  RESET ALL COMPONENTS LOCALLY"+color.END,"")
 print("   Restore to default state\n")
 
 print(color.BOLD+"   Integrity Check")
@@ -71,15 +71,19 @@ else:
 
 if integrity == 1:
     print(color.END+color.BOLD+"\n   THIS TOOL:")
+    print(color.BOLD+color.GREEN+"       WILL "+color.END+"reset the virtual NVRAM")
+    print(color.BOLD+color.GREEN+"       WILL "+color.END+"reset the OpenCore image back to default")
+    #print(color.BOLD+color.GREEN+"       WILL "+color.END+"delete AutoPilot configuration data")
     print(color.BOLD+color.GREEN+"       WILL "+color.END+"replace the OVMF code with a new copy")
-    print(color.BOLD+color.YELLOW+"      MIGHT "+color.END+"fix some boot issues")
-    print(color.BOLD+color.RED+"   WILL NOT "+color.END+"reset the virtual NVRAM")
+    print(color.BOLD+color.GREEN+"       WILL "+color.END+"fix permissions on resources")
+    print(color.BOLD+color.YELLOW+"      MIGHT "+color.END+"fix some quirky issues")
+    print(color.BOLD+color.RED+"   WILL NOT "+color.END+"delete your configs or vHDD files")
     print(color.BOLD+color.RED+"   WILL NOT "+color.END+"create a backup of reset files")
 
     #print(color.END+color.BOLD+"\n                 THIS TOOL")
     #print(color.BOLD+color.GREEN+"          WILL       "+color.END+"|"+color.BOLD+color.RED+"       WILL NOT"+color.END)
-    #print("      RESET OVMF CODE   |     Delete vHDDs")
-    #print("      RESET OVMF CODE   |     Delete vHDDs")
+    #print("      Reset vNVRAM   |     Delete vHDDs")
+    #print("      Reset vNVRAM   |     Delete vHDDs")
     print("\n   ARE YOU SURE YOU WANT TO RESET?\n   This cannot be undone.\n"+color.END)
     print(color.BOLD+color.RED+"      X. RESET")
     print(color.END+"      Q. Exit to restore tools...\n")
@@ -91,8 +95,8 @@ else:
 def success():
     clear()
     print("\n\n   "+color.BOLD+color.GREEN+"✔ RESTORE COMPLETE"+color.END,"")
-    print("   OVMF code has been reset\n")
-    print("   OVMF boot code file has been reset.\n   You can safely use the new file."+color.END+"\n\n\n\n\n\n\n")
+    print("   All local components have been reset\n")
+    print("   The project files have been restored from the local project store.\n   You can safely use these files.\n\n   REMEMBER: Do not tamper with files in the /resources folder."+color.END+"\n\n\n\n\n\n\n")
 
 def throwError():
     global errorMessage
@@ -106,19 +110,61 @@ def throwError():
 if detectChoice2 == "X" or detectChoice2 == "x":
     
     clear()
-    print("\n\n   "+color.BOLD+color.RED+"↺  RESET OVMF CODE"+color.END,"")
+    print("\n\n   "+color.BOLD+color.RED+"↺  RESET ALL COMPONENTS LOCALLY"+color.END,"")
     print("   Restoring...\n\n\n")
     print("   Please wait while the restore process is in progress.\n   This may take a few moments.\n\n   DO NOT INTERRUPT THIS OPERATION.\n\n\n")
     time.sleep(5)
+    os.system("rm ./boot/OpenCore.qcow2 > /dev/null 2>&1")
+    os.system("rm ./boot/config.plist > /dev/null 2>&1")
+    os.system("rm -rf ./boot/EFI > /dev/null 2>&1")
+    os.system("rm ./ovmf/OVMF_VARS.fd > /dev/null 2>&1")
     os.system("rm ./ovmf/OVMF_CODE.fd > /dev/null 2>&1")
+    #os.system("rm ./blobs/*.apb > /dev/null 2>&1")
+    #os.system("rm ./blobs/stale/*.apb > /dev/null 2>&1")
+    os.system("rm ./resources/config.sh > /dev/null 2>&1")
+    os.system("chmod +x -R scripts/*.py")
+    os.system("chmod +x -R scripts/*.sh")
+    os.system("chmod +x resources/dmg2img")
+    time.sleep(4)
+
+    global USR_TARGET_OS
+
+    if os.path.exists("./blobs/USR_TARGET_OS.apb"):
+        blob = open("./blobs/USR_TARGET_OS.apb","r")
+        USR_TARGET_OS = blob.read()
+        USR_TARGET_OS = int(USR_TARGET_OS)
+        if USR_TARGET_OS < 999:
+            USR_TARGET_OS = USR_TARGET_OS * 100
+        blob.close()
+    else:
+        USR_TARGET_OS = 9999
+
     time.sleep(2)
+    if USR_TARGET_OS <= 1015:
+        os.system("cp resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
+        os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
+        os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
+    else:
+        os.system("cp resources/oc_store/compat_new/OpenCore.qcow2 boot/OpenCore.qcow2")
+        os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
+        os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
+
+
+
     os.system("cp ./resources/ovmf/OVMF_CODE.fd ./ovmf/OVMF_CODE.fd")
+    os.system("cp ./ovmf/var/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
 
     
     errorMessage = "Restoration failed. You may not have sufficient\n           permissions or damaged files."
 
-    if os.path.exists("./ovmf/OVMF_CODE.fd"):
-        success()
+    if os.path.exists("boot/OpenCore.qcow2"):
+        if os.path.exists("ovmf/OVMF_CODE.fd"):
+            if os.path.exists("boot/EFI/"):
+                success()
+            else:
+                throwError()
+        else:
+            throwError()
     else:
         throwError()
     
