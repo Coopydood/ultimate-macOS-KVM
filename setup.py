@@ -63,6 +63,7 @@ def startup():
     if not os.path.exists("resources/script_store/setup.py"): # BACKUP ORIGINAL FILES TO STORE
         os.system("cp -R ./scripts/* ./resources/script_store/")
         os.system("cp ./setup.py ./resources/script_store/")
+        os.system("cp ./VERSION ./resources/script_store/")
 
     if isVM == True:
         print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)

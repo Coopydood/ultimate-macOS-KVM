@@ -77,7 +77,7 @@ if integrity == 1:
     print(color.BOLD+color.GREEN+"       WILL "+color.END+"replace the OVMF code with a new copy")
     print(color.BOLD+color.GREEN+"       WILL "+color.END+"fix permissions on resources")
     print(color.BOLD+color.YELLOW+"      MIGHT "+color.END+"fix some quirky issues")
-    print(color.BOLD+color.YELLOW+"      MIGHT "+color.END+"restore older versions of repository files")
+    print(color.BOLD+color.YELLOW+"      MIGHT "+color.END+"downgrade repository files to older versions")
     print(color.BOLD+color.RED+"   WILL NOT "+color.END+"delete your configs or vHDD files")
     print(color.BOLD+color.RED+"   WILL NOT "+color.END+"create a backup of reset files")
 
@@ -85,8 +85,8 @@ if integrity == 1:
     #print(color.BOLD+color.GREEN+"          WILL       "+color.END+"|"+color.BOLD+color.RED+"       WILL NOT"+color.END)
     #print("      Reset vNVRAM   |     Delete vHDDs")
     #print("      Reset vNVRAM   |     Delete vHDDs")
-    print("\n   ARE YOU SURE YOU WANT TO RESET?\n   This cannot be undone.\n"+color.END)
-    print(color.BOLD+color.RED+"      X. RESET")
+    print("\n   ARE YOU SURE YOU WANT TO RESTORE?\n   This cannot be undone.\n"+color.END)
+    print(color.BOLD+color.RED+"      X. RESTORE")
     print(color.END+"      Q. Exit to restore tools...\n")
     detectChoice2 = str(input(color.BOLD+"Select> "+color.END))
 else:
@@ -124,6 +124,7 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     #os.system("rm ./blobs/stale/*.apb > /dev/null 2>&1")
     os.system("rm ./resources/config.sh > /dev/null 2>&1")
     os.system("rm ./setup.py > /dev/null 2>&1")
+    os.system("rm ./VERSION > /dev/null 2>&1")
     os.system("rm ./scripts/* > /dev/null 2>&1")
     os.system("rm ./scripts/restore/* > /dev/null 2>&1")
     os.system("rm ./scripts/extras/* > /dev/null 2>&1")
@@ -154,6 +155,7 @@ if detectChoice2 == "X" or detectChoice2 == "x":
 
     os.system("cp -R ./resources/script_store/* ./scripts/")
     os.system("mv ./scripts/setup.py ./setup.py")
+    os.system("mv ./scripts/VERSION ./VERSION")
     os.system("cp ./resources/ovmf/OVMF_CODE.fd ./ovmf/OVMF_CODE.fd")
     os.system("cp ./ovmf/var/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
 
