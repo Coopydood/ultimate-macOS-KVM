@@ -69,6 +69,7 @@ if integrity == 1:
 else:
    print(color.RED+color.BOLD+"   ●"+color.END+" DAMAGED")
 
+
 if integrity == 1:
     print(color.END+color.BOLD+"\n   THIS TOOL:")
     print(color.BOLD+color.GREEN+"       WILL "+color.END+"reset the virtual NVRAM")
@@ -111,6 +112,35 @@ def throwError():
 if detectChoice2 == "X" or detectChoice2 == "x":
     
     clear()
+
+    version = open("./VERSION")
+    version = version.read()
+
+    versionStore = open("./resources/script_store/VERSION")
+    versionStore = versionStore.read()
+
+    versionInt = version.replace(".","")
+    versionStoreInt = versionStore.replace(".","")
+
+    versionInt = int(versionInt)
+    versionStoreInt = int(versionStoreInt)
+
+    if versionStoreInt < versionInt:
+        print("\n\n   "+color.BOLD+color.YELLOW+"⚠ RISK OF DOWNGRADE DETECTED"+color.END,"")
+        print("   Version data does not match local store\n")
+        print("   The version data of the repository files in the local project store\n   do not match those of your current files. As a result, restoring locally\n   may downgrade your repository to an older version.\n"+color.END+"")
+        print("\n   Would you like to continue?\n"+color.END)
+        print(color.BOLD+"      1. Continue anyway...")
+        print(color.END+"      Q. Exit to restore tools...\n")
+        detectChoice3 = str(input(color.BOLD+"Select> "+color.END))
+        if detectChoice3 == 1:
+            clear()
+        elif detectChoice3 == "q" or detectChoice3 == "Q":
+            clear()
+            os.system('./scripts/restoretools.py')
+
+
+
     print("\n\n   "+color.BOLD+color.RED+"↺  RESET ALL COMPONENTS LOCALLY"+color.END,"")
     print("   Restoring...\n\n\n")
     print("   Please wait while the restore process is in progress.\n   This may take a few moments.\n\n   DO NOT INTERRUPT THIS OPERATION.\n\n\n")

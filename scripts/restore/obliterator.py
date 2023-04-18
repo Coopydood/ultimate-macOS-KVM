@@ -132,6 +132,7 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     os.system("rm ./boot/OpenCore.qcow2 > /dev/null 2>&1")
     os.system("rm ./boot/config.plist > /dev/null 2>&1")
     os.system("rm -rf ./boot/EFI > /dev/null 2>&1")
+    os.system("rm -rf ./resources/script_store/ > /dev/null 2>&1")
     os.system("rm ./ovmf/OVMF_VARS.fd > /dev/null 2>&1")
     os.system("rm ./ovmf/OVMF_CODE.fd > /dev/null 2>&1")
     os.system("rm ./resources/dmg2img > /dev/null 2>&1")
@@ -203,7 +204,7 @@ if detectChoice2 == "X" or detectChoice2 == "x":
 
 
     os.system("cp ./resources/ovmf/OVMF_CODE.fd ./ovmf/OVMF_CODE.fd")
-    os.system("cp ./ovmf/var/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+    os.system("cp ./resources/ovmf/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
 
     
     errorMessage = "Restoration failed. You may not have sufficient\n           permissions or damaged files."

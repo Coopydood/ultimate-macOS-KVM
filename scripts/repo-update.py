@@ -50,14 +50,18 @@ noDelta = 0
 
 if os.path.exists("./resources/WEBVERSION"): os.system("rm ./resources/WEBVERSION")
 os.system("wget -q --output-document=./resources/WEBVERSION --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/VERSION")
+if os.path.exists("./resources/UPGRADEPATH"): os.system("rm ./resources/UPGRADEPATH")
+os.system("wget -q --output-document=./resources/UPGRADEPATH --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/UPGRADEPATH")
+
+
 webVersion = open("./resources/WEBVERSION")
 webVersion = webVersion.read()
+
 
 time.sleep(2)
 clear()
 
-if "*" in webVersion:
-   noDelta = 1
+
 
 webVersion = webVersion.replace("*","")
 
@@ -67,7 +71,15 @@ webVersion = webVersion.replace("\n","")
 versionInt = version.replace(".","")
 webVersionInt = webVersion.replace(".","")
 
+if os.path.exists("./resources/UPGRADEPATH"):
+   deltaSupport = open("./resources/UPGRADEPATH")
+   deltaSupport = deltaSupport.read()
+   deltaSupport = deltaSupport.replace("\n"," ")
+   if version not in deltaSupport:
+      noDelta = 1
 
+if "*" in webVersion:
+      noDelta = 1
 
 versionInt = int(versionInt)
 webVersionInt = int(webVersionInt)
@@ -228,11 +240,13 @@ elif versionInt < webVersionInt and noDelta == 1:
    print(color.BOLD+"         Current Version\n   "+"          v"+version,color.END+"\n")
    print(color.END+"               ⊘\n")
    print(color.END+color.GRAY+"         Latest Version\n   "+"          v"+webVersion,"\n"+color.END)
-   print("   Your version is incompatible with the latest version.\n   To protect your data, auto-update is unavailable.\n\n   This happens when your version is very old,\n   or a major update has been released. You can\n   manually download and install it.\n")
-   print(color.GRAY+"      1. Download and Install..."+color.END)
-   print(color.BOLD+"      2. Download only")
+   print("   Your version is incompatible with the latest version.\n   To protect your data, auto-update is unavailable.\n\n   This happens when your version is too old,\n   or a major update has been released. You can\n   manually download and install it.\n")
+   
+   print(color.BOLD+"      1. Download only")
    print(color.END+"      Q. Exit without updating\n")
    detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
+   if detectChoice1 == "1":
+      detectChoice1 == "2"
    updateBrains()
 elif versionInt < webVersionInt and noDelta == 0:
    clear()
