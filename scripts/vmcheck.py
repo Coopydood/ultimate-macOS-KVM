@@ -82,4 +82,4 @@ if detected == 1:
 
    elif stageSelect == "2": 
       isVM = False
-      os.system("./setup.py -svmc")
+      os.system("./main.py -svmc")

@@ -12,7 +12,7 @@ Signature: 4CD28348A3DD016F
 
 
 # THIS IS THE MAIN SETUP FILE! RUN THIS FILE FIRST!
-# ./setup.py
+# ./main.py
 
 
 import os
@@ -37,6 +37,7 @@ latestOSName = "Ventura"
 latestOSVer = "13"
 runs = 0
 apFilePath = ""
+procFlow = 1
 
 version = open("./VERSION")
 version = version.read()
@@ -60,9 +61,9 @@ def startup():
     print("\n\n   Welcome to"+color.BOLD+color.CYAN,"Ultimate macOS KVM"+color.END,"(v"+version+")")
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
 
-    if not os.path.exists("resources/script_store/setup.py"): # BACKUP ORIGINAL FILES TO STORE
+    if not os.path.exists("resources/script_store/main.py"): # BACKUP ORIGINAL FILES TO STORE
         os.system("cp -R ./scripts/* ./resources/script_store/")
-        os.system("cp ./setup.py ./resources/script_store/")
+        os.system("cp ./main.py ./resources/script_store/")
         os.system("cp ./VERSION ./resources/script_store/")
 
     if isVM == True:
@@ -70,7 +71,7 @@ def startup():
     if os.path.exists("blobs/USR_CFG.apb"):
             tainted = 1
     else:
-        print("   This script can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, getting vfio-ids, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.\n")
+        print("   This project can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, checking your system, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.\n")
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print("   Select an option to continue.")
@@ -100,22 +101,21 @@ def startup():
     else:
         print(color.BOLD+"\n      1. AutoPilot (Experimental)")
         print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
-    if isVM == True:
-        
-        print(color.END+"      2. Download and convert macOS image")
-        print(color.END+"      3. Check GPU compatibility"+color.YELLOW,"⚠")
-        print(color.END+"      4. Check IOMMU grouping"+color.YELLOW,"⚠")
-        print(color.END+"      5. Get and display vfio-pci IDs"+color.YELLOW,"⚠")
-        print(color.END+"      6. Verify devices bound to vfio-pci"+color.YELLOW,"⚠")
-    else:
-        print(color.END+"      2. Download and convert macOS image")
-        print(color.END+"      3. Check GPU compatibility")
-        print(color.END+"      4. Check IOMMU grouping")
-        print(color.END+"      5. Get and display vfio-pci IDs")
-        print(color.END+"      6. Verify devices bound to vfio-pci")
+    
+
+    #print(color.END+"      2. Download and convert macOS image")
+    #print(color.END+"      3. Check GPU compatibility")
+    #print(color.END+"      4. Check IOMMU grouping")
+    #print(color.END+"      5. Get and display vfio-pci IDs")
+    #print(color.END+"      6. Verify devices bound to vfio-pci")
+    
+    print(color.END+"      2. Download macOS...")
+    print(color.END+"      3. System compatibility checks...")
+    print(color.END+"      4. VFIO-PCI passthrough tools...")
+    
     
     print(color.END+"      E. Extras...")
-    print(color.END+"      U. Check for updates...")
+    print(color.END+"      U. Check for updates")
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
@@ -199,16 +199,10 @@ elif detectChoice == "2":
 
 elif detectChoice == "3":
     clear()
-    os.system('./scripts/gpu-check.py')
+    os.system('./scripts/compatchecks.py')
 elif detectChoice == "4":
     clear()
-    os.system('./scripts/iommu.sh')
-elif detectChoice == "5":
-    clear()
-    os.system('./scripts/vfio-ids.py')
-elif detectChoice == "6":
-    clear()
-    os.system('./scripts/vfio-pci.py')
+    os.system('./scripts/vfio-menu.py')
 elif detectChoice == "e" or detectChoice == "E":
     clear()
     os.system('./scripts/extras.py')

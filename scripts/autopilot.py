@@ -55,9 +55,9 @@ def startup():
     print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"AutoPilot"+color.END,"(BETA)")
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
     print("\n   The purpose of this script is to automatically guide you through \n   the process of",color.BOLD+"creating and running a basic macOS VM",color.END+"using settings \n   based on answers to a number of questions. \n\n   Many of the values can be left to default - especially if you are unsure.\n   It won't be perfect, but it's supposed to make it as"+color.BOLD,"easy as possible.\n"+color.END)
-    print(color.BOLD+"\n"+"   Profile:"+color.END,"https://github.com/Coopydood")
-    print(color.BOLD+"      Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    print("\n   Continue whenever you're ready, or return to the main menu.")
+    #print(color.BOLD+"\n"+"   Profile:"+color.END,"https://github.com/Coopydood")
+    #print(color.BOLD+"      Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
+    print("   Continue whenever you're ready, or return to the main menu.")
     print(color.BOLD+"\n      1. Start")
     print(color.END+"         Begin creating a new QEMU-based macOS config file \n")
     print(color.END+"      2. Main menu")
@@ -66,6 +66,7 @@ def startup():
 
 def clear(): print("\n" * 150)
 
+clear()
 startup()
 clear()
 
@@ -1251,10 +1252,10 @@ def autopilot():
          configData = configData.replace("#    THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!    #","#   APC-RUN_"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"\n#\n#   THIS FILE WAS GENERATED USING AUTOPILOT.")
          configData = configData.replace("#                                                          #\n","")
          configData = configData.replace("# It is intended to be used by the automatic setup wizard. #\n","")
-         configData = configData.replace("#   To use the wizard, run the included \"setup.py\" file;   #\n","")
+         configData = configData.replace("#   To use the wizard, run the included \"main.py\" file;   #\n","")
          configData = configData.replace("#                                                          #","#")
-         configData = configData.replace("#                      $ ./setup.py                        #","#\n#   To boot this script, run the following command:\n#   $ ./"+str(USR_CFG))
-         configData = configData.replace("#   ./setup.py","")
+         configData = configData.replace("#                      $ ./main.py                        #","#\n#   To boot this script, run the following command:\n#   $ ./"+str(USR_CFG))
+         configData = configData.replace("#   ./main.py","")
          configData = configData.replace("############################################################.","#")
 
          with open ("resources/config.sh","w") as file:
@@ -1367,7 +1368,7 @@ def autopilot():
          os.system("./"+USR_CFG)
 
       elif stageSelect == "2":
-         os.system("python ./setup.py")
+         os.system("python ./main.py")
          
       elif stageSelect == "q" or stageSelect == "Q":
          exit
@@ -1378,7 +1379,7 @@ def autopilot():
 if detectChoice == 1:
    autopilot()
 elif detectChoice == 2:
-    os.system('./setup.py')
+    os.system('./main.py')
 
 elif detectChoice == 3:
     exit

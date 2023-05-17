@@ -1,5 +1,5 @@
 # ultimate-macOS-KVM
-### v0.8.6
+### v0.9.0
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
 ## Introduction
@@ -75,14 +75,14 @@ Make sure you have **all** [dependencies](https://github.com/Coopydood/ultimate-
 ```
 git clone https://github.com/Coopydood/ultimate-macOS-KVM
 cd ultimate-macOS-KVM
-chmod +x setup.py
+chmod +x main.py
 ```
 or, do all this with a one-liner:
 ```
-git clone https://github.com/Coopydood/ultimate-macOS-KVM && cd ultimate-macOS-KVM && chmod +x setup.py
+git clone https://github.com/Coopydood/ultimate-macOS-KVM && cd ultimate-macOS-KVM && chmod +x main.py
 ```
 ## Setup
-Okay, so you've cloned my repo, cd'd into the directory, and made the ``setup.py`` file executeable. Great! 
+Okay, so you've cloned my repo, cd'd into the directory, and made the ``main.py`` file executeable. Great! 
 Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already:
 ```
 sudo systemctl enable libvirtd
@@ -92,11 +92,11 @@ and/or check the status of the daemon with
 systemctl status libvirtd
 ```
 
-Okay, now you're ready to use **ultimate-macOS-KVM**. Use the main ``setup.py`` file. 
+Okay, now you're ready to use **ultimate-macOS-KVM**. Use the ``main.py`` file. 
 
 This is your main menu / central hub for the project and everything can be accessed from here. Most sub-scripts included in the project should *not* be run on their own.
 ```
-./setup.py
+./main.py
 ```
 ## I'm here for GPU passthrough!
 ...and you've come to the right place. ultimate-macOS-KVM includes several handy built-in tools to make VFIO-PCI passthrough (including GPUs) as painfree as possible. Please see the documentation on how to get started with these tools.

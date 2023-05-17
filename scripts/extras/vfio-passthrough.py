@@ -10,7 +10,7 @@ Signature: 4CD28348A3DD016F
 
 """
 
-# This script should NOT be run directly, but instead from the main "setup.py" script.
+# This script should NOT be run directly, but instead from the main "main.py" script.
 
 
 import os

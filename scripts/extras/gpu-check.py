@@ -52,15 +52,15 @@ class color:
 
 def startup():
     global detectChoice
-    print("\n\nWelcome to"+color.BOLD+color.YELLOW,"GPU Compatibility Checker"+color.END,"")
-    print("Created by",color.BOLD+"Coopydood\n"+color.END)
-    print("\nThe purpose of this script is to prepare you for GPU passthrough by \nchecking your exact system's GPU model against a macOS compatibility \nlist created and provided by"+color.BOLD,"Dortania.\n"+color.END)
-    print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
-    print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    print("\nI can attempt to check what GPU you have automatically, or you can manually enter it.\nWhich would you prefer?")
-    print(color.BOLD+"\n   1. Detect automatically (recommended)")
-    print(color.END+"   2. Enter manually")
-    print(color.END+"   3. Exit\n")
+    print("\n\n   Welcome to"+color.BOLD+color.YELLOW,"GPU Compatibility Checker"+color.END,"")
+    print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+    print("\n   The purpose of this script is to prepare you for GPU passthrough by \n   checking your exact system's GPU model against a macOS compatibility \n   list created and provided by"+color.BOLD,"Dortania.\n"+color.END)
+    #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
+    #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
+    print("   I can attempt to check what GPU you have automatically, or you can manually enter it.\n   Which would you prefer?")
+    print(color.BOLD+"\n      1. Detect automatically (recommended)")
+    print(color.END+"      2. Enter manually")
+    print(color.END+"      3. Exit\n")
     detectChoice = int(input(color.BOLD+"Select> "+color.END))
 
        
@@ -130,11 +130,11 @@ def autoRun():
             gpuCount = gpuCount + 1
 
     if gpuCount >= 2:
-        print("I"+color.BOLD+color.GREEN,"successfully"+color.END,"detected"+color.BOLD,gpuCount,"GPUs"+color.END,"in your system:\n")
+        print("   I"+color.BOLD+color.GREEN,"successfully"+color.END,"detected"+color.BOLD,gpuCount,"GPUs"+color.END,"in your system:\n")
     elif gpuCount == 1:
-        print("I"+color.BOLD+color.GREEN,"successfully"+color.END,"detected"+color.BOLD,gpuCount,"GPU"+color.END,"in your system:\n")
+        print("   I"+color.BOLD+color.GREEN,"successfully"+color.END,"detected"+color.BOLD,gpuCount,"GPU"+color.END,"in your system:\n")
     else:
-        print("I"+color.BOLD+color.RED,"failed"+color.END,"to detect any GPUs in your system.\nSomething has went very wrong somewhere, or your GPU is weirder than you are.\nPerhaps try entering your GPU model"+color.BOLD,"manually"+color.END,"by selecting the second option instead.\n")
+        print("   I"+color.BOLD+color.RED,"failed"+color.END,"to detect any GPUs in your system.\nSomething has went very wrong somewhere, or your GPU is weirder than you are.\nPerhaps try entering your GPU model"+color.BOLD,"manually"+color.END,"by selecting the second option instead.\n")
 
     for gpu in gpus:
         if (gpu["name"]) in model:
@@ -234,29 +234,29 @@ def autoRun():
             if "XT" in model:
                 gpuName = gpuName + " XT" 
 
-            print(color.BOLD+gpuName+color.END)
-            print("───────────────────────────────")
+            print(color.BOLD+"   "+gpuName+color.END)
+            print("   ───────────────────────────────")
             if gpuSupport == True:
-                print(color.BOLD+color.GREEN+"●",color.END+"Supported\n")
+                print(color.BOLD+color.GREEN+"   ●",color.END+"Supported\n")
             elif gpuSupport == False:
-                print(color.BOLD+color.RED+"●",color.END+"Unsupported\n")
+                print(color.BOLD+color.RED+"   ●",color.END+"Unsupported\n")
             else:
-                print(color.BOLD+color.YELLOW+"●",color.END+"Problematic\n")
+                print(color.BOLD+color.YELLOW+"   ●",color.END+"Problematic\n")
             
             if gpuMaxOS == "9999":
-                print(color.BOLD+"Maximum macOS:"+color.END,"Latest /",latestOSName,"("+latestOSVer+")")
+                print(color.BOLD+"   Maximum macOS:"+color.END,"Latest /",latestOSName,"("+latestOSVer+")")
             elif gpuMaxOS == "-1":
-                print(color.BOLD+"Maximum macOS:"+color.END,"N/A")
+                print(color.BOLD+"   Maximum macOS:"+color.END,"N/A")
             else:
-                print(color.BOLD+"Maximum macOS:"+color.END,gpuMaxOSF)
+                print(color.BOLD+"   Maximum macOS:"+color.END,gpuMaxOSF)
 
             if gpuMinOS == "-1":
-                print(color.BOLD+"Minimum macOS:"+color.END,"N/A")
+                print(color.BOLD+"   Minimum macOS:"+color.END,"N/A")
             else:
-                print(color.BOLD+"Minimum macOS:"+color.END,gpuMinOSF)
+                print(color.BOLD+"   Minimum macOS:"+color.END,gpuMinOSF)
             
-            print("\n"+color.BOLD+"Additional Information"+color.END)
-            print(gpuQuirks)
+            print("\n"+color.BOLD+"   Additional Information"+color.END)
+            print("   "+gpuQuirks)
 
             print("\n")
             exit

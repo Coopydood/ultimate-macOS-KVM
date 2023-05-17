@@ -10,7 +10,7 @@ Signature: 4CD28348A3DD016F
 
 """
 
-# This script should NOT be run directly, but instead from the main "setup.py" script.
+# This script should NOT be run directly, but instead from the main "main.py" script.
 
 
 import os
@@ -48,7 +48,7 @@ def startup():
     if detected == 0:
         print("\n\n   Welcome to"+color.BOLD+color.BLUE,"Ultimate macOS KVM Extras"+color.END,"")
         print("   Created by",color.BOLD+"Coopydood\n"+color.END)
-        print("   This script can assist you in more advanced post-install\n   processes like"+color.BOLD,"PCI/GPU passthrough, dumping your VBIOS,\n   "+color.END+"and"+color.BOLD,"importing your VM into virt-manager.\n"+color.END)
+        print("   This script can assist you in post-install processes,\n   such as"+color.BOLD,"importing your VM into virt-manager, backing up\n   your data, "+color.END+"and"+color.BOLD,"restore options for troubleshooting.\n"+color.END)
         #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
         #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
         print("   Select an option to continue.")
@@ -57,8 +57,8 @@ def startup():
         print(color.END+"      2. VFIO-PCI passthrough assistant")
         
         print(color.END+"      3. Create a backup of config files")
-        print(color.END+"      4. Dump VBIOS to ROM file")
-        #print(color.END+"      4. Import config file into virt-manager")
+        print(color.END+"      4. Open GitHub project page")
+        print(color.END+"      5. VFIO-PCI tools...")
         print(color.RED+"      R. Restore tools...")
         print(color.END+"      B. Back...")
         print(color.END+"      Q. Exit\n")
@@ -67,7 +67,7 @@ def startup():
         print("   Created by",color.BOLD+"Coopydood\n"+color.END)
         if detected == True:
             print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
-        print("   This script can assist you in more advanced post-install\n   processes like"+color.BOLD,"PCI/GPU passthrough, dumping your VBIOS,\n   "+color.END+"and"+color.BOLD,"importing your VM into virt-manager.\n"+color.END)
+        print("   This script can assist you in more advanced post-install\n   processes like"+color.BOLD,"PCI/GPU passthrough, dumping your VBIOS,\n   "+color.END+"and"+color.BOLD,"importing your VM into the virt-manager GUI.\n"+color.END)
         #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
         #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
         print("   Select an option to continue.")
@@ -75,8 +75,7 @@ def startup():
         print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
         print(color.END+"      2. VFIO-PCI passthrough assistant"+color.YELLOW,"⚠")
         print(color.END+"      3. Create a backup of config files")
-        print(color.END+"      4. Dump VBIOS to ROM file"+color.YELLOW,"⚠")
-        #print(color.END+"      4. Import config file into virt-manager")
+        print(color.END+"      4. VFIO-PCI tools...")
         print(color.RED+"      R. Restore tools...")
         print(color.END+"      B. Back...")
         print(color.END+"      Q. Exit\n")
@@ -122,13 +121,21 @@ elif detectChoice == "2":
     os.system('./scripts/extras/vfio-passthrough.py')
 elif detectChoice == "3":
     os.system('./scripts/extras/smbios.py')
-
 elif detectChoice == "4":
-    os.system('./scripts/extras/backupassist.py')
+    
+    print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING PROJECT IN DEFAULT BROWSER"+color.END,"")
+    print("   Continue in your browser\n")
+    print("\n   I have attempted to open the project page in\n   your default browser. Please be patient.\n\n   You will be returned to the extras menu in 5 seconds.\n\n\n\n\n")
+    os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM > /dev/null 2>&1')
+    time.sleep(6)
+    clear()
+    os.system('./scripts/extras.py')
+elif detectChoice == "5":
+    os.system('./scripts/vfio-menu.py')
 
 elif detectChoice == "r" or detectChoice == "R":
     os.system('./scripts/restoretools.py')
 elif detectChoice == "b" or detectChoice == "B":
-    os.system('./setup.py')
+    os.system('./main.py')
 elif detectChoice == "q" or detectChoice == "Q":
     exit

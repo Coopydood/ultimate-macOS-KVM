@@ -48,7 +48,7 @@ clear()
 print("\n\n   "+color.BOLD+color.RED+"↺  RESET vNVRAM"+color.END,"")
 print("   Please wait\n")
 print(color.END+"\n\n\n   Checking integrity...\n\n\n\n\n")
-if os.path.exists("./ovmf/var/OVMF_VARS.fd") and os.path.exists("./ovmf/var/OVMF_VARS-1280x720.fd"):
+if os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS-1280x720.fd"):
     integrity = 1
 else:
     integrity = 0
@@ -114,7 +114,7 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     time.sleep(5)
     os.system("rm ./ovmf/OVMF_VARS.fd > /dev/null 2>&1")
     time.sleep(2)
-    os.system("cp ./ovmf/var/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+    os.system("cp ./resources/ovmf/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
 
     
     errorMessage = "Restoration failed. You may not have sufficient\n           permissions or damaged files."

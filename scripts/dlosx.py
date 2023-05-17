@@ -477,13 +477,16 @@ def main():
             {"name": "Ventura (13)", "b": "Mac-7BA5B2D9E42DDD94", "m": "00000000000000000", "os_type": "latest", "short": "ventura"}
     ]
 
-    print("\n\nWelcome to"+color.BOLD+color.YELLOW,"macOS Image Downloader"+color.END,"")
-    print("Created by",color.BOLD+"vit9696"+color.END,"and modified by"+color.BOLD,"Coopydood\n"+color.END)
-    print("\nThis script will"+color.BOLD,"download and convert a macOS base image for you.\n"+color.END+"It will be placed in your"+color.BOLD,"ultimate-macOS-KVM"+color.END,"directory.\n")
+    def clear(): print("\n" * 150)
+
+    clear()
+    print("\n\n   Welcome to"+color.BOLD+color.YELLOW,"macOS Image Downloader"+color.END,"")
+    print("   Created by",color.BOLD+"vit9696"+color.END,"and modified by"+color.BOLD,"Coopydood\n"+color.END)
+    print("\n   This script will"+color.BOLD,"download and convert a macOS base image for you.\n"+color.END+"   It will be placed in your"+color.BOLD,"ultimate-macOS-KVM"+color.END,"directory.\n")
     
     for index, product in enumerate(products):
         name = product["name"]
-        print('%s. %12s' % (index + 1, name))
+        print("      "+'%s. %12s' % (index + 1, name))
 
     # test locally using args.shortname = 'mojave'
     if not args.shortname or args.shortname == '':
