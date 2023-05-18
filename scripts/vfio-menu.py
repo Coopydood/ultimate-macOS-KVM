@@ -28,7 +28,7 @@ latestOSName = "Ventura"
 latestOSVer = "13"
 runs = 0
 
-version = open("./VERSION")
+version = open("./.version")
 version = version.read()
 
 class color:

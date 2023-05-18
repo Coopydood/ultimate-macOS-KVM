@@ -27,3 +27,4 @@ resources/script_store/restore/*.py
 resources/script_store/restore/*.sh
 INTERNAL_CHECKLIST.pdf
 INTERNAL_CHECKLIST.txt
+internal/*

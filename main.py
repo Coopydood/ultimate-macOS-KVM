@@ -39,7 +39,7 @@ runs = 0
 apFilePath = ""
 procFlow = 1
 
-version = open("./VERSION")
+version = open("./.version")
 version = version.read()
 
 class color:
@@ -64,7 +64,7 @@ def startup():
     if not os.path.exists("resources/script_store/main.py"): # BACKUP ORIGINAL FILES TO STORE
         os.system("cp -R ./scripts/* ./resources/script_store/")
         os.system("cp ./main.py ./resources/script_store/")
-        os.system("cp ./VERSION ./resources/script_store/")
+        os.system("cp ./.version ./resources/script_store/")
 
     if isVM == True:
         print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)

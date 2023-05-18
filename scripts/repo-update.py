@@ -19,12 +19,15 @@ import re
 import json
 import sys
 
+global noDelta
+
 detectChoice = 1
 latestOSName = "Ventura"
 latestOSVer = "13"
 runs = 0
+noDelta = 0
 
-version = open("./VERSION")
+version = open("./.version")
 version = version.read()
 
 def clear(): print("\n" * 150)
@@ -48,13 +51,18 @@ print("Checking for updates...")
 
 noDelta = 0
 
+if os.path.exists("./resources/.webversion"): os.system("rm ./resources/.webversion")
+os.system("wget -q --output-document=./resources/.webversion --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/VERSION")
+if os.path.exists("./resources/.upgrade"): os.system("rm ./resources/.upgrade")
+os.system("wget -q --output-document=./resources/.upgrade --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/resources/.upgrade")
+
+# COMPATIBILITY MODE
 if os.path.exists("./resources/WEBVERSION"): os.system("rm ./resources/WEBVERSION")
-os.system("wget -q --output-document=./resources/WEBVERSION --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/VERSION")
 if os.path.exists("./resources/UPGRADEPATH"): os.system("rm ./resources/UPGRADEPATH")
-os.system("wget -q --output-document=./resources/UPGRADEPATH --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/UPGRADEPATH")
 
 
-webVersion = open("./resources/WEBVERSION")
+
+webVersion = open("./resources/.webversion")
 webVersion = webVersion.read()
 
 
@@ -71,10 +79,11 @@ webVersion = webVersion.replace("\n","")
 versionInt = version.replace(".","")
 webVersionInt = webVersion.replace(".","")
 
-if os.path.exists("./resources/UPGRADEPATH"):
-   deltaSupport = open("./resources/UPGRADEPATH")
+if os.path.exists("./resources/.upgrade"):
+   deltaSupport = open("./resources/.upgrade")
    deltaSupport = deltaSupport.read()
    deltaSupport = deltaSupport.replace("\n"," ")
+   # print(deltaSupport)    # Uncomment to display supported upgrade versions
    if version not in deltaSupport:
       noDelta = 1
 
@@ -139,7 +148,7 @@ def updateBrains():
 
 
       
-      versionNew = open("./VERSION")
+      versionNew = open("./.version")
       versionNew = versionNew.read()
 
 
@@ -200,7 +209,7 @@ def updateBrains():
       os.system("chmod +x ./updates/"+webVersion+"/scripts/extras/*.sh")
       os.system("chmod +x ./updates/"+webVersion+"/resources/dmg2img")
       clear()
-      versionNew = open("./updates/"+webVersion+"/VERSION")
+      versionNew = open("./updates/"+webVersion+"/.version")
       versionNew = versionNew.read()
 
 
@@ -273,4 +282,4 @@ else:
    print(color.BOLD+"   Your Reported Version\n   "+color.END+"v"+version,"\n")
    print("   I couldn't get the status of your current version, and/or the\n   remote server version's control file."+"\n\n")
    
-#https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/VERSION
+#https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/.version

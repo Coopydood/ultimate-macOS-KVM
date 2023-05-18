@@ -26,7 +26,7 @@ latestOSVer = "13"
 runs = 0
 global errorMessage
 
-version = open("./VERSION")
+version = open("./.version")
 version = version.read()
 
 def clear(): print("\n" * 150)
@@ -145,7 +145,7 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     #os.system("rm ./blobs/stale/*.apb > /dev/null 2>&1")
     os.system("rm ./resources/config.sh > /dev/null 2>&1")
     os.system("rm ./main.py > /dev/null 2>&1")
-    os.system("rm ./VERSION > /dev/null 2>&1")
+    os.system("rm ./.version > /dev/null 2>&1")
     os.system("rm ./README.md > /dev/null 2>&1")
 
     time.sleep(4)
@@ -163,7 +163,7 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     os.system("cp -R ./RESTORE/resources ./resources")
     os.system("cp -R ./RESTORE/ovmf ./ovmf")
     os.system("cp -R ./RESTORE/blobs ./blobs")
-    os.system("cp ./RESTORE/VERSION ./VERSION")
+    os.system("cp ./RESTORE/.version ./.version")
     os.system("cp ./RESTORE/README.md ./README.md")
     os.system("cp ./RESTORE/main.py ./main.py")
     os.system("cp ./RESTORE/* ./ > /dev/null 2>&1")

@@ -25,7 +25,7 @@ latestOSVer = "13"
 runs = 0
 global errorMessage
 
-version = open("./VERSION")
+version = open("./.version")
 version = version.read()
 
 def clear(): print("\n" * 150)
