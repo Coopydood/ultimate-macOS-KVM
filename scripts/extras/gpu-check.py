@@ -87,7 +87,7 @@ def autoRun():
 
     for x in vgaGrep:
         #val = x.split('[', 1)[1].split(']')
-        a = "aaaa"
+        a = "aaaa"  # aaaaaaaa?
         val = re.findall('\[.*?\]', x)
         vgaGrepT.append(val)
     gpuList = open("scripts/gpulist.json")
@@ -134,7 +134,7 @@ def autoRun():
     elif gpuCount == 1:
         print("   I"+color.BOLD+color.GREEN,"successfully"+color.END,"detected"+color.BOLD,gpuCount,"GPU"+color.END,"in your system:\n")
     else:
-        print("   I"+color.BOLD+color.RED,"failed"+color.END,"to detect any GPUs in your system.\nSomething has went very wrong somewhere, or your GPU is weirder than you are.\nPerhaps try entering your GPU model"+color.BOLD,"manually"+color.END,"by selecting the second option instead.\n")
+        print("   I"+color.BOLD+color.RED,"failed"+color.END,"to detect any GPUs in your system.\n   Something has went very wrong somewhere, or your GPU is weirder than you are.\n   Perhaps try entering your GPU model"+color.BOLD,"manually"+color.END,"by selecting the second option instead.\n")
 
     for gpu in gpus:
         if (gpu["name"]) in model:
@@ -266,12 +266,12 @@ def manualRun():
     if args.manual is not None:
         model = args.manual
     else:
-        print(color.BOLD+"Enter your GPU manually\n")
-        print("\nYou have chosen to"+color.BOLD,"enter your GPU model manually."+color.END)
-        print("To do this, simply type the model of your GPU and hit the ENTER key. You do not\nhave to include the vendor name.\n")
-        print(color.BOLD+"  Example:"+color.END+" If you had an",color.BOLD+"AMD Radeon RX 550")
-        print(color.END+"           You would type"+color.BOLD,"RX 550")
-        print(color.BOLD+color.CYAN+"\nTIP:"+color.END,"You can see a list of GPUs installed in your system by running "+color.BOLD+"lspci -v | grep \"VGA\"")
+        print(color.BOLD+"   Enter your GPU manually\n")
+        print("\n   You have chosen to"+color.BOLD,"enter your GPU model manually."+color.END)
+        print("   To do this, simply type the model of your GPU and hit the ENTER key. You do not\n   have to include the vendor name.\n")
+        print(color.BOLD+"     Example:"+color.END+" If you had an",color.BOLD+"AMD Radeon RX 550")
+        print(color.END+"              You would type"+color.BOLD,"RX 550")
+        print(color.BOLD+color.CYAN+"\n   TIP:"+color.END,"You can see a list of GPUs installed in your system by running "+color.BOLD+"lspci -v | grep \"VGA\"")
         print(color.BOLD+"\n")
         model = str(input(color.BOLD+"Model> "+color.END))
 
@@ -287,9 +287,9 @@ def manualRun():
             gpuCount = gpuCount + 1
 
     if gpuCount == 1:
-        print("I"+color.BOLD+color.GREEN,"successfully"+color.END,"found a match for "+color.BOLD+"\""+model+"\""+color.END+" in the database:\n")
+        print("   I"+color.BOLD+color.GREEN,"successfully"+color.END,"found a match for "+color.BOLD+"\""+model+"\""+color.END+" in the database:\n")
     else:
-        print("I"+color.BOLD+color.RED,"failed"+color.END,"to find a match for "+color.BOLD+"\""+model+"\""+color.END+" in the database.\nPlease check your"+color.BOLD,"spelling"+color.END,"and ensure you're not imagining a GPU's existence.\n")
+        print("   I"+color.BOLD+color.RED,"failed"+color.END,"to find a match for "+color.BOLD+"\""+model+"\""+color.END+" in the database.\n   Please check your"+color.BOLD,"spelling"+color.END,"and ensure you're not imagining a GPU's existence.\n")
         exit
 
     for gpu in gpus:
@@ -390,29 +390,29 @@ def manualRun():
             if "XT" in model:
                 gpuName = gpuName + " XT" 
 
-            print(color.BOLD+gpuName+color.END)
-            print("───────────────────────────────")
+            print("   "+color.BOLD+gpuName+color.END)
+            print("   ───────────────────────────────")
             if gpuSupport == True:
-                print(color.BOLD+color.GREEN+"●",color.END+"Supported\n")
+                print(color.BOLD+color.GREEN+"   ●",color.END+"Supported\n")
             elif gpuSupport == False:
-                print(color.BOLD+color.RED+"●",color.END+"Unsupported\n")
+                print(color.BOLD+color.RED+"   ●",color.END+"Unsupported\n")
             else:
-                print(color.BOLD+color.YELLOW+"●",color.END+"Problematic\n")
+                print(color.BOLD+color.YELLOW+"   ●",color.END+"Problematic\n")
             
             if gpuMaxOS == "9999":
-                print(color.BOLD+"Maximum macOS:"+color.END,"Latest /",latestOSName,"("+latestOSVer+")")
+                print(color.BOLD+"   Maximum macOS:"+color.END,"Latest /",latestOSName,"("+latestOSVer+")")
             elif gpuMaxOS == "-1":
-                print(color.BOLD+"Maximum macOS:"+color.END,"N/A")
+                print(color.BOLD+"   Maximum macOS:"+color.END,"N/A")
             else:
-                print(color.BOLD+"Maximum macOS:"+color.END,gpuMaxOSF)
+                print(color.BOLD+"   Maximum macOS:"+color.END,gpuMaxOSF)
 
             if gpuMinOS == "-1":
-                print(color.BOLD+"Minimum macOS:"+color.END,"N/A")
+                print(color.BOLD+"   Minimum macOS:"+color.END,"N/A")
             else:
-                print(color.BOLD+"Minimum macOS:"+color.END,gpuMinOSF)
+                print(color.BOLD+"   Minimum macOS:"+color.END,gpuMinOSF)
             
-            print("\n"+color.BOLD+"Additional Information"+color.END)
-            print(gpuQuirks)
+            print("\n"+color.BOLD+"   Additional Information"+color.END)
+            print("   "+gpuQuirks)
 
             print("\n")
             exit

@@ -33,11 +33,13 @@ Here's a table with my best judgement on minimum, recommended, and best system r
 <li><b>Wget</b> 》 <code>wget</code></li>
 <li><b>QEMU</b> 》 <code>qemu-base</code> or <code>qemu-full</code></li>
 <li><b>Libvirt</b> 》 <code>libvirt</code></li>
+<li><b>DNSmasq</b> 》 <code>dnsmasq</code></li>
 <li><b>Python</b> 》 <code>python</code></li>
 </ul>
 <b>Optional / Recommended</b>
 <ul>
 <li><b>Virtual Machine Manager (GUI)</b> 》 <code>virt-manager</code></li>
+<li><b>Virsh</b> 》 <code>virsh</code></li>
 </ul>
 </details>
 

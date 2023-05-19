@@ -28,3 +28,4 @@ resources/script_store/restore/*.sh
 INTERNAL_CHECKLIST.pdf
 INTERNAL_CHECKLIST.txt
 internal/*
+resources/.webversion

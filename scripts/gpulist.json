@@ -9,6 +9,287 @@
             "maxOS": "9999",
             "quirks": "Baffin core only (67ff)"
         },
+
+        {
+            "name": "Radeon RX 6600",
+            "fullName": "AMD Radeon RX 6600",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "12.1",
+            "maxOS": "9999",
+            "quirks": "Most Navi 23 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+
+        {
+            "name": "Radeon RX 6600 XT",
+            "fullName": "AMD Radeon RX 6600 XT",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "12.1",
+            "maxOS": "9999",
+            "quirks": "Most Navi 23 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon RX 6800",
+            "fullName": "AMD Radeon RX 6800",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "11.4",
+            "maxOS": "9999",
+            "quirks": "Most Navi 21 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon RX 6800 XT",
+            "fullName": "AMD Radeon RX 6800 XT",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "11.4",
+            "maxOS": "9999",
+            "quirks": "Most Navi 21 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon RX 6900 XT",
+            "fullName": "AMD Radeon RX 6900 XT",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "11.4",
+            "maxOS": "9999",
+            "quirks": "Most Navi 21 cards currently require the boot argument \"agdpmod=pikera\" to get a display out\n   The XTXH variant (Device ID: 0x73AF) is supported with WhateverGreen 1.5.2 and spoofing device-id to 0x73BF"
+        },
+        {
+            "name": "Radeon RX 5500",
+            "fullName": "AMD Radeon RX 5500",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.15.1",
+            "maxOS": "9999",
+            "quirks": "Most Navi 10 and 14 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon RX 5500 XT",
+            "fullName": "AMD Radeon RX 5500 XT",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.15.1",
+            "maxOS": "9999",
+            "quirks": "Most Navi 10 and 14 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon RX 5600",
+            "fullName": "AMD Radeon RX 5600",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.15.1",
+            "maxOS": "9999",
+            "quirks": "Most Navi 10 and 14 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon RX 5600 XT",
+            "fullName": "AMD Radeon RX 5600 XT",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.15.1",
+            "maxOS": "9999",
+            "quirks": "Most Navi 10 and 14 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon RX 5700",
+            "fullName": "AMD Radeon RX 5700",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.15.1",
+            "maxOS": "9999",
+            "quirks": "Most Navi 10 and 14 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon RX 5700 XT",
+            "fullName": "AMD Radeon RX 5700 XT",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.15.1",
+            "maxOS": "9999",
+            "quirks": "Most Navi 10 and 14 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon RX 5700 XT 50th Anniversary Edition",
+            "fullName": "AMD Radeon RX 5700 XT 50th Anniversary Edition",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.15.1",
+            "maxOS": "9999",
+            "quirks": "Most Navi 10 and 14 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon Pro W5500",
+            "fullName": "AMD Radeon Pro W5500",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.15.1",
+            "maxOS": "9999",
+            "quirks": "Most Navi 10 and 14 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon Pro W5700",
+            "fullName": "AMD Radeon Pro W5700",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.15.1",
+            "maxOS": "9999",
+            "quirks": "Most Navi 10 and 14 cards currently require the boot argument \"agdpmod=pikera\" to get a display out"
+        },
+        {
+            "name": "Radeon VII",
+            "fullName": "AMD Radeon VII",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.14.5",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Vega 64 Liquid",
+            "fullName": "AMD Vega 64 Liquid",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.13",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Vega 64",
+            "fullName": "AMD Vega 64",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.13",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Vega 56",
+            "fullName": "AMD Vega 56",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.13",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Vega Frontier Edition",
+            "fullName": "AMD Vega Frontier Edition",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.13",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon Pro WX 9100",
+            "fullName": "AMD Radeon Pro WX 9100",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.13",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon RX 480",
+            "fullName": "AMD Radeon RX 480",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon RX 470D",
+            "fullName": "AMD Radeon RX 470D",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon RX 470",
+            "fullName": "AMD Radeon RX 470",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon RX 460",
+            "fullName": "AMD Radeon RX 460",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon RX 590",
+            "fullName": "AMD Radeon RX 590",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon RX 580X",
+            "fullName": "AMD Radeon RX 580X",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon RX 580",
+            "fullName": "AMD Radeon RX 580",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon RX 570X",
+            "fullName": "AMD Radeon RX 570X",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon RX 570",
+            "fullName": "AMD Radeon RX 570",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon RX 560X",
+            "fullName": "AMD Radeon RX 560X",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon RX 550",
+            "fullName": "AMD Radeon RX 550",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "Baffin core only (67ff)"
+        },
         {
             "name": "Radeon RX 560",
             "fullName": "AMD Radeon RX 560",
@@ -18,6 +299,187 @@
             "maxOS": "9999",
             "quirks": "0"
         },
+        {
+            "name": "Radeon Pro WX 7100",
+            "fullName": "AMD Radeon Pro WX 7100",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon Pro WX 5100",
+            "fullName": "AMD Radeon Pro WX 5100",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon Pro WX 4100",
+            "fullName": "AMD Radeon Pro WX 4100",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "Radeon Pro E9550",
+            "fullName": "AMD Radeon Pro E9550",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.12",
+            "maxOS": "9999",
+            "quirks": "0"
+        },
+        {
+            "name": "R9 Fury X",
+            "fullName": "AMD Radeon R9 Fury X",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "R9 Fury",
+            "fullName": "AMD Radeon R9 Fury",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "R9 Nano",
+            "fullName": "AMD Radeon R9 Nano",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "R9 390",
+            "fullName": "AMD Radeon R9 390",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Fake ID needed"
+        },
+        {
+            "name": "R9 290X",
+            "fullName": "AMD Radeon R9 290X",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "R9 390X",
+            "fullName": "AMD Radeon R9 390X",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "R9 290",
+            "fullName": "AMD Radeon R9 290",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Fake ID needed"
+        },
+        {
+            "name": "R9 390",
+            "fullName": "AMD Radeon R9 390",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Fake ID needed"
+        },
+        {
+            "name": "R9 280X",
+            "fullName": "AMD Radeon R9 280X",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Hit or miss"
+        },
+        {
+            "name": "R9 380X",
+            "fullName": "AMD Radeon R9 380X",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Hit or miss"
+        },
+        {
+            "name": "R9 280",
+            "fullName": "AMD Radeon R9 280",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Fake ID needed"
+        },
+        {
+            "name": "R9 380",
+            "fullName": "AMD Radeon R9 380",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Fake ID needed"
+        },
+        {
+            "name": "R9 270X",
+            "fullName": "AMD Radeon R9 270X",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "R9 370X",
+            "fullName": "AMD Radeon R9 370X",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "R9 270",
+            "fullName": "AMD Radeon R9 270",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Fake ID needed"
+        },
+        {
+            "name": "R9 370",
+            "fullName": "AMD Radeon R9 370",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Fake ID needed"
+        },
+        
         {
             "name": "R9 255",
             "fullName": "AMD Radeon R9 255",
