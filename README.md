@@ -1,6 +1,11 @@
 # ultimate-macOS-KVM
-### v0.9.0
+### v0.9.0 
+
 Helping you build the ultimate macOS virtual machine, powered by KVM.
+
+*[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-9-0.md)*
+
+***
 
 ## Introduction
 Tired of all the restraints and poor performance of macOS VMs in hypervisors like VirtualBox or VMware? Well, the story changes when you run your virtual machines in **kernel space**. Welcome to the world of **K**ernel **V**irtual **M**achines.
