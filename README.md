@@ -83,6 +83,9 @@ or, do all this with a one-liner:
 ```
 git clone https://github.com/Coopydood/ultimate-macOS-KVM && cd ultimate-macOS-KVM && chmod +x main.py
 ```
+
+Alternatively, you can download the latest release here: [Download](https://github.com/Coopydood/ultimate-macOS-KVM/archive/refs/heads/main.zip)
+
 ## Setup
 Okay, so you've cloned my repo, cd'd into the directory, and made the ``main.py`` file executeable. Great! 
 Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already:
