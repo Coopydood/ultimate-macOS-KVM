@@ -11,7 +11,7 @@ Signature: 4CD28348A3DD016F
 """
 
 
-# THIS IS THE MAIN SETUP FILE! RUN THIS FILE FIRST!
+# THIS IS THE MAIN FILE! RUN THIS FILE FIRST!
 # ./main.py
 
 
@@ -41,6 +41,8 @@ procFlow = 1
 
 version = open("./.version")
 version = version.read()
+
+versionDash = version.replace(".","-")
 
 class color:
    PURPLE = '\033[95m'
@@ -115,6 +117,7 @@ def startup():
     
     
     print(color.END+"      E. Extras...")
+    print(color.END+"      W. What's new?")
     print(color.END+"      U. Check for updates")
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
@@ -206,6 +209,15 @@ elif detectChoice == "4":
 elif detectChoice == "e" or detectChoice == "E":
     clear()
     os.system('./scripts/extras.py')
+elif detectChoice == "w" or detectChoice == "W":
+    clear()
+    print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING RELEASE NOTES IN DEFAULT BROWSER"+color.END,"")
+    print("   Continue in your browser\n")
+    print("\n   I have attempted to open the release notes in\n   your default browser. Please be patient.\n\n   You will be returned to the main menu in 5 seconds.\n\n\n\n\n")
+    os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v'+versionDash+".md > /dev/null 2>&1")
+    time.sleep(6)
+    clear()
+    os.system('./main.py')
 elif detectChoice == "u" or detectChoice == "U":
     clear()
     os.system('./scripts/repo-update.py')
