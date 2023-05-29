@@ -44,6 +44,11 @@ version = version.read()
 
 versionDash = version.replace(".","-")
 
+# We don't need these files anymore. If they're here, get rid
+if os.path.exists("./UPGRADEPATH"): os.system("rm ./UPGRADEPATH")
+if os.path.exists("./VERSION"): os.system("rm ./VERSION") 
+if os.path.exists("./resources/WEBVERSION"): os.system("rm ./resources/WEBVERSION")
+
 class color:
    PURPLE = '\033[95m'
    CYAN = '\033[96m'
