@@ -56,12 +56,13 @@ def startup():
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
     print("\n   The purpose of this script is to automatically guide you through \n   the process of",color.BOLD+"creating and running a basic macOS VM",color.END+"using settings \n   based on answers to a number of questions. \n\n   Many of the values can be left to default - especially if you are unsure.\n   It won't be perfect, but it's supposed to make it as"+color.BOLD,"easy as possible.\n"+color.END)
     #print(color.BOLD+"\n"+"   Profile:"+color.END,"https://github.com/Coopydood")
-    #print(color.BOLD+"      Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
+    #print(color.BOLD+"      Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM") # no shameless plugs anymore :[
     print("   Continue whenever you're ready, or return to the main menu.")
     print(color.BOLD+"\n      1. Start")
     print(color.END+"         Begin creating a new QEMU-based macOS config file \n")
-    print(color.END+"      2. Main menu")
-    print(color.END+"      3. Exit\n")
+    print(color.END+"      2. Help...")
+    print(color.END+"      3. Main menu")
+    print(color.END+"      4. Exit\n")
     detectChoice = int(input(color.BOLD+"Select> "+color.END))
 
 def clear(): print("\n" * 150)
@@ -171,6 +172,7 @@ def autopilot():
       
       print("    "+color.END+"  2. Back")
       print("    "+color.END+"  X. Start Over")
+      print("    "+color.END+"  H. Help...")
       print("    "+color.END+"  Q. Exit\n")
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
    
@@ -183,6 +185,16 @@ def autopilot():
       elif stageSelect == "x" or stageSelect == "X":
          currentStage = 1
          stage1()
+
+      elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#review-your-preferences > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage12()
          
       elif stageSelect == "q" or stageSelect == "Q":
          exit   
@@ -214,6 +226,7 @@ def autopilot():
          print(color.END+"      2. Select existing...")
          print(color.END+"      3. Skip")
          print(color.END+"      4. Back")
+         print(color.END+"      H. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -247,6 +260,16 @@ def autopilot():
             currentStage = 1
             stage10()
             
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#11-macos-recovery-image-file > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage11()
+
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
 
@@ -277,6 +300,7 @@ def autopilot():
          print(color.END+"      2. Generate automatically")
          print(color.END+"      3. Custom value...")
          print(color.END+"      4. Back")
+         print(color.END+"      H. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -311,6 +335,16 @@ def autopilot():
          elif stageSelect == "4":
             currentStage = 1
             stage9()
+
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#10-network-mac-address > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage10()
             
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
@@ -346,6 +380,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
+         print(color.END+"      H. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -365,6 +400,16 @@ def autopilot():
             currentStage = 1
             stage8()
             
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#9-set-network-adapter-model > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage9()
+
          elif stageSelect == "q" or stageSelect == "Q":
             exit    
 
@@ -394,6 +439,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
+         print(color.END+"      H. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -413,6 +459,16 @@ def autopilot():
             currentStage = 1
             stage7()
             
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#8-set-hard-disk-capacity > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage8()
+
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
 
@@ -442,6 +498,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
+         print(color.END+"      H. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -460,6 +517,16 @@ def autopilot():
          elif stageSelect == "3":
             currentStage = 1
             stage6()
+         
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#7-set-amount-of-allocated-ram > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage7()
             
          elif stageSelect == "q" or stageSelect == "Q":
             exit     
@@ -490,6 +557,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
+         print(color.END+"      H. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -509,6 +577,16 @@ def autopilot():
             currentStage = 1
             stage5()
             
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#6-set-cpu-feature-arguments > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage6()
+
          elif stageSelect == "q" or stageSelect == "Q":
             exit    
 
@@ -538,6 +616,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
+         print(color.END+"      H. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -556,6 +635,16 @@ def autopilot():
          elif stageSelect == "3":
             currentStage = 1
             stage4()
+
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#5-set-cpu-model > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage5()
             
          elif stageSelect == "q" or stageSelect == "Q":
             exit    
@@ -586,6 +675,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
+         print(color.END+"      H. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -605,6 +695,16 @@ def autopilot():
             currentStage = 1
             stage3()
             
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#4-set-number-of-cpu-threads > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage4()
+
          elif stageSelect == "q" or stageSelect == "Q":
             exit
 
@@ -639,6 +739,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
+         print(color.END+"      H. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -657,7 +758,17 @@ def autopilot():
          elif stageSelect == "3":
             currentStage = 1
             stage2()
-            
+         
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#3-set-number-of-cpu-cores > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage3()
+
          elif stageSelect == "q" or stageSelect == "Q":
             exit
 
@@ -688,6 +799,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
+         print(color.END+"      H. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -706,6 +818,16 @@ def autopilot():
          elif stageSelect == "3":
             currentStage = 1
             stage1()
+         
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#2-set-target-os > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage2()
             
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
@@ -740,6 +862,7 @@ def autopilot():
          print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+"boot.sh"+color.END)
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
+         print(color.END+"      H. Help...")
          print(color.END+"      Q. Exit\n")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -753,6 +876,16 @@ def autopilot():
 
          elif stageSelect == "2":
             customValue = 1
+            stage1()
+         
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#1-name-your-config-file > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
             stage1()
 
          elif stageSelect == "q" or stageSelect == "Q":
@@ -1379,7 +1512,16 @@ def autopilot():
 if detectChoice == 1:
    autopilot()
 elif detectChoice == 2:
+   clear()
+   print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING AUTOPILOT WIKI IN DEFAULT BROWSER"+color.END,"")
+   print("   Continue in your browser\n")
+   print("\n   I have attempted to open the AutoPilot wiki in\n   your default browser. Please be patient.\n\n   You will be returned to AutoPilot in 5 seconds.\n\n\n\n\n")
+   os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot > /dev/null 2>&1')
+   time.sleep(6)
+   clear()
+   os.system('./scripts/autopilot.py')
+elif detectChoice == 3:
     os.system('./main.py')
 
-elif detectChoice == 3:
+elif detectChoice == 4:
     exit
