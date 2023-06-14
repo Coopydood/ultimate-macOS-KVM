@@ -1,6 +1,6 @@
 gpu-check1.py
 BaseSystem.img
-blobs/*
+blobs/*.apb
 blobs/stale/*
 resources/config.sh
 baseConfig
