@@ -5,9 +5,9 @@
 #    THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!    #
 #                                                          #
 # It is intended to be used by the automatic setup wizard. #
-#   To use the wizard, run the included "setup.py" file;   #
+#    To use the wizard, run the included "main.py" file;   #
 #                                                          #
-#                      $ ./setup.py                        #
+#                       $ ./main.py                        #
 ############################################################.
 
 #
@@ -29,7 +29,9 @@ FILE="$USR_CFG"
 IGNORE_FILE=0
 REQUIRES_SUDO=0
 VFIO_PTA=0
-GENEPOCH=000000000
+GEN_EPOCH=000000000
+
+SCREEN_RES="$USR_SCREEN_RES"
 
 ALLOCATED_RAM="$USR_ALLOCATED_RAM"
 CPU_SOCKETS="$USR_CPU_SOCKS"
@@ -40,14 +42,15 @@ CPU_FEATURE_ARGS="$USR_CPU_FEATURE_ARGS"
 
 REPO_PATH="$USR_REPO_PATH"
 OVMF_DIR="$USR_REPO_PATH/ovmf"
+
 VFIO_ID_0="$USR_VFIO_ID_0"
 VFIO_ID_1="$USR_VFIO_ID_1"
 VFIO_ROM="$USR_VFIO_ROM"
 
 USB_DEVICES="$USR_USB_DEVICES"
+
 NETWORK_DEVICE="$USR_NETWORK_DEVICE"
 MAC_ADDRESS="$USR_MAC_ADDRESS"
-
 
 #   You should not have to touch anything below this line, especially if you
 #   don't really know what you're doing. It'll probably break something.
@@ -59,6 +62,7 @@ args=(
 -usb -device usb-kbd -device usb-tablet #USB_DEV
 -smp "$CPU_THREADS",cores="$CPU_CORES",sockets="$CPU_SOCKETS"
 -device usb-ehci,id=ehci
+-device qemu-xhci,id=xhci
 -device pcie-root-port,bus=pcie.0,slot=1,x-speed=16,x-width=32
 #VFIO_DEV_BEGIN
 #VFIO_DEV_END
@@ -79,10 +83,15 @@ args=(
 ##########################################################################
 
 -netdev user,id=net0 -device "$NETWORK_DEVICE",netdev=net0,id=net0,mac="$MAC_ADDRESS"
--vga qxl
+-device qxl-vga,vgamem_mb=128,vram_size_mb=128
 -monitor stdio
 #-display none
+#-vga qxl
+
+################ UNCOMMENT IF YOU WANT TO USE VNC MONITOR ################
 #-vnc 0.0.0.0:1,password=on -k en-us
+##########################################################################
+
 )
 
 qemu-system-x86_64 "${args[@]}"

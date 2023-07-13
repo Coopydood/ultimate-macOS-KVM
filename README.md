@@ -1,10 +1,10 @@
 # ultimate-macOS-KVM
 
-### v0.9.1
+### v0.9.2
 
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
-*[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-9-1.md)*
+*[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-9-2.md)*
 
 ![GitHub](https://img.shields.io/github/license/Coopydood/ultimate-macOS-KVM?label=Licence&logo=unlicense&logoColor=white&style=for-the-badge) ![GitHub repo size](https://img.shields.io/github/repo-size/Coopydood/ultimate-macOS-KVM?label=Size&logo=envoy-proxy&logoColor=white&style=for-the-badge) ![Discord](https://img.shields.io/discord/574943603466436628?color=7d86ff&label=Discord&logo=discord&logoColor=white&style=for-the-badge)
 

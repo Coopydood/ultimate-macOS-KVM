@@ -112,7 +112,7 @@ def autopilot():
    customValue = 0
 
    
-   def stage12():
+   def stage13():
       global USR_CPU_SOCKS
       global USR_CPU_CORES
       global USR_CPU_THREADS
@@ -180,7 +180,7 @@ def autopilot():
          handoff()
 
       elif stageSelect == "2":
-         stage11()
+         stage12()
 
       elif stageSelect == "x" or stageSelect == "X":
          currentStage = 1
@@ -194,10 +194,100 @@ def autopilot():
             os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#review-your-preferences > /dev/null 2>&1')
             time.sleep(6)
             clear()
-            stage12()
+            stage13()
          
       elif stageSelect == "q" or stageSelect == "Q":
          exit   
+
+   def stage12():
+      global customValue
+      global currentStage
+      global USR_SCREEN_RES
+      defaultValue = "1280x720"
+
+      clear()
+      print("\n   "+color.BOLD+"Screen resolution"+color.END)
+      print("   Step 12")
+      print("\n   Select a compatible booter screen resolution. \n   This resolution will apply to both the bootloader and\n   macOS, and can be changed later in OVMF Plaform Settings. If you\n   intend on using GPU passthrough, your GPU/monitor determines this."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      if customValue == 1:
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<file>"+color.YELLOW+".img"+color.END+"\n   Enter a custom value.\n   \n   ")
+         print(color.END+"\n      1. 800x600")
+         print(color.END+"      2. 1024x768")
+         print(color.BOLD+"      3. 1280x720 (720p)")
+         print(color.END+"      4. 1280x1024")
+         print(color.END+"      5. 1440x900")
+         print(color.END+"      6. 1920x1080 (1080p)")
+         print(color.END+"      7. 2560x1440 (1440p)")
+         print(color.END+"      8. 3840x2160 (4K)\n")
+         customInput = str(input(color.BOLD+"Select> "+color.END))
+         
+         if customInput == "1":
+            customInput = "800x600"
+         elif customInput == "2":
+            customInput = "1024x768"
+         elif customInput == "3":
+            customInput = "1280x720"
+         elif customInput == "4":
+            customInput = "1280x1024"
+         elif customInput == "5":
+            customInput = "1440x900"
+         elif customInput == "6":
+            customInput = "1920x1080"
+         elif customInput == "7":
+            customInput = "2560x1440"
+         elif customInput == "8":
+            customInput = "3840x2160"
+         else:
+            customInput = "1280x720"
+
+         USR_SCREEN_RES = customInput               #+".sh" #<--- change required prefix/suffix
+         currentStage = currentStage + 1
+         customValue = 0
+         blob = open("./blobs/USR_SCREEN_RES.apb","w")
+         blob.write(USR_SCREEN_RES)
+         blob.close()
+         stage13()
+      else:
+         print(color.BOLD+"\n      1. 1280x720")
+         print(color.END+"      2. More resolutions...")
+         print(color.END+"      3. Back")
+         print(color.END+"      H. Help...")
+         print(color.END+"      Q. Exit\n   ")
+         stageSelect = str(input(color.BOLD+"Select> "+color.END))
+      
+         if stageSelect == "1":
+            USR_SCREEN_RES = "1280x720"
+            blob = open("./blobs/USR_SCREEN_RES.apb","w")
+            blob.write(USR_SCREEN_RES)
+            blob.close()
+            blob = open("./blobs/CDN_CONTROL","w")
+            blob.write("fresh_cdn")
+            blob.close()
+            currentStage = currentStage + 1
+            stage13()
+
+         elif stageSelect == "2":
+            customValue = 1
+            stage12()
+
+         elif stageSelect == "3":
+            currentStage = 1
+            stage11()
+            
+         elif stageSelect == "h" or stageSelect == "H":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#11-macos-recovery-image-file > /dev/null 2>&1')
+            time.sleep(6)
+            clear()
+            stage12()
+
+         elif stageSelect == "q" or stageSelect == "Q":
+            exit   
+
 
    def stage11():
       global customValue
@@ -1083,7 +1173,7 @@ def autopilot():
             os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
          
          os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
-         os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
+         os.system("cp resources/ovmf/OVMF_VARS_"+USR_SCREEN_RES+".fd ovmf/OVMF_VARS.fd")
          
          integrityConfig = 1
          if os.path.exists("resources/config.sh"):
@@ -1153,6 +1243,14 @@ def autopilot():
          else:
             integrity = integrity - 1
          if os.path.exists("blobs/USR_TARGET_OS.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+         if os.path.exists("blobs/USR_MAC_ADDRESS.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
+         if os.path.exists("blobs/USR_SCREEN_RES.apb"):
             integrity = integrity + 0
          else:
             integrity = integrity - 1
@@ -1240,6 +1338,7 @@ def autopilot():
          configData = configData.replace("baseConfig",str(USR_CFG))
          configData = configData.replace("$USR_CFG",str(USR_CFG))
          configData = configData.replace("$USR_MAC_ADDRESS",str(USR_MAC_ADDRESS))
+         configData = configData.replace("$USR_SCREEN_RES",str(USR_SCREEN_RES))
          if USR_BOOT_FILE == "-2":
             configData = configData.replace("-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw","#-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw")
             configData = configData.replace("-device ide-hd,bus=sata.4,drive=BaseSystem","#-device ide-hd,bus=sata.4,drive=BaseSystem")
@@ -1385,11 +1484,12 @@ def autopilot():
          configData = configData.replace("#    THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!    #","#   APC-RUN_"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"\n#\n#   THIS FILE WAS GENERATED USING AUTOPILOT.")
          configData = configData.replace("#                                                          #\n","")
          configData = configData.replace("# It is intended to be used by the automatic setup wizard. #\n","")
-         configData = configData.replace("#   To use the wizard, run the included \"main.py\" file;   #\n","")
+         configData = configData.replace("#    To use the wizard, run the included \"main.py\" file;   #\n","")
          configData = configData.replace("#                                                          #","#")
-         configData = configData.replace("#                      $ ./main.py                        #","#\n#   To boot this script, run the following command:\n#   $ ./"+str(USR_CFG))
-         configData = configData.replace("#   ./main.py","")
+         configData = configData.replace("#                       $ ./main.py                        #","#\n#   To boot this script, run the following command:\n#   $ ./"+str(USR_CFG))
+         configData = configData.replace("#    ./main.py","")
          configData = configData.replace("############################################################.","#")
+         configData = configData.replace("GEN_EPOCH=000000000","GEN_EPOCH="+str(int(time.time())))
 
          with open ("resources/config.sh","w") as file:
             file.write(configData)
@@ -1491,16 +1591,19 @@ def autopilot():
 
       print(color.BOLD+"\n      1. Boot")
       print(color.END+"         Run your",USR_CFG,"file now.\n")
-      
-      print("    "+color.END+"  2. Main menu")
+      print("    "+color.END+"  2. Open in default editor")
+      print("    "+color.END+"  3. Main menu")
       print("    "+color.END+"  Q. Exit\n")
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
    
       if stageSelect == "1":
          clear()
          os.system("./"+USR_CFG)
-
+      
       elif stageSelect == "2":
+         os.system("xdg-open ./"+USR_CFG)
+
+      elif stageSelect == "3":
          os.system("python ./main.py")
          
       elif stageSelect == "q" or stageSelect == "Q":
