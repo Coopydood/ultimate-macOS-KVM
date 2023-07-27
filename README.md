@@ -87,16 +87,16 @@ Easily convert any AutoPilot-generated QEMU scripts into an importable XML file 
 It's easy to get up and running. Simply clone the repo, fix permissions, and run.
 Make sure you have **all** [dependencies](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/README.md#requirements) installed before getting started.
 
-```
-git clone https://github.com/Coopydood/ultimate-macOS-KVM
-cd ultimate-macOS-KVM
-chmod +x main.py
+```sh
+$ git clone https://github.com/Coopydood/ultimate-macOS-KVM
+$ cd ultimate-macOS-KVM
+$ chmod +x main.py
 ```
 
 or, do all this with a one-liner:
 
-```
-git clone https://github.com/Coopydood/ultimate-macOS-KVM && cd ultimate-macOS-KVM && chmod +x main.py
+```sh
+$ git clone https://github.com/Coopydood/ultimate-macOS-KVM && cd ultimate-macOS-KVM && chmod +x main.py
 ```
 
 Alternatively, you can download the latest release here: [Download](https://github.com/Coopydood/ultimate-macOS-KVM/archive/refs/heads/main.zip)
@@ -106,22 +106,22 @@ Alternatively, you can download the latest release here: [Download](https://gith
 Okay, so you've cloned my repo, cd'd into the directory, and made the ``main.py`` file executeable. Great!
 Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already:
 
-```
-sudo systemctl enable libvirtd
+```sh
+$ sudo systemctl enable libvirtd
 ```
 
 and/or check the status of the daemon with
 
-```
-systemctl status libvirtd
+```sh
+$ systemctl status libvirtd
 ```
 
 Okay, now you're ready to use **ultimate-macOS-KVM**. Use the ``main.py`` file.
 
 This is your main menu / central hub for the project and everything can be accessed from here. Most sub-scripts included in the project should *not* be run on their own.
 
-```
-./main.py
+```sh
+$ ./main.py
 ```
 
 ## I'm here for GPU passthrough
@@ -132,10 +132,9 @@ Oh, and speaking of...
 
 ## Documentation
 
-More detailed write-ups on the project and the scripts included, as well as some tutorials can be found on this repo's wiki.
-[I'm working on it...](https://github.com/Coopydood/ultimate-macOS-KVM/wiki)
+More detailed write-ups on the project and the scripts included, as well as some tutorials can be found on this [repo's wiki](https://github.com/Coopydood/ultimate-macOS-KVM/wiki).
 
-Or, you can find some in the included **docs** folder.
+Or, you can find some in the included [docs folder](https://github.com/Coopydood/ultimate-macOS-KVM/tree/main/docs).
 
 ## Updates
 
@@ -153,7 +152,7 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 - I'm not responsible if you make an oopsie whoopsie.
 - Do NOT run anything as ``sudo``. If you have an urge to then you need to break that habit _**asap.**_ None of my scripts require superuser privileges.
 - Expect headaches. Some severe.
-- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassle, you WILL run into stupid gotchas that require trial and error out of my control.
+- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassle, you WILL run into [stupid gotchas](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Gotchas) that require trial and error out of my control.
 - I'm by no means an expert on this stuff nor would I claim to be.
 - I've simply made *what I had to go through* **easier** for you. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
@@ -162,7 +161,7 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 
 While I am the creator of these automation/ease-of-use scripts, this project is not possible without both the prior and current works of some very talented people. The people who have tested the project are also included.
 
-- **[Dortania](https://github.com/Dortania)** 》 Extensive documentation and Hackintosh development
+- **[Dortania](https://github.com/Dortania)** 》 Extensive documentation and Hackintosh development.
 - **[Kholia](https://github.com/kholia)** 》 Development of scripts and documentation. ultimate-macOS-KVM is intended as an extension to [OSX-KVM](https://github.com/kholia/OSX-KVM).
 - **[thenickdude](https://github.com/thenickdude)** 》 Personal support throughout my KVM misadventures and countless community contribs. Cheers.
 - **[vu1tur](to@vu1tur.eu.org)** 》 Open source dmg to img conversion tool; used and bundled by this project.

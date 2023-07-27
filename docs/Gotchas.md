@@ -14,8 +14,8 @@ Please note this document will be updated frequently.
 
 Awww, you little donkey. You forgot to make it executable.
 
-```
-chmod +x ./main.py
+```sh
+$ chmod +x ./main.py
 ```
 
 *sigh*. I did say it was for noobs. Dammit.
@@ -45,7 +45,7 @@ Make sure your network adapter model is set correctly in your config file. You m
 
 Also make sure that the virtual network is started. You can do this with 
 
-```
+```sh
 $ sudo virsh net-start default
 ```
 

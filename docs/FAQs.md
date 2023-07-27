@@ -56,7 +56,7 @@ Any recent Linux kernel has KVM built right in, meaning you don't have to do any
 
 You **must** be booting in UEFI mode, and **NOT** legacy BIOS mode. Secure Boot should also ideally be disabled.
 
-CSM and ROM-BAR may need to be enabled / disabled based on your specific system. See the [gotchas page](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/Gotchas.md) for more on this.
+CSM and ROM-BAR may need to be enabled / disabled based on your specific system. See the [gotchas page](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Gotchas) for more on this.
 
 All you need to do is install the dependencies and have your hardware meet the requirements, both listed [here](https://github.com/Coopydood/ultimate-macOS-KVM#requirements). Then, just follow the small guide included [here](https://github.com/Coopydood/ultimate-macOS-KVM#getting-started). You can choose any Linux distro that you want, but individual installations of packages will likely differ between different distros (apt, pacman, rpm, etc.).
 
@@ -77,7 +77,7 @@ Great! The project can assist you with this too.
 
 There's a built-in tool called the **VFIO-PCI Passthrough Assistant**, which - similarly to *AutoPilot* - guides you through the process of configuring your devices for VFIO-PCI passthrough.
 
-The full guide for this tool and passthrough in general can be found [here](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/Passthrough.md).
+The full guide for this tool and passthrough in general can be found [here](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Passthrough).
 
 </details>
 
@@ -91,7 +91,7 @@ Everything in the ``resources`` folder should be left alone, as the project need
 
 The files in the aptly-named ``scripts`` folder are, well, the scripts themselves. Same principle as the `resources` folder - no touchy unless you know how to touchy.
 
-Files in the ``boot`` folder are generated after running AutoPilot. They consist of the OpenCore boot image and its unpackaged files. You can't really edit these even if you wanted to, except from the OpenCore image, which **you should do** from within macOS. A guide on this can be found [here](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/OpenCore.md).
+Files in the ``boot`` folder are generated after running AutoPilot. They consist of the OpenCore boot image and its unpackaged files. You can't really edit these even if you wanted to, except from the OpenCore image, which **you should do** from within macOS. A guide on this can be found [here](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/OpenCore).
 
 The ``blobs`` folder contains nothing until AutoPilot is run. This is where AutoPilot stores your choices, instead of using variables. This way, if the process is interrupted for some reason, it can be resumed using the existing files. The contents of these files may also be dictated by an *AutoPilot preset* that you loaded. It is **safe** to delete these files **after** AutoPilot has finished, or if you want to do a clean run of AutoPilot. If AutoPilot blobs exist the next time it is run, these blobs are automatically archived to a ``stale`` folder inside the ``blobs`` folder. The blobs in the ``stale`` folder are unused and are stored simply in case the user wants to back them up, but can be safely deleted at any time.
 
@@ -111,7 +111,7 @@ Yes, you can. AutoPilot is designed to create a new boot script based on your pr
 
 The values that can be safely changed by the user are all placed at the top of the generated boot script, like this:
 
-```
+```sh
 ALLOCATED_RAM="8G"
 CPU_SOCKETS="1"
 CPU_CORES="2"
@@ -122,13 +122,13 @@ CPU_FEATURE_ARGS="+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check"
 
 As you can see, the values you would have chosen during AutoPilot are inserted into each argument as a string. You can edit the value inside the string (i.e. "8G"), but do **NOT** edit the variable itself (i.e. ALLOCATED_RAM=). In this example, if you wanted to change the virtual RAM from 8 GB to 16 GB, you'd change
 
-```
+```sh
 ALLOCATED_RAM="8G"
 ``` 
 
 to
 
-```
+```sh
 ALLOCATED_RAM="16G"
 ```
 
@@ -136,7 +136,7 @@ and this would take effect in the VM's configuration the next time it is run.
 
 Anything below the variables should not be changed, except the designated lines used to attach the macOS recovery image to the VM, or the lines used to enable VNC. You can remove these lines after you've installed macOS, which will stop "macOS Base System" from appearing in your boot menu. To do this, remove the following lines from your config file:
 
-```
+```sh
 ############## REMOVE THESE LINES AFTER MACOS INSTALLATION ###############
 -drive id=BaseSystem,if=none,file="/home/aaaaaaa/sexytime/BaseSystem.dmg",format=raw
 -device ide-hd,bus=sata.4,drive=BaseSystem
@@ -151,7 +151,7 @@ You may prefer to comment-out the lines instead, in case you need to re-attach t
 
 If you would prefer to connect to the virtual display using VNC, you can do so. The virtual machine can open a virtual display as a VNC server, running on port ``5900`` of your local host. Uncomment the ``-vnc`` line (remove the # at the start) of your boot config file to enable this:
 
-```
+```sh
 ################ UNCOMMENT IF YOU WANT TO USE VNC MONITOR ################
 -vnc 0.0.0.0:1,password=on -k en-us
 ##########################################################################
