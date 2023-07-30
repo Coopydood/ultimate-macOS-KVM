@@ -157,7 +157,7 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 - I've simply made *what I had to go through* **easier** for you. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
 
-## Credits / Greetz
+## Credits & Greetz
 
 While I am the creator of these automation/ease-of-use scripts, this project is not possible without both the prior and current works of some very talented people. The people who have tested the project are also included.
 
