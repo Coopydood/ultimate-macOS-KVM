@@ -52,7 +52,7 @@ class color:
 
 def startup():
     global detectChoice
-    print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"AutoPilot"+color.END,"(BETA)")
+    print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"AutoPilot"+color.END,"")
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
     print("\n   The purpose of this script is to automatically guide you through \n   the process of",color.BOLD+"creating and running a basic macOS VM",color.END+"using settings \n   based on answers to a number of questions. \n\n   Many of the values can be left to default - especially if you are unsure.\n   It won't be perfect, but it's supposed to make it as"+color.BOLD,"easy as possible.\n"+color.END)
     #print(color.BOLD+"\n"+"   Profile:"+color.END,"https://github.com/Coopydood")
@@ -280,7 +280,7 @@ def autopilot():
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
             print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
-            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#11-macos-recovery-image-file > /dev/null 2>&1')
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#12-screen-resolution > /dev/null 2>&1')
             time.sleep(6)
             clear()
             stage12()
@@ -871,7 +871,7 @@ def autopilot():
       clear()
       print("\n   "+color.BOLD+"Set target OS"+color.END)
       print("   Step 2")
-      print("\n   This is only really important for networking. \n   The most suitable network adapter will be automatically\n   selected for you based on this later."+color.END)
+      print("\n   This is only important for networking. \n   The most suitable network adapter will be automatically\n   selected for you based on this later."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
       if customValue == 1:
          print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
@@ -1148,6 +1148,7 @@ def autopilot():
       def apcPrepare():    # PREPARE
          global PROC_PREPARE
          global USR_TARGET_OS
+         global USR_SCREEN_RES
          PROC_PREPARE = 1
          global errorMessage
          errorMessage = "Couldn't prepare files. You may have insufficient\n           permissions or damaged files."
@@ -1156,7 +1157,7 @@ def autopilot():
          time.sleep(1)
          
          if os.path.exists("boot/OpenCore.qcow2"):
-            backupOCPath = str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))
+            backupOCPath = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
             os.system("mkdir boot/"+backupOCPath)
             os.system("mv boot/*.qcow2 boot/"+backupOCPath+"/")
             os.system("mv boot/*.plist boot/"+backupOCPath+"/")
@@ -1300,7 +1301,7 @@ def autopilot():
                stageSelect = str(input(color.BOLD+"Select> "+color.END))
             
                if stageSelect == "1":
-                  os.system("mv ./"+USR_CFG+" ./"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"_"+USR_CFG)
+                  os.system("mv ./"+USR_CFG+" ./"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))+"_"+USR_CFG)
                   apcGenConfig()
 
                elif stageSelect == "2":
@@ -1432,7 +1433,7 @@ def autopilot():
             stageSelect = str(input(color.BOLD+"Select> "+color.END))
          
             if stageSelect == "1":
-               os.system("mv ./HDD.qcow2"+" ./"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"_HDD.qcow2")
+               os.system("mv ./HDD.qcow2"+" ./"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))+"_HDD.qcow2")
                apcGenHDD()
 
             elif stageSelect == "2":
@@ -1481,7 +1482,7 @@ def autopilot():
          with open("resources/config.sh","r") as file:
             configData = file.read()
          configData = configData.replace("baseConfig",str(USR_NAME))
-         configData = configData.replace("#    THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!    #","#   APC-RUN_"+str(datetime.today().strftime('%Y-%m-%d_%H-%M-%S'))+"\n#\n#   THIS FILE WAS GENERATED USING AUTOPILOT.")
+         configData = configData.replace("#    THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!    #","#   APC-RUN_"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))+"\n#\n#   THIS FILE WAS GENERATED USING AUTOPILOT.")
          configData = configData.replace("#                                                          #\n","")
          configData = configData.replace("# It is intended to be used by the automatic setup wizard. #\n","")
          configData = configData.replace("#    To use the wizard, run the included \"main.py\" file;   #\n","")
@@ -1539,7 +1540,8 @@ def autopilot():
          refreshStatusGUI()
          time.sleep(1)
 
-         os.system("mv blobs/*.apb /blobs/stale/")
+         os.system("cp blobs/*.apb blobs/user/")
+         os.system("mv blobs/*.apb blobs/stale/")
 
          PROC_CLEANUP = 2
          refreshStatusGUI()
@@ -1585,7 +1587,7 @@ def autopilot():
       print("   "+color.BOLD+color.PURPLE+"FILE     ",color.END+color.END+USR_CFG+color.END)
       print("   "+color.BOLD+color.RED+"COMMAND  ",color.END+color.END+"$ ./"+USR_CFG,color.END)
       print("   "+color.BOLD+color.CYAN+"TIME    ",color.END+color.END,str(exTime),"seconds",color.END+"")
-      print("   "+color.BOLD+"───────────────────────────────────────────",color.END)
+      print("   "+color.BOLD+"────────────────────────────────────────────",color.END)
       print("   "+color.BOLD+"\n   Created by Coopydood"+color.END)
       print("   "+"Helpful? Consider supporting the project on GitHub! <3"+color.END)
 

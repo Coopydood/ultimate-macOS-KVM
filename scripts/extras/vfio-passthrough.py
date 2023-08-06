@@ -84,6 +84,10 @@ def stage5():
         apFileSelect = str(input(color.BOLD+"AutoPilot Config File> "+color.END))
         clear()
         time.sleep(1)
+        if "'" in apFileSelect:
+            apFileSelect = apFileSelect.replace("'","")
+        if " " in apFileSelect:
+            apFileSelect = apFileSelect.replace(" ","")
         if os.path.exists(apFileSelect):
             apFile = open(apFileSelect)
             if "APC-RUN" in apFile.read():
@@ -102,6 +106,7 @@ def stage5():
 
                 if detectChoice1 == "1":
                     apFilePath = apFileSelect
+                    apFile = open(apFileSelect)
                     apFile = apFile.read()
                     apFileChosen = 1
                     clear()
@@ -116,9 +121,13 @@ def stage5():
                         print("   The assistant is now configuring your AutoPilot config file\n   for use with your VFIO-PCI devices.")
                         print(color.BOLD+"\n   This may take a few moments.\n   Your current config will be backed up.\n")
                         time.sleep(2)
+                        if apFilePath[0] == "/" and apFilePath[1] == "/":
+                            apFilePath = apFilePath.replace("/","",1)
+                        if apFilePath[0] == "." and len(apFilePath) > 10:
+                            apFilePath = apFilePath.replace(".","",1)
                         apFilePathNoExt = apFilePath.replace(".sh","")
-                        os.system("cp ./"+apFilePath+" ./"+apFilePathNoExt+"-noPT.sh")
-                        with open("./"+apFilePath,"r") as file1:
+                        os.system("cp "+apFilePath+" "+apFilePathNoExt+"-noPT.sh")
+                        with open(apFilePath,"r") as file1:
                             apFileM = file1.read()
                             currentDispVal = slotCount
                             for y in range(slotCount):
@@ -131,10 +140,10 @@ def stage5():
                                 os.system("cp ./resources/ovmf/* ./ovmf/")
                         file1.close
 
-                        with open("./"+apFilePath,"w") as file:
+                        with open(apFilePath,"w") as file:
                             file.write(apFileM)
 
-                    apFile = open("./"+apFilePath,"r")
+                    apFile = open(apFilePath,"r")
                     if devLineF in apFile.read():
                         clear()
                         print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
@@ -207,8 +216,8 @@ def stage5():
         blob.close()
         clear()
         time.sleep(1)
-        if os.path.exists("./blobs/USR_CFG.apb"):
-            apFilePath = open("./blobs/USR_CFG.apb")
+        if os.path.exists("./blobs/user/USR_CFG.apb"):
+            apFilePath = open("./blobs/user/USR_CFG.apb")
             apFilePath = apFilePath.read()
             if os.path.exists("./"+apFilePath):
                 apFile = open("./"+apFilePath,"r")
@@ -617,6 +626,6 @@ elif detectChoice == "2":
     os.system('./scripts/gpu-check.py')
 
 elif detectChoice == "B" or detectChoice == "b":
-    os.system('./scripts/extras.py')
+    os.system('./main.py')
 elif detectChoice == "q" or detectChoice == "Q":
     exit

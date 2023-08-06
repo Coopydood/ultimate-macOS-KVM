@@ -1,0 +1,197 @@
+<!--
+	############################################################.
+	#    THIS DOMAIN FILE SHOULD NOT BE EDITED BY THE USER!    #
+	#                                                          #
+	#    It is intended to be used by the XML import wizard.   #
+	#    To use the wizard, run the included "main.py" file;   #
+	#                                                          #
+	#                       $ ./main.py                        #
+	############################################################.
+	
+	baseDomain	
+	Created by Coopydood as part of the ultimate-macOS-KVM project.
+	
+	Profile: https://github.com/Coopydood
+	Repo: https://github.com/Coopydood/ultimate-macOS-KVM
+	
+	TO BE USED WITH AUTOPILOT ONLY.
+
+-->
+
+<domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm">
+  <name>ultmos-$USR_OS_VERSION</name>
+  <title>$USR_NAME (ultimate-macOS-KVM)</title>
+  <description>  $USR_NAME
+  $USR_HEADER 
+
+  This virtual machine was created using ultimate-macOS-KVM, a project by Coopydood.
+  Visit https://github.com/Coopydood/ultimate-macOS-KVM for help and support, or provide some feedback!
+
+  DEBUG
+  ULTMOS: v$REPO_VERSION
+  XML: $XML_FILE
+  AP: $AP_FILE
+  APRUNTIME: $AP_RUNTIME
+  </description>
+  <uuid>$USR_UUID</uuid>
+  <memory unit="KiB">$USR_MEMORY</memory>
+  <currentMemory unit="KiB">$USR_MEMORY</currentMemory>
+  <vcpu placement="static">$USR_CPU_TOTAL</vcpu>
+  <os>
+    <type arch="x86_64" machine="pc-q35-4.2">hvm</type>
+    <loader readonly="yes" type="pflash">$REPO_DIR/$OVMF_DIR/OVMF_CODE.fd</loader>
+    <nvram>$REPO_DIR/$OVMF_DIR/OVMF_VARS.fd</nvram>
+    <boot dev="hd"/>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+  </features>
+  <cpu mode="host-passthrough" check="none" migratable="on">
+    <topology sockets="1" dies="1" cores="$USR_CPU_CORES" threads="$USR_CPU_THREADS"/>
+  </cpu>
+  <clock offset="utc">
+    <timer name="rtc" tickpolicy="catchup"/>
+    <timer name="pit" tickpolicy="delay"/>
+    <timer name="hpet" present="no"/>
+  </clock>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>restart</on_crash>
+  <devices>
+    <emulator>/usr/bin/qemu-system-x86_64</emulator>
+    <disk type="file" device="disk">
+      <driver name="qemu" type="qcow2"/>
+      <source file="$REPO_DIR/boot/OpenCore.qcow2"/>
+      <target dev="sda" bus="sata"/>
+      <address type="drive" controller="0" bus="0" target="0" unit="0"/>
+    </disk>
+    <disk type="file" device="disk">
+      <driver name="qemu" type="qcow2"/>
+      <source file="$REPO_DIR/HDD.qcow2"/>
+      <target dev="sdb" bus="sata"/>
+      <address type="drive" controller="0" bus="0" target="0" unit="1"/>
+    </disk>
+
+<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############-->
+
+    <disk type="file" device="disk">
+      <driver name="qemu" type="raw"/>
+      <source file="$REPO_DIR/BaseSystem.img"/>
+      <target dev="sdc" bus="sata"/>
+      <address type="drive" controller="0" bus="0" target="0" unit="2"/>
+	  </disk>
+	
+<!--#######################################################################-->
+
+    <controller type="sata" index="0">
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x1f" function="0x2"/>
+    </controller>
+    <controller type="pci" index="0" model="pcie-root"/>
+    <controller type="pci" index="1" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="1" port="0x8"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x0" multifunction="on"/>
+    </controller>
+    <controller type="pci" index="2" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="2" port="0x9"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x1"/>
+    </controller>
+    <controller type="pci" index="3" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="3" port="0xa"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x2"/>
+    </controller>
+    <controller type="pci" index="4" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="4" port="0xb"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x3"/>
+    </controller>
+    <controller type="pci" index="5" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="5" port="0xc"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x4"/>
+    </controller>
+    <controller type="pci" index="6" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="6" port="0xd"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x5"/>
+    </controller>
+    <controller type="pci" index="7" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="7" port="0xe"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x6"/>
+    </controller>
+    <controller type="pci" index="8" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="8" port="0xf"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x7"/>
+    </controller>
+    <controller type="pci" index="9" model="pcie-to-pci-bridge">
+      <model name="pcie-pci-bridge"/>
+      <address type="pci" domain="0x0000" bus="0x01" slot="0x00" function="0x0"/>
+    </controller>
+    <controller type="usb" index="0" model="ich9-ehci1">
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x1d" function="0x7"/>
+    </controller>
+    <controller type="usb" index="0" model="ich9-uhci1">
+      <master startport="0"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x1d" function="0x0" multifunction="on"/>
+    </controller>
+    <controller type="usb" index="0" model="ich9-uhci2">
+      <master startport="2"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x1d" function="0x1"/>
+    </controller>
+    <controller type="usb" index="0" model="ich9-uhci3">
+      <master startport="4"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x1d" function="0x2"/>
+    </controller>
+    <interface type="bridge">
+      <mac address="$USR_MAC_ADDRESS"/>
+      <source bridge="virbr0"/>
+      <model type="$USR_NETWORK_ADAPTER"/>
+      <address type="pci" domain="0x0000" bus="0x09" slot="0x02" function="0x0"/>
+    </interface>
+    <serial type="pty">
+      <target type="isa-serial" port="0">
+        <model name="isa-serial"/>
+      </target>
+    </serial>
+    <console type="pty">
+      <target type="serial" port="0"/>
+    </console>
+    <input type="mouse" bus="ps2"/>
+    <input type="keyboard" bus="ps2"/>
+    <input type="keyboard" bus="usb">
+      <address type="usb" bus="0" port="3"/>
+    </input>
+    <input type="mouse" bus="usb">
+      <address type="usb" bus="0" port="4"/>
+    </input>
+    <graphics type="spice">
+      <listen type="none"/>
+    </graphics>
+    <sound model="ich9">
+	  <address type="pci" domain="0x0000" bus="0x00" slot="0x1b" function="0x0"/>
+	</sound>
+    <audio id="1" type="none"/>
+    <video>
+      <model type="vga" vram="16384" heads="1" primary="yes"/>
+      <address type="pci" domain="0x0000" bus="0x09" slot="0x01" function="0x0"/>
+    </video>
+    <!-- VFIO-PCI HEADER -->
+    <watchdog model="itco" action="reset"/>
+    <memballoon model="none"/>
+  </devices>
+  <qemu:commandline>
+	<qemu:arg value="-global"/>
+	<qemu:arg value="ICH9-LPC.acpi-pci-hotplug-with-bridge-support=off"/>
+    <qemu:arg value="-device"/>
+    <qemu:arg value="isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"/>
+    <qemu:arg value="-smbios"/>
+    <qemu:arg value="type=2"/>
+    <qemu:arg value="-cpu"/>
+    <qemu:arg value="$USR_CPU_MODEL,kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,$USR_CPU_ARGS"/>
+  </qemu:commandline>
+</domain>

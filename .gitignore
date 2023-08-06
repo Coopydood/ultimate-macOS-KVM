@@ -1,9 +1,12 @@
 gpu-check1.py
 BaseSystem.img
 blobs/*.apb
-blobs/stale/*
+blobs/stale/*.apb
+blobs/user/*.apb
+*xml
 resources/config.sh
 baseConfig
+scripts/__pycache__/
 scripts/__pycache__/dlosx.cpython-310.pyc
 HDD.qcow2
 boot.sh

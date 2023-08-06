@@ -52,7 +52,7 @@ def startup():
         #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
         #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
         print("   Select an option to continue.")
-        print(color.BOLD+"\n      1. Create and import XML file")
+        print(color.BOLD+"\n      1. Convert and import XML file")
         print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
         print(color.END+"      2. VFIO-PCI passthrough assistant")
         
@@ -60,6 +60,7 @@ def startup():
         print(color.END+"      4. Open GitHub project page")
         print(color.END+"      5. VFIO-PCI tools...")
         print(color.RED+"      R. Restore tools...")
+        print(color.END+"      I. Report an issue...")
         print(color.END+"      B. Back...")
         print(color.END+"      Q. Exit\n")
     else:
@@ -71,12 +72,13 @@ def startup():
         #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
         #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
         print("   Select an option to continue.")
-        print(color.BOLD+"\n      1. Create and import XML file"+color.END+color.YELLOW,"⚠")
+        print(color.BOLD+"\n      1. Convert and import XML file"+color.END+color.YELLOW,"⚠")
         print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
         print(color.END+"      2. VFIO-PCI passthrough assistant"+color.YELLOW,"⚠")
         print(color.END+"      3. Create a backup of config files")
         print(color.END+"      4. VFIO-PCI tools...")
         print(color.RED+"      R. Restore tools...")
+        print(color.END+"      I. Report an issue...")
         print(color.END+"      B. Back...")
         print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
@@ -116,7 +118,7 @@ startup()
 clear()
 
 if detectChoice == "1":
-    os.system('./scripts/autopilot.py')
+    os.system('./scripts/extras/xml-convert.py')
 elif detectChoice == "2":
     os.system('./scripts/extras/vfio-passthrough.py')
 elif detectChoice == "3":
@@ -132,6 +134,17 @@ elif detectChoice == "4":
     os.system('./scripts/extras.py')
 elif detectChoice == "5":
     os.system('./scripts/vfio-menu.py')
+
+elif detectChoice == "i" or detectChoice == "I":
+    
+    print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING ISSUE CREATOR IN DEFAULT BROWSER"+color.END,"")
+    print("   Continue in your browser\n")
+    print("\n   I have attempted to open the new issue form in\n   your default browser. Please be patient.\n\n   You will be returned to the extras menu in 5 seconds.\n\n\n\n\n")
+    os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/issues/new > /dev/null 2>&1')
+    time.sleep(6)
+    clear()
+    os.system('./scripts/extras.py')
+
 
 elif detectChoice == "r" or detectChoice == "R":
     os.system('./scripts/restoretools.py')
