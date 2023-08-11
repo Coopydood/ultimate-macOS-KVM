@@ -10,6 +10,7 @@ rm ./vfio-args.txt > /dev/null 2>&1
 rm -rf ./boot/* > /dev/null 2>&1
 rm ./ovmf/OVMF_CODE.fd > /dev/null 2>&1
 rm ./ovmf/OVMF_VARS.fd > /dev/null 2>&1
+rm ./boot.xml > /dev/null 2>&1
 echo  
 echo AutoPilot working files reset.
 echo  

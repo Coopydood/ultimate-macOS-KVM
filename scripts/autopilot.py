@@ -87,6 +87,7 @@ def autopilot():
    global USR_HDD_SIZE
    global USR_BOOT_FILE
    global USR_MAC_ADDRESS
+   global USR_SCREEN_RES
 
    USR_CPU_SOCKS = 1
    USR_CPU_CORES = 2 
@@ -103,6 +104,7 @@ def autopilot():
    USR_HDD_SIZE = "80G"
    USR_BOOT_FILE = "BaseSystem.img"
    USR_MAC_ADDRESS = "00:16:cb:00:21:09"
+   USR_SCREEN_RES = "1280x720"
    
 
    global currentStage
@@ -261,7 +263,7 @@ def autopilot():
             blob = open("./blobs/USR_SCREEN_RES.apb","w")
             blob.write(USR_SCREEN_RES)
             blob.close()
-            blob = open("./blobs/CDN_CONTROL","w")
+            blob = open("./blobs/.cdn_control","w")
             blob.write("fresh_cdn")
             blob.close()
             currentStage = currentStage + 1
@@ -325,7 +327,7 @@ def autopilot():
             blob = open("./blobs/USR_BOOT_FILE.apb","w")
             blob.write(USR_BOOT_FILE)
             blob.close()
-            blob = open("./blobs/CDN_CONTROL","w")
+            blob = open("./blobs/.cdn_control","w")
             blob.write("fresh_cdn")
             blob.close()
             currentStage = currentStage + 1
@@ -340,7 +342,7 @@ def autopilot():
             blob = open("./blobs/USR_BOOT_FILE.apb","w")
             blob.write(USR_BOOT_FILE)
             blob.close()
-            blob = open("./blobs/CDN_CONTROL","w")
+            blob = open("./blobs/.cdn_control","w")
             blob.write("fresh_cdn")
             blob.close()
             currentStage = currentStage + 1
@@ -399,7 +401,7 @@ def autopilot():
             blob = open("./blobs/USR_MAC_ADDRESS.apb","w")
             blob.write(USR_MAC_ADDRESS)
             blob.close()
-            blob = open("./blobs/CDN_CONTROL","w")
+            blob = open("./blobs/.cdn_control","w")
             blob.write("fresh_cdn")
             blob.close()
             currentStage = currentStage + 1
@@ -416,7 +418,7 @@ def autopilot():
             blob = open("./blobs/USR_MAC_ADDRESS.apb","w")
             blob.write(USR_MAC_ADDRESS)
             blob.close()
-            blob = open("./blobs/CDN_CONTROL","w")
+            blob = open("./blobs/.cdn_control","w")
             blob.write("fresh_cdn")
             blob.close()
             currentStage = currentStage + 1
@@ -801,6 +803,7 @@ def autopilot():
    def stage3():
       global USR_CPU_CORES
       global USR_TARGET_OS
+      global USR_TARGET_OS_ID
       global customValue
       global currentStage
       defaultValue = 2
@@ -808,6 +811,20 @@ def autopilot():
 
       if USR_TARGET_OS >= 11 and USR_TARGET_OS <= 99:
          USR_TARGET_OS = USR_TARGET_OS * 100
+
+
+      if USR_TARGET_OS == 13:
+         USR_TARGET_OS_ID = "ventura"
+      elif USR_TARGET_OS == 12:
+         USR_TARGET_OS_ID = "monterey"
+      elif USR_TARGET_OS == 11:
+         USR_TARGET_OS_ID = "big-sur"
+      elif USR_TARGET_OS == 1015:
+         USR_TARGET_OS_ID = "catalina"
+      elif USR_TARGET_OS == 1014:
+         USR_TARGET_OS_ID = "mojave"
+      elif USR_TARGET_OS == 1013:
+         USR_TARGET_OS_ID = "high-sierra"
 
       clear()
       print("\n   "+color.BOLD+"Set number of CPU cores"+color.END)
@@ -871,7 +888,7 @@ def autopilot():
       clear()
       print("\n   "+color.BOLD+"Set target OS"+color.END)
       print("   Step 2")
-      print("\n   This is only important for networking. \n   The most suitable network adapter will be automatically\n   selected for you based on this later."+color.END)
+      print("\n   This configures networking and image download version. \n   The most suitable network adapter will be automatically\n   selected for you based on this later."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
       if customValue == 1:
          print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
@@ -1140,7 +1157,9 @@ def autopilot():
          elif PROC_CLEANUP == 2:
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Cleaning up"+color.END)
 
-         print("   "+color.BOLD+"──────────────────────────────────────────────────────────────\n\n\n",color.END)
+         print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+         if PROC_FETCHDL != 1:
+            print("\n\n\n")
 
       refreshStatusGUI()
       time.sleep(3)
@@ -1360,18 +1379,29 @@ def autopilot():
 
       def apcFetchDL():  # FETCH RECOVERY ONLINE
          global PROC_FETCHDL
+         global USR_TARGET_OS_F
+         global USR_TARGET_OS_ID
+
+         
+
          PROC_FETCHDL = 1
          global errorMessage
          errorMessage = "The download script could not be executed.\n           You may have insufficient permissions or damaged files."
          integrityImg = 1
          refreshStatusGUI()
          time.sleep(2)
-         os.system("./scripts/dlosx.py")
+         print(color.BOLD+"   Downloading macOS",str(USR_TARGET_OS_F)+"...")
+         if len(USR_TARGET_OS_ID) > 1:
+            os.system("./scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID)
+         else:
+            os.system("./scripts/dlosx.py")
          #subprocess.Popen(cmd).wait()
-         if os.path.exists("./BaseSystem.img"):
+         print(os.path.getsize("./BaseSystem.img"))
+         if os.path.exists("./BaseSystem.img") and os.path.getsize("./BaseSystem.img") > 2401920:
             integrityImg = 1
          else:
             integrityImg = 0
+            errorMessage = "The image download failed.\n           Please check your internet connection."
             throwError()
          PROC_FETCHDL = 2
          refreshStatusGUI()
@@ -1481,6 +1511,7 @@ def autopilot():
 
          with open("resources/config.sh","r") as file:
             configData = file.read()
+
          configData = configData.replace("baseConfig",str(USR_NAME))
          configData = configData.replace("#    THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!    #","#   APC-RUN_"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))+"\n#\n#   THIS FILE WAS GENERATED USING AUTOPILOT.")
          configData = configData.replace("#                                                          #\n","")

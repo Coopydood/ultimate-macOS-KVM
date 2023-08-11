@@ -32,3 +32,5 @@ INTERNAL_CHECKLIST.pdf
 INTERNAL_CHECKLIST.txt
 internal/*
 resources/.webversion
+ovmf/OVMF_CODE.fd
+ovmf/OVMF_VARS.fd

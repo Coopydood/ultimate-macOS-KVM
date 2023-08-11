@@ -147,9 +147,9 @@
       <master startport="4"/>
       <address type="pci" domain="0x0000" bus="0x00" slot="0x1d" function="0x2"/>
     </controller>
-    <interface type="bridge">
+    <interface type="network">
       <mac address="$USR_MAC_ADDRESS"/>
-      <source bridge="virbr0"/>
+      <source network="default"/>
       <model type="$USR_NETWORK_ADAPTER"/>
       <address type="pci" domain="0x0000" bus="0x09" slot="0x02" function="0x0"/>
     </interface>

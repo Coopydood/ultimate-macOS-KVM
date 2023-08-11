@@ -1,15 +1,59 @@
 {
     "gpuList": [
         {
-            "name": "Radeon RX 550",
-            "fullName": "AMD Radeon RX 550",
+            "name": "Radeon RX 6400",
+            "fullName": "AMD Radeon RX 6400",
             "vendor": "AMD",
-            "supported": true,
-            "minOS": "10.12",
-            "maxOS": "9999",
-            "quirks": "Baffin core only (67ff)"
+            "supported": false,
+            "minOS": "-1",
+            "maxOS": "-1",
+            "quirks": "-1"
         },
-
+        {
+            "name": "Radeon RX 6500",
+            "fullName": "AMD Radeon RX 6500 XT",
+            "vendor": "AMD",
+            "supported": false,
+            "minOS": "-1",
+            "maxOS": "-1",
+            "quirks": "-1"
+        },
+        {
+            "name": "Radeon RX 6700 XT",
+            "fullName": "AMD Radeon RX 6700 XT",
+            "vendor": "AMD",
+            "supported": false,
+            "minOS": "-1",
+            "maxOS": "-1",
+            "quirks": "-1"
+        },
+        {
+            "name": "Radeon RX 6750 XT",
+            "fullName": "AMD Radeon RX 6750 XT",
+            "vendor": "AMD",
+            "supported": false,
+            "minOS": "-1",
+            "maxOS": "-1",
+            "quirks": "-1"
+        },
+        {
+            "name": "Radeon RX 7900 XT",
+            "fullName": "AMD Radeon RX 7900 XT",
+            "vendor": "AMD",
+            "supported": false,
+            "minOS": "-1",
+            "maxOS": "-1",
+            "quirks": "-1"
+        },
+        {
+            "name": "Radeon RX 7900 XTX",
+            "fullName": "AMD Radeon RX 7900 XTX",
+            "vendor": "AMD",
+            "supported": false,
+            "minOS": "-1",
+            "maxOS": "-1",
+            "quirks": "-1"
+        },
         {
             "name": "Radeon RX 6600",
             "fullName": "AMD Radeon RX 6600",
@@ -300,6 +344,42 @@
             "quirks": "0"
         },
         {
+            "name": "Radeon RX 540",
+            "fullName": "AMD Radeon RX 540",
+            "vendor": "AMD",
+            "supported": false,
+            "minOS": "-1",
+            "maxOS": "-1",
+            "quirks": "-1"
+        },
+        {
+            "name": "Radeon RX 540X",
+            "fullName": "AMD Radeon RX 540X",
+            "vendor": "AMD",
+            "supported": false,
+            "minOS": "-1",
+            "maxOS": "-1",
+            "quirks": "-1"
+        },
+        {
+            "name": "Radeon WX 2100",
+            "fullName": "AMD Radeon WX 2100",
+            "vendor": "AMD",
+            "supported": false,
+            "minOS": "-1",
+            "maxOS": "-1",
+            "quirks": "-1"
+        },
+        {
+            "name": "Radeon WX 3100",
+            "fullName": "AMD Radeon WX 3100",
+            "vendor": "AMD",
+            "supported": false,
+            "minOS": "-1",
+            "maxOS": "-1",
+            "quirks": "-1"
+        },
+        {
             "name": "Radeon Pro WX 7100",
             "fullName": "AMD Radeon Pro WX 7100",
             "vendor": "AMD",
@@ -486,9 +566,269 @@
             "vendor": "AMD",
             "supported": true,
             "minOS": "10.10",
-            "maxOS": "9999",
+            "maxOS": "12",
             "quirks": "0"
         },
+        {
+            "name": "R7 250X",
+            "fullName": "AMD Radeon R7 250X",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Requires boot arguments: radpg=15"
+        },
+        {
+            "name": "R7 250",
+            "fullName": "AMD Radeon R7 250",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Fake ID needed\n   Requires boot arguments: radpg=15"
+        },
+        {
+            "name": "R7 240",
+            "fullName": "AMD Radeon R7 240",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.10",
+            "maxOS": "12",
+            "quirks": "Fake ID needed"
+        },
+        {
+            "name": "HD 8740",
+            "fullName": "AMD Radeon HD 8740",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 8760",
+            "fullName": "AMD Radeon HD 8760",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 8770",
+            "fullName": "AMD Radeon HD 8770",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 8850",
+            "fullName": "AMD Radeon HD 8850",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 8870",
+            "fullName": "AMD Radeon HD 8870",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 8890",
+            "fullName": "AMD Radeon HD 8890",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 8950",
+            "fullName": "AMD Radeon HD 8950",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 8970",
+            "fullName": "AMD Radeon HD 8970",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "Dual AMD FirePro D300",
+            "fullName": "Dual AMD FirePro D300",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "Dual AMD FirePro D500",
+            "fullName": "Dual AMD FirePro D500",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "Dual AMD FirePro D700",
+            "fullName": "Dual AMD FirePro D700",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "FirePro W5100",
+            "fullName": "AMD FirePro W5100",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "Fake ID needed"
+        },
+        {
+            "name": "FirePro W7000",
+            "fullName": "AMD FirePro W7000",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "FirePro W9000",
+            "fullName": "AMD FirePro W9000",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 7700",
+            "fullName": "AMD Radeon HD 7700",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 7730",
+            "fullName": "AMD Radeon HD 7730",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "Requires boot arguments: radpg=15"
+        },
+        {
+            "name": "HD 7750",
+            "fullName": "AMD Radeon HD 7750",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "Requires boot arguments: radpg=15"
+        },
+        {
+            "name": "HD 7770",
+            "fullName": "AMD Radeon HD 7770",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "Requires boot arguments: radpg=15"
+        },
+        {
+            "name": "HD 7790",
+            "fullName": "AMD Radeon HD 7790",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 7850",
+            "fullName": "AMD Radeon HD 7850",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 7870",
+            "fullName": "AMD Radeon HD 7870",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 7870 XT",
+            "fullName": "AMD Radeon HD 7870 XT",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 7950",
+            "fullName": "AMD Radeon HD 7950",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 7970",
+            "fullName": "AMD Radeon HD 7970",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+        {
+            "name": "HD 7990",
+            "fullName": "AMD Radeon HD 7990",
+            "vendor": "AMD",
+            "supported": true,
+            "minOS": "10.8",
+            "maxOS": "12",
+            "quirks": "0"
+        },
+
+
+
+
+
+
+
+
         {
             "name": "RTX 4090",
             "fullName": "NVIDIA RTX 4090",
@@ -959,7 +1299,7 @@
         },
         {
             "name": "VMware SVGA",
-            "fullName": "VMware SVGA II",
+            "fullName": "VMware SVGA",
             "vendor": "VMware Inc.",
             "supported": false,
             "minOS": "-1",

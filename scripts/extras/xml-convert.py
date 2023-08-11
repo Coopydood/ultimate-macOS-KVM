@@ -162,18 +162,6 @@ def convertBrains():
 
                 vfioargsBlock = vfioargs.splitlines()
 
-               
-
-                # TO GET QEMU COMMAND LINE ARGS ONLY, DEPRECATED :/
-
-                #for x in range(vfioargsN):
-                #    vfioargsBlock[x] = vfioargsBlock[x].replace("-device ","")
-                #    vfioargsBlock[x] = "<qemu:arg value=\"-device\"/>\n<qemu:arg value=\""+vfioargsBlock[x]+"\"/>"
-
-
-
-
-
             #    <hostdev mode="subsystem" type="pci" managed="yes">
             #        <source>                     ##  vfioBuses ##        ##  vfioFunctions ##  
             #                                            \/                         \/
@@ -205,19 +193,6 @@ def convertBrains():
                 # FEED THE XML!
                 for x in range(vfioargsN):
                     vfioXML.append("<hostdev mode=\"subsystem\" type=\"pci\" managed=\"yes\">\n      <source>\n        <address domain=\"0x0000\" bus=\"0x"+vfioBuses[x]+"\" slot=\"0x00\" function=\"0x"+str(vfioFunctions[x])+"\"/>\n      </source>\n      <address type=\"pci\" domain=\"0x0000\" bus=\"0x0"+str(vfioAddresses[x])+"\" slot=\"0x00\" function=\"0x0\"/>\n    </hostdev>")
-
-
-                
-
-                #print('\n'.join(vfioargsBlock))
-
-                #print("__________  RESULTS!  ___________")
-                #print('\n'.join(vfioXML))
-
-
-
-
-
 
 
         apFilePathNoExt = apFilePath.replace(".sh","")

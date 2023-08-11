@@ -34,8 +34,8 @@ parser.add_argument("-f", "--force", dest="forceModel", metavar="<model>", help=
 args = parser.parse_args()
 
 detectChoice = 1
-latestOSName = "Ventura"
-latestOSVer = "13"
+latestOSName = "Sonoma"
+latestOSVer = "14"
 runs = 0
 
 class color:
@@ -90,7 +90,7 @@ def autoRun():
         a = "aaaa"  # aaaaaaaa?
         val = re.findall('\[.*?\]', x)
         vgaGrepT.append(val)
-    gpuList = open("scripts/gpulist.json")
+    gpuList = open("resources/gpuList.json")
     data = json.load(gpuList)
     model = str(vgaGrep)
 
@@ -121,7 +121,7 @@ def autoRun():
     if args.forceModel is not None:
         model = args.forceModel
 
-    #model = "[DEBUG]" #<-- Uncomment to override GPU for testing
+    #model = "GTX 1050" #<-- Uncomment to override GPU for testing
 
     gpus = [y for y in data['gpuList']]
     gpuCount = 0
@@ -144,6 +144,46 @@ def autoRun():
             gpuMinOS = gpu["minOS"]
             gpuMaxOS = gpu["maxOS"]
             gpuQuirks = gpu["quirks"]
+            gpuLastOS = gpuMaxOS
+            gpuLastOSF = "N/A"
+
+            if len(gpuLastOS) > 5:
+                gpuLastOS = ".".join(gpuLastOS.split(".",2)[:2])
+            if len(gpuMaxOS) > 5:
+                gpuMaxOSL = ".".join(gpuMaxOS.split(".",2)[:2])    
+            else:
+                gpuMaxOSL = gpuMaxOS      
+                
+            if len(gpuMinOS) > 5:
+                gpuMinOSL = ".".join(gpuMinOS.split(".",2)[:2])   
+            else:
+                gpuMinOSL = gpuMinOS
+
+            if float(gpuLastOS) >= 11 and gpuLastOS != "9999":
+                gpuLastOS = int(gpuMaxOS) + 1
+                gpuLastOS = str(gpuLastOS)
+            elif float(gpuLastOS) < 11 and float(gpuLastOS) == 10.10 and gpuLastOS != "9999":
+                gpuLastOSL = ".".join(gpuLastOS.split(".",2)[:2])
+                gpuLastOS = "10.11"
+                gpuLastOS = str(gpuLastOS)
+            elif float(gpuLastOS) < 11 and float(gpuLastOS) < 10.2 and float(gpuLastOS) >= 10.10 and float(gpuLastOS) < 10.15 and gpuLastOS != "9999":
+                gpuLastOSL = ".".join(gpuLastOS.split(".",2)[:2])
+                gpuLastOS = float(gpuLastOSL) + 0.01
+                gpuLastOS = str(gpuLastOS)
+                gpuLastOS = gpuLastOS[0:5]
+            elif float(gpuLastOS) < 11 and float(gpuLastOS) >= 10.2 and float(gpuLastOS) >= 10.9 and gpuLastOS != "9999":
+                gpuLastOSL = ".".join(gpuLastOS.split(".",2)[:2])
+                gpuLastOS = "10.10"
+                gpuLastOS = str(gpuLastOS)
+            elif float(gpuLastOS) < 11 and float(gpuLastOS) <= 10.8 and float(gpuLastOS) >= 10.2 and gpuLastOS != "9999":
+                gpuLastOSL = ".".join(gpuLastOS.split(".",2)[:2])
+                gpuLastOS = float(gpuLastOSL) + 0.1
+                gpuLastOS = str(gpuLastOS)
+            elif float(gpuLastOS) < 11 and float(gpuLastOS) == 10.15 and gpuLastOS != "9999":
+                gpuLastOSL = ".".join(gpuLastOS.split(".",2)[:2])
+                gpuLastOS = 10 + 1
+                gpuLastOS = str(gpuLastOS)
+            
 
             if gpuMinOS == "-1":
                 gpuMinOS = "N/A"
@@ -188,6 +228,8 @@ def autoRun():
                 gpuMaxOSF = "Monterey ("+gpuMaxOS+")"
             elif "13" in gpuMaxOS:
                 gpuMaxOSF = "Ventura ("+gpuMaxOS+")"
+            elif "14" in gpuMinOS:
+                gpuMinOSF = "Sonoma ("+gpuMaxOS+")"
             
             gpuMinOSF = "N/A"
             if "10.2" in gpuMinOS:
@@ -224,6 +266,46 @@ def autoRun():
                 gpuMinOSF = "Monterey ("+gpuMinOS+")"
             elif "13" in gpuMinOS:
                 gpuMinOSF = "Ventura ("+gpuMinOS+")"
+            elif "14" in gpuMinOS:
+                gpuMinOSF = "Sonoma ("+gpuMinOS+")"
+
+            gpuLastOSF = "N/A"
+            if "10.2" in gpuLastOS:
+                gpuLastOSF = "Jaguar"
+            elif "10.3" in gpuLastOS:
+                gpuLastOSF = "Panther"
+            elif "10.4" in gpuLastOS:
+                gpuLastOSF = "Tiger"
+            elif "10.5" in gpuLastOS:
+                gpuLastOSF = "Leopard"
+            elif "10.6" in gpuLastOS:
+                gpuLastOSF = "Snow Leopard"
+            elif "10.7" in gpuLastOS:
+                gpuLastOSF = "Lion"
+            elif "10.8" in gpuLastOS:
+                gpuLastOSF = "Mountain Lion"
+            elif "10.9" in gpuLastOS:
+                gpuLastOSF = "Mavericks"
+            elif "10.10" in gpuLastOS:
+                gpuLastOSF = "Yosemite"
+            elif "10.11" in gpuLastOS:
+                gpuLastOSF = "El Capitan"
+            elif "10.12" in gpuLastOS:
+                gpuLastOSF = "Sierra"
+            elif "10.13" in gpuLastOS:
+                gpuLastOSF = "High Sierra"
+            elif "10.14" in gpuLastOS:
+                gpuLastOSF = "Mojave"
+            elif "10.15" in gpuLastOS:
+                gpuLastOSF = "Catalina"
+            elif "11" in gpuLastOS:
+                gpuLastOSF = "Big Sur"
+            elif "12" in gpuLastOS:
+                gpuLastOSF = "Monterey"
+            elif "13" in gpuLastOS:
+                gpuLastOSF = "Ventura"
+            elif "14" in gpuLastOS:
+                gpuLastOSF = "Sonoma"
 
             if "Ti" in model:
                 gpuName = gpuName + " Ti"
@@ -236,8 +318,12 @@ def autoRun():
 
             print(color.BOLD+"   "+gpuName+color.END)
             print("   ───────────────────────────────")
-            if gpuSupport == True:
+            if gpuSupport == True and gpuMaxOS == "9999":
                 print(color.BOLD+color.GREEN+"   ●",color.END+"Supported\n")
+            elif gpuSupport == True and gpuMaxOSL != "9999" and float(gpuMaxOSL) >= 10.12 and float(gpuMaxOSL) <= 10.15 or float(gpuMaxOSL) > 10.2 and gpuMaxOS != "9999":
+                print(color.BOLD+color.YELLOW+"   ●",color.END+"Supported up to macOS",gpuMaxOS,"\n")
+            elif gpuSupport == True and gpuMaxOSL != "9999" and float(gpuMaxOSL) <= 10.11 or float(gpuMaxOSL) >= 10.2 and float(gpuMaxOSL) <= 10.9 and gpuMaxOS != "9999":
+                print(color.BOLD+color.YELLOW+"   ●",color.END+"Supported up to Mac OS X",gpuMaxOS,"\n")
             elif gpuSupport == False:
                 print(color.BOLD+color.RED+"   ●",color.END+"Unsupported\n")
             else:
@@ -257,7 +343,10 @@ def autoRun():
             
             print("\n"+color.BOLD+"   Additional Information"+color.END)
             print("   "+gpuQuirks)
-
+            if gpuSupport == True and gpuMaxOS != "9999" and float(gpuLastOS) >= 10.12 and float(gpuLastOS) <= 10.15 or float(gpuLastOS) > 10.2 and gpuMaxOS != "9999":
+                print("   Not supported by macOS",gpuLastOSF,"or later.")
+            elif gpuSupport == True and gpuMaxOS != "9999" and float(gpuLastOS) <= 10.11 or float(gpuLastOS) >= 10.2 and float(gpuLastOS) <= 10.9 and gpuMaxOS != "9999":
+                print("   Not supported by Mac OS X",gpuLastOSF,"or later.")
             print("\n")
             exit
 
@@ -278,7 +367,7 @@ def manualRun():
     if "RX" in model and "Radeon" not in model:
         model = "Radeon "+model
     clear()
-    gpuList = open("scripts/gpulist.json")
+    gpuList = open("resources/gpuList.json")
     data = json.load(gpuList)
     gpus = [y for y in data['gpuList']]
     gpuCount = 0
@@ -300,6 +389,46 @@ def manualRun():
             gpuMinOS = gpu["minOS"]
             gpuMaxOS = gpu["maxOS"]
             gpuQuirks = gpu["quirks"]
+            gpuLastOS = gpuMaxOS
+            gpuLastOSF = "N/A"
+
+            if len(gpuLastOS) > 5:
+                gpuLastOS = ".".join(gpuLastOS.split(".",2)[:2])
+            if len(gpuMaxOS) > 5:
+                gpuMaxOSL = ".".join(gpuMaxOS.split(".",2)[:2])    
+            else:
+                gpuMaxOSL = gpuMaxOS      
+                
+            if len(gpuMinOS) > 5:
+                gpuMinOSL = ".".join(gpuMinOS.split(".",2)[:2])   
+            else:
+                gpuMinOSL = gpuMinOS 
+                
+            if float(gpuLastOS) >= 11 and gpuLastOS != "9999":
+                gpuLastOS = int(gpuMaxOS) + 1
+                gpuLastOS = str(gpuLastOS)
+            elif float(gpuLastOS) < 11 and float(gpuLastOS) == 10.10 and gpuLastOS != "9999":
+                gpuLastOSL = ".".join(gpuLastOS.split(".",2)[:2])
+                gpuLastOS = "10.11"
+                gpuLastOS = str(gpuLastOS)
+            elif float(gpuLastOS) < 11 and float(gpuLastOS) < 10.2 and float(gpuLastOS) >= 10.10 and float(gpuLastOS) < 10.15 and gpuLastOS != "9999":
+                gpuLastOSL = ".".join(gpuLastOS.split(".",2)[:2])
+                gpuLastOS = float(gpuLastOSL) + 0.01
+                gpuLastOS = str(gpuLastOS)
+                gpuLastOS = gpuLastOS[0:5]
+            elif float(gpuLastOS) < 11 and float(gpuLastOS) >= 10.2 and float(gpuLastOS) >= 10.9 and gpuLastOS != "9999":
+                gpuLastOSL = ".".join(gpuLastOS.split(".",2)[:2])
+                gpuLastOS = "10.10"
+                gpuLastOS = str(gpuLastOS)
+            elif float(gpuLastOS) < 11 and float(gpuLastOS) <= 10.8 and float(gpuLastOS) >= 10.2 and gpuLastOS != "9999":
+                gpuLastOSL = ".".join(gpuLastOS.split(".",2)[:2])
+                gpuLastOS = float(gpuLastOSL) + 0.1
+                gpuLastOS = str(gpuLastOS)
+            elif float(gpuLastOS) < 11 and float(gpuLastOS) == 10.15 and gpuLastOS != "9999":
+                gpuLastOSL = ".".join(gpuLastOS.split(".",2)[:2])
+                gpuLastOS = 10 + 1
+                gpuLastOS = str(gpuLastOS)
+            
 
             if gpuMinOS == "-1":
                 gpuMinOS = "N/A"
@@ -344,6 +473,8 @@ def manualRun():
                 gpuMaxOSF = "Monterey ("+gpuMaxOS+")"
             elif "13" in gpuMaxOS:
                 gpuMaxOSF = "Ventura ("+gpuMaxOS+")"
+            elif "14" in gpuMinOS:
+                gpuMinOSF = "Sonoma ("+gpuMaxOS+")"
             
             gpuMinOSF = "N/A"
             if "10.2" in gpuMinOS:
@@ -380,6 +511,46 @@ def manualRun():
                 gpuMinOSF = "Monterey ("+gpuMinOS+")"
             elif "13" in gpuMinOS:
                 gpuMinOSF = "Ventura ("+gpuMinOS+")"
+            elif "14" in gpuMinOS:
+                gpuMinOSF = "Sonoma ("+gpuMinOS+")"
+
+            gpuLastOSF = "N/A"
+            if "10.2" in gpuLastOS:
+                gpuLastOSF = "Jaguar"
+            elif "10.3" in gpuLastOS:
+                gpuLastOSF = "Panther"
+            elif "10.4" in gpuLastOS:
+                gpuLastOSF = "Tiger"
+            elif "10.5" in gpuLastOS:
+                gpuLastOSF = "Leopard"
+            elif "10.6" in gpuLastOS:
+                gpuLastOSF = "Snow Leopard"
+            elif "10.7" in gpuLastOS:
+                gpuLastOSF = "Lion"
+            elif "10.8" in gpuLastOS:
+                gpuLastOSF = "Mountain Lion"
+            elif "10.9" in gpuLastOS:
+                gpuLastOSF = "Mavericks"
+            elif "10.10" in gpuLastOS:
+                gpuLastOSF = "Yosemite"
+            elif "10.11" in gpuLastOS:
+                gpuLastOSF = "El Capitan"
+            elif "10.12" in gpuLastOS:
+                gpuLastOSF = "Sierra"
+            elif "10.13" in gpuLastOS:
+                gpuLastOSF = "High Sierra"
+            elif "10.14" in gpuLastOS:
+                gpuLastOSF = "Mojave"
+            elif "10.15" in gpuLastOS:
+                gpuLastOSF = "Catalina"
+            elif "11" in gpuLastOS:
+                gpuLastOSF = "Big Sur"
+            elif "12" in gpuLastOS:
+                gpuLastOSF = "Monterey"
+            elif "13" in gpuLastOS:
+                gpuLastOSF = "Ventura"
+            elif "14" in gpuLastOS:
+                gpuLastOSF = "Sonoma"
 
             if "Ti" in model:
                 gpuName = gpuName + " Ti"
@@ -390,10 +561,15 @@ def manualRun():
             if "XT" in model:
                 gpuName = gpuName + " XT" 
 
-            print("   "+color.BOLD+gpuName+color.END)
+            print(color.BOLD+"   "+gpuName+color.END)
             print("   ───────────────────────────────")
-            if gpuSupport == True:
+            if gpuSupport == True and gpuMaxOS == "9999":
                 print(color.BOLD+color.GREEN+"   ●",color.END+"Supported\n")
+            elif gpuSupport == True and gpuMaxOS != "9999" and float(gpuMinOSL) >= 10.12 and float(gpuMinOSL) <= 10.15 or float(gpuMinOSL) > 10.2 and gpuMaxOS != "9999":
+                print(color.BOLD+color.YELLOW+"   ●",color.END+"Supported up to macOS",gpuMaxOS,"\n")
+            elif gpuSupport == True and gpuMaxOS != "9999" and float(gpuMinOSL) <= 10.11 or float(gpuMinOSL) >= 10.2 and float(gpuMinOSL) <= 10.9 and gpuMaxOS != "9999":
+                print(color.BOLD+color.YELLOW+"   ●",color.END+"Supported up to Mac OS X",gpuMaxOS,"\n")
+                
             elif gpuSupport == False:
                 print(color.BOLD+color.RED+"   ●",color.END+"Unsupported\n")
             else:
@@ -413,7 +589,10 @@ def manualRun():
             
             print("\n"+color.BOLD+"   Additional Information"+color.END)
             print("   "+gpuQuirks)
-
+            if gpuSupport == True and gpuMaxOS != "9999" and float(gpuLastOS) >= 10.12 and float(gpuLastOS) <= 10.15 or float(gpuLastOS) > 10.2 and gpuMaxOS != "9999":
+                print("   Not supported by macOS",gpuLastOSF,"or later.")
+            elif gpuSupport == True and gpuMaxOS != "9999" and float(gpuLastOS) <= 10.11 or float(gpuLastOS) >= 10.2 and float(gpuLastOS) <= 10.9 and gpuMaxOS != "9999":
+                print("   Not supported by Mac OS X",gpuLastOSF,"or later.")
             print("\n")
             exit
 

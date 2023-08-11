@@ -33,8 +33,8 @@ args = parser.parse_args()
 global apFilePath
 
 detectChoice = 1
-latestOSName = "Ventura"
-latestOSVer = "13"
+latestOSName = "Sonoma"
+latestOSVer = "14"
 runs = 0
 apFilePath = ""
 procFlow = 1
