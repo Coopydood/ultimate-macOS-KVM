@@ -25,6 +25,8 @@ import argparse
 from datetime import datetime
 import timeit
 import random
+import uuid
+import platform
 
 #parser = argparse.ArgumentParser("gpu-check")
 #parser.add_argument("-a", "--auto", dest="auto", help="Detect GPU(s) automatically",action="store_true")
@@ -37,6 +39,9 @@ detectChoice = 1
 latestOSName = "Ventura"
 latestOSVer = "13"
 runs = 0
+
+version = open("./.version")
+version = version.read()
 
 class color:
    PURPLE = '\033[95m'
@@ -60,10 +65,28 @@ def startup():
     print("   Continue whenever you're ready, or return to the main menu.")
     print(color.BOLD+"\n      1. Start")
     print(color.END+"         Begin creating a new QEMU-based macOS config file \n")
-    print(color.END+"      2. Help...")
-    print(color.END+"      3. Main menu")
-    print(color.END+"      4. Exit\n")
-    detectChoice = int(input(color.BOLD+"Select> "+color.END))
+    print(color.END+"      2. Main menu")
+    print(color.END+"      ?. Help...")
+    print(color.END+"      Q. Exit\n")
+    detectChoice = str(input(color.BOLD+"Select> "+color.END))
+
+    # EXPERIMENTAL MENU, NOT FINISHED OR IN USE
+    #global detectChoice
+    #print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"AutoPilot"+color.END,"")
+    #print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+    #print("   Welcome to AutoPilot - an advanced configuration automation tool.\n   To get started, choose an operation mode from the options below."+color.END)#print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
+    #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
+    #print(color.BOLD+"\n      1. Create boot script... (default)")
+    #print(color.END+"         AutoPilot will ask you a series of questions, of which\n         your answers will define the configuration. This will\n         then be processed to generate a valid file.")
+    #print(color.BOLD+"\n      2. Create boot script and add to virt-manager...")
+    #print(color.END+"         Use this option if you do not have an AutoPilot config file.\n         This script will take you through the AutoPilot steps before\n         generating an XML file based on your answers. No existing\n         data, such as vHDDs, can be used with this method.")
+    #print(color.BOLD+"\n      3. Import XML file...")
+    #print(color.END+"         Use this option if you already have an XML file.\n         This option lets you import a previously-created XML file\n         into virsh for use with virt-manager.\n")
+  
+    #print(color.END+"      ?. Help...")
+    #print(color.END+"      M. Main menu")
+    #print(color.END+"      Q. Exit\n")
+    #detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
 def clear(): print("\n" * 150)
 
@@ -88,6 +111,7 @@ def autopilot():
    global USR_BOOT_FILE
    global USR_MAC_ADDRESS
    global USR_SCREEN_RES
+   global USR_TARGET_OS_NAME
 
    USR_CPU_SOCKS = 1
    USR_CPU_CORES = 2 
@@ -105,6 +129,8 @@ def autopilot():
    USR_BOOT_FILE = "BaseSystem.img"
    USR_MAC_ADDRESS = "00:16:cb:00:21:09"
    USR_SCREEN_RES = "1280x720"
+   USR_TARGET_OS_NAME = "Catalina"
+   
    
 
    global currentStage
@@ -114,7 +140,7 @@ def autopilot():
    customValue = 0
 
    
-   def stage13():
+   def stage14():
       global USR_CPU_SOCKS
       global USR_CPU_CORES
       global USR_CPU_THREADS
@@ -132,6 +158,11 @@ def autopilot():
       global USR_TARGET_OS_F
       global USR_CPU_TOTAL_F
       global USR_MAC_ADDRESS
+      global USR_CREATE_XML
+      global USR_CFG_XML
+      global USR_TARGET_OS_NAME
+
+      USR_CFG_XML = USR_CFG.replace(".sh",".xml")
 
       USR_ALLOCATED_RAM_F = USR_ALLOCATED_RAM.replace("G","")
       USR_HDD_SIZE_F = USR_HDD_SIZE.replace("G","")
@@ -148,12 +179,18 @@ def autopilot():
          USR_BOOT_FILE_F = "Local image file"
 
       clear()
-      print("   "+"\n   "+color.BOLD+"Ready to generate config file"+color.END)
+      if USR_CREATE_XML == "True":
+         print("   "+"\n   "+color.BOLD+"Ready to generate files"+color.END)
+      else:
+         print("   "+"\n   "+color.BOLD+"Ready to generate config file"+color.END)
       print("   "+"Review your preferences")
       print("   "+"\n   The config wizard is complete.\n   Review your preferences below and continue when ready."+color.END)
       print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
-      print("   "+color.BOLD+color.PURPLE+"FILE    ",color.END+color.END+USR_CFG+color.END)
-      print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"macOS",USR_TARGET_OS_F,color.END)
+      if USR_CREATE_XML == "True":
+         print("   "+color.BOLD+color.PURPLE+"FILES   ",color.END+color.END+USR_CFG+", "+USR_CFG_XML)
+      else:
+         print("   "+color.BOLD+color.PURPLE+"FILE    ",color.END+color.END+USR_CFG+color.END)
+      print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"macOS",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
       print("   "+color.BOLD+color.YELLOW+"BOOT    ",color.END+color.END+USR_BOOT_FILE_F,color.END)
       print("   "+color.BOLD+color.CYAN+"CPU     ",color.END+color.END+USR_CPU_MODEL+",",USR_CPU_CORES,"cores,",USR_CPU_THREADS,"threads","("+USR_CPU_TOTAL_F+")"+color.END)  
       #print("   "+color.BOLD+color.CYAN+"        ",color.END+color.BOLD+USR_CPU_FEATURE_ARGS+color.END)
@@ -167,14 +204,14 @@ def autopilot():
       print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
       if USR_BOOT_FILE == "-1":
          print(color.BOLD+"\n      1. Download and generate...")
-         print(color.END+"         Fetch a new recovery image, then create the config\n         and hard disk file in the repo folder\n")
+         print(color.END+"         Fetch a new recovery image, then create the config\n         and hard disk files in the repo folder\n")
       else:
          print(color.BOLD+"\n      1. Generate")
-         print(color.END+"         Copy the local recovery image, then create the config\n         and hard disk file in the repo folder\n")
+         print(color.END+"         Copy the local recovery image, then create the config\n         and hard disk files in the repo folder\n")
       
       print("    "+color.END+"  2. Back")
       print("    "+color.END+"  X. Start Over")
-      print("    "+color.END+"  H. Help...")
+      print("    "+color.END+"  ?. Help...")
       print("    "+color.END+"  Q. Exit\n")
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
    
@@ -182,13 +219,13 @@ def autopilot():
          handoff()
 
       elif stageSelect == "2":
-         stage12()
+         stage13()
 
       elif stageSelect == "x" or stageSelect == "X":
          currentStage = 1
          stage1()
 
-      elif stageSelect == "h" or stageSelect == "H":
+      elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -196,11 +233,67 @@ def autopilot():
             os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#review-your-preferences > /dev/null 2>&1')
             time.sleep(6)
             clear()
-            stage13()
+            stage14()
          
       elif stageSelect == "q" or stageSelect == "Q":
          exit   
 
+      else:
+            stage14()
+
+   def stage13():
+      global customValue
+      global currentStage
+      global USR_CREATE_XML
+
+      clear()
+      print("\n   "+color.BOLD+"Generate XML file"+color.END)
+      print("   Step 13")
+      print("\n   You can now generate an XML file during AutoPilot. \n   This will be created alongside your boot script file,\n   and can be imported into virt-manager. This will allow\n   you to use the VM through the GUI, for easy access.\n\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"You can convert boot scripts to XML files at\n         any time using the built-in converter tool."+color.END)
+      
+      print(color.BOLD+"\n      1. Generate and import XML")
+      print(color.END+"      2. Skip")
+      print(color.END+"      3. Back")
+      print(color.END+"      ?. Help...")
+      print(color.END+"      Q. Exit\n   ")
+      stageSelect = str(input(color.BOLD+"Select> "+color.END))
+      
+      if stageSelect == "1":
+         USR_CREATE_XML = "True"
+         blob = open("./blobs/USR_CREATE_XML.apb","w")
+         blob.write(USR_CREATE_XML)
+         blob.close()
+         currentStage = currentStage + 1
+         stage14()
+
+      elif stageSelect == "2":
+         USR_CREATE_XML = "False"
+         blob = open("./blobs/USR_CREATE_XML.apb","w")
+         blob.write(USR_CREATE_XML)
+         blob.close()
+         customValue = 1
+         stage14()
+
+      elif stageSelect == "3":
+         currentStage = 1
+         stage12()
+         
+      elif stageSelect == "?":
+         clear()
+         print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+         print("   Continue in your browser\n")
+         print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+         os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#13-generate-xml-file > /dev/null 2>&1')
+         time.sleep(6)
+         clear()
+         stage13()
+
+      elif stageSelect == "q" or stageSelect == "Q":
+         exit   
+
+      else:
+            stage13()
+   
    def stage12():
       global customValue
       global currentStage
@@ -254,7 +347,7 @@ def autopilot():
          print(color.BOLD+"\n      1. 1280x720")
          print(color.END+"      2. More resolutions...")
          print(color.END+"      3. Back")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -277,7 +370,7 @@ def autopilot():
             currentStage = 1
             stage11()
             
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -289,6 +382,9 @@ def autopilot():
 
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
+
+         else:
+            stage12()
 
 
    def stage11():
@@ -318,7 +414,7 @@ def autopilot():
          print(color.END+"      2. Select existing...")
          print(color.END+"      3. Skip")
          print(color.END+"      4. Back")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -352,7 +448,7 @@ def autopilot():
             currentStage = 1
             stage10()
             
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -364,6 +460,9 @@ def autopilot():
 
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
+         
+         else:
+            stage11()
 
    def stage10():
       global customValue
@@ -392,7 +491,7 @@ def autopilot():
          print(color.END+"      2. Generate automatically")
          print(color.END+"      3. Custom value...")
          print(color.END+"      4. Back")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -428,7 +527,7 @@ def autopilot():
             currentStage = 1
             stage9()
 
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -440,6 +539,9 @@ def autopilot():
             
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
+
+         else:
+            stage10()
 
    def stage9():
       global USR_NETWORK_DEVICE
@@ -472,7 +574,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -492,7 +594,7 @@ def autopilot():
             currentStage = 1
             stage8()
             
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -503,7 +605,10 @@ def autopilot():
             stage9()
 
          elif stageSelect == "q" or stageSelect == "Q":
-            exit    
+            exit   
+
+         else:
+            stage9() 
 
    def stage8():
       global USR_HDD_SIZE
@@ -531,7 +636,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -551,7 +656,7 @@ def autopilot():
             currentStage = 1
             stage7()
             
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -563,6 +668,9 @@ def autopilot():
 
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
+
+         else:
+            stage8()
 
    def stage7():
       global USR_ALLOCATED_RAM
@@ -590,7 +698,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -610,7 +718,7 @@ def autopilot():
             currentStage = 1
             stage6()
          
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -622,6 +730,9 @@ def autopilot():
             
          elif stageSelect == "q" or stageSelect == "Q":
             exit     
+
+         else:
+            stage7()
 
    def stage6():
       global USR_CPU_FEATURE_ARGS
@@ -649,7 +760,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -669,7 +780,7 @@ def autopilot():
             currentStage = 1
             stage5()
             
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -681,6 +792,9 @@ def autopilot():
 
          elif stageSelect == "q" or stageSelect == "Q":
             exit    
+
+         else:
+            stage6()
 
    def stage5():
       global USR_CPU_MODEL
@@ -708,7 +822,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -728,7 +842,7 @@ def autopilot():
             currentStage = 1
             stage4()
 
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -740,6 +854,9 @@ def autopilot():
             
          elif stageSelect == "q" or stageSelect == "Q":
             exit    
+
+         else:
+            stage5()
 
    def stage4():
       global USR_CPU_THREADS
@@ -767,7 +884,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -787,7 +904,7 @@ def autopilot():
             currentStage = 1
             stage3()
             
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -800,10 +917,14 @@ def autopilot():
          elif stageSelect == "q" or stageSelect == "Q":
             exit
 
+         else:
+            stage4()
+
    def stage3():
       global USR_CPU_CORES
       global USR_TARGET_OS
       global USR_TARGET_OS_ID
+      global USR_TARGET_OS_NAME
       global customValue
       global currentStage
       defaultValue = 2
@@ -812,12 +933,53 @@ def autopilot():
       if USR_TARGET_OS >= 11 and USR_TARGET_OS <= 99:
          USR_TARGET_OS = USR_TARGET_OS * 100
 
+      USR_TARGET_OS_NAME = "N/A"
+      if USR_TARGET_OS == 102:
+         USR_TARGET_OS_NAME = "Jaguar"
+      elif USR_TARGET_OS == 103:
+         USR_TARGET_OS_NAME = "Panther"
+      elif USR_TARGET_OS == 104:
+         USR_TARGET_OS_NAME = "Tiger"
+      elif USR_TARGET_OS == 105:
+         USR_TARGET_OS_NAME = "Leopard"
+      elif USR_TARGET_OS == 106:
+         USR_TARGET_OS_NAME = "Snow Leopard"
+      elif USR_TARGET_OS == 107:
+         USR_TARGET_OS_NAME = "Lion"
+      elif USR_TARGET_OS == 108:
+         USR_TARGET_OS_NAME = "Mountain Lion"
+      elif USR_TARGET_OS == 109:
+         USR_TARGET_OS_NAME = "Mavericks"
+      elif USR_TARGET_OS == 1010:
+         USR_TARGET_OS_NAME = "Yosemite"
+      elif USR_TARGET_OS == 1011:
+         USR_TARGET_OS_NAME = "El Capitan"
+      elif USR_TARGET_OS == 1012:
+         USR_TARGET_OS_NAME = "Sierra"
+      elif USR_TARGET_OS == 1013:
+         USR_TARGET_OS_NAME = "High Sierra"
+      elif USR_TARGET_OS == 1014:
+         USR_TARGET_OS_NAME = "Mojave"
+      elif USR_TARGET_OS == 1015:
+         USR_TARGET_OS_NAME = "Catalina"
+      elif USR_TARGET_OS == 1100:
+         USR_TARGET_OS_NAME = "Big Sur"
+      elif USR_TARGET_OS == 1200:
+         USR_TARGET_OS_NAME = "Monterey"
+      elif USR_TARGET_OS == 1300:
+         USR_TARGET_OS_NAME = "Ventura"
+      elif USR_TARGET_OS == 1400:
+         USR_TARGET_OS_NAME = "Sonoma"
 
-      if USR_TARGET_OS == 13:
+      blob = open("./blobs/USR_TARGET_OS_NAME.apb","w")
+      blob.write(str(USR_TARGET_OS_NAME))
+      blob.close()
+
+      if USR_TARGET_OS == 1300:
          USR_TARGET_OS_ID = "ventura"
-      elif USR_TARGET_OS == 12:
+      elif USR_TARGET_OS == 1200:
          USR_TARGET_OS_ID = "monterey"
-      elif USR_TARGET_OS == 11:
+      elif USR_TARGET_OS == 1100:
          USR_TARGET_OS_ID = "big-sur"
       elif USR_TARGET_OS == 1015:
          USR_TARGET_OS_ID = "catalina"
@@ -846,7 +1008,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -866,7 +1028,7 @@ def autopilot():
             currentStage = 1
             stage2()
          
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -878,6 +1040,9 @@ def autopilot():
 
          elif stageSelect == "q" or stageSelect == "Q":
             exit
+
+         else:
+            stage3()
 
    def stage2():
       global USR_TARGET_OS
@@ -906,7 +1071,7 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
          print(color.END+"      3. Back")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -926,7 +1091,7 @@ def autopilot():
             currentStage = 1
             stage1()
          
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -938,6 +1103,9 @@ def autopilot():
             
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
+         
+         else:
+            stage2()
 
    def stage1():
       global USR_CFG
@@ -969,7 +1137,7 @@ def autopilot():
          print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+"boot.sh"+color.END)
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
-         print(color.END+"      H. Help...")
+         print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -985,7 +1153,7 @@ def autopilot():
             customValue = 1
             stage1()
          
-         elif stageSelect == "h" or stageSelect == "H":
+         elif stageSelect == "?":
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
@@ -997,6 +1165,9 @@ def autopilot():
 
          elif stageSelect == "q" or stageSelect == "Q":
             exit
+         
+         else:
+            stage1()
 
 
    global PROC_PREPARE
@@ -1032,6 +1203,7 @@ def autopilot():
       global PROC_FIXPERMS
       global PROC_CLEANUP
       global PROC_LOCALCOPY_CVTN 
+      global PROC_GENXML
       global startTime
 
       startTime = 0
@@ -1046,6 +1218,7 @@ def autopilot():
       PROC_APPLYPREFS = 0
       PROC_FIXPERMS = 0
       PROC_CLEANUP = 0
+      PROC_GENXML = 0
 
       clear()
       time.sleep(2)
@@ -1108,6 +1281,14 @@ def autopilot():
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Generating config script"+color.END)
          elif PROC_GENCONFIG == 2:
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Generating config script"+color.END)
+         
+         if USR_CREATE_XML == "True":
+            if PROC_GENXML == 0:
+               print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Convert to domain XML file"+color.END)
+            elif PROC_GENXML == 1:
+               print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Convert to domain XML file"+color.END)
+            elif PROC_GENXML == 2:
+               print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Convert to domain XML file"+color.END)
 
          if PROC_LOCALCOPY == 0 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
@@ -1194,6 +1375,9 @@ def autopilot():
          
          os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
          os.system("cp resources/ovmf/OVMF_VARS_"+USR_SCREEN_RES+".fd ovmf/OVMF_VARS.fd")
+
+         # NOW COPY A DUPLICATE TO LOCAL STORE FOR RESTORATION WITH SETTINGS PRESERVATION
+         os.system("cp resources/ovmf/OVMF_VARS_"+USR_SCREEN_RES+".fd ovmf/user_store/OVMF_VARS.fd")
          
          integrityConfig = 1
          if os.path.exists("resources/config.sh"):
@@ -1274,6 +1458,10 @@ def autopilot():
             integrity = integrity + 0
          else:
             integrity = integrity - 1
+         if os.path.exists("blobs/USR_CREATE_XML.apb"):
+            integrity = integrity + 0
+         else:
+            integrity = integrity - 1
 
          if integrity == 1:
             PROC_CHECKBLOBS = 2
@@ -1284,6 +1472,7 @@ def autopilot():
       def apcGenConfig():  # GENERATE CONFIG
          global PROC_GENCONFIG
          PROC_GENCONFIG = 1
+         global PROC_GENXML
          global USR_CFG
          global customValue
          global customInput
@@ -1338,7 +1527,7 @@ def autopilot():
 
          refreshStatusGUI()
          time.sleep(4)
-         if os.path.exists("./"+USR_CFG):
+         if os.path.exists("./"+USR_CFG) or os.path.exists("./"+USR_CFG_XML):
             customInput = 0
             customValue = 0
             existingWarning()
@@ -1370,12 +1559,93 @@ def autopilot():
          if "ALLOCATED_RAM=\""+str(USR_ALLOCATED_RAM) in configDataTest:
             integrityCfg3 = 0
          else:
-            integrityCfg3 - 1
-            throwError()
-
-         time.sleep(2)
-         PROC_GENCONFIG = 2
+            integrityCfg3 - 19
          refreshStatusGUI()
+         PROC_GENCONFIG = 2
+         time.sleep(1)
+
+         
+
+
+         # USE CONVERSION TOOL CODE TO GENERATE XML
+         if USR_CREATE_XML == "True":
+            PROC_GENXML = 1
+            refreshStatusGUI()
+            apFilePath = "resources/config.sh"
+            with open("./"+apFilePath,"r") as source:
+               apFileS = source.read()
+               apVars = (re.findall(r'"([^"]*)"', apFileS))
+               apFilePathNoExt = apFilePath.replace(".sh","")
+            os.system("cp ./resources/baseDomain"+" ./"+apFilePathNoExt+".xml")
+            with open("./"+apFilePathNoExt+".xml","r") as file1:
+                  apFileM = file1.read()
+                  apFileM = apFileM.replace("baseDomain",str(apFilePathNoExt+".xml"))
+                  apFileM = apFileM.replace("#    THIS DOMAIN FILE SHOULD NOT BE EDITED BY THE USER!    #","    APC-RUN_"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))+"\n \n    THIS FILE WAS GENERATED USING AUTOPILOT.")
+                  apFileM = apFileM.replace("#                                                          #\n","")
+                  apFileM = apFileM.replace("	#    It is intended to be used by the XML import wizard.   #\n","")
+                  apFileM = apFileM.replace("#    To use the wizard, run the included \"main.py\" file;   #\n","")
+                  apFileM = apFileM.replace("#                                                          #"," ")
+                  apFileM = apFileM.replace("#                       $ ./main.py                        #"," \n     To be used with virsh / virt-manager.")
+                  apFileM = apFileM.replace("#    ./main.py","")
+                  apFileM = apFileM.replace("############################################################."," ")
+
+
+                  apFileM = apFileM.replace("$USR_NAME",apVars[2]+"")
+                  apFileM = apFileM.replace("$USR_UUID",str(uuid.uuid4()))
+
+                  # CONVERT MEMORY TO VIRSH FORMAT
+                  apMemCvt = apVars[5].replace("G","")
+                  apMemCvt = int(apMemCvt)
+                  apMemCvt = apMemCvt * 1048576
+
+                  # GET WD
+                  workdir = os.getcwd()
+
+                  # CONVERT THREADS TO VIRSH FORMAT
+                  apThreadsCvt = apVars[8]
+                  apThreadsCvt = int(apThreadsCvt)
+                  apThreadsCvt = round(apThreadsCvt / 2)
+
+                  # CONVERT VCPUS TO VIRSH FORMAT
+                  apTotalCvt = apVars[7]
+                  apTotalCvt = int(apTotalCvt)
+                  apTotalCvt = round(apTotalCvt * apThreadsCvt)
+
+                  # CONVERT OS VERSION TO VIRSH FORMAT
+                  apOSCvt = apVars[2]
+                  apOSCvt = apOSCvt.replace("macOS ","")
+                  apOSCvt = apOSCvt.replace(".","")
+
+                  apFileM = apFileM.replace("$USR_MEMORY",str(apMemCvt))
+                  apFileM = apFileM.replace("$USR_CPU_CORES",apVars[7])
+                  apFileM = apFileM.replace("$USR_CPU_TOTAL",str(apTotalCvt))
+                  apFileM = apFileM.replace("$USR_CPU_THREADS",str(apThreadsCvt))
+                  apFileM = apFileM.replace("$USR_CPU_MODEL",apVars[9])
+                  apFileM = apFileM.replace("$OVMF_DIR","ovmf")
+                  apFileM = apFileM.replace("$REPO_DIR",workdir)
+                  apFileM = apFileM.replace("$USR_CPU_ARGS",apVars[10])
+                  apFileM = apFileM.replace("$USR_CPU_CORES",apVars[7])
+                  apFileM = apFileM.replace("$USR_NETWORK_ADAPTER",apVars[17])
+                  apFileM = apFileM.replace("$USR_MAC_ADDRESS",apVars[18])
+                  apFileM = apFileM.replace("$USR_OS_VERSION",apOSCvt)
+                  apFileM = apFileM.replace("$USR_OS_NAME",apVars[2])
+                  apFileM = apFileM.replace("$USR_HEADER","Converted from "+apFilePath)
+                  apFileM = apFileM.replace("$REPO_VERSION",version)
+                  apFileM = apFileM.replace("$XML_FILE",apFilePathNoExt+".xml")
+                  apFileM = apFileM.replace("$AP_FILE",apFilePath)
+                  apFileM = apFileM.replace("$AP_RUNTIME",str(datetime.today().strftime('%H:%M:%S %d/%m/%Y')))
+
+            # apFileM = apFileM.replace("$USR_",apVars[])
+            
+            file1.close
+
+            with open("./"+apFilePathNoExt+".xml","w") as file:
+                  file.write(apFileM)
+            time.sleep(2)
+            PROC_GENXML = 2
+            refreshStatusGUI()
+            time.sleep(3)
+
 
       def apcFetchDL():  # FETCH RECOVERY ONLINE
          global PROC_FETCHDL
@@ -1535,6 +1805,14 @@ def autopilot():
             throwError()
 
          os.system("mv resources/config.sh ./"+USR_CFG)
+
+         if USR_CREATE_XML == "True":
+            os.system("mv resources/config.xml ./"+USR_CFG_XML)
+            if os.path.exists("./"+USR_CFG_XML):
+               integrityImg = 1
+            else:
+               integrityImg = 0
+               throwError()
          
          if os.path.exists("./"+USR_CFG):
             integrityImg = 1
@@ -1607,57 +1885,87 @@ def autopilot():
       global USR_HDD_SIZE
       global USR_TARGET_OS_F
       global USR_CPU_TOTAL_F
+      global USR_CFG_XML
+      global USR_CREATE_XML
 
       exTime = round(stopTime - startTime)
 
       clear()
       print("   "+"\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END)
       print("   "+"All processes finished successfully")
-      print("   "+"\n   Your customised boot file is now ready.\n   You can now start using macOS."+color.END)
+      if USR_CREATE_XML != "True": print("   "+"\n   Your customised boot file is now ready.\n   You can now start using macOS."+color.END)
+      else: print("   "+"\n   Your customised files are now ready.\n   You can now start using macOS."+color.END)
       print("   "+"\n   "+color.BOLD+"────────────────────────────────────────────",color.END)
-      print("   "+color.BOLD+color.PURPLE+"FILE     ",color.END+color.END+USR_CFG+color.END)
+      if USR_CREATE_XML == "True": print("   "+color.BOLD+color.PURPLE+"FILES    ",color.END+color.END+USR_CFG+color.END+", "+USR_CFG_XML)
+      else: print("   "+color.BOLD+color.PURPLE+"FILE     ",color.END+color.END+USR_CFG+color.END)
       print("   "+color.BOLD+color.RED+"COMMAND  ",color.END+color.END+"$ ./"+USR_CFG,color.END)
       print("   "+color.BOLD+color.CYAN+"TIME    ",color.END+color.END,str(exTime),"seconds",color.END+"")
       print("   "+color.BOLD+"────────────────────────────────────────────",color.END)
       print("   "+color.BOLD+"\n   Created by Coopydood"+color.END)
       print("   "+"Helpful? Consider supporting the project on GitHub! <3"+color.END)
 
-      print(color.BOLD+"\n      1. Boot")
-      print(color.END+"         Run your",USR_CFG,"file now.\n")
-      print("    "+color.END+"  2. Open in default editor")
-      print("    "+color.END+"  3. Main menu")
+      if USR_CREATE_XML == "True":
+         print(color.BOLD+"\n      1. Import XML...")
+         print(color.END+"         Import the",USR_CFG_XML,"file into virsh.\n")
+         print("    "+color.END+"  2. Boot")
+         print("    "+color.END+"  3. Main menu")
+      else:
+         print(color.BOLD+"\n      1. Boot")
+         print(color.END+"         Run your",USR_CFG,"file now.\n")
+         print("    "+color.END+"  2. Open in default editor")
+         print("    "+color.END+"  3. Main menu")
       print("    "+color.END+"  Q. Exit\n")
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
-   
-      if stageSelect == "1":
-         clear()
-         os.system("./"+USR_CFG)
-      
-      elif stageSelect == "2":
-         os.system("xdg-open ./"+USR_CFG)
 
-      elif stageSelect == "3":
-         os.system("python ./main.py")
+
+      if USR_CREATE_XML == "True":
+         if stageSelect == "1":
+            clear()
+            os.system("./scripts/extras/xml-convert.py --import "+USR_CFG_XML)
          
-      elif stageSelect == "q" or stageSelect == "Q":
-         exit
+         elif stageSelect == "2":
+            os.system("./"+USR_CFG)
+
+         elif stageSelect == "3":
+            os.system("python ./main.py")
+
+         elif stageSelect == "q" or stageSelect == "Q":
+            exit
+
+      else:
+         if stageSelect == "1":
+            clear()
+            os.system("./"+USR_CFG)
+         
+         elif stageSelect == "2":
+            os.system("xdg-open ./"+USR_CFG)
+
+         elif stageSelect == "3":
+            os.system("python ./main.py")
+
+         elif stageSelect == "q" or stageSelect == "Q":
+            exit
+
+            
 
 
    stage1()
 
-if detectChoice == 1:
+if detectChoice == "1":
    autopilot()
-elif detectChoice == 2:
+elif detectChoice == "?":
    clear()
-   print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING AUTOPILOT WIKI IN DEFAULT BROWSER"+color.END,"")
+   print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING AUTOPILOT HELP IN DEFAULT BROWSER"+color.END,"")
    print("   Continue in your browser\n")
-   print("\n   I have attempted to open the AutoPilot wiki in\n   your default browser. Please be patient.\n\n   You will be returned to AutoPilot in 5 seconds.\n\n\n\n\n")
+   print("\n   I have attempted to open the AutoPilot help in\n   your default browser. Please be patient.\n\n   You will be returned to AutoPilot in 5 seconds.\n\n\n\n\n")
    os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot > /dev/null 2>&1')
    time.sleep(6)
    clear()
    os.system('./scripts/autopilot.py')
-elif detectChoice == 3:
+elif detectChoice == "2":
     os.system('./main.py')
 
-elif detectChoice == 4:
+elif detectChoice == "q" or detectChoice == "Q":
     exit
+else:
+   startup()

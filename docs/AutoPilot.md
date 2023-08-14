@@ -158,6 +158,16 @@ Custom values are not supported. When inputting a value at this stage, you will 
 |   1280x720  | 800x600<br>1024x768<br>1280x720<br>1280x1024<br>1440x900<br>1920x1080<br>2560x1440<br>3840x2160 | 1024x768<br>1920x1080 |
 
 ***
+## 13. Generate XML file
+As of [v0.9.3](https://github.com/Coopydood/ultimate-macOS-KVM/releases/tag/v0.9.3), XML files can be generated through conversion of a valid AutoPilot config file using the **XML Conversion tool**. This can be accessed through the **Extras** menu. 
+
+However, with the [v0.9.5](https://github.com/Coopydood/ultimate-macOS-KVM/releases/tag/v0.9.5) update, this functionality is also built right in as an AutoPilot stage.
+
+If you choose, you can have AutoPilot automatically create an XML file alongside your regular boot config script as part of the AutoPilot flow. You'll then be prompted to import it upon completion, for use within Virtual Machine Manager (virt-manager), for easy GUI access.
+
+This stage is completely optional and can be skipped. You can always use the standalone XML conversion tool to convert an AutoPilot script at any time, from the Extras menu.
+
+***
 ## Review your preferences
 You'll now get a chance to see your choices displayed in the form of a summary screen. An example of this screen can be found below:
 

@@ -228,8 +228,8 @@ def autoRun():
                 gpuMaxOSF = "Monterey ("+gpuMaxOS+")"
             elif "13" in gpuMaxOS:
                 gpuMaxOSF = "Ventura ("+gpuMaxOS+")"
-            elif "14" in gpuMinOS:
-                gpuMinOSF = "Sonoma ("+gpuMaxOS+")"
+            elif "14" in gpuMaxOS:
+                gpuMaxOSF = "Sonoma ("+gpuMaxOS+")"
             
             gpuMinOSF = "N/A"
             if "10.2" in gpuMinOS:

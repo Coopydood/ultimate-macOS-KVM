@@ -114,7 +114,10 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     time.sleep(5)
     os.system("rm ./ovmf/OVMF_VARS.fd > /dev/null 2>&1")
     time.sleep(2)
-    os.system("cp ./resources/ovmf/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+    if os.path.exists("./ovmf/user_store/OVMF_VARS.fd"):
+        os.system("cp ./ovmf/user_store/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+    else:
+        os.system("cp ./resources/ovmf/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
 
     
     errorMessage = "Restoration failed. You may not have sufficient\n           permissions or damaged files."

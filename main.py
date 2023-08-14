@@ -22,11 +22,13 @@ import re
 import json
 import sys
 import argparse
+import platform
 
 sys.path.insert(0, 'scripts')
 
-parser = argparse.ArgumentParser("setup")
-parser.add_argument("-svmc", "--skip-vm-check", dest="svmc", help="Skip the arbitrary VM check",action="store_true")
+parser = argparse.ArgumentParser("main")
+parser.add_argument("--skip-vm-check", dest="svmc", help="Skip the arbitrary VM check",action="store_true")
+parser.add_argument("--skip-os-check", dest="sosc", help="Skip the OS platform check",action="store_true")
 
 args = parser.parse_args()
 
@@ -75,27 +77,31 @@ def startup():
 
     if isVM == True:
         print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
-    if os.path.exists("blobs/USR_CFG.apb"):
+    if os.path.exists("blobs/user/USR_CFG.apb"):
             tainted = 1
     else:
         print("   This project can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, checking your system, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.\n")
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print("   Select an option to continue.")
-    if os.path.exists("./blobs/USR_CFG.apb"):
+    if os.path.exists("./blobs/user/USR_CFG.apb"):
             global apFilePath
-            apFilePath = open("./blobs/USR_CFG.apb")
+            apFilePath = open("./blobs/user/USR_CFG.apb")
             apFilePath = apFilePath.read()
-            macOSVer = open("./blobs/USR_TARGET_OS.apb")
-            macOSVer = macOSVer.read()
-            if int(macOSVer) >= 999:
-                macOSVer = str(int(macOSVer) / 100)
+            if os.path.exists("./blobs/user/USR_TARGET_OS_NAME.apb"):
+                macOSVer = open("./blobs/user/USR_TARGET_OS_NAME.apb")
+                macOSVer = macOSVer.read()
+            else:
+                macOSVer = open("./blobs/user/USR_TARGET_OS.apb")
+                macOSVer = macOSVer.read()
+                if int(macOSVer) >= 999:
+                    macOSVer = str(int(macOSVer) / 100)
             if os.path.exists("./"+apFilePath):
                 apFile = open("./"+apFilePath,"r")
             
                 if "APC-RUN" in apFile.read():
                     print(color.BOLD+"\n      B. Boot macOS "+macOSVer+"")
-                    print(color.END+"         Start macOS using the detected "+apFilePath+" script.")
+                    print(color.END+"         Start macOS using the detected\n         "+apFilePath+" script file.")
                     print(color.END+"\n      1. AutoPilot")
 
                 else:
@@ -164,7 +170,13 @@ if "Redhat" in vmc1 or "RedHat" in vmc1 or "QEMU" in vmc1:
 if "Bochs" in vmc1 or "Sea BIOS" in vmc1 or "SeaBIOS" in vmc1:
    detected = 1
 
+if platform.system() != "Linux":
+    detected = 2
+
+
 clear()
+
+#detected = 2    # FORCE DETECTION OF INCOMPATIBLE OS FOR DEBUG
 
 if detected == 1:
     if args.svmc == True:
@@ -187,6 +199,21 @@ if detected == 1:
         elif stageSelect == "2": 
             clear()
             startup()
+elif detected == 2:
+    if args.sosc == True:
+        clear()
+        startup()
+    else:
+        print("\n   "+color.BOLD+color.RED+"✖ INCOMPATIBLE OPERATING SYSTEM"+color.END)
+        print("   "+platform.system()+" detected")
+        print("\n   I've determined that you're using "+platform.system()+". \n   Put simply, this project won't work on here.\n   To save you further disappointment, I'm instead\n   throwing you this error.\n\n   Sorry :/"+color.END)
+        
+        print("\n   "+color.BOLD+color.RED+"PROBLEM:",color.END+"well... not Linux... ¯\_(ツ)_/¯"+color.END)
+        print("\n\n\n")
+        time.sleep(5)
+        sys.exit
+
+        
 else:
     clear()
     startup()
@@ -231,3 +258,5 @@ elif detectChoice == "q" or detectChoice == "Q":
 elif detectChoice == "b" or detectChoice == "B":
     clear()
     os.system("./"+apFilePath)
+else:
+    startup()
