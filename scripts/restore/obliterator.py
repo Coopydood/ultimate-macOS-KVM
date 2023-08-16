@@ -181,8 +181,8 @@ if detectChoice2 == "X" or detectChoice2 == "x":
 
     global USR_TARGET_OS
 
-    if os.path.exists("./blobs/USR_TARGET_OS.apb"):
-        blob = open("./blobs/USR_TARGET_OS.apb","r")
+    if os.path.exists("./blobs/user/USR_TARGET_OS.apb"):
+        blob = open("./blobs/user/USR_TARGET_OS.apb","r")
         USR_TARGET_OS = blob.read()
         USR_TARGET_OS = int(USR_TARGET_OS)
         if USR_TARGET_OS < 999:

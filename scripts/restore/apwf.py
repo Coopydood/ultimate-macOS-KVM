@@ -48,7 +48,7 @@ clear()
 print("\n\n   "+color.BOLD+color.RED+"↺  DELETE AUTOPILOT DATA"+color.END,"")
 print("   Please wait\n")
 print(color.END+"\n\n\n   Checking data...\n\n\n\n\n")
-if os.path.exists("./blobs/USR_CFG.apb"):
+if os.path.exists("./blobs/user/USR_CFG.apb"):
     integrity = 1
 elif os.path.exists("./blobs/stale/USR_CFG.apb"):
     integrity = 1
@@ -119,7 +119,7 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     
     errorMessage = "Restoration failed. You may not have sufficient\n           permissions or damaged files."
 
-    if os.path.exists("./blobs/USR_CFG.apb") or os.path.exists("./blobs/stale/USR_CFG.apb"):
+    if os.path.exists("./blobs/user/USR_CFG.apb") or os.path.exists("./blobs/stale/USR_CFG.apb"):
         throwError()
     else:
         success()
