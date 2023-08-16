@@ -22,11 +22,11 @@ The scripts are run in terminal-space. Scripts included in the project intended 
 
 <details><summary><h5>It's for noobs, right?</h5></summary>
 
-Nope. *ultimate-macOS-KVM* is designed for everyone. You may well be a noob, and that's okay, but you might also be a professional **nerd** who knows everything about everything. Either way, this project was made for you. 
+It can be, sure. But *ultimate-macOS-KVM* is designed for everyone. You may well be a noob, and that's okay, but you might also be a professional **nerd** who knows everything about everything. Either way, this project was made for you. 
 
 While there is a focus on user-friendliness, there are plenty of advanced features and functionality present within the project. For example, did you know that the built in updater can upgrade and downgrade to *any version* of the project using command arguments? Neither did I!
 
-Furthermore, it's as f*ck-up-proof as possible, with tools designed to help you recover from such misadventures without losing valuable files, such as a soft reset of the virtual NVRAM, which can be used to fix common bootloader issues. Or, for the hardcore misintellectual, you can even download and reset the *entire* project from *within* the project. Pure mental- for the pure mental.
+Furthermore, it's as f*ck-up-proof as possible, with tools designed to help you recover from such misadventures without losing valuable files, such as a soft reset of the virtual NVRAM, which can be used to fix common bootloader issues. Or, for the hardcore misintellectual, you can even download and reset the *entire* project from *within* the project. Pure mental- *for* the pure mental.
 
 </details>
 
@@ -149,7 +149,7 @@ You may prefer to comment-out the lines instead, in case you need to re-attach t
 
 <details><summary><h5>Can I use VNC?</h5></summary>
 
-If you would prefer to connect to the virtual display using VNC, you can do so. The virtual machine can open a virtual display as a VNC server, running on port ``5900`` of your local host. Uncomment the ``-vnc`` line (remove the # at the start) of your boot config file to enable this:
+If you would prefer to connect to the virtual display using VNC, you can do so! The virtual machine can open a virtual display as a VNC server, running on port ``5900`` of your local host. Uncomment the ``-vnc`` line (remove the # at the start) of your boot config file to enable this:
 
 ```sh
 ################ UNCOMMENT IF YOU WANT TO USE VNC MONITOR ################
