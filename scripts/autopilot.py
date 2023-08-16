@@ -800,7 +800,7 @@ def autopilot():
       global USR_CPU_MODEL
       global customValue
       global currentStage
-      defaultValue = "Penryn"
+      defaultValue = "Skylake-Client"
 
       clear()
       print("\n   "+color.BOLD+"Set CPU model"+color.END)
@@ -1054,10 +1054,31 @@ def autopilot():
       print("\n   "+color.BOLD+"Set target OS"+color.END)
       print("   Step 2")
       print("\n   This configures networking and image download version. \n   The most suitable network adapter will be automatically\n   selected for you based on this later."+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,"Catalina (10.15)",color.END)
       if customValue == 1:
-         print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
-         customInput = int(input(color.BOLD+"Value> "+color.END))
+         print(color.END+"\n      1. Ventura (13)")
+         print(color.END+"      2. Monterey (12)")
+         print(color.END+"      3. Big Sur (11)")
+         print(color.BOLD+"      4. Catalina (10.15)")
+         print(color.END+"      5. Mojave (10.14)")
+         print(color.END+"      6. High Sierra (10.13)\n")
+         customInput = str(input(color.BOLD+"Select> "+color.END))
+         
+         if customInput == "1":
+            customInput = 13
+         elif customInput == "2":
+            customInput = 12
+         elif customInput == "3":
+            customInput = 11
+         elif customInput == "4":
+            customInput = 1015
+         elif customInput == "5":
+            customInput = 1014
+         elif customInput == "6":
+            customInput = 1013
+         else:
+            customInput = 1015
+
          USR_TARGET_OS = customInput               #+".sh" #<--- change required prefix/suffix
          currentStage = 3
          customValue = 0
@@ -1069,7 +1090,7 @@ def autopilot():
          stage3()
       else:
          print(color.BOLD+"\n      1. Use default value")
-         print(color.END+"      2. Custom value...")
+         print(color.END+"      2. Select macOS version...")
          print(color.END+"      3. Back")
          print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
@@ -1106,6 +1127,69 @@ def autopilot():
          
          else:
             stage2()
+
+   #def stage2():
+      #global USR_TARGET_OS
+      #global customValue
+      #global currentStage
+      #defaultValue = 1015
+
+      #clear()
+      #print("\n   "+color.BOLD+"Set target OS"+color.END)
+      #print("   Step 2")
+      #print("\n   This configures networking and image download version. \n   The most suitable network adapter will be automatically\n   selected for you based on this later."+color.END)
+      #print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
+      #if customValue == 1:
+         #print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
+         #customInput = int(input(color.BOLD+"Value> "+color.END))
+         #USR_TARGET_OS = customInput               #+".sh" #<--- change required prefix/suffix
+         #currentStage = 3
+         #customValue = 0
+         ##if USR_TARGET_OS > 110 and USR_TARGET_OS < 999:
+         ##   USR_TARGET_OS = USR_TARGET_OS * 10
+         #blob = open("./blobs/USR_TARGET_OS.apb","w")
+         #blob.write(str(USR_TARGET_OS))
+         #blob.close()
+         #stage3()
+      #else:
+      #   print(color.BOLD+"\n      1. Use default value")
+      #   print(color.END+"      2. Custom value...")
+      #   print(color.END+"      3. Back")
+      #   print(color.END+"      ?. Help...")
+      #   print(color.END+"      Q. Exit\n   ")
+      #   stageSelect = str(input(color.BOLD+"Select> "+color.END))
+      #
+      #   if stageSelect == "1":
+      #      USR_TARGET_OS = defaultValue
+      #      blob = open("./blobs/USR_TARGET_OS.apb","w")
+      #      blob.write(str(USR_TARGET_OS))
+      #      blob.close()
+      #      currentStage = 3
+      #      stage3()
+
+      #   elif stageSelect == "2":
+      #      customValue = 1
+      #      stage2()
+
+      #   elif stageSelect == "3":
+      #      currentStage = 1
+      #      stage1()
+         
+      #   elif stageSelect == "?":
+      #      clear()
+      #      print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+      #      print("   Continue in your browser\n")
+      #      print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+      #      os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#2-set-target-os > /dev/null 2>&1')
+      #      time.sleep(6)
+      #      clear()
+      #      stage2()
+            
+      #   elif stageSelect == "q" or stageSelect == "Q":
+      #      exit   
+         
+      #   else:
+      #      stage2()
 
    def stage1():
       global USR_CFG
