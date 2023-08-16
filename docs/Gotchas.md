@@ -88,6 +88,18 @@ Please read [this document](https://github.com/Coopydood/ultimate-macOS-KVM/wiki
 
 </details>
 
+<details><summary><h5>vfio 0000:00:00.0: failed to open /dev/vfio/X: Permission denied</h5></summary>
+
+This is what happens when trying to run a script file that contains PCI passthrough as a regular user.
+
+Thankfully, this is of course an easy fix. You'll need to run the script as superuser;
+
+```sh
+$ sudo ./boot.sh
+```
+
+</details>
+
 <details><summary><h5>Repository file integrity damaged</h5></summary>
 
 When using AutoPilot, the restore tools suite, system checkers, or the built-in updater tool, you may encounter an error regarding repo file integrity.
