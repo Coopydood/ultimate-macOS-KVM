@@ -52,7 +52,7 @@ def startup():
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print("   Select an option to continue.")
     print(color.BOLD+"\n      1. VFIO-PCI passthrough assistant")
-    print(color.END+"         Automatically configure PCI passthrough with ease\n         using an existing AutoPilot config file.\n")
+    print(color.END+"         Automatically configure PCI passthrough with ease\n         using an existing AutoPilot config file\n")
     print(color.END+"      2. Check if your system is ready...")
     print(color.END+"      3. Display system IOMMU grouping")
     print(color.END+"      4. Get and display vfio-pci device IDs")

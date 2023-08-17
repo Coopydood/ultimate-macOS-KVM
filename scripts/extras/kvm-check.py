@@ -201,8 +201,8 @@ print("Checking your system... (8/9)")
 
 
 # vfcConfig 
-if os.path.exists("./blobs/USR_CFG.apb"):
-            apFilePath = open("./blobs/USR_CFG.apb")
+if os.path.exists("./blobs/user/USR_CFG.apb"):
+            apFilePath = open("./blobs/user/USR_CFG.apb")
             apFilePath = apFilePath.read()
             if os.path.exists("./"+apFilePath):
                 apFile = open("./"+apFilePath,"r")

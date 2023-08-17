@@ -32,7 +32,7 @@ global version
 
 # INTERNAL VERSION OF THIS UTILITY
 # May be used in the future
-updaterVersion = "2.0"
+updaterVersion = "2.1"
 
 if os.path.exists("./.version"):
    version = open("./.version")
@@ -217,7 +217,7 @@ if integrity == 1:
             os.system("git reset --hard tags/v"+targetVersion)
          else:
             os.system("git pull -f -q")
-            os.system("git merge origin/main")
+            os.system("git merge --autostash origin/main")
          clear()
          clear()
          print("\n\n   "+color.BOLD+color.BLUE+"⧖  UPDATING..."+color.END,"")

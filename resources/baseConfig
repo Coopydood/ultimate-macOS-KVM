@@ -26,6 +26,7 @@ ID="$USR_ID"
 NAME="$USR_NAME"
 FILE="$USR_CFG"
 
+ULTMOS_VERSION=0.0.0
 IGNORE_FILE=0
 REQUIRES_SUDO=0
 VFIO_PTA=0
@@ -83,7 +84,7 @@ args=(
 ##########################################################################
 
 -netdev user,id=net0 -device "$NETWORK_DEVICE",netdev=net0,id=net0,mac="$MAC_ADDRESS"
--device qxl-vga,vgamem_mb=128,vram_size_mb=128
+-device qxl-vga,vgamem_mb=128,vram_size_mb=128    
 -monitor stdio
 #-display none
 #-vga qxl

@@ -193,5 +193,7 @@
     <qemu:arg value="type=2"/>
     <qemu:arg value="-cpu"/>
     <qemu:arg value="$USR_CPU_MODEL,kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,$USR_CPU_ARGS"/>
+    <qemu:arg value="-global"/>
+    <qemu:arg value="nec-usb-xhci.msi=off"/>
   </qemu:commandline>
 </domain>

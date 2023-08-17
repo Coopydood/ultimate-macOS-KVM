@@ -10,9 +10,13 @@ Signature: 4CD28348A3DD016F
 
 """
 
+#    WELCOME TO ULTMOS! *waves like an idiot*
 
-# THIS IS THE MAIN FILE! RUN THIS FILE FIRST!
-# ./main.py
+##################################################
+#   THIS IS THE MAIN FILE! RUN THIS FILE FIRST!  #
+#                                                #
+#                  $ ./main.py                   #
+##################################################
 
 
 import os
@@ -33,6 +37,8 @@ parser.add_argument("--skip-os-check", dest="sosc", help="Skip the OS platform c
 args = parser.parse_args()
 
 global apFilePath
+global VALID_FILE
+global REQUIRES_SUDO
 
 detectChoice = 1
 latestOSName = "Sonoma"
@@ -97,23 +103,45 @@ def startup():
                 if int(macOSVer) >= 999:
                     macOSVer = str(int(macOSVer) / 100)
             if os.path.exists("./"+apFilePath):
+                global REQUIRES_SUDO
+                global VALID_FILE
+                
                 apFile = open("./"+apFilePath,"r")
-            
+
+                
+
+                if "REQUIRES_SUDO=1" in apFile.read():
+                    REQUIRES_SUDO = 1
+                else:
+                    REQUIRES_SUDO = 0
+
+                apFile.close()
+
+                apFile = open("./"+apFilePath,"r")
+                
                 if "APC-RUN" in apFile.read():
-                    print(color.BOLD+"\n      B. Boot macOS "+macOSVer+"")
-                    print(color.END+"         Start macOS using the detected\n         "+apFilePath+" script file.")
+                    VALID_FILE = 1
+                    
+                    #REQUIRES_SUDO = 1 # UNCOMMENT FOR DEBUGGING
+
+                    if REQUIRES_SUDO == 1:
+                        print(color.BOLD+"\n      B. Boot macOS "+macOSVer+color.YELLOW,"⚠"+color.END)
+                        print(color.END+"         Start macOS using the detected\n         "+apFilePath+" script file."+color.YELLOW,"Requires superuser."+color.END)
+                    else:
+                        print(color.BOLD+"\n      B. Boot macOS "+macOSVer+"")
+                        print(color.END+"         Start macOS using the detected\n         "+apFilePath+" script file.")
                     print(color.END+"\n      1. AutoPilot")
 
                 else:
-                    print(color.BOLD+"\n      1. AutoPilot (Experimental)")
-                    print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
+                    print(color.BOLD+"\n      1. AutoPilot")
+                    print(color.END+"         Quickly and easily set up a macOS\n         virtual machine in just a few steps\n")
 
             else:
-                print(color.BOLD+"\n      1. AutoPilot (Experimental)")
-                print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
+                print(color.BOLD+"\n      1. AutoPilot")
+                print(color.END+"         Quickly and easily set up a macOS\n         virtual machine in just a few steps\n")
     else:
-        print(color.BOLD+"\n      1. AutoPilot (Experimental)")
-        print(color.END+"         Quickly and easily set up a macOS VM in just a few steps\n")
+        print(color.BOLD+"\n      1. AutoPilot")
+        print(color.END+"         Quickly and easily set up a macOS\n         virtual machine in just a few steps\n")
     
 
     #print(color.END+"      2. Download and convert macOS image")
@@ -255,8 +283,12 @@ elif detectChoice == "u" or detectChoice == "U":
     os.system('./scripts/repo-update.py')
 elif detectChoice == "q" or detectChoice == "Q":
     exit
-elif detectChoice == "b" or detectChoice == "B":
+elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FILE == 1:
     clear()
-    os.system("./"+apFilePath)
+    if REQUIRES_SUDO == 1:
+        print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical PCI passthrough,\n   and needs superuser priviledges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
+        os.system("sudo ./"+apFilePath)
+    else:
+        os.system("./"+apFilePath)
 else:
     startup()

@@ -28,6 +28,11 @@ latestOSName = "Ventura"
 latestOSVer = "13"
 runs = 0
 
+global USR_SCREEN_RES
+
+USR_SCREEN_RES = open("./blobs/user/USR_SCREEN_RES.apb")
+USR_SCREEN_RES = USR_SCREEN_RES.read()
+
 class color:
    PURPLE = '\033[95m'
    CYAN = '\033[96m'
@@ -134,10 +139,14 @@ def stage5():
                                 currentDispVal = currentDispVal - 1
                                 devLineF = str(deviceLines[currentDispVal])
                                 apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+devLineF)
-                                apFileM = apFileM.replace("-vga qxl","-vga none")
-                                apFileM = apFileM.replace("-monitor stdio","-monitor none")
+                                apFileM = apFileM.replace("#-vga qxl","-vga none")
+                                #apFileM = apFileM.replace("-monitor stdio","-monitor none")
                                 apFileM = apFileM.replace("#-display none","-display none")
-                                os.system("cp ./resources/ovmf/* ./ovmf/")
+                                apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
+                                apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
+                                apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
+                                os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
+                                os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS.fd")
                         file1.close
 
                         with open(apFilePath,"w") as file:
@@ -256,10 +265,14 @@ def stage5():
                                     currentDispVal = currentDispVal - 1
                                     devLineF = str(deviceLines[currentDispVal])
                                     apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+devLineF)
-                                    apFileM = apFileM.replace("-vga qxl","-vga none")
-                                    apFileM = apFileM.replace("-monitor stdio","-monitor none")
+                                    apFileM = apFileM.replace("#-vga qxl","-vga none")
+                                    #apFileM = apFileM.replace("-monitor stdio","-monitor none")
                                     apFileM = apFileM.replace("#-display none","-display none")
-                                    os.system("cp ./resources/ovmf/* ./ovmf/")
+                                    apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
+                                    apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
+                                    apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
+                                    os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
+                                    os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS.fd")
                             file1.close
 
                             with open("./"+apFilePath,"w") as file:
@@ -623,7 +636,7 @@ if detectChoice == "1":
     stage1()
 elif detectChoice == "2":
     clear()
-    os.system('./scripts/gpu-check.py')
+    os.system('./scripts/extras/gpu-check.py')
 
 elif detectChoice == "B" or detectChoice == "b":
     os.system('./main.py')

@@ -128,7 +128,7 @@ def importXML():
 
         if detectChoice1 == "1":
             clear()
-            print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To define the domain, virsh needs superuser to continue.\n"+color.END)
+            print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To define the domain, virsh needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
             os.system("sudo virsh define "+apFilePathNoExt+".xml")
             time.sleep(4)
             clear()

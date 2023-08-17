@@ -136,6 +136,24 @@ If you'd like to help the investigation, any and all testing is greatly apprecia
 
 </details>
 
+<details><summary><h5>No disks available during macOS installation</h5></summary>
+
+If you're in macOS Recovery and trying to use the installer, you'll get to a screen asking you to select a disk.
+
+If this screen only shows "macOS Base System" (greyed out), then it simply means you have not formatted the virtual disk yet. 
+
+This can be done by using **Disk Utility** from the macOS Recovery menu. 
+
+Select the ``QEMU HARDDISK`` entry from the sidebar with the storage capacity corresponding to what you chose during AutoPilot - be careful not to erase the small OpenCore partition. 
+
+When selected, click "Erase" from the centre-top header, and enter a name for the new disk; this can be whatever you want. The default is ``Untitled``, so you can be classy and call it ``Titled``, or if you want to emulate a real Mac, call it ``Macintosh HD``. It's up to you. 
+
+For the filesystem, leave ``APFS`` as the selected option, unless you particularly want to use Mac OS Extended.
+
+Then, simply quit Disk Utility and return to the macOS installer. On the disk selection screen, your newly-formatted disk should appear as a selectable option. Click it, and then click ``Install``. Done!
+
+</details>
+
 <details><summary><h5>Who the hell is Eversiege?</h5></summary>
 
 You may have seen the name ``Eversiege`` pop up throughout the project. Who is it you ask?

@@ -54,15 +54,16 @@ class color:
    BOLD = '\033[1m'
    UNDERLINE = '\033[4m'
    END = '\033[0m'
+   GRAY = '\u001b[38;5;245m'
 
 def startup():
     global detectChoice
     print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"AutoPilot"+color.END,"")
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
-    print("\n   The purpose of this script is to automatically guide you through \n   the process of",color.BOLD+"creating and running a basic macOS VM",color.END+"using settings \n   based on answers to a number of questions. \n\n   Many of the values can be left to default - especially if you are unsure.\n   It won't be perfect, but it's supposed to make it as"+color.BOLD,"easy as possible.\n"+color.END)
+    print("   The purpose of this script is to automatically guide you through \n   the process of",color.BOLD+"creating and running a basic macOS VM",color.END+"using settings \n   based on answers to a number of questions. \n\n   Many of the values can be left to default - especially if you are unsure.\n   It won't be perfect, but it's supposed to make it as"+color.BOLD,"easy as possible."+color.END)
     #print(color.BOLD+"\n"+"   Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"      Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM") # no shameless plugs anymore :[
-    print("   Continue whenever you're ready, or return to the main menu.")
+    #print("   Continue whenever you're ready, or return to the main menu.")
     print(color.BOLD+"\n      1. Start")
     print(color.END+"         Begin creating a new QEMU-based macOS config file \n")
     print(color.END+"      2. Main menu")
@@ -183,8 +184,8 @@ def autopilot():
          print("   "+"\n   "+color.BOLD+"Ready to generate files"+color.END)
       else:
          print("   "+"\n   "+color.BOLD+"Ready to generate config file"+color.END)
-      print("   "+"Review your preferences")
-      print("   "+"\n   The config wizard is complete.\n   Review your preferences below and continue when ready."+color.END)
+      #print("   "+"Review your preferences")
+      print("   "+"The config wizard is complete.\n   Review your preferences below and continue when ready."+color.END)
       print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
       if USR_CREATE_XML == "True":
          print("   "+color.BOLD+color.PURPLE+"FILES   ",color.END+color.END+USR_CFG+", "+USR_CFG_XML)
@@ -1400,6 +1401,8 @@ def autopilot():
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Creating virtual hard disk"+color.END)
          elif PROC_GENHDD == 2:
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
+         elif PROC_GENHDD == 3:
+            print("      "+color.BOLD+color.CYAN+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
 
          if PROC_APPLYPREFS == 0:
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Applying preferences"+color.END)
@@ -1632,6 +1635,9 @@ def autopilot():
          configData = configData.replace("$USR_CFG",str(USR_CFG))
          configData = configData.replace("$USR_MAC_ADDRESS",str(USR_MAC_ADDRESS))
          configData = configData.replace("$USR_SCREEN_RES",str(USR_SCREEN_RES))
+
+         configData = configData.replace("0.0.0",version)
+
          if USR_BOOT_FILE == "-2":
             configData = configData.replace("-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw","#-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw")
             configData = configData.replace("-device ide-hd,bus=sata.4,drive=BaseSystem","#-device ide-hd,bus=sata.4,drive=BaseSystem")
@@ -1817,14 +1823,20 @@ def autopilot():
             stageSelect = str(input(color.BOLD+"Select> "+color.END))
          
             if stageSelect == "1":
+               global PROC_GENHDD
+               
                os.system("mv ./HDD.qcow2"+" ./"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))+"_HDD.qcow2")
+               PROC_GENHDD = 2
                apcGenHDD()
 
             elif stageSelect == "2":
+               
+               PROC_GENHDD = 3
                refreshStatusGUI() 
 
             elif stageSelect == "x" or stageSelect == "X":
                os.system("rm HDD.qcow2")
+               PROC_GENHDD = 2
                apcGenHDD()
 
             elif stageSelect == "q" or stageSelect == "Q":
@@ -1835,14 +1847,14 @@ def autopilot():
          else:
             os.system("qemu-img create -f qcow2 HDD.qcow2 "+USR_HDD_SIZE+" > /dev/null 2>&1")
             time.sleep(3)
-
+            PROC_GENHDD = 2
 
          # Hard disk creation error catcher - thanks Cyber!
          if not os.path.exists("./HDD.qcow2"):
             errorMessage = "The virtual hard disk file could not be created.\n           Did you install QEMU + tools?"
             throwError()
          
-         PROC_GENHDD = 2
+         
          refreshStatusGUI()
          time.sleep(2)
 
