@@ -90,6 +90,12 @@ def startup():
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print("   Select an option to continue.")
+
+
+    if os.path.exists("./blobs/USR_TARGET_OS.apb") and not os.path.exists("./blobs/user/USR_TARGET_OS.apb"):
+        os.system("mv ./blobs/*.apb ./blobs/user")
+
+
     if os.path.exists("./blobs/user/USR_CFG.apb"):
             global apFilePath
             apFilePath = open("./blobs/user/USR_CFG.apb")

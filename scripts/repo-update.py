@@ -216,6 +216,8 @@ if integrity == 1:
             targetVersion = args.version
             os.system("git reset --hard tags/v"+targetVersion)
          else:
+            #os.system("git reset --hard HEAD")
+            os.system("git clean -xffd")
             os.system("git pull -f -q")
             os.system("git merge --autostash origin/main")
          clear()
