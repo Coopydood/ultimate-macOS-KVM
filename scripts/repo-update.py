@@ -201,8 +201,8 @@ if integrity == 1:
          print("   The update you requested is being downloaded and installed.\n   Do NOT terminate this script or close the window.\n\n")
          time.sleep(3)
          
-         os.system("git stash -q")
-         os.system("git clean -f -q")
+         os.system("git stash -q > /dev/null 2>&1")
+         os.system("git clean -f -q > /dev/null 2>&1")
          clear()
          clear()
          print("\n\n   "+color.BOLD+color.BLUE+"⧖  UPDATING..."+color.END,"")
@@ -217,9 +217,9 @@ if integrity == 1:
             os.system("git reset --hard tags/v"+targetVersion)
          else:
             #os.system("git reset --hard HEAD")
-            os.system("git clean -xffd")
-            os.system("git pull -f -q")
-            os.system("git merge --autostash origin/main")
+            os.system("git clean -xffd > /dev/null 2>&1")
+            os.system("git pull -f -q > /dev/null 2>&1")
+            os.system("git merge --autostash origin/main > /dev/null 2>&1")
          clear()
          clear()
          print("\n\n   "+color.BOLD+color.BLUE+"⧖  UPDATING..."+color.END,"")
