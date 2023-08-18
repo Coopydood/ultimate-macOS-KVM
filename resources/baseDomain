@@ -31,6 +31,8 @@
   ULTMOS: v$REPO_VERSION
   XML: $XML_FILE
   AP: $AP_FILE
+  AUTO: $AP_AUTO
+  USEBLOBS: $AP_BLOB
   APRUNTIME: $AP_RUNTIME
   </description>
   <uuid>$USR_UUID</uuid>

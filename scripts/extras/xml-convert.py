@@ -26,8 +26,11 @@ import timeit
 import uuid
 import random
 import io
+import pathlib
 
 global apFileSelect
+global autodetect
+global useBlobs
 
 detectChoice = 1
 latestOSName = "Ventura"
@@ -160,9 +163,45 @@ def convertBrains():
         print("   The assistant is now converting your AutoPilot config file\n   into a valid domain XML file for use with virsh.")
         print(color.BOLD+"\n   This may take a few moments.\n   Your source config won't be modified.\n")
         time.sleep(2)
-        with open("./"+apFilePath,"r") as source:
+        with open(""+apFilePath,"r") as source:
+            global apVars
+            global useBlobs
             apFileS = source.read()
-            apVars = (re.findall(r'"([^"]*)"', apFileS))
+            apVars = ["macOS","macOS",apFilePath,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0]
+            
+            
+            if autodetect == False:
+                apVars = (re.findall(r'"([^"]*)"', apFileS))
+                useBlobs = False
+            else:
+                # NEW BLOB MODE yay
+
+                # We are only substituting what is needed. This is done to add backwards compatibility with < v0.9.2
+                # This makes the array look fragmented, but hard-coded and expected values are pre-entered into the array before these assignments
+                # Even if they're assigned a place in the array below, there's no guarantee they'll be used
+
+                # HOWEVER, because this method relies on blob existence, there's no guarantee of a APC lineup
+                # Therefore, this will only be used if the APC was autodetected and user authorises this
+
+                #with open("./blobs/user/USR_NAME.apb") as blob: apVars[0] = str(blob.read())
+                with open("./blobs/user/USR_TARGET_OS.apb") as blob: apVars[1] = "macOS "+str(blob.read())
+                with open("./blobs/user/USR_ALLOCATED_RAM.apb") as blob: apVars[4] = str(blob.read())
+                with open("./blobs/user/USR_CPU_CORES.apb") as blob: apVars[6] = str(blob.read())
+                with open("./blobs/user/USR_CPU_THREADS.apb") as blob: apVars[7] = str(blob.read())
+                with open("./blobs/user/USR_CPU_MODEL.apb") as blob: apVars[8] = str(blob.read())
+                with open("./blobs/user/USR_CPU_FEATURE_ARGS.apb") as blob: apVars[9] = str(blob.read())
+                with open("./blobs/user/USR_NETWORK_DEVICE.apb") as blob: apVars[16] = str(blob.read())
+                with open("./blobs/user/USR_MAC_ADDRESS.apb") as blob: apVars[17] = str(blob.read())
+
+                useBlobs = True
+
+
+            
+
+
+
+
+
             if "-device vfio-pci" in apFileS:
                 vfioargs = apFileS.split("#VFIO_DEV_BEGIN",1)[1]
                 vfioargs = vfioargs.replace("\n","",1)
@@ -210,8 +249,10 @@ def convertBrains():
 
 
         apFilePathNoExt = apFilePath.replace(".sh","")
-        os.system("cp ./resources/baseDomain"+" ./"+apFilePathNoExt+".xml")
-        with open("./"+apFilePathNoExt+".xml","r") as file1:
+        apFilePathNoExt = r"{}".format(apFilePathNoExt)
+        
+        os.system("cp ./resources/baseDomain"+" "+apFilePathNoExt+".xml")
+        with open(""+apFilePathNoExt+".xml","r") as file1:
             apFileM = file1.read()
             apFileM = apFileM.replace("baseDomain",str(apFilePathNoExt+".xml"))
             apFileM = apFileM.replace("#    THIS DOMAIN FILE SHOULD NOT BE EDITED BY THE USER!    #","    APC-RUN_"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))+"\n \n    THIS FILE WAS GENERATED USING AUTOPILOT.")
@@ -268,6 +309,14 @@ def convertBrains():
             apFileM = apFileM.replace("$XML_FILE",apFilePathNoExt+".xml")
             apFileM = apFileM.replace("$AP_FILE",apFilePath)
             apFileM = apFileM.replace("$AP_RUNTIME",str(datetime.today().strftime('%H:%M:%S %d/%m/%Y')))
+            if autodetect == True:
+                apFileM = apFileM.replace("$AP_AUTO","Yes")
+            else:
+                apFileM = apFileM.replace("$AP_AUTO","No")
+            if useBlobs == True:
+                apFileM = apFileM.replace("$AP_BLOB","Yes")
+            else:
+                apFileM = apFileM.replace("$AP_BLOB","No")
 
 
             if "-device vfio-pci" in apFileS:
@@ -276,16 +325,16 @@ def convertBrains():
         
         file1.close
 
-        with open("./"+apFilePathNoExt+".xml","w") as file:
+        with open(""+apFilePathNoExt+".xml","w") as file:
             file.write(apFileM)
         time.sleep(5)
 
-    apFile = open("./"+apFilePathNoExt+".xml","r")
+    apFile = open(""+apFilePathNoExt+".xml","r")
     if "APC-RUN" in apFile.read():
         clear()
         print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
         print("   AutoPilot config file converted\n")
-        print("   The config file was converted successfully into\n   "+color.BOLD+"./"+apFilePathNoExt+".xml"+color.END+"\n\n\n\n\n   Please wait...\n\n") 
+        print("   The config file was converted successfully into\n   "+color.BOLD+""+apFilePathNoExt+".xml"+color.END+"\n\n\n\n\n   Please wait...\n\n") 
         time.sleep(3)
         clear()
         print("\n\n   "+color.BOLD+color.BLUE+"❖  IMPORT XML FILE"+color.END,"")
@@ -327,6 +376,8 @@ def manualAPSelect():
         if os.path.exists(apFileSelect):
             apFile = open(apFileSelect)
             if "APC-RUN" in apFile.read():
+                global autodetect
+                autodetect = False
                 print("\n\n   "+color.BOLD+color.GREEN+"✔ VALID AUTOPILOT CONFIG"+color.END,"")
                 print("   Valid AutoPilot config found\n")
                 print("   The file you selected was generated by AutoPilot.\n   It appears to be valid.\n")
@@ -342,7 +393,17 @@ def manualAPSelect():
 
                 if detectChoice1 == "1":
                     apFilePath = apFileSelect
-                    apFile = open("./"+apFilePath,"r")
+                    if apFilePath[0] == "/" and apFilePath[1] == "/":
+                            apFilePath = apFilePath.replace("/","",1)
+                    if apFilePath[0] == "." and len(apFilePath) > 10:
+                        apFilePath = apFilePath.replace(".","",1)
+                    
+                    cleanPath = r"{}".format(apFilePath)
+                    apFilePath = cleanPath
+
+
+                    
+                    apFile = open(apFilePath,"r")
                     apFile = apFile.read()
                     apFileChosen = 1
                     clear()
@@ -403,7 +464,7 @@ if detectChoice == "1":
                         #apFileR = apFile.read()
                         apFileChosen = 1
                         apFile = open("./"+apFilePath,"r")
-
+                        autodetect = True
                         apFile = apFile.read()
                         apFileChosen = 1
                         clear()

@@ -56,6 +56,13 @@ Doing so with an unsupported OS may have unexpected consequences, and ones I am 
 
 You probably don't have ``qemu-tools`` installed.
 
+However, if the issue persists, you can try making the HDD file yourself:
+```sh
+$ qemu-img create -f qcow2 HDD.qcow2 <size>G 
+```
+
+then try running AutoPilot again. It will detect the disk file and ask if you want to use it.
+
 </details>
 
 <details><summary><h5>AutoPilot exits silently during user questions</h5></summary>
@@ -126,13 +133,38 @@ Support for updating legacy AP files may come in the future, but for now it is r
 
 <details><summary><h5>macOS Ventura (13.X) fails to install or upgrade, with various errors</h5></summary>
 
-This is a [known issue](https://github.com/Coopydood/ultimate-macOS-KVM/issues/10). 
+This was a [known issue](https://github.com/Coopydood/ultimate-macOS-KVM/issues/10), and has been resolved:
 
-While this is investigated, please do not try to install or upgrade to macOS Ventura, as this may be unrecoverable until resolved. Stick to **macOS Monterey (12)** or earlier for now. 
+This issue does NOT affect users who changed their CPU model from the default. For example, if you manually changed your CPU model to ``host``, this does not affect you.
 
-The most stable tested OS is **macOS Big Sur (11)**.
+**FOR NEW USERS:** as of [v0.9.6](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-9-6.md), this issue has been fixed, and new files generated with AutoPilot will use the new model by default, which can be used to install Ventura.
 
-If you'd like to help the investigation, any and all testing is greatly appreciated, and can be submitted as a comment to the issue linked above.
+**FOR EXISTING USERS:** for users of **v0.9.5** or earlier, you have a couple options:
+***
+1. If you have an existing AutoPilot config that you have used for a while, with many customisations of your own, it may be best to just change the CPU model. Do this by finding the following line in your boot script:
+```sh
+CPU_MODEL="Penryn"
+```
+and change it to
+```sh
+CPU_MODEL="Skylake-Client"
+```
+
+***
+
+2. Generate a new AutoPilot config file. While this does mean you have to go through AutoPilot again, there are a number of benefits. Generating a new AP config ensures you have the latest structure updates, and the best compatibility with the rest of the project:
+
+    - You can **keep your existing config file**, either by choosing a different name, or by backing up your old one when prompted
+    - You can **keep and use your existing virtual hard disk file**. When AP gets to the `Creating virtual hard disk` stage, you'll automatically be notified about the existing HDD file, and you'll have the option to use the file in the new config.
+    - Your **OpenCore boot image will be replaced**, but your old OpenCore image will **automatically get backed up to a timestamped folder, in the `boot` folder**. If you've made customisations to the OpenCore image, you can move the old one back into place after AP finishes.
+    - The **virtual NVRAM will be reset**, but this is safe. In [v0.9.2](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-9-2.md) and later, you can even select your screen resolution as an AutoPilot stage - meaning you won't lose any resolution changes you may have made.
+
+***
+~~While this is investigated, please do not try to install or upgrade to macOS Ventura, as this may be unrecoverable until resolved. Stick to **macOS Monterey (12)** or earlier for now.~~ 
+
+~~The most stable tested OS is **macOS Big Sur (11)**.~~
+
+~~If you'd like to help the investigation, any and all testing is greatly appreciated, and can be submitted as a comment to the issue linked above.~~
 
 </details>
 
