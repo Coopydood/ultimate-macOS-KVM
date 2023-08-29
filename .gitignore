@@ -31,7 +31,9 @@ resources/script_store/restore/*.sh
 INTERNAL_CHECKLIST.pdf
 INTERNAL_CHECKLIST.txt
 internal/*
+logs/*
 resources/.webversion
 ovmf/OVMF_CODE.fd
 ovmf/OVMF_VARS.fd
 ovmf/user_store/OVMF_VARS.fd
+boot/opencore-image-ng.sh

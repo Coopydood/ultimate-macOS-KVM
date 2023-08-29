@@ -92,7 +92,7 @@ def startup():
     print("   Select an option to continue.")
 
 
-    if os.path.exists("./blobs/USR_TARGET_OS.apb") and not os.path.exists("./blobs/user/USR_TARGET_OS.apb"):
+    if os.path.exists("./blobs/USR_TARGET_OS.apb") and not os.path.exists("./blobs/user/USR_TARGET_OS.apb"):  # Rescue live blobs if coming from older repo version
         os.system("mv ./blobs/*.apb ./blobs/user")
 
 
