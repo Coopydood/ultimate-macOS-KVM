@@ -27,6 +27,10 @@ import json
 import sys
 import argparse
 import platform
+try:
+    import pypresence
+except:
+    None
 
 sys.path.insert(0, 'scripts')
 
@@ -51,6 +55,16 @@ version = open("./.version")
 version = version.read()
 
 versionDash = version.replace(".","-")
+
+
+# Discord rich presence routine
+client_id = "1149434759152422922"
+try:
+    RPC = Presence(client_id)
+except:
+    None
+
+projectVer = "Powered by ULTMOS v"+version
 
 # We don't need these files anymore. If they're here, get rid
 if os.path.exists("./UPGRADEPATH"): os.system("rm ./UPGRADEPATH")
@@ -98,6 +112,7 @@ def startup():
 
     if os.path.exists("./blobs/user/USR_CFG.apb"):
             global apFilePath
+            global macOSVer
             apFilePath = open("./blobs/user/USR_CFG.apb")
             apFilePath = apFilePath.read()
             if os.path.exists("./blobs/user/USR_TARGET_OS_NAME.apb"):
@@ -291,6 +306,7 @@ elif detectChoice == "q" or detectChoice == "Q":
     exit
 elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FILE == 1:
     clear()
+    subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
     if REQUIRES_SUDO == 1:
         print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical PCI passthrough,\n   and needs superuser priviledges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
         os.system("sudo ./"+apFilePath)

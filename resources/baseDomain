@@ -20,7 +20,7 @@
 
 <domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm">
   <name>ultmos-$USR_OS_VERSION</name>
-  <title>$USR_NAME (ultimate-macOS-KVM)</title>
+  <title>$USR_NAME (ULTMOS)</title>
   <description>  $USR_NAME
   $USR_HEADER 
 

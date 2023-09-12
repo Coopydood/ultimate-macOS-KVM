@@ -1853,6 +1853,10 @@ def autopilot():
          configData = configData.replace("0.0.0",version)
          cpydLog("ok",("Marked working script as using ULTMOS v"+str(version)))
 
+         cpydLog("info",("Adding OS ID marker"))
+         configData = configData.replace("$USR_OS_NAME",str(USR_TARGET_OS_NAME))
+
+
          cpydLog("info",("Setting up BaseSystem image attachment"))
          if USR_BOOT_FILE == "-2":
             cpydLog("warn",("Detaching BaseSystem from script, user skipped"))

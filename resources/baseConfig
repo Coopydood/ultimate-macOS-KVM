@@ -31,6 +31,8 @@ IGNORE_FILE=0
 REQUIRES_SUDO=0
 VFIO_PTA=0
 GEN_EPOCH=000000000
+VERBOSE=1
+DISCORD_RPC=1
 
 SCREEN_RES="$USR_SCREEN_RES"
 
@@ -52,6 +54,8 @@ USB_DEVICES="$USR_USB_DEVICES"
 
 NETWORK_DEVICE="$USR_NETWORK_DEVICE"
 MAC_ADDRESS="$USR_MAC_ADDRESS"
+
+OS_ID="$USR_OS_NAME"
 
 #   You should not have to touch anything below this line, especially if you
 #   don't really know what you're doing. It'll probably break something.
@@ -95,4 +99,42 @@ args=(
 
 )
 
+if [ $VERBOSE = 1 ]
+then
+echo
+echo \ \ \──────────────────────────────────────────────
+echo \ \ \ \ \ $NAME
+echo
+echo \ \ \ \ \ $FILE
+echo \ \ \ \ \ Built with ULTMOS v$ULTMOS_VERSION
+if [ $REQUIRES_SUDO = 1 ]
+then
+echo \ \ \ \ \ Superuser priviledges enabled
+fi
+if [ $VFIO_PTA = 1 ]
+then
+echo \ \ \ \ \ Passthrough enabled
+else
+echo \ \ \ \ \ Passthrough disabled
+fi
+if [ $DISCORD_RPC = 1 ]
+then
+echo \ \ \ \ \ Discord RPC enabled
+else
+echo \ \ \ \ \ Discord RPC disabled
+fi
+echo \ \ \──────────────────────────────────────────────
+echo
+fi
+
+if [ $DISCORD_RPC = 1 ]
+then
+$REPO_PATH/scripts/drpc.py --os $OS_ID &
+fi
+
 qemu-system-x86_64 "${args[@]}"
+
+if [ $DISCORD_RPC = 1 ]
+then
+pkill -f drpc.py
+fi
