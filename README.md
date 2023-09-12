@@ -33,10 +33,12 @@ Here's a table with my best judgement on minimum, recommended, and best system r
 | **Resolution**  |                    1280x720                    |                              2560x1440                             |                                  3840x2160                                  |                               2560x1440                              |
 | **GPU (VFIO)**  |                        -                       |                             AMD RX 580                             |                                AMD RX 6600 XT                               |                                  AMD RX 550                                  |
 
-**You must also have all the required dependencies installed before starting - and any optional ones too along the way. Click the dropdown below to see the list.**
-<details>
-<summary><b>Dependencies</b></summary>
-<br>
+## Dependencies
+
+You must also have all the required dependencies installed before starting. 
+
+Optional dependencies can enhance your experience, such as using your VM in a GUI, or showing what macOS version you're currently running on your Discord profile.
+
 <b>Required</b>
 <ul>
 <li><b>Git</b> 》 <code>git</code></li>
