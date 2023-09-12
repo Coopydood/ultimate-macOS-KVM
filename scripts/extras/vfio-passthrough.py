@@ -28,10 +28,6 @@ latestOSName = "Ventura"
 latestOSVer = "13"
 runs = 0
 
-global USR_SCREEN_RES
-
-USR_SCREEN_RES = open("./blobs/user/USR_SCREEN_RES.apb")
-USR_SCREEN_RES = USR_SCREEN_RES.read()
 
 class color:
    PURPLE = '\033[95m'
