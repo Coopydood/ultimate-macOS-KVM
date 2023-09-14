@@ -1631,6 +1631,7 @@ def autopilot():
          
          cpydLog("info",("Copying OVMF code into place"))
          os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
+         os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
          cpydLog("info",("Copying OVMF vars for resolution "+str(USR_SCREEN_RES)))
          os.system("cp resources/ovmf/OVMF_VARS_"+USR_SCREEN_RES+".fd ovmf/OVMF_VARS.fd")
          cpydLog("ok",("OVMF files copied"))
@@ -1852,6 +1853,17 @@ def autopilot():
          cpydLog("info",("Stamping with ULTMOS version"))
          configData = configData.replace("0.0.0",version)
          cpydLog("ok",("Marked working script as using ULTMOS v"+str(version)))
+         cpydLog("info",("Checking if Discord rich presence is available"))
+         output_stream1 = os.popen("pip show pypresence")
+         vfcPresence = output_stream1.read()
+         if "Name: pypresence\n" in vfcPresence:
+            vfcPresence = 1
+            cpydLog("ok",("Discord rich presence is available, will enable in script"))
+            configData = configData.replace("DISCORD_RPC=1","DISCORD_RPC=1")
+         else:
+            vfcPresence = 0
+            cpydLog("ok",("Discord rich presence appears unavailable, will NOT enable in script"))
+            configData = configData.replace("DISCORD_RPC=1","DISCORD_RPC=0")
 
          cpydLog("info",("Adding OS ID marker"))
          configData = configData.replace("$USR_OS_NAME",str(USR_TARGET_OS_NAME))

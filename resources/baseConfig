@@ -99,6 +99,13 @@ args=(
 
 )
 
+while getopts d: flag
+do
+    case "${flag}" in
+        d) DISCORD_RPC=${OPTARG};;
+    esac
+done
+
 if [ $VERBOSE = 1 ]
 then
 echo

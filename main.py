@@ -37,12 +37,14 @@ sys.path.insert(0, 'scripts')
 parser = argparse.ArgumentParser("main")
 parser.add_argument("--skip-vm-check", dest="svmc", help="Skip the arbitrary VM check",action="store_true")
 parser.add_argument("--skip-os-check", dest="sosc", help="Skip the OS platform check",action="store_true")
+parser.add_argument("--disable-rpc", dest="rpcDisable", help="Disable Discord Rich Presence integration",action="store_true")
 
 args = parser.parse_args()
 
 global apFilePath
 global VALID_FILE
 global REQUIRES_SUDO
+global discordRPC
 
 detectChoice = 1
 latestOSName = "Sonoma"
@@ -50,6 +52,7 @@ latestOSVer = "14"
 runs = 0
 apFilePath = ""
 procFlow = 1
+discordRPC = 1
 
 version = open("./.version")
 version = version.read()
@@ -63,6 +66,11 @@ try:
     RPC = Presence(client_id)
 except:
     None
+
+if args.rpcDisable == True:
+    discordRPC = 0
+else:
+    discordRPC = 1 # DEBUGGG
 
 projectVer = "Powered by ULTMOS v"+version
 
@@ -306,11 +314,25 @@ elif detectChoice == "q" or detectChoice == "Q":
     exit
 elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FILE == 1:
     clear()
-    subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
+
+    if not os.path.exists("./ovmf/OVMF_VARS.df"):   # AUTO REPAIR OVMF
+        if os.path.exists("./ovmf/user_store/OVMF_VARS.fd"):
+            os.system("cp ./ovmf/user_store/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+        else:
+            os.system("cp ./resources/ovmf/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+
+    if discordRPC == 1:
+        subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
     if REQUIRES_SUDO == 1:
         print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical PCI passthrough,\n   and needs superuser priviledges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
-        os.system("sudo ./"+apFilePath)
+        if discordRPC == 0:
+            os.system("sudo ./"+apFilePath+" -d 0")
+        else:
+            os.system("sudo ./"+apFilePath)
     else:
-        os.system("./"+apFilePath)
+        if discordRPC == 0:
+            os.system("./"+apFilePath+" -d 0")
+        else:
+            os.system("./"+apFilePath)
 else:
     startup()
