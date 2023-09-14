@@ -1862,7 +1862,7 @@ def autopilot():
             configData = configData.replace("DISCORD_RPC=1","DISCORD_RPC=1")
          else:
             vfcPresence = 0
-            cpydLog("ok",("Discord rich presence appears unavailable, will NOT enable in script"))
+            cpydLog("warn",("Discord rich presence appears unavailable, will NOT enable in script"))
             configData = configData.replace("DISCORD_RPC=1","DISCORD_RPC=0")
 
          cpydLog("info",("Adding OS ID marker"))
