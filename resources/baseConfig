@@ -30,6 +30,7 @@ ULTMOS_VERSION=0.0.0
 IGNORE_FILE=0
 REQUIRES_SUDO=0
 VFIO_PTA=0
+VFIO_DEVICES=0
 GEN_EPOCH=000000000
 VERBOSE=1
 DISCORD_RPC=1
@@ -117,7 +118,7 @@ echo \ \ \ \ \ Built with ULTMOS v$ULTMOS_VERSION
 echo \ \ \ \ \ Using $CPU_MODEL CPU model
 if [ $REQUIRES_SUDO = 1 ]
 then
-echo \ \ \ \ \ Superuser priviledges enabled
+echo \ \ \ \ \ Superuser privileges enabled
 fi
 if [ $VFIO_PTA = 1 ]
 then
