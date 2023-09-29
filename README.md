@@ -107,7 +107,7 @@ Alternatively, you can download the latest release here: [Download](https://gith
 ## Setup
 
 Okay, so you've cloned my repo, cd'd into the directory, and made the ``main.py`` file executeable. Great!
-Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already:
+Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already. Here's an example for Arch-based systems:
 
 ```sh
 $ sudo systemctl enable libvirtd
