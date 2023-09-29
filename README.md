@@ -31,7 +31,7 @@ Here's a table with my best judgement on minimum, recommended, and best system r
 | **Disk Type**   |                    SATA HDD                    |                              SATA SSD                              |                                   NVMe SSD                                  |                               NVMe SSD                               |
 | **Disk Space**  |                      40 GB                     |                               120 GB                               |                                   500 GB+                                   |                                    500 GB                                    |
 | **Resolution**  |                    1280x720                    |                              2560x1440                             |                                  3840x2160                                  |                               2560x1440                              |
-| **GPU (VFIO)**  |                        -                       |                             AMD RX 580                             |                                AMD RX 6600 XT                               |                                  AMD RX 550                                  |
+| **GPU (VFIO)**  |                        -                       |                             AMD RX 580                             |                                AMD RX 6600 XT                               |                                  AMD RX 5700 XT                                  |
 
 ## Dependencies
 
