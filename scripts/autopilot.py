@@ -237,7 +237,10 @@ def autopilot():
       USR_CPU_TOTAL = USR_CPU_CORES * USR_CPU_THREADS
       USR_CPU_TOTAL_F = str(USR_CPU_TOTAL)
 
-      USR_TARGET_OS_F = USR_TARGET_OS / 100
+      if USR_TARGET_OS > 1000:
+         USR_TARGET_OS_F = USR_TARGET_OS / 100
+      else:
+         USR_TARGET_OS_F = USR_TARGET_OS / 10
 
       if USR_BOOT_FILE == "-1":
          USR_BOOT_FILE_F = "Download from Apple..."
@@ -258,7 +261,10 @@ def autopilot():
          print("   "+color.BOLD+color.PURPLE+"FILES   ",color.END+color.END+USR_CFG+", "+USR_CFG_XML)
       else:
          print("   "+color.BOLD+color.PURPLE+"FILE    ",color.END+color.END+USR_CFG+color.END)
-      print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"macOS",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
+      if USR_TARGET_OS < 1012:
+         print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"Mac OS X",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
+      else:
+         print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"macOS",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
       print("   "+color.BOLD+color.YELLOW+"BOOT    ",color.END+color.END+USR_BOOT_FILE_F,color.END)
       print("   "+color.BOLD+color.CYAN+"CPU     ",color.END+color.END+USR_CPU_MODEL+",",USR_CPU_CORES,"cores,",USR_CPU_THREADS,"threads","("+USR_CPU_TOTAL_F+")"+color.END)  
       #print("   "+color.BOLD+color.CYAN+"        ",color.END+color.BOLD+USR_CPU_FEATURE_ARGS+color.END)
@@ -1121,6 +1127,8 @@ def autopilot():
          USR_TARGET_OS_ID = "mojave"
       elif USR_TARGET_OS == 1013:
          USR_TARGET_OS_ID = "high-sierra"
+      elif USR_TARGET_OS == 109:
+         USR_TARGET_OS_ID = "mavericks"
 
       clear()
       print("\n   "+color.BOLD+"Set number of CPU cores"+color.END)
@@ -1200,7 +1208,8 @@ def autopilot():
          print(color.END+"      3. Big Sur (11)")
          print(color.BOLD+"      4. Catalina (10.15)")
          print(color.END+"      5. Mojave (10.14)")
-         print(color.END+"      6. High Sierra (10.13)\n")
+         print(color.END+"      6. High Sierra (10.13)")
+         print(color.END+"      7. Mavericks (10.9)\n")
          customInput = str(input(color.BOLD+"Select> "+color.END))
          
          if customInput == "1":
@@ -1215,6 +1224,8 @@ def autopilot():
             customInput = 1014
          elif customInput == "6":
             customInput = 1013
+         elif customInput == "7":
+            customInput = 109
          else:
             customInput = 1015
 
@@ -1851,7 +1862,7 @@ def autopilot():
          cpydLog("ok",("Variable injection complete"))
 
          cpydLog("info",("Stamping with ULTMOS version"))
-         configData = configData.replace("0.0.0",version)
+         configData = configData.replace("ULTMOS=0.0.0","ULTMOS="+str(version))
          cpydLog("ok",("Marked working script as using ULTMOS v"+str(version)))
          cpydLog("info",("Checking if Discord rich presence is available"))
          output_stream1 = os.popen("pip show pypresence")

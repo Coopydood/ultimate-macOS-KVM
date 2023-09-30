@@ -18,6 +18,11 @@ You might be new to QEMU/KVM, or a long-time veteran - either way this project a
 
 Scripts? Configs? QEMU arguments? A *"qcow"* file? Moo? If you need a little help wrapping your head around this stuff, feel free to check out the [FAQs](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/FAQs) for some quick knowledge on the basics.
 
+<br>
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1244b64e-95b2-469a-8271-43c56e72b065" alt="ultimate-macOS-KVM" width="1400"/>
+<p align="center"><i>SussyMac v2.0 - Full virtual Hackintosh setup powered by ULTMOS.</i></p>
+<br>
+
 ## Requirements
 
 As with all other virtual machines / hypervisors, you don't need an *uber-powerful* PC, but you should expect guest performance to be relative to your host's. Performance *can* change dramatically based on guest properties, such as virtual cores, allocated memory, and virtual CPU threads - but it really does boil down to how beefy your host's hardware is.
@@ -43,20 +48,19 @@ Optional dependencies can enhance your experience, such as using your VM in a GU
 <ul>
 <li><b>Git</b> 》 <code>git</code></li>
 <li><b>Wget</b> 》 <code>wget</code></li>
-<li><b>QEMU</b> 》 <code>qemu-base</code> or <code>qemu-full</code></li>
+<li><b>QEMU</b> 》 <code>qemu-base</code> / <code>qemu-full</code></li>
 <li><b>Libvirt</b> 》 <code>libvirt</code></li>
 <li><b>DNSmasq</b> 》 <code>dnsmasq</code></li>
 <li><b>Python</b> 》 <code>python</code></li>
 </ul>
-<b>Optional / Recommended</b>
+<b>Optional</b>
 <ul>
 <li><b>Virtual Machine Manager (GUI)</b> 》 <code>virt-manager</code></li>
 <li><b>Virsh</b> 》 <code>virsh</code></li>
 <li><b>Discord Rich Presence (pypresence)</b> 》 <code>python-pypresence</code> or, using pip, install <code>pypresence</code></li>
 </ul>
-</details>
 
-### Oh, and you NEED Linux
+#### Oh, and you NEED Linux.
 
 Shocker; KVM is a module built into the *Linux kernel*. Not **Windows Subsystem for Linux** or some UNIX-like terminal. You need a full install of at least base Linux **on your host**. Don't try any of that VM inception shenanigans.
 
@@ -87,26 +91,16 @@ Easily convert any AutoPilot-generated QEMU scripts into an importable XML file 
 
 ## Getting Started
 
-It's easy to get up and running. Simply clone the repo, fix permissions, and run.
+It's easy to get up and running. Simply clone the repo using ``git``.
 Make sure you have **all** [dependencies](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/README.md#requirements) installed before getting started.
 
 ```sh
 $ git clone https://github.com/Coopydood/ultimate-macOS-KVM
-$ cd ultimate-macOS-KVM
-$ chmod +x main.py
-```
-
-or, do all this with a one-liner:
-
-```sh
-$ git clone https://github.com/Coopydood/ultimate-macOS-KVM && cd ultimate-macOS-KVM && chmod +x main.py
 ```
 
 Alternatively, you can download the latest release here: [Download](https://github.com/Coopydood/ultimate-macOS-KVM/archive/refs/heads/main.zip)
 
-## Setup
-
-Okay, so you've cloned my repo, cd'd into the directory, and made the ``main.py`` file executeable. Great!
+Okay, so you've cloned my repo, and cd'd into the directory. Great!
 Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already. Here's an example for Arch-based systems:
 
 ```sh
@@ -118,6 +112,8 @@ and/or check the status of the daemon with
 ```sh
 $ systemctl status libvirtd
 ```
+
+## Usage
 
 Okay, now you're ready to use **ultimate-macOS-KVM**. Use the ``main.py`` file.
 
@@ -137,6 +133,8 @@ Oh, and speaking of...
 
 More detailed write-ups on the project and the scripts included, as well as some tutorials can be found on this [repo's wiki](https://github.com/Coopydood/ultimate-macOS-KVM/wiki).
 
+This is continually updated and made better as the project develops. Feel free to help out and [write your own!](https://github.com/Coopydood/ultimate-macOS-KVM/new/main/docs)
+
 Or, you can find some in the included [docs folder](https://github.com/Coopydood/ultimate-macOS-KVM/tree/main/docs).
 
 ## Updates
@@ -146,6 +144,12 @@ This project has been designed to be updated and made better over time.
 As you use it to generate your personal files, having to re-clone the entire repo yourself while preserving your files would be a right pain in the backside. Therefore, there's an automated updater script built right-in that you can use to safely update in-place to newer versions of this project, without affecting any of your personal config files, virtual hard drives, or anything else not part of the project files. And, if an update dramatically changes directory structures from your current version, the updater automatically disables its in-place update mechanism to prevent data loss.
 
 Of course, if you're just testing the project, then a "clean install" is probably still preferable.
+
+## Gallery
+
+Here's a few screenshots showing **ultimate-macOS-KVM** in action!
+
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/02c6abd3-40b3-416b-ba1f-5979314ad2f9" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8712cc11-e352-40ba-9373-d0da13c4bd89" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/5fa35111-1559-42d5-b8d2-87aa35d64489" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1c10c6e0-263d-409c-996e-2d0fc5cf1287" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/232f3bae-b31b-4e18-bee9-8c03a472d5a0" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ac766b58-5e66-4b70-9742-8e318f065fc2" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1fd0add5-c0c8-46a1-8897-3b80c37f98a1" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8380632b-dceb-41e7-acb0-b2bd15cbf575" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b32c2701-a934-42ce-ab69-06b1ae350f1b" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ee451491-35fa-436e-957b-888d2f7d488e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/c4e394c3-a666-4aab-9aa7-b40b1e84d977" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/feb19dce-7a9a-4527-884c-8b2f2d445e2f" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4a8b5249-3029-49d3-8539-229b3c179816" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4e7678f3-5ee4-4e69-93a7-d9ba9881cea7" width="45%"></img> 
 
 ## Disclaimer
 

@@ -55,8 +55,10 @@ except:
 
 projectVer = "Powered by ULTMOS v"+version
 
-if osVer is not None:
+if osVer is not None and osVer == "Sierra" or osVer == "High Sierra" or osVer == "Mojave" or osVer == "Catalina" or osVer == "Big Sur" or osVer == "Monterey" or osVer == "Ventura" or osVer == "Sonoma":
     osName = "macOS "+osVer
+elif osVer is not None:
+    osName = "Mac OS X "+osVer
 
 if osVer is None:
         osVer = "unknown"
