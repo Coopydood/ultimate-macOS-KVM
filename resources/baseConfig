@@ -138,7 +138,7 @@ fi
 
 if [ $DISCORD_RPC = 1 ]
 then
-$REPO_PATH/scripts/drpc.py --os $OS_ID &
+$REPO_PATH/scripts/drpc.py --os "$OS_ID" --pt $VFIO_DEVICES &
 fi
 
 qemu-system-x86_64 "${args[@]}"
