@@ -1209,7 +1209,7 @@ def autopilot():
          print(color.BOLD+"      4. Catalina (10.15)")
          print(color.END+"      5. Mojave (10.14)")
          print(color.END+"      6. High Sierra (10.13)")
-         print(color.END+"      7. Mavericks (10.9)\n")
+         #print(color.END+"      7. Mavericks (10.9)\n")
          customInput = str(input(color.BOLD+"Select> "+color.END))
          
          if customInput == "1":
@@ -1224,8 +1224,8 @@ def autopilot():
             customInput = 1014
          elif customInput == "6":
             customInput = 1013
-         elif customInput == "7":
-            customInput = 109
+         #elif customInput == "7":
+         #   customInput = 109
          else:
             customInput = 1015
 
