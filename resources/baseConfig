@@ -114,7 +114,7 @@ echo \ \ \───────────────────────�
 echo \ \ \ \ \ $NAME
 echo
 echo \ \ \ \ \ $FILE
-echo \ \ \ \ \ Built with ULTMOS v$ULTMOS_VERSION
+echo \ \ \ \ \ Built with ULTMOS v$ULTMOS
 echo \ \ \ \ \ Using $CPU_MODEL CPU model
 if [ $REQUIRES_SUDO = 1 ]
 then
