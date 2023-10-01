@@ -164,6 +164,16 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 - I've simply made *what I had to go through* **easier** for you. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
 
+## Legal
+
+This project contains a string of text known as an OS Key (OSK). 
+
+Apple use this key to make it more difficult for non-Macintosh computers to run macOS, by requiring the key to be provided by the SMBIOS. 
+
+This OS key is widely available on the Internet and is no longer considered a "secret", and was even included in a [public court document](http://www.rcfp.org/sites/default/files/docs/20120105_202426_apple_sealing.pdf).
+
+Apple have attempted to classify the OSK as a trade secret, but have ultimately failed in doing so. As a result, it is freely included within this project, as with [OSX-KVM](https://github.com/kholia/OSX-KVM).
+
 ## Credits & Greetz
 
 While I am the creator of these automation/ease-of-use scripts, this project is not possible without both the prior and current works of some very talented people. The people who have tested the project are also included.
