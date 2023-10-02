@@ -12,6 +12,8 @@ Please note this document will be updated frequently.
 ***
 <details><summary><h5>main.py: Permission denied</h5></summary>
 
+**NOTE:** As of v0.9.8, files are packaged as executable by default, and do not require additional permission modifications.
+
 Awww, you little donkey. You forgot to make it executable.
 
 ```sh
@@ -104,6 +106,20 @@ Thankfully, this is of course an easy fix. You'll need to run the script as supe
 ```sh
 $ sudo ./boot.sh
 ```
+</details>
+
+<details><summary><h5>Unknown PCI header type "127" (vendor reset bug)</h5></summary>
+
+Sometimes, when stopping or resetting a virtual machine with an AMD GPU passed through, the "reset" mechanism used to detach the GPU from the virtual machine fails.
+
+This is due to a problem known as the **vendor reset bug**. It affects a large variety of AMD GPUs, and is a firmware-level flaw.
+
+Unfortunately, after seeing this message, the only way to use the GPU again with a VM (even the same one) is to restart the host entirely. Even this might be difficult, as the shutdown process may hang when trying to reset the GPU before power off. Make sure you save all your work, and allow as many system processes to exit as possible, and then hard-reset the host.
+
+Although annoying, it's pretty benign. You can install ``vendor-reset`` using the ``vendor-reset-dkms-git`` package, which will likely not eliminate the issue entirely, but prevents it happening as often. 
+
+It's also worth noting that some cards are affected worse than others, so occurance of the issue may vary.
+
 
 </details>
 
