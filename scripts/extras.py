@@ -24,8 +24,8 @@ import argparse
 sys.path.insert(0, 'scripts')
 
 detectChoice = 1
-latestOSName = "Ventura"
-latestOSVer = "13"
+latestOSName = "Sonoma"
+latestOSVer = "14"
 runs = 0
 
 version = open("./.version")
@@ -56,9 +56,10 @@ def startup():
         print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
         print(color.END+"      2. VFIO-PCI passthrough assistant")
         
-        print(color.END+"      3. Create a backup of config files")
-        print(color.END+"      4. Open GitHub project page")
-        print(color.END+"      5. VFIO-PCI tools...")
+        #print(color.END+"      . Create a backup of config files")
+        print(color.END+"      3. Open GitHub project page")
+        print(color.END+"      4. VFIO-PCI tools...")
+        print(color.END+"      5. OpenCore configuration assistant...")
         print(color.RED+"      R. Restore tools...")
         print(color.END+"      I. Report an issue...")
         print(color.END+"      B. Back...")
@@ -75,8 +76,10 @@ def startup():
         print(color.BOLD+"\n      1. Convert and import XML file"+color.END+color.YELLOW,"⚠")
         print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
         print(color.END+"      2. VFIO-PCI passthrough assistant"+color.YELLOW,"⚠")
-        print(color.END+"      3. Create a backup of config files")
+        #print(color.END+"      3. Create a backup of config files")
+        print(color.END+"      3. Open GitHub project page")
         print(color.END+"      4. VFIO-PCI tools...")
+        print(color.END+"      5. OpenCore configuration assistant...")
         print(color.RED+"      R. Restore tools...")
         print(color.END+"      I. Report an issue...")
         print(color.END+"      B. Back...")
@@ -121,9 +124,9 @@ if detectChoice == "1":
     os.system('./scripts/extras/xml-convert.py')
 elif detectChoice == "2":
     os.system('./scripts/extras/vfio-passthrough.py')
+#elif detectChoice == "3":
+ #   os.system('./scripts/extras/smbios.py')
 elif detectChoice == "3":
-    os.system('./scripts/extras/smbios.py')
-elif detectChoice == "4":
     
     print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING PROJECT IN DEFAULT BROWSER"+color.END,"")
     print("   Continue in your browser\n")
@@ -132,8 +135,10 @@ elif detectChoice == "4":
     time.sleep(6)
     clear()
     os.system('./scripts/extras.py')
-elif detectChoice == "5":
+elif detectChoice == "4":
     os.system('./scripts/vfio-menu.py')
+elif detectChoice == "5":
+    os.system('./scripts/domtrues/nbdassistant.py')
 
 elif detectChoice == "i" or detectChoice == "I":
     

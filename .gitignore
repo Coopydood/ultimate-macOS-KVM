@@ -37,3 +37,5 @@ ovmf/OVMF_CODE.fd
 ovmf/OVMF_VARS.fd
 ovmf/user_store/OVMF_VARS.fd
 boot/opencore-image-ng.sh
+boot/mnt
+BaseSystem.dmg

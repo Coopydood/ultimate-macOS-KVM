@@ -297,7 +297,9 @@ def autopilot():
          stage13()
 
       elif stageSelect == "x" or stageSelect == "X":
+         global customValue
          currentStage = 1
+         customValue = 0
          stage1()
 
       elif stageSelect == "?":
@@ -380,94 +382,107 @@ def autopilot():
       defaultValue = "1280x720"
       cpydLog("ok",str("Stage 12 sequence initiated"))
       clear()
-      print("\n   "+color.BOLD+"Screen resolution"+color.END)
-      print("   Step 12")
-      print("\n   Select a compatible booter screen resolution. \n   This resolution will apply to both the bootloader and\n   macOS, and can be changed later in OVMF Plaform Settings. If you\n   intend on using GPU passthrough, your GPU/monitor determines this."+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
-      if customValue == 1:
-         cpydLog("info",str("Custom value requested, setting up"))
-      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<file>"+color.YELLOW+".img"+color.END+"\n   Enter a custom value.\n   \n   ")
-         print(color.END+"\n      1. 800x600")
-         print(color.END+"      2. 1024x768")
-         print(color.BOLD+"      3. 1280x720 (720p)")
-         print(color.END+"      4. 1280x1024")
-         print(color.END+"      5. 1440x900")
-         print(color.END+"      6. 1920x1080 (1080p)")
-         print(color.END+"      7. 2560x1440 (1440p)")
-         print(color.END+"      8. 3840x2160 (4K)\n")
-         customInput = str(input(color.BOLD+"Select> "+color.END))
-         
-         if customInput == "1":
-            customInput = "800x600"
-         elif customInput == "2":
-            customInput = "1024x768"
-         elif customInput == "3":
-            customInput = "1280x720"
-         elif customInput == "4":
-            customInput = "1280x1024"
-         elif customInput == "5":
-            customInput = "1440x900"
-         elif customInput == "6":
-            customInput = "1920x1080"
-         elif customInput == "7":
-            customInput = "2560x1440"
-         elif customInput == "8":
-            customInput = "3840x2160"
-         else:
-            customInput = "1280x720"
-
-         USR_SCREEN_RES = customInput
-         cpydLog("ok",str("Custom value was set to "+str(customInput)))               #+".sh" #<--- change required prefix/suffix
-         currentStage = currentStage + 1
-         customValue = 0
+      
+      if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012: 
+         cpydLog("warn",str("Custom resolution unsupported on legacy OS, using default value of "+str(defaultValue)))
+         USR_SCREEN_RES = "1280x720"
          blob = open("./blobs/USR_SCREEN_RES.apb","w")
          blob.write(USR_SCREEN_RES)
          blob.close()
+         blob = open("./blobs/.cdn_control","w")
+         blob.write("fresh_cdn")
+         blob.close()
+         currentStage = currentStage + 1
          stage13()
-      else:
-         print(color.BOLD+"\n      1. 1280x720")
-         print(color.END+"      2. More resolutions...")
-         print(color.END+"      3. Back")
-         print(color.END+"      ?. Help...")
-         print(color.END+"      Q. Exit\n   ")
-         stageSelect = str(input(color.BOLD+"Select> "+color.END))
-      
-         if stageSelect == "1":
-            cpydLog("ok",str("Using default value of "+str(defaultValue)))
-            USR_SCREEN_RES = "1280x720"
+      else:   
+         print("\n   "+color.BOLD+"Screen resolution"+color.END)
+         print("   Step 12")
+         print("\n   Select a compatible booter screen resolution. \n   This resolution will apply to both the bootloader and\n   macOS, and can be changed later in OVMF Plaform Settings. If you\n   intend on using GPU passthrough, your GPU/monitor determines this."+color.END)
+         print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+         if customValue == 1:
+            cpydLog("info",str("Custom value requested, setting up"))
+         #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<file>"+color.YELLOW+".img"+color.END+"\n   Enter a custom value.\n   \n   ")
+            print(color.END+"\n      1. 800x600")
+            print(color.END+"      2. 1024x768")
+            print(color.BOLD+"      3. 1280x720 (720p)")
+            print(color.END+"      4. 1280x1024")
+            print(color.END+"      5. 1440x900")
+            print(color.END+"      6. 1920x1080 (1080p)")
+            print(color.END+"      7. 2560x1440 (1440p)")
+            print(color.END+"      8. 3840x2160 (4K)\n")
+            customInput = str(input(color.BOLD+"Select> "+color.END))
+            
+            if customInput == "1":
+               customInput = "800x600"
+            elif customInput == "2":
+               customInput = "1024x768"
+            elif customInput == "3":
+               customInput = "1280x720"
+            elif customInput == "4":
+               customInput = "1280x1024"
+            elif customInput == "5":
+               customInput = "1440x900"
+            elif customInput == "6":
+               customInput = "1920x1080"
+            elif customInput == "7":
+               customInput = "2560x1440"
+            elif customInput == "8":
+               customInput = "3840x2160"
+            else:
+               customInput = "1280x720"
+
+            USR_SCREEN_RES = customInput
+            cpydLog("ok",str("Custom value was set to "+str(customInput)))               #+".sh" #<--- change required prefix/suffix
+            currentStage = currentStage + 1
+            customValue = 0
             blob = open("./blobs/USR_SCREEN_RES.apb","w")
             blob.write(USR_SCREEN_RES)
             blob.close()
-            blob = open("./blobs/.cdn_control","w")
-            blob.write("fresh_cdn")
-            blob.close()
-            currentStage = currentStage + 1
             stage13()
-
-         elif stageSelect == "2":
-            customValue = 1
-            stage12()
-
-         elif stageSelect == "3":
-            currentStage = 1
-            stage11()
-            
-         elif stageSelect == "?":
-            clear()
-            cpydLog("ok",("Contacting xdg-open with URL"))
-            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
-            print("   Continue in your browser\n")
-            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
-            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#12-screen-resolution > /dev/null 2>&1')
-            time.sleep(6)
-            clear()
-            stage12()
-
-         elif stageSelect == "q" or stageSelect == "Q":
-            exit   
-
          else:
-            stage12()
+            print(color.BOLD+"\n      1. 1280x720")
+            print(color.END+"      2. More resolutions...")
+            print(color.END+"      3. Back")
+            print(color.END+"      ?. Help...")
+            print(color.END+"      Q. Exit\n   ")
+            stageSelect = str(input(color.BOLD+"Select> "+color.END))
+         
+            if stageSelect == "1":
+               cpydLog("ok",str("Using default value of "+str(defaultValue)))
+               USR_SCREEN_RES = "1280x720"
+               blob = open("./blobs/USR_SCREEN_RES.apb","w")
+               blob.write(USR_SCREEN_RES)
+               blob.close()
+               blob = open("./blobs/.cdn_control","w")
+               blob.write("fresh_cdn")
+               blob.close()
+               currentStage = currentStage + 1
+               stage13()
+
+            elif stageSelect == "2":
+               customValue = 1
+               stage12()
+
+            elif stageSelect == "3":
+               currentStage = 1
+               stage11()
+               
+            elif stageSelect == "?":
+               clear()
+               cpydLog("ok",("Contacting xdg-open with URL"))
+               print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+               print("   Continue in your browser\n")
+               print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+               os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#12-screen-resolution > /dev/null 2>&1')
+               time.sleep(6)
+               clear()
+               stage12()
+
+            elif stageSelect == "q" or stageSelect == "Q":
+               exit   
+
+            else:
+               stage12()
 
 
    def stage11():
@@ -481,6 +496,9 @@ def autopilot():
       print("   Step 11")
       print("\n   Choose a bootable image file the virtual machine should boot to. \n   You need a macOS Recovery image (BaseSystem.img). You can either\n   select an existing one or the wizard can download one for you.\n   It must be in the *.img file format."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"This stage is optional. You can skip it if\n         you intend on using an existing HDD file."+color.END)
+      if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
+         print(color.YELLOW+"\n     ⚠"+color.END+color.BOLD+"   Download flow disabled for legacy versions.\n         You must download an image manually."+color.END)
+
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
       #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<file>"+color.YELLOW+".img"+color.END+"\n   Enter a custom value.\n   \n   ")
@@ -498,15 +516,20 @@ def autopilot():
          blob.close()
          stage12()
       else:
-         print(color.BOLD+"\n      1. Download from Apple...")
-         print(color.END+"      2. Select existing...")
+         if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
+            print(color.END+color.GRAY+"\n      1. Download from Apple..."+color.END)
+            print(color.BOLD+"      2. Select existing...")
+         else:
+            print(color.BOLD+"\n      1. Download from Apple...")
+            print(color.END+"      2. Select existing...")
          print(color.END+"      3. Skip")
          print(color.END+"      4. Back")
          print(color.END+"      ?. Help...")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
-      
-         if stageSelect == "1":
+         if stageSelect == "1" and USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
+            stage11()
+         elif stageSelect == "1":
             cpydLog("info","Arming download mechanism")
             USR_BOOT_FILE = "-1"
             blob = open("./blobs/USR_BOOT_FILE.apb","w")
@@ -652,7 +675,7 @@ def autopilot():
       global currentStage
       global USR_TARGET_OS
       cpydLog("ok",str("Stage 9 sequence initiated"))
-      if USR_TARGET_OS >= 1014 and USR_TARGET_OS <= 1015:
+      if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
          defaultValue = "e1000-82545em"
       else:
          defaultValue = "vmxnet3"
@@ -926,9 +949,13 @@ def autopilot():
 
    def stage5():
       global USR_CPU_MODEL
+      global USR_TARGET_OS
       global customValue
       global currentStage
-      defaultValue = "Skylake-Client"
+      if USR_TARGET_OS >= 1013:
+         defaultValue = "Haswell-noTSX"
+      else:
+         defaultValue = "Penryn"
       cpydLog("ok",str("Stage 5 sequence initiated"))
 
       clear()
@@ -1115,7 +1142,9 @@ def autopilot():
       blob.write(str(USR_TARGET_OS_NAME))
       blob.close()
 
-      if USR_TARGET_OS == 1300:
+      if USR_TARGET_OS == 1400:
+         USR_TARGET_OS_ID = "sonoma"
+      elif USR_TARGET_OS == 1300:
          USR_TARGET_OS_ID = "ventura"
       elif USR_TARGET_OS == 1200:
          USR_TARGET_OS_ID = "monterey"
@@ -1203,32 +1232,77 @@ def autopilot():
       print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,"Catalina (10.15)",color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
-         print(color.END+"\n      1. Ventura (13)")
-         print(color.END+"      2. Monterey (12)")
-         print(color.END+"      3. Big Sur (11)")
-         print(color.BOLD+"      4. Catalina (10.15)")
-         print(color.END+"      5. Mojave (10.14)")
-         print(color.END+"      6. High Sierra (10.13)")
-         #print(color.END+"      7. Mavericks (10.9)\n")
+         print(color.END+"\n      1. Sonoma (14)")
+         print(color.END+"      2. Ventura (13)")
+         print(color.END+"      3. Monterey (12)")
+         print(color.END+"      4. Big Sur (11)")
+         print(color.BOLD+"      5. Catalina (10.15)")
+         print(color.END+"      6. Mojave (10.14)")
+         print(color.END+"      7. High Sierra (10.13)\n")
+
+         print(color.END+"      8. Legacy versions...\n")
          customInput = str(input(color.BOLD+"Select> "+color.END))
          
          if customInput == "1":
-            customInput = 13
+            customInput = 14
          elif customInput == "2":
-            customInput = 12
+            customInput = 13
          elif customInput == "3":
-            customInput = 11
+            customInput = 12
          elif customInput == "4":
-            customInput = 1015
+            customInput = 11
          elif customInput == "5":
-            customInput = 1014
+            customInput = 1015
          elif customInput == "6":
+            customInput = 1014
+         elif customInput == "7":
             customInput = 1013
-         #elif customInput == "7":
-         #   customInput = 109
+         elif customInput == "8":
+            customValue = 2
+            stage2()
+            
+
+         else:
+            customValue = 1
+            stage2()
+
+         USR_TARGET_OS = customInput
+         cpydLog("ok",str("Custom value was set to "+str(customInput)))               #+".sh" #<--- change required prefix/suffix
+         currentStage = 3
+         customValue = 0
+         #if USR_TARGET_OS > 110 and USR_TARGET_OS < 999:
+         #   USR_TARGET_OS = USR_TARGET_OS * 10
+         blob = open("./blobs/USR_TARGET_OS.apb","w")
+         blob.write(str(USR_TARGET_OS))
+         blob.close()
+         stage3()
+
+      elif customValue == 2:
+         cpydLog("info",str("Custom value requested, setting up"))
+         print(color.END+"\n      1. Sierra (10.12)")
+         print(color.END+"      2. El Capitan (10.11)")
+         print(color.END+"      3. Yosemite (10.10)")
+         print(color.END+"      4. Mavericks (10.9)")
+         print(color.END+"      5. Mountain Lion (10.8)")
+         print(color.END+"      6. Lion (10.7)\n")
+         #print(color.END+"      7. Snow Leopard (10.6)")
+         #print(color.END+"      8. Leopard (10.5)\n")
+         customInput = str(input(color.BOLD+"Select> "+color.END))
+         
+         if customInput == "1":
+            customInput = 1012
+         elif customInput == "2":
+            customInput = 1011
+         elif customInput == "3":
+            customInput = 1010
+         elif customInput == "4":
+            customInput = 109
+         elif customInput == "5":
+            customInput = 108
+         elif customInput == "6":
+            customInput = 107
          else:
             customInput = 1015
-
          USR_TARGET_OS = customInput
          cpydLog("ok",str("Custom value was set to "+str(customInput)))               #+".sh" #<--- change required prefix/suffix
          currentStage = 3
@@ -1625,12 +1699,22 @@ def autopilot():
             #os.system("rm -rf boot/EFI")
             time.sleep(2)
          cpydLog("info",("Selecting appropriate OpenCore image"))
-         if USR_TARGET_OS <= 1015:
+         if USR_TARGET_OS <= 1015 and USR_TARGET_OS >= 1013:
             cpydLog("ok",("Selected OLD OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
             os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
             os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
+            cpydLog("ok",("OpenCore image copied"))
+         elif USR_TARGET_OS <= 1012 and USR_TARGET_OS >= 108:
+            cpydLog("ok",("Selected NEW LEGACY OpenCore image"))
+            cpydLog("info",("Copying OpenCore image in place"))
+            os.system("cp resources/oc_store/legacy_new/OpenCore.qcow2 boot/OpenCore.qcow2")
+            cpydLog("ok",("OpenCore image copied"))
+         elif USR_TARGET_OS <= 1012 and USR_TARGET_OS <= 107:
+            cpydLog("ok",("Selected OLD LEGACY OpenCore image"))
+            cpydLog("info",("Copying OpenCore image in place"))
+            os.system("cp resources/oc_store/legacy_old/OpenCore.qcow2 boot/OpenCore.qcow2")
             cpydLog("ok",("OpenCore image copied"))
          else:
             cpydLog("ok",("Selected NEW OpenCore image"))
@@ -1853,8 +1937,12 @@ def autopilot():
          configData = configData.replace("$USR_ALLOCATED_RAM",str(USR_ALLOCATED_RAM))
          configData = configData.replace("$USR_REPO_PATH",".")
          configData = configData.replace("$USR_NETWORK_DEVICE",str(USR_NETWORK_DEVICE))
-         configData = configData.replace("$USR_NAME","macOS "+str(USR_TARGET_OS_F))
-         configData = configData.replace("$USR_ID","macOS")
+         if USR_TARGET_OS >= 1013:
+            configData = configData.replace("$USR_NAME","macOS "+str(USR_TARGET_OS_F))
+            configData = configData.replace("$USR_ID","macOS")
+         else:
+            configData = configData.replace("$USR_NAME","Mac OS X "+str(USR_TARGET_OS_F))
+            configData = configData.replace("$USR_ID","Mac OS X")
          configData = configData.replace("baseConfig",str(USR_CFG))
          configData = configData.replace("$USR_CFG",str(USR_CFG))
          configData = configData.replace("$USR_MAC_ADDRESS",str(USR_MAC_ADDRESS))
@@ -1961,6 +2049,7 @@ def autopilot():
                   # CONVERT OS VERSION TO VIRSH FORMAT
                   apOSCvt = apVars[2]
                   apOSCvt = apOSCvt.replace("macOS ","")
+                  apOSCvt = apOSCvt.replace("Mac OS X ","")
                   apOSCvt = apOSCvt.replace(".","")
 
                   apFileM = apFileM.replace("$USR_MEMORY",str(apMemCvt))
@@ -2058,7 +2147,7 @@ def autopilot():
             PROC_LOCALCOPY_CVTN = 1
             refreshStatusGUI()
             time.sleep(1)
-            os.system("resources/dmg2img ./BaseSystem.dmg")
+            os.system("resources/dmg2img ./BaseSystem.dmg > /dev/null 2>&1")
             cpydLog("info",("Finished converting, removing source DMG"))
             os.system("rm ./BaseSystem.dmg")
             time.sleep(1)
@@ -2310,7 +2399,7 @@ def autopilot():
       global USR_CPU_TOTAL_F
       global USR_CFG_XML
       global USR_CREATE_XML
-
+      global customValue
 
       exTime = round(stopTime - startTime)
       cpydLog("ok",("Timer was stopped with a recorded time of "+str(exTime)+" seconds in live mode"))
@@ -2346,7 +2435,7 @@ def autopilot():
       cpydLog("wait",("Waiting for user input"))
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
       cpydLog("ok",("User input received"))
-
+      customValue = 0
       if USR_CREATE_XML == "True":
          if stageSelect == "1":
             cpydLog("info",("Handing off to XML importer experience flow"))

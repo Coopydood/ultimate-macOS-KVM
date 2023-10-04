@@ -121,16 +121,23 @@ def startup():
     if os.path.exists("./blobs/user/USR_CFG.apb"):
             global apFilePath
             global macOSVer
+            global mOSString
             apFilePath = open("./blobs/user/USR_CFG.apb")
             apFilePath = apFilePath.read()
             if os.path.exists("./blobs/user/USR_TARGET_OS_NAME.apb"):
                 macOSVer = open("./blobs/user/USR_TARGET_OS_NAME.apb")
                 macOSVer = macOSVer.read()
+           
+            macOSVer = open("./blobs/user/USR_TARGET_OS.apb")
+            macOSVer = macOSVer.read()
+            if int(macOSVer) <= 999 and int(macOSVer) > 99:
+                macOSVer = str(int(macOSVer) / 100)
+                mOSString = "Mac OS X"
             else:
-                macOSVer = open("./blobs/user/USR_TARGET_OS.apb")
+                mOSString = "macOS"
+            if os.path.exists("./blobs/user/USR_TARGET_OS_NAME.apb"):
+                macOSVer = open("./blobs/user/USR_TARGET_OS_NAME.apb")
                 macOSVer = macOSVer.read()
-                if int(macOSVer) >= 999:
-                    macOSVer = str(int(macOSVer) / 100)
             if os.path.exists("./"+apFilePath):
                 global REQUIRES_SUDO
                 global VALID_FILE
@@ -154,11 +161,11 @@ def startup():
                     #REQUIRES_SUDO = 1 # UNCOMMENT FOR DEBUGGING
 
                     if REQUIRES_SUDO == 1:
-                        print(color.BOLD+"\n      B. Boot macOS "+macOSVer+color.YELLOW,"⚠"+color.END)
-                        print(color.END+"         Start macOS using the detected\n         "+apFilePath+" script file."+color.YELLOW,"Requires superuser."+color.END)
+                        print(color.BOLD+"\n      B. Boot",mOSString,macOSVer+color.YELLOW,"⚠"+color.END)
+                        print(color.END+"         Start",mOSString,"using the detected\n         "+apFilePath+" script file."+color.YELLOW,"Requires superuser."+color.END)
                     else:
-                        print(color.BOLD+"\n      B. Boot macOS "+macOSVer+"")
-                        print(color.END+"         Start macOS using the detected\n         "+apFilePath+" script file.")
+                        print(color.BOLD+"\n      B. Boot",mOSString,macOSVer+"")
+                        print(color.END+"         Start",mOSString,"using the detected\n         "+apFilePath+" script file.")
                     print(color.END+"\n      1. AutoPilot")
 
                 else:

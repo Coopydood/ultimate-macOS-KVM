@@ -289,6 +289,7 @@ def convertBrains():
             # CONVERT OS VERSION TO VIRSH FORMAT
             apOSCvt = apVars[1]
             apOSCvt = apOSCvt.replace("macOS ","")
+            apOSCvt = apOSCvt.replace("Mac OS X ","")
             apOSCvt = apOSCvt.replace(".","")
 
             apFileM = apFileM.replace("$USR_MEMORY",str(apMemCvt))
@@ -356,7 +357,7 @@ def convertBrains():
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
             print("   XML domain has been defined\n")
-            print("   The requested XML file has been successfully defined\n   using virsh, and is now available in virt-manager.\n   The name is displayed below.\n\n   "+color.BOLD+apVars[1]+" (ultimate-macOS-KVM)"+color.END+"\n\n\n\n\n\n\n") 
+            print("   The requested XML file has been successfully defined\n   using virsh, and is now available in virt-manager.\n   The name is displayed below.\n\n   "+color.BOLD+apVars[1]+" (ULTMOS)"+color.END+"\n\n\n\n\n\n\n") 
             time.sleep(5)
 def manualAPSelect():
         global apFile
