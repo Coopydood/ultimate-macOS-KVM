@@ -209,6 +209,7 @@ os.system("chmod +x -R scripts/extras/*.py")
 #os.system("chmod +x -R scripts/extras/*.sh")
 os.system("chmod +x -R scripts/restore/*.py")
 os.system("chmod +x -R scripts/*.sh")
+os.system("chmod +x -R scripts/domtrues/*.py")
 os.system("chmod +x resources/dmg2img")
 
 

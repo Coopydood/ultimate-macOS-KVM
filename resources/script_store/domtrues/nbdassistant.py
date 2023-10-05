@@ -115,11 +115,9 @@ def menu():
         detectchoice = 0
         menu()
     elif detectchoice == "B":
-        cpydLog("info", ("User has exited OpenCore Assistant."))
         print(spaces)
         os.system('./scripts/extras.py')
     elif detectchoice == "Q":
-        cpydLog("info", ("User has exited OpenCore Assistant."))
         exit()
     else:
         if len(detectchoice) > 3:
