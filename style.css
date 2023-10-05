@@ -74,6 +74,14 @@
   left: 0;
 }
 
+.slide .vector {
+  position: absolute;
+  width: 1816px;
+  height: 207px;
+  top: 168px;
+  left: 104px;
+}
+
 .slide .rectangle-2 {
   position: absolute;
   width: 1920px;
@@ -98,20 +106,12 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   text-fill-color: transparent;
-  font-family: "Cabin", Helvetica;
+  font-family: "Cabin-Bold", Helvetica;
   font-weight: 700;
   color: transparent;
   font-size: 256px;
   letter-spacing: 0;
   line-height: normal;
-}
-
-.slide .vector {
-  position: absolute;
-  width: 1816px;
-  height: 207px;
-  top: 168px;
-  left: 104px;
 }
 
 .slide .header {
@@ -133,7 +133,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  font-family: "Cabin", Helvetica;
+  font-family: "Cabin-Bold", Helvetica;
   font-weight: 700;
   color: #ffffff;
   font-size: 256px;
@@ -146,7 +146,7 @@
   top: 270px;
   left: 0;
   text-shadow: 0px 5px 10px #000000a6;
-  font-family: "Cabin", Helvetica;
+  font-family: "Cabin-Bold", Helvetica;
   font-weight: 700;
   color: #ffffff;
   font-size: 256px;
@@ -184,7 +184,7 @@
   position: absolute;
   top: 20px;
   left: 230px;
-  font-family: "Cabin", Helvetica;
+  font-family: "Cabin-Bold", Helvetica;
   font-weight: 700;
   color: #ffffff;
   font-size: 56px;
