@@ -1917,6 +1917,8 @@ def autopilot():
                   exit
                   exit
 
+         workdir = os.getcwd()
+         cpydLog("info",("Working directory was captured as",workdir))
 
          refreshStatusGUI()
          cpydLog("info",("Scanning for file conflict"))
@@ -1935,7 +1937,7 @@ def autopilot():
          configData = configData.replace("$USR_CPU_MODEL",str(USR_CPU_MODEL))
          configData = configData.replace("$USR_CPU_FEATURE_ARGS",str(USR_CPU_FEATURE_ARGS))
          configData = configData.replace("$USR_ALLOCATED_RAM",str(USR_ALLOCATED_RAM))
-         configData = configData.replace("$USR_REPO_PATH",".")
+         configData = configData.replace("$USR_REPO_PATH",workdir)
          configData = configData.replace("$USR_NETWORK_DEVICE",str(USR_NETWORK_DEVICE))
          if USR_TARGET_OS >= 1013:
             configData = configData.replace("$USR_NAME","macOS "+str(USR_TARGET_OS_F))

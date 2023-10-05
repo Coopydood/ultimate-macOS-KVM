@@ -19,21 +19,25 @@
 #
 
 ID="macOS"
-NAME="macOS"
+NAME="macOS 10.15"
 FILE="bootExample.sh"
 
+ULTMOS=0.10.0
 IGNORE_FILE=0
 REQUIRES_SUDO=0
 VFIO_PTA=0
-GEN_EPOCH=1691275656
+VFIO_DEVICES=0
+GEN_EPOCH=000000000
+VERBOSE=1
+DISCORD_RPC=1
 
 SCREEN_RES="1280x720"
 
 ALLOCATED_RAM="4G"
 CPU_SOCKETS="1"
 CPU_CORES="2"
-CPU_THREADS="4"
-CPU_MODEL="Penryn"
+CPU_THREADS="2"
+CPU_MODEL="Haswell-NoTSX"
 CPU_FEATURE_ARGS="+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check"
 
 REPO_PATH="."
@@ -45,8 +49,10 @@ VFIO_ROM="$USR_VFIO_ROM"
 
 USB_DEVICES="$USR_USB_DEVICES"
 
-NETWORK_DEVICE="vmxnet3"
-MAC_ADDRESS="00:16:cb:00:21:09"
+NETWORK_DEVICE="$USR_NETWORK_DEVICE"
+MAC_ADDRESS="$USR_MAC_ADDRESS"
+
+OS_ID="$USR_OS_NAME"
 
 #   You should not have to touch anything below this line, especially if you
 #   don't really know what you're doing. It'll probably break something.
@@ -68,7 +74,7 @@ args=(
 -smbios type=2
 -device ich9-intel-hda -device hda-duplex
 -device ich9-ahci,id=sata
--drive id=OpenCore,if=none,snapshot=on,format=qcow2,file="$REPO_PATH/boot/OpenCore.qcow2"
+-drive id=OpenCore,if=none,format=qcow2,file="$REPO_PATH/boot/OpenCore.qcow2"
 -drive id=HDD,if=none,file="$REPO_PATH/HDD.qcow2",format=qcow2
 -device ide-hd,bus=sata.2,drive=OpenCore
 -device ide-hd,bus=sata.3,drive=HDD
@@ -79,7 +85,7 @@ args=(
 ##########################################################################
 
 -netdev user,id=net0 -device "$NETWORK_DEVICE",netdev=net0,id=net0,mac="$MAC_ADDRESS"
--device qxl-vga,vgamem_mb=128,vram_size_mb=128
+-device qxl-vga,vgamem_mb=128,vram_size_mb=128    
 -monitor stdio
 #-display none
 #-vga qxl
@@ -90,4 +96,50 @@ args=(
 
 )
 
+while getopts d: flag
+do
+    case "${flag}" in
+        d) DISCORD_RPC=${OPTARG};;
+    esac
+done
+
+if [ $VERBOSE = 1 ]
+then
+echo
+echo \ \ \──────────────────────────────────────────────
+echo \ \ \ \ \ $NAME
+echo
+echo \ \ \ \ \ $FILE
+echo \ \ \ \ \ Built with ULTMOS v$ULTMOS
+echo \ \ \ \ \ Using $CPU_MODEL CPU model
+if [ $REQUIRES_SUDO = 1 ]
+then
+echo \ \ \ \ \ Superuser privileges enabled
+fi
+if [ $VFIO_PTA = 1 ]
+then
+echo \ \ \ \ \ Passthrough enabled
+else
+echo \ \ \ \ \ Passthrough disabled
+fi
+if [ $DISCORD_RPC = 1 ]
+then
+echo \ \ \ \ \ Discord RPC enabled
+else
+echo \ \ \ \ \ Discord RPC disabled
+fi
+echo \ \ \──────────────────────────────────────────────
+echo
+fi
+
+if [ $DISCORD_RPC = 1 ]
+then
+$REPO_PATH/scripts/drpc.py --os "$OS_ID" --pt $VFIO_DEVICES --wd $REPO_PATH &
+fi
+
 qemu-system-x86_64 "${args[@]}"
+
+if [ $DISCORD_RPC = 1 ]
+then
+pkill -f drpc.py
+fi

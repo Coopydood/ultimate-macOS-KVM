@@ -26,18 +26,26 @@ except:
 osVer = "Unknown"
 ptCount = 0
 
-version = open("./.version")
-version = version.read()
 
-versionDash = version.replace(".","-")
 
 parser = argparse.ArgumentParser("main")
 parser.add_argument("--os", dest="osVer",action="store")
 parser.add_argument("--pt", dest="pt",action="store")
+parser.add_argument("--wd", dest="wd",action="store")
 
 args = parser.parse_args()
 
 #args.pt = "0"
+
+if args.wd is None:
+    version = open("./.version")
+else:    
+    version = open(args.wd+"/.version") # PORTABLE SCRIPT SUPPORT
+    #print("DEBUG: Captured workdir ver as",args.wd)
+
+version = version.read()
+versionDash = version.replace(".","-")
+
 
 osVer = args.osVer
 try:

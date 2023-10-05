@@ -3,7 +3,7 @@ BaseSystem.img
 blobs/*.apb
 blobs/stale/*.apb
 blobs/user/*.apb
-*xml
+./*xml
 resources/config.sh
 baseConfig
 scripts/__pycache__/
@@ -39,3 +39,4 @@ ovmf/user_store/OVMF_VARS.fd
 boot/opencore-image-ng.sh
 boot/mnt
 BaseSystem.dmg
+.gitignore

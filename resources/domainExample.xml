@@ -1,0 +1,224 @@
+
+<!--
+############################################################
+
+
+    This is the XML file of "SussyMac", my main macOS VM.
+    It was generated using ULTMOS, and is actively used
+    by me in real-world scenarios. 
+
+    It demonstrates how the project may be used to produce
+    an absolute monster of a virtual Mac!
+
+
+    SPECS AND MODIFICATIONS
+    ──────────────────────────────────
+    OS      :   macOS Monterey (12.6.8)
+    CPU     :   host-passthrough (8 cores, 2 threads)
+    RAM     :   32 GB (2 virtual banks)
+    SMBIOS  :   iMac20,2 (iMac 5K 27-inch, 2020)
+
+    MODS    :   Host CPU cores have been pinned for use with
+                the guest; 8 cores, alternating to utilise SMT.
+
+                Added "adgpmod=pikera" to boot-args to correctly
+                initialise the Navi 10 GPU.
+
+                Using bridged network with custom MAC address.
+
+                Added experimental PulseAudio device.
+
+
+    VFIO-PCI PASSTHROUGH
+    ──────────────────────────────────
+    0000:00:14.0  :   Intel USB 3.1 XHCI Controller
+    0000:00:14.2  :   Intel PCH Shared SRAM
+    0000:00:14.3  :   Intel Wi-Fi 6 AX201
+    0000:08:00.0  :   SanDisk WD Blue SN570 500GB NVMe SSD
+    0000:07:00.0  :   Intel I225-V 2.5G Ethernet 
+    0000:04:00.0  :   Sapphire Nitro+ AMD Radeon RX 5700 XT
+    0000:04:00.1  :   Sapphire Nitro+ HDMI Audio
+
+
+############################################################
+-->
+
+<domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm">
+  <name>hpfsn-osx</name>
+  <uuid>2998ac38-7354-4856-8012-24a8e9964a73</uuid>
+  <title>HPFSN-OSX</title>
+  <description>SussyMac
+  Converted from hpfsn-osx.xml 
+
+  This virtual machine was created using ultimate-macOS-KVM, a project by Coopydood.
+  Visit https://github.com/Coopydood/ultimate-macOS-KVM for help and support, or provide some feedback!
+
+  DEBUG
+  ULTMOS: v0.9.5
+  XML: hpfsn-osx.xml 
+  AP: hpfsn-osx.sh
+  AUTO: DEVMODE
+  USEBLOBS: No
+  APRUNTIME: 23:39:15 05/08/2023</description>
+  <memory unit="KiB">33554432</memory>
+  <currentMemory unit="KiB">33554432</currentMemory>
+  <vcpu placement="static">16</vcpu>
+  <cputune>
+    <vcpupin vcpu="0" cpuset="2"/>
+    <vcpupin vcpu="1" cpuset="6"/>
+    <vcpupin vcpu="2" cpuset="3"/>
+    <vcpupin vcpu="3" cpuset="7"/>
+    <vcpupin vcpu="4" cpuset="4"/>
+    <vcpupin vcpu="5" cpuset="8"/>
+    <vcpupin vcpu="6" cpuset="5"/>
+    <vcpupin vcpu="7" cpuset="9"/>
+  </cputune>
+  <os>
+    <type arch="x86_64" machine="pc-q35-4.2">hvm</type>
+    <loader readonly="yes" type="pflash">OVMF_CODE.fd</loader>
+    <nvram>OVMF_VARS.fd</nvram>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+  </features>
+  <cpu mode="host-passthrough" check="none" migratable="on">
+    <topology sockets="1" dies="1" cores="8" threads="2"/>
+  </cpu>
+  <clock offset="utc">
+    <timer name="rtc" tickpolicy="catchup"/>
+    <timer name="pit" tickpolicy="delay"/>
+    <timer name="hpet" present="no"/>
+  </clock>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>restart</on_crash>
+  <devices>
+    <emulator>/usr/bin/qemu-system-x86_64</emulator>
+    <disk type="file" device="disk">
+      <driver name="qemu" type="qcow2" cache="writeback" io="threads"/>
+      <source file="OpenCore.qcow2"/>
+      <target dev="sda" bus="sata"/>
+      <address type="drive" controller="0" bus="0" target="0" unit="0"/>
+    </disk>
+    <controller type="sata" index="0">
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x1f" function="0x2"/>
+    </controller>
+    <controller type="pci" index="0" model="pcie-root"/>
+    <controller type="pci" index="1" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="1" port="0x8"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x0" multifunction="on"/>
+    </controller>
+    <controller type="pci" index="2" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="2" port="0x9"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x1"/>
+    </controller>
+    <controller type="pci" index="3" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="3" port="0xa"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x2"/>
+    </controller>
+    <controller type="pci" index="4" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="4" port="0xb"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x3"/>
+    </controller>
+    <controller type="pci" index="5" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="5" port="0xc"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x4"/>
+    </controller>
+    <controller type="pci" index="6" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="6" port="0xd"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x5"/>
+    </controller>
+    <controller type="pci" index="7" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="7" port="0xe"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x6"/>
+    </controller>
+    <controller type="pci" index="8" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="8" port="0xf"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x7"/>
+    </controller>
+    <controller type="pci" index="9" model="pcie-to-pci-bridge">
+      <model name="pcie-pci-bridge"/>
+      <address type="pci" domain="0x0000" bus="0x01" slot="0x00" function="0x0"/>
+    </controller>
+    <controller type="usb" index="0" model="qemu-xhci" ports="15">
+      <address type="pci" domain="0x0000" bus="0x04" slot="0x00" function="0x0"/>
+    </controller>
+    <interface type="bridge">
+      <mac address="00:16:cb:00:00:00"/>
+      <source bridge="virbr0"/>
+      <model type="vmxnet3"/>
+      <link state="up"/>
+      <address type="pci" domain="0x0000" bus="0x09" slot="0x02" function="0x0"/>
+    </interface>
+    <input type="mouse" bus="ps2"/>
+    <input type="keyboard" bus="ps2"/>
+    <sound model="ich9">
+      <codec type="micro"/>
+      <audio id="1"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x1b" function="0x0"/>
+    </sound>
+    <audio id="1" type="pulseaudio" serverName="/run/user/1000/pulse/native"/>
+    <hostdev mode="subsystem" type="pci" managed="yes">
+      <source>
+        <address domain="0x0000" bus="0x00" slot="0x14" function="0x0"/>
+      </source>
+      <address type="pci" domain="0x0000" bus="0x09" slot="0x01" function="0x0"/>
+    </hostdev>
+    <hostdev mode="subsystem" type="pci" managed="yes">
+      <source>
+        <address domain="0x0000" bus="0x00" slot="0x14" function="0x2"/>
+      </source>
+      <address type="pci" domain="0x0000" bus="0x09" slot="0x03" function="0x0"/>
+    </hostdev>
+    <hostdev mode="subsystem" type="pci" managed="yes">
+      <source>
+        <address domain="0x0000" bus="0x00" slot="0x14" function="0x3"/>
+      </source>
+      <address type="pci" domain="0x0000" bus="0x02" slot="0x00" function="0x0"/>
+    </hostdev>
+    <hostdev mode="subsystem" type="pci" managed="yes">
+      <source>
+        <address domain="0x0000" bus="0x08" slot="0x00" function="0x0"/>
+      </source>
+      <rom bar="off"/>
+      <address type="pci" domain="0x0000" bus="0x06" slot="0x00" function="0x0"/>
+    </hostdev>
+    <hostdev mode="subsystem" type="pci" managed="yes">
+      <source>
+        <address domain="0x0000" bus="0x04" slot="0x00" function="0x0"/>
+      </source>
+      <address type="pci" domain="0x0000" bus="0x03" slot="0x00" function="0x0"/>
+    </hostdev>
+    <hostdev mode="subsystem" type="pci" managed="yes">
+      <source>
+        <address domain="0x0000" bus="0x04" slot="0x00" function="0x1"/>
+      </source>
+      <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
+    </hostdev>
+    <watchdog model="itco" action="poweroff"/>
+    <memballoon model="none"/>
+  </devices>
+  <qemu:commandline>
+    <qemu:arg value="-global"/>
+    <qemu:arg value="ICH9-LPC.acpi-pci-hotplug-with-bridge-support=off"/>
+    <qemu:arg value="-device"/>
+    <qemu:arg value="isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"/>
+    <qemu:arg value="-smbios"/>
+    <qemu:arg value="type=2"/>
+    <qemu:arg value="-cpu"/>
+    <qemu:arg value="host,vendor=GenuineIntel,+hypervisor,+invtsc,kvm=on,+fma,+avx,+avx2,+aes,+ssse3,+sse4_2,+popcnt,+bmi1,+bmi2"/>
+    <qemu:arg value="-audiodev"/>
+    <qemu:arg value="pa,id=pa1,server=/run/user/1000/pulse/native"/>
+    <qemu:arg value="-global"/>
+    <qemu:arg value="nec-usb-xhci.msi=off"/>
+  </qemu:commandline>
+</domain>
