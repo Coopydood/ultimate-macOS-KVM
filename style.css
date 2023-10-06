@@ -96,11 +96,11 @@
   top: 0;
   left: 112px;
   background: linear-gradient(
-      180deg,
-      rgb(255, 102, 0) 0%,
-      rgb(184.88, 68.96, 53.15) 33.76%,
-      rgb(141.31, 34.74, 74.49) 70.62%,
-      rgb(59, 67, 113) 100%
+    180deg,
+    rgb(255, 102, 0) 0%,
+    rgb(184.88, 68.96, 53.15) 33.76%,
+    rgb(141.31, 34.74, 74.49) 70.62%,
+    rgb(59, 67, 113) 100%
   );
   -webkit-background-clip: text !important;
   background-clip: text;
