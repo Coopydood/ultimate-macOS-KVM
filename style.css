@@ -98,7 +98,7 @@
   -webkit-background-clip: text !important;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-fill-color: transparent;
+  color: transparent;
   font-family: "Cabin", Helvetica;
   font-weight: 700;
   color: transparent;
@@ -124,7 +124,7 @@
   -webkit-background-clip: text !important;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-fill-color: transparent;
+  color: transparent;
   font-family: "Cabin", Helvetica;
   font-weight: 700;
   color: transparent;
