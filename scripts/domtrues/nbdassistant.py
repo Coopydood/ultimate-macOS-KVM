@@ -31,19 +31,19 @@ if enableLog == True: # LOG SUPPORT
 
    def cpydLog(logStatus,logMsg,*args):
       logFile = open("./logs/OCMA_RUN_"+logTime+".log","a")
-      if logStatus == "ok":      logStatus = "[ ✔ ]"
-      if logStatus == "info":    logStatus = "[ ✦ ]"
-      if logStatus == "warn":    logStatus = "[ ⚠ ]"
-      if logStatus == "error":   logStatus = "[ ✖ ]"
-      if logStatus == "fatal":   logStatus = "[ ☠ ]"
-      if logStatus == "wait":    logStatus = "[ ➜ ]"
+      #if logStatus == "ok":      logStatus = "[ ✔ ]"
+      #if logStatus == "info":    logStatus = "[ ✦ ]"
+      #if logStatus == "warn":    logStatus = "[ ⚠ ]"
+      #if logStatus == "error":   logStatus = "[ ✖ ]"
+      #if logStatus == "fatal":   logStatus = "[ ☠ ]"
+      #if logStatus == "wait":    logStatus = "[ ➜ ]"
       
-      #if logStatus == "ok":      logStatus = "[    OK ]"
-      #if logStatus == "info":    logStatus = "[  INFO ]"
-      #if logStatus == "warn":    logStatus = "[  WARN ]"
-      #if logStatus == "error":   logStatus = "[ ERROR ]"
-      #if logStatus == "fatal":   logStatus = "[ FATAL ]"
-      #if logStatus == "wait":    logStatus = "[  WAIT ]"
+      if logStatus == "ok":      logStatus = "[    OK ]"
+      if logStatus == "info":    logStatus = "[  INFO ]"
+      if logStatus == "warn":    logStatus = "[  WARN ]"
+      if logStatus == "error":   logStatus = "[ ERROR ]"
+      if logStatus == "fatal":   logStatus = "[ FATAL ]"
+      if logStatus == "wait":    logStatus = "[  WAIT ]"
       entryTime = str(datetime.today().strftime('%H:%M:%S.%f'))
       entryTime = entryTime[:-3]
       entryLine = ("["+entryTime+"]"+str(logStatus)+":  "+str(logMsg)+"\n")
@@ -90,6 +90,7 @@ def menu():
     print("      2. Unmount OpenCore ⚠\n         This will unmount your OpenCore.qcow2 so you can boot with your modifications.\n         \033[93mWill prompt you for superuser permissions, which are required.\033[0m\n")
     print("      B. Back...")
     print("      Q. Exit\n")
+    cpydLog("info",("Awaiting user input."))
     detectchoice = input("\033[1mSelect> \033[0m")
     if detectchoice == 1 or detectchoice == "1":
         print(spaces)
@@ -98,6 +99,7 @@ def menu():
         os.system("mkdir -p boot/mnt")
         os.system("sudo mount /dev/nbd0p1 boot/mnt -o uid=$UID,gid=$(id -g)")
         print("\n   \033[92mOperation completed. \033[32m(mounted at ./boot/mnt/)\033[0m")
+        cpydLog("ok",("User has mounted OpenCore image."))
         input("\n\033[1m   Press [ENTER] to continue...\033[0m\n")
         detectchoice = 0
         menu()
@@ -108,6 +110,7 @@ def menu():
         os.system("sudo qemu-nbd --disconnect /dev/nbd0 2>&1 >/dev/null")
         os.system("sudo rmmod nbd")
         print("\n   \033[92mOperation completed. \033[32m(unmounted from ./boot/mnt/)\033[0m")
+        cpydLog("ok",("User has unmounted OpenCore image."))
         input("\n\033[1m   Press [ENTER] to continue...\033[0m\n")
         detectchoice = 0
         menu()
@@ -130,7 +133,10 @@ def menu():
             print("               \\....\\.........._.·´")
             print("                \\..............(")
             print("                 \\..............\\\n")
+            cpydLog("fatal",("User is being belligerent."))
             input("\n\033[1m   Press [ENTER] to continue...\033[0m")
+        else:
+            cpydLog("ok",("User has fat fingered a mere script. Yeah, that extra character didn't work."))
         detectchoice = 0
         menu()
 
