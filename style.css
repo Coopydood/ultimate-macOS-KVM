@@ -100,7 +100,7 @@
     rgb(255, 102, 0) 0%,
     rgb(184.88, 68.96, 53.15) 33.76%,
     rgb(141.31, 34.74, 74.49) 70.62%,
-    rgb(59, 67, 113) 100%
+    rgba(59, 67, 113, 0) 100%
   );
   -webkit-background-clip: text !important;
   background-clip: text;
