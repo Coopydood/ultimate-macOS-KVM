@@ -34,7 +34,7 @@
   APFLOW: $AP_FLOW
   AUTO: $AP_AUTO
   USEBLOBS: $AP_BLOB
-  APRUNTIME: $AP_RUNTIME
+  RUNTIME: $AP_RUNTIME
   </description>
   <uuid>$USR_UUID</uuid>
   <memory unit="KiB">$USR_MEMORY</memory>

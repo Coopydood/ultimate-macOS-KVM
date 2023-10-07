@@ -265,6 +265,7 @@ def convertBrains():
             apFileM = apFileM.replace("#    ./main.py","")
             apFileM = apFileM.replace("############################################################."," ")
 
+            
 
             apFileM = apFileM.replace("$USR_NAME",apVars[18]+"")
             apFileM = apFileM.replace("$USR_UUID",str(uuid.uuid4()))
@@ -311,6 +312,11 @@ def convertBrains():
             apFileM = apFileM.replace("$XML_FILE",apFilePathNoExt+".xml")
             apFileM = apFileM.replace("$AP_FILE",apFilePath)
             apFileM = apFileM.replace("$AP_RUNTIME",str(datetime.today().strftime('%H:%M:%S %d/%m/%Y')))
+            
+            if "-device vfio-pci" in apFileS: # DISABLE VGA VIDEO OUT IF PASSTHROUGH DETECTED
+                apFileM = apFileM.replace("    <video>\n      <model type=\"vga\" vram=\"16384\" heads=\"1\" primary=\"yes\"/>\n      <address type=\"pci\" domain=\"0x0000\" bus=\"0x09\" slot=\"0x01\" function=\"0x0\"/>\n    </video>","    <video>\n		<model type=\"none\"/>\n    </video>")
+            
+            
             if autodetect == True:
                 apFileM = apFileM.replace("$AP_AUTO","Yes")
             else:
@@ -330,7 +336,7 @@ def convertBrains():
 
         with open(""+apFilePathNoExt+".xml","w") as file:
             file.write(apFileM)
-        time.sleep(5)
+        time.sleep(2)
 
     apFile = open(""+apFilePathNoExt+".xml","r")
     if "APC-RUN" in apFile.read():
