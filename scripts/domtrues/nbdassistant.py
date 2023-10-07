@@ -114,10 +114,10 @@ def menu():
         input("\n\033[1m   Press [ENTER] to continue...\033[0m\n")
         detectchoice = 0
         menu()
-    elif detectchoice == "B":
+    elif detectchoice == "B" or detectchoice == "b":
         print(spaces)
         os.system('./scripts/extras.py')
-    elif detectchoice == "Q":
+    elif detectchoice == "Q" or detectchoice == "q":
         exit()
     else:
         if len(detectchoice) > 3:
