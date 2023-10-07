@@ -40,3 +40,4 @@ boot/opencore-image-ng.sh
 boot/mnt
 BaseSystem.dmg
 .gitignore
+boot.xml

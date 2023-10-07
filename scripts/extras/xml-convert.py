@@ -167,7 +167,7 @@ def convertBrains():
             global apVars
             global useBlobs
             apFileS = source.read()
-            apVars = ["macOS","macOS",apFilePath,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0]
+            apVars = ["macOS","macOS",apFilePath,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0]
             
             
             if autodetect == False:
@@ -185,6 +185,7 @@ def convertBrains():
 
                 #with open("./blobs/user/USR_NAME.apb") as blob: apVars[0] = str(blob.read())
                 with open("./blobs/user/USR_TARGET_OS.apb") as blob: apVars[1] = "macOS "+str(blob.read())
+                with open("./blobs/user/USR_TARGET_OS_NAME.apb") as blob: apVars[18] = "macOS "+str(blob.read())
                 with open("./blobs/user/USR_ALLOCATED_RAM.apb") as blob: apVars[4] = str(blob.read())
                 with open("./blobs/user/USR_CPU_CORES.apb") as blob: apVars[6] = str(blob.read())
                 with open("./blobs/user/USR_CPU_THREADS.apb") as blob: apVars[7] = str(blob.read())
@@ -265,7 +266,7 @@ def convertBrains():
             apFileM = apFileM.replace("############################################################."," ")
 
 
-            apFileM = apFileM.replace("$USR_NAME",apVars[1]+"")
+            apFileM = apFileM.replace("$USR_NAME",apVars[18]+"")
             apFileM = apFileM.replace("$USR_UUID",str(uuid.uuid4()))
 
             # CONVERT MEMORY TO VIRSH FORMAT
@@ -279,7 +280,7 @@ def convertBrains():
             # CONVERT THREADS TO VIRSH FORMAT
             apThreadsCvt = apVars[7]
             apThreadsCvt = int(apThreadsCvt)
-            apThreadsCvt = round(apThreadsCvt / 2)
+            #apThreadsCvt = round(apThreadsCvt / 2)
 
             # CONVERT VCPUS TO VIRSH FORMAT
             apTotalCvt = apVars[6]
@@ -304,7 +305,7 @@ def convertBrains():
             apFileM = apFileM.replace("$USR_NETWORK_ADAPTER",apVars[16])
             apFileM = apFileM.replace("$USR_MAC_ADDRESS",apVars[17])
             apFileM = apFileM.replace("$USR_OS_VERSION",apOSCvt)
-            apFileM = apFileM.replace("$USR_OS_NAME",apVars[1])
+            apFileM = apFileM.replace("$USR_OS_NAME",apVars[18])
             apFileM = apFileM.replace("$USR_HEADER","Converted from "+apFilePath)
             apFileM = apFileM.replace("$REPO_VERSION",version)
             apFileM = apFileM.replace("$XML_FILE",apFilePathNoExt+".xml")
@@ -357,7 +358,7 @@ def convertBrains():
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
             print("   XML domain has been defined\n")
-            print("   The requested XML file has been successfully defined\n   using virsh, and is now available in virt-manager.\n   The name is displayed below.\n\n   "+color.BOLD+apVars[1]+" (ULTMOS)"+color.END+"\n\n\n\n\n\n\n") 
+            print("   The requested XML file has been successfully defined\n   using virsh, and is now available in virt-manager.\n   The name is displayed below.\n\n   "+color.BOLD+apVars[18]+" (ULTMOS)"+color.END+"\n\n\n\n\n\n\n") 
             time.sleep(5)
 def manualAPSelect():
         global apFile

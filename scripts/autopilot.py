@@ -132,7 +132,7 @@ def startup():
     print(color.BOLD+"\n      1. Start")
     print(color.END+"         Begin creating a new QEMU-based macOS config file \n")
     print(color.END+"      2. Main menu")
-    print(color.END+"      ?. Help...")
+    print(color.END+"      ?. Help")
     print(color.END+"      Q. Exit\n")
     cpydLog("ok",str("Menu displayed"))
     cpydLog("wait",("Waiting on user input"))
@@ -151,7 +151,7 @@ def startup():
     #print(color.BOLD+"\n      3. Import XML file...")
     #print(color.END+"         Use this option if you already have an XML file.\n         This option lets you import a previously-created XML file\n         into virsh for use with virt-manager.\n")
   
-    #print(color.END+"      ?. Help...")
+    #print(color.END+"      ?. Help")
     #print(color.END+"      M. Main menu")
     #print(color.END+"      Q. Exit\n")
     #detectChoice = str(input(color.BOLD+"Select> "+color.END))
@@ -283,9 +283,9 @@ def autopilot():
          print(color.BOLD+"\n      1. Generate")
          print(color.END+"         Copy the local recovery image, then create the config\n         and hard disk files in the repo folder\n")
       
-      print("    "+color.END+"  2. Back")
+      print("    "+color.END+"  B. Back")
       print("    "+color.END+"  X. Start Over")
-      print("    "+color.END+"  ?. Help...")
+      print("    "+color.END+"  ?. Help")
       print("    "+color.END+"  Q. Exit\n")
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
    
@@ -293,7 +293,7 @@ def autopilot():
          #cpydLog("ok",str("Using default value of "+str(defaultValue)))
          handoff()
 
-      elif stageSelect == "2":
+      elif stageSelect == "b" or stageSelect == "B":
          stage13()
 
       elif stageSelect == "x" or stageSelect == "X":
@@ -332,8 +332,8 @@ def autopilot():
       
       print(color.BOLD+"\n      1. Generate and import XML")
       print(color.END+"      2. Skip")
-      print(color.END+"      3. Back")
-      print(color.END+"      ?. Help...")
+      print(color.END+"\n      B. Back")
+      print(color.END+"      ?. Help")
       print(color.END+"      Q. Exit\n   ")
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -355,7 +355,7 @@ def autopilot():
          customValue = 1
          stage14()
 
-      elif stageSelect == "3":
+      elif stageSelect == "b" or stageSelect == "B":
          currentStage = 1
          stage12()
          
@@ -442,8 +442,8 @@ def autopilot():
          else:
             print(color.BOLD+"\n      1. 1280x720")
             print(color.END+"      2. More resolutions...")
-            print(color.END+"      3. Back")
-            print(color.END+"      ?. Help...")
+            print(color.END+"\n      B. Back")
+            print(color.END+"      ?. Help")
             print(color.END+"      Q. Exit\n   ")
             stageSelect = str(input(color.BOLD+"Select> "+color.END))
          
@@ -463,7 +463,7 @@ def autopilot():
                customValue = 1
                stage12()
 
-            elif stageSelect == "3":
+            elif stageSelect == "b" or stageSelect == "B":
                currentStage = 1
                stage11()
                
@@ -523,8 +523,8 @@ def autopilot():
             print(color.BOLD+"\n      1. Download from Apple...")
             print(color.END+"      2. Select existing...")
          print(color.END+"      3. Skip")
-         print(color.END+"      4. Back")
-         print(color.END+"      ?. Help...")
+         print(color.END+"\n      B. Back")
+         print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
          if stageSelect == "1" and USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
@@ -560,7 +560,7 @@ def autopilot():
             currentStage = currentStage + 1
             stage12()
 
-         elif stageSelect == "4":
+         elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
             stage10()
             
@@ -611,8 +611,8 @@ def autopilot():
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Generate automatically")
          print(color.END+"      3. Custom value...")
-         print(color.END+"      4. Back")
-         print(color.END+"      ?. Help...")
+         print(color.END+"\n      B. Back")
+         print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -648,7 +648,7 @@ def autopilot():
             currentStage = currentStage + 1
             stage11()
 
-         elif stageSelect == "4":
+         elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
             stage9()
 
@@ -703,8 +703,8 @@ def autopilot():
       else:
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
-         print(color.END+"      3. Back")
-         print(color.END+"      ?. Help...")
+         print(color.END+"\n      B. Back")
+         print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -721,7 +721,7 @@ def autopilot():
             customValue = 1
             stage9()
 
-         elif stageSelect == "3":
+         elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
             stage8()
             
@@ -771,8 +771,8 @@ def autopilot():
       else:
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
-         print(color.END+"      3. Back")
-         print(color.END+"      ?. Help...")
+         print(color.END+"\n      B. Back")
+         print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -789,7 +789,7 @@ def autopilot():
             customValue = 1
             stage8()
 
-         elif stageSelect == "3":
+         elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
             stage7()
             
@@ -839,8 +839,8 @@ def autopilot():
       else:
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
-         print(color.END+"      3. Back")
-         print(color.END+"      ?. Help...")
+         print(color.END+"\n      B. Back")
+         print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -857,7 +857,7 @@ def autopilot():
             customValue = 1
             stage7()
 
-         elif stageSelect == "3":
+         elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
             stage6()
          
@@ -908,8 +908,8 @@ def autopilot():
       else:
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
-         print(color.END+"      3. Back")
-         print(color.END+"      ?. Help...")
+         print(color.END+"\n      B. Back")
+         print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -926,7 +926,7 @@ def autopilot():
             customValue = 1
             stage6()
 
-         elif stageSelect == "3":
+         elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
             stage5()
             
@@ -981,8 +981,8 @@ def autopilot():
       else:
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
-         print(color.END+"      3. Back")
-         print(color.END+"      ?. Help...")
+         print(color.END+"\n      B. Back")
+         print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -999,7 +999,7 @@ def autopilot():
             customValue = 1
             stage5()
 
-         elif stageSelect == "3":
+         elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
             stage4()
 
@@ -1048,8 +1048,8 @@ def autopilot():
       else:
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
-         print(color.END+"      3. Back")
-         print(color.END+"      ?. Help...")
+         print(color.END+"\n      B. Back")
+         print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -1066,7 +1066,7 @@ def autopilot():
             customValue = 1
             stage4()
 
-         elif stageSelect == "3":
+         elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
             stage3()
             
@@ -1180,8 +1180,8 @@ def autopilot():
       else:
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
-         print(color.END+"      3. Back")
-         print(color.END+"      ?. Help...")
+         print(color.END+"\n      B. Back")
+         print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -1198,7 +1198,7 @@ def autopilot():
             customValue = 1
             stage3()
 
-         elif stageSelect == "3":
+         elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
             stage2()
          
@@ -1316,8 +1316,8 @@ def autopilot():
       else:
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Select macOS version...")
-         print(color.END+"      3. Back")
-         print(color.END+"      ?. Help...")
+         print(color.END+"\n      B. Back")
+         print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -1334,7 +1334,7 @@ def autopilot():
             customValue = 1
             stage2()
 
-         elif stageSelect == "3":
+         elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
             stage1()
          
@@ -1385,7 +1385,7 @@ def autopilot():
       #   print(color.BOLD+"\n      1. Use default value")
       #   print(color.END+"      2. Custom value...")
       #   print(color.END+"      3. Back")
-      #   print(color.END+"      ?. Help...")
+      #   print(color.END+"      ?. Help")
       #   print(color.END+"      Q. Exit\n   ")
       #   stageSelect = str(input(color.BOLD+"Select> "+color.END))
       #
@@ -1457,7 +1457,7 @@ def autopilot():
          print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+"boot.sh"+color.END)
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
-         print(color.END+"      ?. Help...")
+         print(color.END+"\n      ?. Help")
          print(color.END+"      Q. Exit\n")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
       
@@ -1760,7 +1760,7 @@ def autopilot():
          cpydLog("ok",("Integrity check PASSED"))
 
          PROC_PREPARE = 2
-         cpydLog("ok",("Updated phase status, handing off to next stage"))
+         cpydLog("ok",("Updated stage status, handing off to next stage"))
          refreshStatusGUI()
 
       def apcBlobCheck():  # CHECK BLOBS
@@ -1843,7 +1843,7 @@ def autopilot():
             cpydLog("ok",("Integrity check PASSED"))
             
             PROC_CHECKBLOBS = 2
-            cpydLog("ok",("Updated phase status, handing off to next stage"))
+            cpydLog("ok",("Updated stage status, handing off to next stage"))
             refreshStatusGUI()
          else:
             cpydLog("fatal",("Integrity of work is damaged, killing flow"))
@@ -1918,7 +1918,7 @@ def autopilot():
                   exit
 
          workdir = os.getcwd()
-         cpydLog("info",("Working directory was captured as",workdir))
+         cpydLog("info",("Working directory was captured as "+str(workdir)))
 
          refreshStatusGUI()
          cpydLog("info",("Scanning for file conflict"))
@@ -1989,7 +1989,7 @@ def autopilot():
             cpydLog("error",("Integrity check FAILED"))
             integrityCfg3 - 19
          cpydLog("ok",("Integrity check PASSED"))
-         cpydLog("ok",("Updated phase status, handing off to next stage"))
+         cpydLog("ok",("Updated stage status, handing off to next stage"))
          refreshStatusGUI()
          PROC_GENCONFIG = 2
          time.sleep(1)
@@ -2026,8 +2026,10 @@ def autopilot():
                   apFileM = apFileM.replace("#    ./main.py","")
                   apFileM = apFileM.replace("############################################################."," ")
 
+                  apVars[19] = "macOS "+apVars[19]
+
                   cpydLog("info",("Converting to XML format"))
-                  apFileM = apFileM.replace("$USR_NAME",apVars[2]+"")
+                  apFileM = apFileM.replace("$USR_NAME",apVars[19]+"")
                   apFileM = apFileM.replace("$USR_UUID",str(uuid.uuid4()))
 
                   # CONVERT MEMORY TO VIRSH FORMAT
@@ -2041,7 +2043,7 @@ def autopilot():
                   # CONVERT THREADS TO VIRSH FORMAT
                   apThreadsCvt = apVars[8]
                   apThreadsCvt = int(apThreadsCvt)
-                  apThreadsCvt = round(apThreadsCvt / 2)
+                  #apThreadsCvt = round(apThreadsCvt / 2)
 
                   # CONVERT VCPUS TO VIRSH FORMAT
                   apTotalCvt = apVars[7]
@@ -2066,12 +2068,16 @@ def autopilot():
                   apFileM = apFileM.replace("$USR_NETWORK_ADAPTER",apVars[17])
                   apFileM = apFileM.replace("$USR_MAC_ADDRESS",apVars[18])
                   apFileM = apFileM.replace("$USR_OS_VERSION",apOSCvt)
-                  apFileM = apFileM.replace("$USR_OS_NAME",apVars[2])
-                  apFileM = apFileM.replace("$USR_HEADER","Converted from "+apFilePath)
+                  apFileM = apFileM.replace("$USR_OS_NAME",apVars[19])
+                  apFileM = apFileM.replace("$USR_HEADER","Converted from "+str(apVars[3]))
                   apFileM = apFileM.replace("$REPO_VERSION",version)
-                  apFileM = apFileM.replace("$XML_FILE",apFilePathNoExt+".xml")
-                  apFileM = apFileM.replace("$AP_FILE",apFilePath)
+                  apFileM = apFileM.replace("$XML_FILE",apVars[3].replace(".sh",".xml"))
+                  apFileM = apFileM.replace("$AP_FILE",apVars[3])
                   apFileM = apFileM.replace("$AP_RUNTIME",str(datetime.today().strftime('%H:%M:%S %d/%m/%Y')))
+                  
+                  apFileM = apFileM.replace("$AP_AUTO","APFLOW")
+                  apFileM = apFileM.replace("$AP_BLOB","APFLOW")
+                  
                   cpydLog("ok",("Converted to XML structure"))
             # apFileM = apFileM.replace("$USR_",apVars[])
             
@@ -2081,13 +2087,13 @@ def autopilot():
                   file.write(apFileM)
                   cpydLog("ok",("Changes written to file"))
             time.sleep(2)
-            cpydLog("ok",("Updated phase status, handing off to next stage"))
+            cpydLog("ok",("Updated stage status, handing off to next stage"))
             PROC_GENXML = 2
             refreshStatusGUI()
             time.sleep(3)
          else:
             cpydLog("ok",("XML creation skipped by user, ignoring"))
-            cpydLog("ok",("Updated phase status, handing off to next stage"))
+            cpydLog("ok",("Updated stage status, handing off to next stage"))
 
 
       def apcFetchDL():  # FETCH RECOVERY ONLINE
@@ -2122,7 +2128,7 @@ def autopilot():
             cpydLog("error",("Integrity check FAILED"))
             errorMessage = "The image download failed.\n           Please check your internet connection."
             throwError()
-         cpydLog("ok",("Updated phase status, handing off to next stage"))
+         cpydLog("ok",("Updated stage status, handing off to next stage"))
          PROC_FETCHDL = 2
          refreshStatusGUI()
          time.sleep(3)
@@ -2166,7 +2172,7 @@ def autopilot():
             integrityImg = 0
             cpydLog("error",("Integrity check FAILED"))
             throwError()
-         cpydLog("ok",("Updated phase status, handing off to next stage"))
+         cpydLog("ok",("Updated stage status, handing off to next stage"))
          PROC_LOCALCOPY = 2
          refreshStatusGUI()
          time.sleep(3)
@@ -2225,7 +2231,8 @@ def autopilot():
                cpydLog("fatal",("User quit"))
                exit
 
-         USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000
+         USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 209756160
+
 
 
          if os.path.exists("./HDD.qcow2"):
@@ -2245,7 +2252,7 @@ def autopilot():
             cpydLog("ok",("Hard disk image file generation verified"))
             PROC_GENHDD = 2
          
-         cpydLog("ok",("Updated phase status, handing off to next stage"))
+         cpydLog("ok",("Updated stage status, handing off to next stage"))
          refreshStatusGUI()
          time.sleep(2)
 
@@ -2320,7 +2327,7 @@ def autopilot():
             throwError()
          
          PROC_APPLYPREFS = 2
-         cpydLog("ok",("Updated phase status, handing off to next stage"))
+         cpydLog("ok",("Updated stage status, handing off to next stage"))
          refreshStatusGUI()
          time.sleep(2)
       
@@ -2339,7 +2346,7 @@ def autopilot():
          cpydLog("info",("Setting readwrite permissions"))
          os.system("chmod +rw ./BaseSystem.img")
          cpydLog("ok",("Permissons set for new user files"))
-         cpydLog("ok",("Updated phase status, handing off to next stage"))
+         cpydLog("ok",("Updated stage status, handing off to next stage"))
          PROC_FIXPERMS = 2
          refreshStatusGUI()
          time.sleep(2)
@@ -2359,7 +2366,7 @@ def autopilot():
          cpydLog("info",("Moving blobs into stale folder"))
          os.system("mv blobs/*.apb blobs/stale/")
          cpydLog("ok",("Blob cleanup complete"))
-         cpydLog("ok",("Updated phase status, handing off to next stage"))
+         cpydLog("ok",("Updated stage status, handing off to next stage"))
          PROC_CLEANUP = 2
          refreshStatusGUI()
          time.sleep(1)
@@ -2443,22 +2450,26 @@ def autopilot():
             cpydLog("info",("Handing off to XML importer experience flow"))
             #cpydLog("ok",str("Using default value of "+str(defaultValue)))
             clear()
+            cpydLog("fatal",("Bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             
             os.system("./scripts/extras/xml-convert.py --import "+USR_CFG_XML)
          
          elif stageSelect == "2":
             cpydLog("info",("Handing off to QEMU; booting "+USR_CFG))
+            cpydLog("fatal",("Bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.system("./"+USR_CFG)
 
          elif stageSelect == "3":
             cpydLog("info",("Returning to main menu"))
+            cpydLog("fatal",("Bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.system("./main.py")
 
          elif stageSelect == "q" or stageSelect == "Q":
             cpydLog("fatal",("User quit"))
+            cpydLog("fatal",("Bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             exit
 
@@ -2467,23 +2478,27 @@ def autopilot():
             #cpydLog("ok",str("Using default value of "+str(defaultValue)))
             clear()
             cpydLog("info",("Handing off to QEMU; booting "+USR_CFG))
+            cpydLog("fatal",("Bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.system("./"+USR_CFG)
            
          
          elif stageSelect == "2":
             cpydLog("info",("Attempting to open "+USR_CFG+"; contacting xdg-open"))
+            cpydLog("fatal",("Bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.system("xdg-open ./"+USR_CFG)
             
 
          elif stageSelect == "3":
             cpydLog("info",("Returning to main menu"))
+            cpydLog("fatal",("Bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.system("./main.py")
 
          elif stageSelect == "q" or stageSelect == "Q":
             cpydLog("fatal",("User quit"))
+            cpydLog("fatal",("Bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             exit
 
