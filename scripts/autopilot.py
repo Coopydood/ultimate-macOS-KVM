@@ -2074,9 +2074,9 @@ def autopilot():
                   apFileM = apFileM.replace("$XML_FILE",apVars[3].replace(".sh",".xml"))
                   apFileM = apFileM.replace("$AP_FILE",apVars[3])
                   apFileM = apFileM.replace("$AP_RUNTIME",str(datetime.today().strftime('%H:%M:%S %d/%m/%Y')))
-                  
-                  apFileM = apFileM.replace("$AP_AUTO","APFLOW")
-                  apFileM = apFileM.replace("$AP_BLOB","APFLOW")
+                  apFileM = apFileM.replace("$AP_FLOW","Yes")
+                  apFileM = apFileM.replace("$AP_AUTO","N/A")
+                  apFileM = apFileM.replace("$AP_BLOB","N/A")
                   
                   cpydLog("ok",("Converted to XML structure"))
             # apFileM = apFileM.replace("$USR_",apVars[])

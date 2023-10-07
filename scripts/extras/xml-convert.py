@@ -320,6 +320,7 @@ def convertBrains():
             else:
                 apFileM = apFileM.replace("$AP_BLOB","No")
 
+            apFileM = apFileM.replace("$AP_FLOW","No")
 
             if "-device vfio-pci" in apFileS:
                 apFileM = apFileM.replace("<!-- VFIO-PCI HEADER -->",('\n    '.join(vfioXML)))
