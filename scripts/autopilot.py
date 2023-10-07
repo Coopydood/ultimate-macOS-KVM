@@ -27,15 +27,22 @@ import timeit
 import random
 import uuid
 import platform
+try:
+    from pypresence import Presence
+except:
+     None
 
 
 script = "autopilot.py"
 scriptName = "AutoPilot"
 scriptID = "APC"
 scriptVendor = "Coopydood"
+client_id = "1149434759152422922"
 
 parser = argparse.ArgumentParser("autopilot")
 parser.add_argument("--disable-logging", dest="disableLog", help="Disables the logfile",action="store_true")
+parser.add_argument("--disable-rpc", dest="disableRPC", help="Disables Discord rich presence",action="store_true")
+
 
 args = parser.parse_args()
 
@@ -45,9 +52,13 @@ latestOSVer = "14"
 runs = 0
 
 enableLog = True
+enableRPC = True
 
 if args.disableLog == True:
    enableLog = False
+
+if args.disableRPC == True:
+   enableRPC = False
 
 version = open("./.version")
 version = version.read()
@@ -67,12 +78,13 @@ class color:
 
 
 global logTime
+logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
 
 if enableLog == True: # LOG SUPPORT
    if not os.path.exists("./logs"):
       os.system("mkdir ./logs")
 
-   logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
+   
    os.system("echo ULTMOS AUTOPILOT LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/APC_RUN_"+logTime+".log")
    os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/APC_RUN_"+logTime+".log")
 
@@ -111,10 +123,32 @@ cpydLog("info",("Vendor     : "+scriptVendor))
 cpydLog("info",(" "))
 cpydLog("info",("Logging to ./logs/APC_RUN_"+logTime+".log"))
 
+try:
+    RPC = Presence(client_id)
+except:
+    cpydLog("warn","Unable to initialise Discord rich presence module, disabling for this session")
+
+projectVer = "Powered by ULTMOS v"+version
+
+if enableRPC == True:
+   try:
+      RPC.connect()
+      RPC.update(large_image="ultmos",large_text=projectVer,details="AutoPilot",buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      cpydLog("ok","Discord rich presence connected")
+   except:
+      None
+
+
+
+
 
 def startup():
     global detectChoice
+    global sparkTime
     cpydLog("info",("Displaying menu"))
+
+    sparkTime = int(time.time())
+
     print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"AutoPilot"+color.END,"")
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
     print("   The purpose of this script is to automatically guide you through \n   the process of",color.BOLD+"creating and running a basic macOS VM",color.END+"using settings \n   based on answers to a number of questions. \n\n   Many of the values can be left to default - especially if you are unsure.\n   It won't be perfect, but it's supposed to make it as"+color.BOLD,"easy as possible."+color.END)
@@ -181,6 +215,8 @@ def autopilot():
    global USR_SCREEN_RES
    global USR_TARGET_OS_NAME
 
+   global startTime
+
    USR_CPU_SOCKS = 1
    USR_CPU_CORES = 2 
    USR_CPU_THREADS = 1
@@ -231,7 +267,10 @@ def autopilot():
       global USR_TARGET_OS_NAME
       cpydLog("ok",str("Interrogation complete, displaying summary and AP autoflow sliproad"))
       USR_CFG_XML = USR_CFG.replace(".sh",".xml")
-
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="doodsuccess",small_text="Ready to Start",state="Ready to start",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
       USR_ALLOCATED_RAM_F = USR_ALLOCATED_RAM.replace("G","")
       USR_HDD_SIZE_F = USR_HDD_SIZE.replace("G","")
       USR_CPU_TOTAL = USR_CPU_CORES * USR_CPU_THREADS
@@ -325,6 +364,12 @@ def autopilot():
       global USR_CREATE_XML
       defaultValue = "True"
       cpydLog("ok",str("Stage 13 sequence initiated"))
+
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring XML generation",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+
       clear()
       print("\n   "+color.BOLD+"Generate XML file"+color.END)
       print("   Step 13")
@@ -382,7 +427,10 @@ def autopilot():
       defaultValue = "1280x720"
       cpydLog("ok",str("Stage 12 sequence initiated"))
       clear()
-      
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring resolution",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
       if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012: 
          cpydLog("warn",str("Custom resolution unsupported on legacy OS, using default value of "+str(defaultValue)))
          USR_SCREEN_RES = "1280x720"
@@ -491,6 +539,12 @@ def autopilot():
       global USR_BOOT_FILE
       defaultValue = "BaseSystem.img"
       cpydLog("ok",str("Stage 11 sequence initiated"))
+
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring macOS recovery image",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+
       clear()
       print("\n   "+color.BOLD+"macOS Recovery image file"+color.END)
       print("   Step 11")
@@ -587,6 +641,12 @@ def autopilot():
       global USR_MAC_ADDRESS
       defaultValue = "00:16:cb:00:21:09"
       cpydLog("ok",str("Stage 10 sequence initiated"))
+
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring MAC address",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+
       clear()
       print("\n   "+color.BOLD+"Network MAC address"+color.END)
       print("   Step 10")
@@ -680,6 +740,12 @@ def autopilot():
       else:
          defaultValue = "vmxnet3"
 
+
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring network adapter",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+
       clear()
       print("\n   "+color.BOLD+"Set network adapter model"+color.END)
       print("   Step 9")
@@ -748,6 +814,12 @@ def autopilot():
       global currentStage
       defaultValue = "80G"
       cpydLog("ok",str("Stage 8 sequence initiated"))
+
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring virtual hard disk",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+
       clear()
       print("\n   "+color.BOLD+"Set hard disk capacity"+color.END)
       print("   Step 8")
@@ -816,6 +888,12 @@ def autopilot():
       global currentStage
       defaultValue = "4G"
       cpydLog("ok",str("Stage 7 sequence initiated"))
+
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring memory",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+
       clear()
       print("\n   "+color.BOLD+"Set amount of allocated RAM"+color.END)
       print("   Step 7")
@@ -884,6 +962,11 @@ def autopilot():
       global currentStage
       defaultValue = "+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check"
       cpydLog("ok",str("Stage 6 sequence initiated"))
+
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring CPU features",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
 
       clear()
       print("\n   "+color.BOLD+"Set CPU feature arguments"+color.END)
@@ -958,6 +1041,11 @@ def autopilot():
          defaultValue = "Penryn"
       cpydLog("ok",str("Stage 5 sequence initiated"))
 
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring CPU model",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+
       clear()
       print("\n   "+color.BOLD+"Set CPU model"+color.END)
       print("   Step 5")
@@ -1026,6 +1114,11 @@ def autopilot():
       global currentStage
       defaultValue = 2
       cpydLog("ok",str("Stage 4 sequence initiated"))
+
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring CPU threads",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
 
       clear()
       print("\n   "+color.BOLD+"Set number of CPU threads"+color.END)
@@ -1138,6 +1231,20 @@ def autopilot():
       elif USR_TARGET_OS == 1400:
          USR_TARGET_OS_NAME = "Sonoma"
 
+      global osIcon
+
+      osIcon = "ap-"+USR_TARGET_OS_NAME.lower().replace(" ","")
+         
+      if USR_TARGET_OS < 1013:
+         osIcon = "ap-legacy"
+
+      osName = "macOS "+USR_TARGET_OS_NAME
+      
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring CPU cores",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+
       blob = open("./blobs/USR_TARGET_OS_NAME.apb","w")
       blob.write(str(USR_TARGET_OS_NAME))
       blob.close()
@@ -1224,6 +1331,13 @@ def autopilot():
       global customValue
       global currentStage
       defaultValue = 1015
+
+      try: # DISCORD RPC
+         RPC.update(large_image="ultmos",large_text=projectVer,details="AutoPilot",state="Selecting macOS version",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+
+
       cpydLog("ok",str("Stage 2 sequence initiated"))
       clear()
       print("\n   "+color.BOLD+"Set target OS"+color.END)
@@ -1430,9 +1544,14 @@ def autopilot():
       # remove stale blobs
       cpydLog("ok",str("Removing stale blobs"))
       os.system("mv -f ./blobs/*.apb ./blobs/stale/")
-      os.system("mv -f /blobs/CDN_CONTROL ./blobs/stale/")
+      #os.system("mv -f /blobs/CDN_CONTROL ./blobs/stale/")
       defaultValue = "boot.sh"
       clear()
+
+      try: # DISCORD RPC
+         RPC.update(large_image="ultmos",large_text=projectVer,details="AutoPilot",state="Naming their config file",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
 
       print("\n   "+color.BOLD+"Name your config file"+color.END)
       print("   Step 1")
@@ -1543,11 +1662,18 @@ def autopilot():
       PROC_GENXML = 0
       cpydLog("info",("Handoff started, user preferences saved"))
       cpydLog("ok",("───────────────── STARTING AUTOPILOT AUTOFLOW ─────────────────"))
+      cpydLog("info",("Here we go!"))
+      startTime = timeit.default_timer()
+      sparkTime = int(time.time())
 
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",state="Starting...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
       clear()
       time.sleep(2)
 
-      startTime = timeit.default_timer()
+      
 
       if USR_BOOT_FILE == "-1":
          PROC_FETCHDL = 0
@@ -1558,6 +1684,10 @@ def autopilot():
 
       def throwError():
          clear()
+         try: # DISCORD RPC
+           RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",state=errorMessage,start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         except:
+            None
          cpydLog("error",(errorMessage))
          print("\n   "+color.BOLD+color.RED+"✖ FAILED"+color.END)
          print("   Unable to continue")
@@ -1610,11 +1740,11 @@ def autopilot():
          
          if USR_CREATE_XML == "True":
             if PROC_GENXML == 0:
-               print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Convert to domain XML file"+color.END)
+               print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Converting to domain XML file"+color.END)
             elif PROC_GENXML == 1:
-               print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Convert to domain XML file"+color.END)
+               print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Converting to domain XML file"+color.END)
             elif PROC_GENXML == 2:
-               print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Convert to domain XML file"+color.END)
+               print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Converting to domain XML file"+color.END)
 
          if PROC_LOCALCOPY == 0 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
@@ -1679,6 +1809,12 @@ def autopilot():
          global USR_SCREEN_RES
          PROC_PREPARE = 1
          cpydLog("info",("STARTING PREPARE PHASE"))
+
+         try: # DISCORD RPC
+            RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="doodrestart",small_text="Running...",state="Preparing files...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         except:
+            None
+
          global errorMessage
          errorMessage = "Couldn't prepare files. You may have insufficient\n           permissions or damaged files."
          refreshStatusGUI()
@@ -1767,6 +1903,10 @@ def autopilot():
          global PROC_CHECKBLOBS
          PROC_CHECKBLOBS = 1
          cpydLog("info",("STARTING INTEGRITY PHASE"))
+         try: # DISCORD RPC
+            RPC.update(large_image=osIcon,large_text=projectVer,state="Checking preferences...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         except:
+            None
          global errorMessage
          errorMessage = "The integrity of the wizard preference files\n           could not be verified."
          integrity = 1
@@ -1860,13 +2000,20 @@ def autopilot():
          global errorMessage
          errorMessage = "The config file could not be written to.\n           You may have insufficient permissions."
          integrityCfg3 = 1
-         
+         try: # DISCORD RPC
+            RPC.update(large_image=osIcon,large_text=projectVer,state="Generating config script...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         except:
+            None
          def existingWarning():
             global USR_CFG
             global customValue
             global customInput
             cpydLog("warn",("Existing file with name "+str(USR_CFG)+" detected, asking the user"))
             clear()
+            try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Generating config script...",details="AutoPilot",small_image="doodsos",small_text="Issue Detected",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+            except:
+               None
             print("\n   "+color.BOLD+color.YELLOW+"⚠ PROBLEM DETECTED"+color.END)
             print("   Resolve the issue to continue")
             print("\n   This is not an error and can be resolved with your input. \n   You must select an option to continue. Once selected,\n   the process can continue from where it was left."+color.END)
@@ -1998,9 +2145,14 @@ def autopilot():
 
 
          # USE CONVERSION TOOL CODE TO GENERATE XML
+
          cpydLog("info",("Checking XML creation preferences"))
          if USR_CREATE_XML == "True":
             cpydLog("ok",("XML creation requested, WILL be generating XML"))
+            try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Converting to domain XML file...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+            except:
+               None
             PROC_GENXML = 1
             refreshStatusGUI()
             cpydLog("info",("Pointing XML conversion tool to live script"))
@@ -2101,7 +2253,10 @@ def autopilot():
          global USR_TARGET_OS_F
          global USR_TARGET_OS_ID
          cpydLog("info",("STARTING REMOTE RECOVERY PHASE"))
-         
+         try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Downloading recovery image...",details="AutoPilot",small_image="doodnetwork",small_text="Downloading Data...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         except:
+            None
 
          PROC_FETCHDL = 1
          global errorMessage
@@ -2139,6 +2294,10 @@ def autopilot():
          PROC_LOCALCOPY = 1
          PROC_LOCALCOPY_CVTN = 0
          cpydLog("info",("STARTING LOCAL RECOVERY PHASE"))
+         try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Copying recovery image into place...",details="AutoPilot",small_image="doodremount",small_text="Copying Files...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         except:
+            None
          global errorMessage
          errorMessage = "The local recovery image could not be found,\n           or it cannot be accessed."
          integrityImg = 1
@@ -2152,6 +2311,10 @@ def autopilot():
 
          if os.path.exists("./BaseSystem.dmg"):
             cpydLog("warn",("BaseSystem image is still in the DMG format, will convert now"))
+            try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Converting image format...",details="AutoPilot",small_image="doodremount",small_text="Converting...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+            except:
+               None
             PROC_LOCALCOPY_CVTN = 1
             refreshStatusGUI()
             time.sleep(1)
@@ -2187,6 +2350,10 @@ def autopilot():
          global USR_HDD_SIZE_B
          PROC_GENHDD = 1
          cpydLog("info",("STARTING HARDDISK PHASE"))
+         try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Creating virtual hard disk...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         except:
+            None
          global errorMessage
          errorMessage = "The virtual hard disk file could not be created.\n           You may have insufficient permissions."
          integrityImg = 1
@@ -2195,6 +2362,10 @@ def autopilot():
          cpydLog("info",("Scanning for file conflict"))
          def existingWarning1():
             clear()
+            try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Creating virtual hard disk...",details="AutoPilot",small_image="doodsos",small_text="Issue Detected",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+            except:
+               None
             cpydLog("warn",("Existing file with name HDD.qcow2 detected, asking the user"))
             print("\n   "+color.BOLD+color.YELLOW+"⚠ PROBLEM DETECTED"+color.END)
             print("   Resolve the issue to continue")
@@ -2210,6 +2381,10 @@ def autopilot():
             if stageSelect == "1":
                #cpydLog("ok",str("Using default value of "+str(defaultValue)))
                global PROC_GENHDD
+               try: # DISCORD RPC
+                  RPC.update(large_image=osIcon,large_text=projectVer,state="Creating virtual hard disk...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+               except:
+                  None
                cpydLog("ok",("Moving HDD.qcow2"+" to "+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))+"_HDD.qcow2"))
                os.system("mv ./HDD.qcow2"+" ./"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))+"_HDD.qcow2")
                PROC_GENHDD = 2
@@ -2217,11 +2392,19 @@ def autopilot():
                apcGenHDD()
 
             elif stageSelect == "2":
+               try: # DISCORD RPC
+                  RPC.update(large_image=osIcon,large_text=projectVer,state="Creating virtual hard disk...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+               except:
+                  None
                cpydLog("ok",("Using existing hard disk file"))
                PROC_GENHDD = 3
                refreshStatusGUI() 
 
             elif stageSelect == "x" or stageSelect == "X":
+               try: # DISCORD RPC
+                  RPC.update(large_image=osIcon,large_text=projectVer,state="Creating virtual hard disk...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+               except:
+                  None
                cpydLog("warn",("Deleting HDD.qcow2"))
                os.system("rm HDD.qcow2")
                PROC_GENHDD = 2
@@ -2261,6 +2444,10 @@ def autopilot():
          global USR_CFG
          PROC_APPLYPREFS = 1
          cpydLog("info",("STARTING APPLY PHASE"))
+         try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Applying preferences...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         except:
+            None
          global errorMessage
          errorMessage = "Could not apply preferences to generated files.\n           You may have insufficient permissions."
          integrityImg = 1
@@ -2336,6 +2523,10 @@ def autopilot():
          global USR_CFG
          PROC_FIXPERMS = 1
          cpydLog("info",("STARTING PERMISSIONS PHASE"))
+         try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Fixing up permissions...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         except:
+            None
          global errorMessage
          errorMessage = "Could not set permissions on generated files.\n           You can attempt to do this manually."
          integrityImg = 1
@@ -2355,6 +2546,10 @@ def autopilot():
          global PROC_CLEANUP
          global USR_CFG
          global errorMessage
+         try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Cleaning up...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         except:
+            None
          PROC_CLEANUP = 1
          refreshStatusGUI()
          cpydLog("info",("STARTING CLEANUP PHASE"))
@@ -2387,7 +2582,11 @@ def autopilot():
       apcCleanUp()
       cpydLog("info",("Stopping timer"))
       stopTime = timeit.default_timer()
-      time.sleep(3)
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,state="Finishing...",details="AutoPilot",small_image="doodshutdown",small_text="Stopping...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+      time.sleep(2)
       
 
       cpydLog("info",("Updating variable definition"))
@@ -2409,8 +2608,14 @@ def autopilot():
       global USR_CFG_XML
       global USR_CREATE_XML
       global customValue
-
       exTime = round(stopTime - startTime)
+      finishedText = ("Finished ("+str(exTime)+"s)")
+
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,state=finishedText,details="AutoPilot",small_image="doodsuccess",small_text="Finished",buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+      
       cpydLog("ok",("Timer was stopped with a recorded time of "+str(exTime)+" seconds in live mode"))
       clear()
       cpydLog("ok",("AutoPilot stages complete, displaying user summary screen"))
@@ -2444,6 +2649,10 @@ def autopilot():
       cpydLog("wait",("Waiting for user input"))
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
       cpydLog("ok",("User input received"))
+      try:
+         RPC.close()
+      except:
+         None
       customValue = 0
       if USR_CREATE_XML == "True":
          if stageSelect == "1":
