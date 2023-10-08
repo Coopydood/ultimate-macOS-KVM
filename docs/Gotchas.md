@@ -1,13 +1,22 @@
 ## Gotchas
 ### Things that will grab you by the balls unexpectedly
 
+
+
+***
+
+**:warning: DEPRECATED DOCUMENT**
+
+A more organised version of this document can be found in the ``Issues`` file.
+***
+
 #### Introduction
 
 You know those computery things that make you facepalm and want to give up because you have no idea why it's happening to you, and all at 3AM running on no sleep? Yeah, I know I do, and I'll be referring to these god-forsaken moments as "gotchas". Because they gotcha. Then sprinkled on some sleep deprivation for good measure. 
 
 This document is for when you learn the definition above to be true, as a comforting guide through the stages of grief. Take a look and prepare yourself, or don't and hope that you don't need to come back here. But you will. Pinkie promise. :P
 
-Please note this document will be updated frequently.
+~~Please note this document will be updated frequently.~~
 
 ***
 <details><summary><h5>main.py: Permission denied</h5></summary>

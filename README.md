@@ -58,6 +58,7 @@ Optional dependencies can enhance your experience, such as using your VM in a GU
 <li><b>Virtual Machine Manager (GUI)</b> 》 <code>virt-manager</code></li>
 <li><b>Virsh</b> 》 <code>virsh</code></li>
 <li><b>Discord Rich Presence (pypresence)</b> 》 <code>python-pypresence</code> or, using pip, install <code>pypresence</code></li>
+<li><b>Network Block Device (NBD)</b> 》 <code>nbd</code> required for mounting the OpenCore image for editing on host system
 </ul>
 
 #### Oh, and you NEED Linux.
@@ -136,6 +137,14 @@ More detailed write-ups on the project and the scripts included, as well as some
 This is continually updated and made better as the project develops. Feel free to help out and [write your own!](https://github.com/Coopydood/ultimate-macOS-KVM/new/main/docs)
 
 Or, you can find some in the included [docs folder](https://github.com/Coopydood/ultimate-macOS-KVM/tree/main/docs).
+
+## Help and Troubleshooting
+
+Alongside the tutorial and explanation documents, this project includes troubleshooting guides for a wide variety of issues - ranging from project issues such as those in *AutoPilot*, or other issues such as GPU passthrough.
+
+You can search for your problem and find solutions in the [**Issues**](https://github.com/Coopydood/ultimate-macOS-KVM/wiki) section of the project wiki.
+
+If an unexpected problem with the ULTMOS project itself arises, it may be a bug, and can be reported [here](https://github.com/Coopydood/ultimate-macOS-KVM/issues/new).
 
 ## Updates
 
