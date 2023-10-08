@@ -62,7 +62,7 @@ def startup():
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
     clear()
-    os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging > /dev/null 2>&1") # Ensure no stale mounts
+    os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging") # Ensure no stale mounts
        
 
 
@@ -146,7 +146,7 @@ if detectChoice == "1":
                 print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
                 #print("     "+color.BOLD+"   ▼")
                 print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-                os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging > /dev/null 2>&1")
+                os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging")
                 time.sleep(3)
             
             elif detectChoice2 == "B" or detectChoice2 == "b":
@@ -231,7 +231,7 @@ elif detectChoice == "2":
                 print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
                 #print("     "+color.BOLD+"   ▼")
                 print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-                os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging > /dev/null 2>&1")
+                os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging")
                 time.sleep(3)
             
             elif detectChoice2 == "2":
@@ -295,7 +295,7 @@ elif detectChoice == "X" or detectChoice == "x":
         print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
         #print("     "+color.BOLD+"   ▼")
         print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-        os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging > /dev/null 2>&1")
+        os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging")
         time.sleep(3)
     
     elif detectChoice2 == "B" or detectChoice2 == "b":
