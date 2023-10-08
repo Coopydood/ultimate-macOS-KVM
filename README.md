@@ -138,11 +138,11 @@ This is continually updated and made better as the project develops. Feel free t
 
 Or, you can find some in the included [docs folder](https://github.com/Coopydood/ultimate-macOS-KVM/tree/main/docs).
 
-## Help and Troubleshooting
+## Help and Troubleshooting Issues
 
 Alongside the tutorial and explanation documents, this project includes troubleshooting guides for a wide variety of issues - ranging from project issues such as those in *AutoPilot*, or other issues such as GPU passthrough.
 
-You can search for your problem and find solutions in the [**Issues**](https://github.com/Coopydood/ultimate-macOS-KVM/wiki) section of the project wiki.
+You can search for your problem and find solutions in the [**Issues and Troubleshooting**](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Issues-and-Troubleshooting) section of the project wiki.
 
 If an unexpected problem with the ULTMOS project itself arises, it may be a bug, and can be reported [here](https://github.com/Coopydood/ultimate-macOS-KVM/issues/new).
 
