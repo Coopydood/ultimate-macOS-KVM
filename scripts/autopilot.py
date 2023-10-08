@@ -1346,7 +1346,7 @@ def autopilot():
       print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,"Catalina (10.15)",color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
-         print(color.END+"\n      1. Sonoma (14)")
+         print(color.END+"\n      1. Sonoma (14) (EXPERIMENTAL)")
          print(color.END+"      2. Ventura (13)")
          print(color.END+"      3. Monterey (12)")
          print(color.END+"      4. Big Sur (11)")
@@ -1835,7 +1835,7 @@ def autopilot():
             #os.system("rm -rf boot/EFI")
             time.sleep(2)
          cpydLog("info",("Selecting appropriate OpenCore image"))
-         if USR_TARGET_OS <= 1015 and USR_TARGET_OS >= 1013:
+         if USR_TARGET_OS <= 1015 and USR_TARGET_OS >= 1013 and USR_TARGET_OS < 1400:
             cpydLog("ok",("Selected OLD OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
@@ -1850,7 +1850,12 @@ def autopilot():
          elif USR_TARGET_OS <= 1012 and USR_TARGET_OS <= 107:
             cpydLog("ok",("Selected OLD LEGACY OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
-            os.system("cp resources/oc_store/legacy_old/OpenCore.qcow2 boot/OpenCore.qcow2")
+            os.system("cp resources/oc_store/legacy_new/OpenCore.qcow2 boot/OpenCore.qcow2")
+            cpydLog("ok",("OpenCore image copied"))
+         elif USR_TARGET_OS >= 1400:
+            cpydLog("ok",("Selected EXPERIMENTAL OpenCore image"))
+            cpydLog("info",("Copying OpenCore image in place"))
+            os.system("cp resources/oc_store/experimental/OpenCore.qcow2 boot/OpenCore.qcow2")
             cpydLog("ok",("OpenCore image copied"))
          else:
             cpydLog("ok",("Selected NEW OpenCore image"))
