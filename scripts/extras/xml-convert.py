@@ -122,7 +122,7 @@ def importXML():
         print("   For use with virsh / virt-manager\n")
         print("   You can now import your XML domain file into\n   virt-manager for GUI-based usage.")
         print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This stage requires superuser permissions.\n   You can also run the following command manually if you wish:\n\n    "+color.BOLD+"$ sudo virsh define "+apFilePathNoExt+".xml\n"+color.END)
-        print(color.BOLD+"      1. Import "+apFilePathNoExt+".xml")
+        print(color.BOLD+"      1. Import "+apFilePathNoExt+".xml"+color.YELLOW,"⚠"+color.END)
         print(color.END+"         Use virsh to define the domain\n")
         print(color.END+"      2. Select another file...")
         print(color.END+"      Q. Exit\n")
