@@ -173,6 +173,18 @@ See **Black screen or reset on AMD RX 5xxx / 6xxx (Navi) GPUs**
 
 </details>
 
+<details><summary><h5>Kernel: Couldn't alloc class "AppleKeyStoreTest"</h5></summary>
+
+Being stuck here after passing through a GPU on macOS Ventura and later may actually be deceptive. 
+
+Either the system has in fact panicked, or **it may still be booting in the background**. No, really!
+
+If you're "stuck" at ``Couldn't alloc class "AppleKeyStoreTest"``, wait up to 5 minutes. There may be a bug present in the macOS verbose system that prevents any more output after a certain stage.
+
+Found by @DomTrues.
+
+</details>
+
 ***
 
 #### QEMU and virt-manager

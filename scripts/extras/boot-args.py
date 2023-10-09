@@ -62,7 +62,7 @@ def startup():
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
     clear()
-    os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging") # Ensure no stale mounts
+    os.system("./scripts/domtrues/nbdassistant.py -u -q") # Ensure no stale mounts
        
 
 
@@ -73,7 +73,7 @@ startup()
 if detectChoice == "1":
     clear()
     print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To mount the OpenCore image,\n   the script needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
-    os.system("./scripts/domtrues/nbdassistant.py -m -q --disable-logging")
+    os.system("./scripts/domtrues/nbdassistant.py -m -q")
     # NOTE: IMPLEMENT ERROR CATCH HERE
     clear()
     plistFile = open("./boot/mnt/EFI/OC/config.plist","r")
@@ -91,15 +91,15 @@ if detectChoice == "1":
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print(color.BOLD+"\n      1. Fix black screen or reset on Navi GPUs")
     print(color.END+"         Fixes the post-install blackout on AMD RX 5xxx / 6xxx (Navi) GPUs")
-    #print(color.BOLD+"\n      2. Import XML file...")
-    #print(color.END+"         Use this option if you already have an XML file.\n         This option lets you import a previously-created XML file\n         into virsh for use with virt-manager.\n")
+    print(color.BOLD+"\n      2. Fix GPU initialisation on HD 7000 / R7 GPUs")
+    print(color.END+"         Fixes the initialisation of AMD Radeon HD 7000 and R7 series GPUs")
   
     #print(color.END+"\n      ?. Help...")
     print(color.END+"\n      M. Main menu")
     print(color.END+"      Q. Exit\n")
     detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
 
-    if detectChoice1 == "1":
+    if detectChoice1 == "1": # Navi Patch
         clear()
 
         if "agdpmod=pikera" in bootArgs:
@@ -146,7 +146,7 @@ if detectChoice == "1":
                 print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
                 #print("     "+color.BOLD+"   ▼")
                 print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-                os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging")
+                os.system("./scripts/domtrues/nbdassistant.py -u -q")
                 time.sleep(3)
             
             elif detectChoice2 == "B" or detectChoice2 == "b":
@@ -154,6 +154,62 @@ if detectChoice == "1":
             elif detectChoice == "Q" or detectChoice == "q":
                 exit
     
+    if detectChoice1 == "2": # R7 HD Patch
+        clear()
+
+        if "radpg=15" in bootArgs:
+            print("   "+"\n   "+color.BOLD+color.RED+"✖  BOOT ARGUMENT PATCH FAILED"+color.END)
+            print("   "+"Boot arguments were not updated")
+            print("   "+"\n   Your changes could not be saved.\n"+color.END)#print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
+        
+            print("   "+color.BOLD+color.RED+"ERROR:"+color.END+color.BOLD,"The selected patch is already applied."+color.END+"\n\n\n\n\n")
+            time.sleep(3)
+
+
+
+        else:
+            bootArgsNew = bootArgs+" radpg=15"
+            print("   "+"\n   "+color.BOLD+"Confirm Patch"+color.END)
+            print("   "+"Ready to apply")
+            print("   "+"\n   The selected patch has been added to your existing\n   boot arguments. Would you like to apply it?"+color.END)#print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
+            print("\n   "+color.BOLD+color.CYAN+"CURRENT:"+color.END+color.BOLD,bootArgs+color.END)
+            #print("     "+color.BOLD+"   ▼")
+            print("   "+color.BOLD+color.GREEN+"    NEW:"+color.END+color.BOLD,bootArgsNew+color.END)
+            #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
+            print(color.BOLD+"\n      1. Apply")
+            print(color.END+"         Add the patch and unmount the OpenCore image")
+            
+            #print(color.END+"         Use this option if you already have an XML file.\n         This option lets you import a previously-created XML file\n         into virsh for use with virt-manager.\n")
+            print(color.END+"\n      B. Back...")
+            #print(color.END+"      ?. Help...")
+            print(color.END+"      Q. Exit\n")
+            detectChoice2 = str(input(color.BOLD+"Select> "+color.END))
+
+            if detectChoice2 == "1":
+                backupOCPath = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
+                os.system("mkdir boot/"+backupOCPath)
+                os.system("cp boot/*.qcow2 boot/"+backupOCPath+"/")
+                plistFile = open("./boot/mnt/EFI/OC/config.plist","w")
+                updatedPlist = plist.replace(bootArgs,bootArgsNew)
+                plistFile.write(updatedPlist)
+                plistFile.close()
+                time.sleep(3)
+                clear()
+                print("   "+"\n   "+color.BOLD+color.GREEN+"✔  BOOT ARGUMENT PATCH APPLIED"+color.END)
+                print("   "+"Boot arguments updated")
+                print("   "+"\n   Your changes have been saved.\n   The new boot arguments are ready to use."+color.END)#print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
+                print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
+                #print("     "+color.BOLD+"   ▼")
+                print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
+                os.system("./scripts/domtrues/nbdassistant.py -u -q")
+                time.sleep(3)
+            
+            elif detectChoice2 == "B" or detectChoice2 == "b":
+                os.system("./scripts/extras/boot-args.py")
+            elif detectChoice == "Q" or detectChoice == "q":
+                exit
+   
+
     elif detectChoice == "M" or detectChoice == "m":
         startup()
 
@@ -163,7 +219,7 @@ if detectChoice == "1":
 elif detectChoice == "2":
     clear()
     print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To mount the OpenCore image,\n   the script needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
-    os.system("./scripts/domtrues/nbdassistant.py -m -q --disable-logging")
+    os.system("./scripts/domtrues/nbdassistant.py -m -q")
     # NOTE: IMPLEMENT ERROR CATCH HERE
     clear()
     plistFile = open("./boot/mnt/EFI/OC/config.plist","r")
@@ -231,7 +287,7 @@ elif detectChoice == "2":
                 print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
                 #print("     "+color.BOLD+"   ▼")
                 print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-                os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging")
+                os.system("./scripts/domtrues/nbdassistant.py -u -q")
                 time.sleep(3)
             
             elif detectChoice2 == "2":
@@ -253,7 +309,7 @@ elif detectChoice == "2":
 elif detectChoice == "X" or detectChoice == "x":
     clear()
     print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To mount the OpenCore image,\n   the script needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
-    os.system("./scripts/domtrues/nbdassistant.py -m -q --disable-logging")
+    os.system("./scripts/domtrues/nbdassistant.py -m -q")
     # NOTE: IMPLEMENT ERROR CATCH HERE
     clear()
     plistFile = open("./boot/mnt/EFI/OC/config.plist","r")
@@ -295,7 +351,7 @@ elif detectChoice == "X" or detectChoice == "x":
         print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
         #print("     "+color.BOLD+"   ▼")
         print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-        os.system("./scripts/domtrues/nbdassistant.py -u -q --disable-logging")
+        os.system("./scripts/domtrues/nbdassistant.py -u -q")
         time.sleep(3)
     
     elif detectChoice2 == "B" or detectChoice2 == "b":
