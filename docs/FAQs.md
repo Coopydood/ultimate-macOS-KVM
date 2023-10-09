@@ -120,6 +120,30 @@ When the project mentions "configs", it's typically referring to *files generate
 
 </details>
 
+<details><summary><h5>How do I enable/disable Discord rich presence?</h5></summary>
+
+To show off your AutoPilot progress or virtual machine status on your Discord profile, you have to enable **Discord rich presence**.
+
+You must have the ``pypresence`` dependency installed. This can be done via a system wide package, ``python-pypresence``, or by using ``pip install pypresence`` for external environments.
+
+The project will detect whether or not this is installed when you run AutoPilot, and marks the generated script accordingly. If you create an AutoPilot script with the dependency installed, your generated script will automatically have Discord rich presence enabled, and you don't have to do anything.
+
+If you install the dependency **after** generating a script - don't worry, it's still easy to enable. Simply open your generated boot script, and look at the ULTMOS variable block. Find the following line:
+
+```sh
+DISCORD_RPC=0
+```
+
+To enable rich presence, change ``0`` to ``1``, and vice versa to disable it.
+
+If you don't want to show your status when running AutoPilot itself, you can manually run the AutoPilot script with a disable argument:
+
+```sh
+$ ./scripts/autopilot.py --disable-rpc
+```
+
+</details>
+
 <details><summary><h5>I'm here for GPU (or any PCI) passthrough!</h5></summary>
 
 Great! The project can assist you with this too.
