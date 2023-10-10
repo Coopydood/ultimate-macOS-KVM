@@ -14,7 +14,7 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 
 Tired of all the restraints and poor performance of macOS VMs in hypervisors like VirtualBox or VMware? Well, the story changes when you run your virtual machines in **kernel space**. Welcome to the world of **K**ernel **V**irtual **M**achines.
 
-You might be new to QEMU/KVM, or a long-time veteran - either way, this project aims to help you build a macOS virtual machine that can take full advantage of the power of KVM - but in a user-friendly and approachable way.
+You might be new to QEMU/KVM, or a long-time veteran - either way this project aims to help you build a macOS virtual machine that can take full advantage of the power of KVM - but in a user-friendly and approachable way.
 
 Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little help wrapping your head around this stuff, feel free to check out the [FAQs](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/FAQs) for some quick knowledge on the basics.
 
@@ -63,11 +63,9 @@ Optional dependencies can enhance your experience, such as using your VM in a GU
 
 #### Oh, and you NEED Linux.
 
-Shocker; KVM is a module built into the *Linux kernel*, <ins>not **Windows Subsystem for Linux** or some UNIX-like terminal</ins>. You need a <ins>full install</ins> of at least base Linux **on your host**. Don't try any of that VM inception shenanigans.
+Shocker; KVM is a module built into the *Linux kernel*, not **Windows Subsystem for Linux** or some UNIX-like terminal. You need a <ins>full install</ins> of at least base Linux **on your host**. Don't try any of that VM inception shenanigans.
 
 The easiest way to do this is by grabbing some mainstream Linux distro, like **Ubuntu, Linux Mint, Manjaro, endeavourOS** - among many, many others. You can pick any one you like. If it's Linux - you can use this project. *I use Arch BTW.*
-
-Please submit an Issue 
 
 ## Features
 
@@ -146,7 +144,7 @@ Alongside the tutorial and explanation documents, this project includes troubles
 
 You can search for your problem and find solutions in the [**Issues and Troubleshooting**](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Issues-and-Troubleshooting) section of the project wiki.
 
-If an unexpected problem with the ULTMOS project itself arises, it may be a bug, and should be reported [here](https://github.com/Coopydood/ultimate-macOS-KVM/issues/new).
+If an unexpected problem with the ULTMOS project itself arises, it may be a bug, and can be reported [here](https://github.com/Coopydood/ultimate-macOS-KVM/issues/new).
 
 ## Updates
 
@@ -164,26 +162,26 @@ Here's a few screenshots showing **ultimate-macOS-KVM** in action!
 
 ## Disclaimer
 
-This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't expect much as this is a passion-project and not a priority in my life.
+This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't expect much as this is a passion project and not a priority in my life.
 
 - I'm not responsible for any time you waste using this project.
 - I'm not responsible if you make an oopsie whoopsie.
-- Do NOT run anything as ``sudo``. If you have an urge to then you need to break that habit _**asap.**_ Most of my scripts do not require superuser privileges, however, the ones that do require them are mentioned.
+- Do NOT run anything as ``sudo``. If you have an urge to then you need to break that habit _**asap.**_ Most of my scripts do not require superuser privileges, however, the ones that do are clearly marked with a yellow ⚠️ next to the operation requiring such permissions.
 - Expect headaches. Some severe.
-- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassles, you <ins>can and will</ins> run into [stupid gotchas](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Gotchas) that require trial and error out of my control.
+- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassles, you WILL run into [stupid gotchas](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Gotchas) that require trial and error out of my control.
 - I'm by no means an expert on this stuff nor would I claim to be.
-- I've simply made *what <ins>I</ins> had to go through **easier** for you*. Hopefully.
+- I've simply made *what I had to go through **easier** for you*. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
 
 ## Legal
 
 This project contains a string of text known as an OS Key (OSK). 
 
-Apple use this key to make it more difficult for non-Macintosh computers to run macOS, by requiring the key to be provided by the SMBIOS. 
+Apple uses this key to make it more difficult for non-Macintosh computers to run macOS, by requiring the key to be provided by the SMBIOS. 
 
 This OS key is widely available on the Internet and is no longer considered a "secret", and was even included in a [public court document](http://www.rcfp.org/sites/default/files/docs/20120105_202426_apple_sealing.pdf).
 
-Apple have attempted to classify the OSK as a trade secret, but have ultimately failed in doing so. As a result, it is freely included within this project, as with [OSX-KVM](https://github.com/kholia/OSX-KVM).
+Apple has attempted to classify the OSK as a trade secret but has ultimately failed in doing so. As a result, it is freely included within this project, as with [OSX-KVM](https://github.com/kholia/OSX-KVM).
 
 ## Credits & Greetz
 
@@ -197,7 +195,7 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[CyberneticSquid](https://github.com/cyberneticsquid)** 》 Testing for me at stupid-o'-clock because he's a cool Aussie.
 - **[Cake](https://github.com/cam-jm)** 》 Another Aussie testing for me in the middle of my sleep-deprived nights, with a slight obsession over cake.
 - **[DomTrues](https://github.com/domtrues)** 》 My personal constitution-munching American. Legend has it that I live in his attic, although even I'm not sure. Love this guy either way.
-- **[Kaz](https://github.com/Eaz11)** 》 Other than his brilliant English accent's pronounciations (including "macOS Syria"), he's done extensive testing. Say hi to your nephew for me.
+- **[Kaz](https://github.com/Eaz11)** 》 Other than his brilliant English accent's pronunciations (including "macOS Syria"), he's done extensive testing. Say hi to your nephew for me.
 - **[GigantTech](https://twitter.com/TechGigant)** 》 Moderately annoying German guy that I convinced to install Linux subsequently letting him test my project. It's free real estate!
 
 ***
