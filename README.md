@@ -102,7 +102,7 @@ $ git clone https://github.com/Coopydood/ultimate-macOS-KVM
 Alternatively, you can download the latest release here: [Download](https://github.com/Coopydood/ultimate-macOS-KVM/archive/refs/heads/main.zip)
 
 Okay, so you've cloned my repo, and `cd`'d into the directory. Great!
-Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already. Here's an example for Arch-based systems (and pretty much most Linux distros, unless you're unfortunate enough to use Gentoo):
+Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already. Here's an example for Arch-based systems (and pretty much most Linux distros):
 
 ```sh
 $ sudo systemctl enable libvirtd
