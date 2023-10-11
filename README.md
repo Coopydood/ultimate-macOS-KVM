@@ -16,7 +16,7 @@ Tired of all the restraints and poor performance of macOS VMs in hypervisors lik
 
 You might be new to QEMU/KVM, or a long-time veteran - either way this project aims to help you build a macOS virtual machine that can take full advantage of the power of KVM - but in a user-friendly and approachable way.
 
-Scripts? Configs? QEMU arguments? A *"qcow"* file? Moo? If you need a little help wrapping your head around this stuff, feel free to check out the [FAQs](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/FAQs) for some quick knowledge on the basics.
+Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little help wrapping your head around this stuff, feel free to check out the [FAQs](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/FAQs) for some quick knowledge on the basics.
 
 <br>
 <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1244b64e-95b2-469a-8271-43c56e72b065" alt="ultimate-macOS-KVM" width="1400"/>
@@ -63,7 +63,7 @@ Optional dependencies can enhance your experience, such as using your VM in a GU
 
 #### Oh, and you NEED Linux.
 
-Shocker; KVM is a module built into the *Linux kernel*. Not **Windows Subsystem for Linux** or some UNIX-like terminal. You need a full install of at least base Linux **on your host**. Don't try any of that VM inception shenanigans.
+Shocker; KVM is a module built into the *Linux kernel*, not **Windows Subsystem for Linux** or some UNIX-like terminal. You need a <ins>full install</ins> of at least base Linux **on your host**. Don't try any of that VM inception shenanigans.
 
 The easiest way to do this is by grabbing some mainstream Linux distro, like **Ubuntu, Linux Mint, Manjaro, endeavourOS** - among many, many others. You can pick any one you like. If it's Linux - you can use this project. *I use Arch BTW.*
 
@@ -101,7 +101,7 @@ $ git clone https://github.com/Coopydood/ultimate-macOS-KVM
 
 Alternatively, you can download the latest release here: [Download](https://github.com/Coopydood/ultimate-macOS-KVM/archive/refs/heads/main.zip)
 
-Okay, so you've cloned my repo, and cd'd into the directory. Great!
+Okay, so you've cloned my repo, and `cd`'d into the directory. Great!
 Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already. Here's an example for Arch-based systems:
 
 ```sh
@@ -126,7 +126,7 @@ $ ./main.py
 
 ## I'm here for GPU passthrough
 
-...and you've come to the right place. ultimate-macOS-KVM includes several handy built-in tools to make VFIO-PCI passthrough (including GPUs) as painfree as possible. Please see the documentation on how to get started with these tools.
+...and you've come to the right place. ultimate-macOS-KVM includes several handy built-in tools to make VFIO-PCI passthrough (including GPUs) as pain-free as possible. Please see the documentation on how to get started with these tools.
 
 Oh, and speaking of...
 
@@ -150,7 +150,7 @@ If an unexpected problem with the ULTMOS project itself arises, it may be a bug,
 
 This project has been designed to be updated and made better over time.
 
-As you use it to generate your personal files, having to re-clone the entire repo yourself while preserving your files would be a right pain in the backside. Therefore, there's an automated updater script built right-in that you can use to safely update in-place to newer versions of this project, without affecting any of your personal config files, virtual hard drives, or anything else not part of the project files. And, if an update dramatically changes directory structures from your current version, the updater automatically disables its in-place update mechanism to prevent data loss.
+As you use it to generate your personal files, having to re-clone the entire repo yourself while preserving your files would be a right pain in the backside. Therefore, there's an automated updater script built right in that you can use to safely update in-place to newer versions of this project, without affecting any of your personal config files, virtual hard drives, or anything else not part of the project files. And, if an update dramatically changes directory structures from your current version, the updater automatically disables its in-place update mechanism to prevent data loss.
 
 Of course, if you're just testing the project, then a "clean install" is probably still preferable.
 
@@ -162,26 +162,26 @@ Here's a few screenshots showing **ultimate-macOS-KVM** in action!
 
 ## Disclaimer
 
-This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't expect much as this is a passion-project and not a priority in my life.
+This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't expect much as this is a passion project and not a priority in my life.
 
 - I'm not responsible for any time you waste using this project.
 - I'm not responsible if you make an oopsie whoopsie.
-- Do NOT run anything as ``sudo``. If you have an urge to then you need to break that habit _**asap.**_ None of my scripts require superuser privileges.
+- Do NOT run anything as ``sudo``. If you have an urge to then you need to break that habit _**asap.**_ Most of my scripts do not require superuser privileges, however, the ones that do are clearly marked with a yellow ⚠️ next to the operation requiring such permissions.
 - Expect headaches. Some severe.
-- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassle, you WILL run into [stupid gotchas](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Gotchas) that require trial and error out of my control.
+- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassles, you WILL run into [stupid gotchas](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Gotchas) that require trial and error out of my control.
 - I'm by no means an expert on this stuff nor would I claim to be.
-- I've simply made *what I had to go through* **easier** for you. Hopefully.
+- I've simply made *what I had to go through **easier** for you*. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
 
 ## Legal
 
 This project contains a string of text known as an OS Key (OSK). 
 
-Apple use this key to make it more difficult for non-Macintosh computers to run macOS, by requiring the key to be provided by the SMBIOS. 
+Apple uses this key to make it more difficult for non-Macintosh computers to run macOS, by requiring the key to be provided by the SMBIOS. 
 
 This OS key is widely available on the Internet and is no longer considered a "secret", and was even included in a [public court document](http://www.rcfp.org/sites/default/files/docs/20120105_202426_apple_sealing.pdf).
 
-Apple have attempted to classify the OSK as a trade secret, but have ultimately failed in doing so. As a result, it is freely included within this project, as with [OSX-KVM](https://github.com/kholia/OSX-KVM).
+Apple has attempted to classify the OSK as a trade secret but has ultimately failed in doing so. As a result, it is freely included within this project, as with [OSX-KVM](https://github.com/kholia/OSX-KVM).
 
 ## Credits & Greetz
 
@@ -195,9 +195,11 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[CyberneticSquid](https://github.com/cyberneticsquid)** 》 Testing for me at stupid-o'-clock because he's a cool Aussie.
 - **[Cake](https://github.com/cam-jm)** 》 Another Aussie testing for me in the middle of my sleep-deprived nights, with a slight obsession over cake.
 - **[DomTrues](https://github.com/domtrues)** 》 My personal constitution-munching American. Legend has it that I live in his attic, although even I'm not sure. Love this guy either way.
-- **[Kaz](https://github.com/Eaz11)** 》 Other than his brilliant English accent's pronounciations (including "macOS Syria"), he's done extensive testing. Say hi to your nephew for me.
+- **[Kaz](https://github.com/Eaz11)** 》 Other than his brilliant English accent's pronunciations (including "macOS Syria"), he's done extensive testing. Say hi to your nephew for me.
 - **[GigantTech](https://twitter.com/TechGigant)** 》 Moderately annoying German guy that I convinced to install Linux subsequently letting him test my project. It's free real estate!
 
 ***
 
-<center><img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/39d78d4b-8ce8-44f4-bba7-fefdbf2f80db" width="15%"></img></center>
+<p align="center">
+  <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/39d78d4b-8ce8-44f4-bba7-fefdbf2f80db" width="10%"> </img>
+</p>
