@@ -59,7 +59,6 @@ version = version.read()
 
 versionDash = version.replace(".","-")
 
-
 # Discord rich presence routine
 client_id = "1149434759152422922"
 try:
@@ -92,7 +91,6 @@ class color:
    END = '\033[0m'
 
 
-
 def startup():
     global detectChoice
     print("\n\n   Welcome to"+color.BOLD+color.CYAN,"Ultimate macOS KVM"+color.END,"(v"+version+")")
@@ -113,10 +111,8 @@ def startup():
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print("   Select an option to continue.")
 
-
     if os.path.exists("./blobs/USR_TARGET_OS.apb") and not os.path.exists("./blobs/user/USR_TARGET_OS.apb"):  # Rescue live blobs if coming from older repo version
         os.system("mv ./blobs/*.apb ./blobs/user")
-
 
     if os.path.exists("./blobs/user/USR_CFG.apb"):
             global apFilePath
@@ -143,8 +139,6 @@ def startup():
                 global VALID_FILE
                 
                 apFile = open("./"+apFilePath,"r")
-
-                
 
                 if "REQUIRES_SUDO=1" in apFile.read():
                     REQUIRES_SUDO = 1
@@ -197,12 +191,8 @@ def startup():
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
-       
-
 
 def clear(): print("\n" * 150)
-
-
 
 os.system("chmod +x -R scripts/*.py")
 os.system("chmod +x -R scripts/extras/*.py")
@@ -211,9 +201,6 @@ os.system("chmod +x -R scripts/restore/*.py")
 os.system("chmod +x -R scripts/*.sh")
 os.system("chmod +x resources/dmg2img")
 os.system("chmod +x scripts/domtrues/*.py")
-
-
-
 
 output_stream = os.popen('lspci')
 vmc1 = output_stream.read()
@@ -226,19 +213,14 @@ isVM = False
 
 if "VMware" in vmc1:
    detected = 1
-
 if "VirtualBox" in vmc1 or "Oracle" in vmc1:
    detected = 1
-
 if "Redhat" in vmc1 or "RedHat" in vmc1 or "QEMU" in vmc1:
    detected = 1
-
 if "Bochs" in vmc1 or "Sea BIOS" in vmc1 or "SeaBIOS" in vmc1:
    detected = 1
-
 if platform.system() != "Linux":
     detected = 2
-
 
 clear()
 
@@ -273,25 +255,48 @@ elif detected == 2:
         print("\n   "+color.BOLD+color.RED+"✖ INCOMPATIBLE OPERATING SYSTEM"+color.END)
         print("   "+platform.system()+" detected")
         print("\n   I've determined that you're using "+platform.system()+". \n   Put simply, this project won't work on here.\n   To save you further disappointment, I'm instead\n   throwing you this error.\n\n   Sorry :/"+color.END)
-        
         print("\n   "+color.BOLD+color.RED+"PROBLEM:",color.END+"well... not Linux... ¯\_(ツ)_/¯"+color.END)
         print("\n\n\n")
         time.sleep(5)
         sys.exit
-
         
 else:
     clear()
     startup()
 
 
-
-
-
-
-
-
-
+"""
+                    NO SWITCHES?
+                                                    
+        -..-... :-.      :-:  ::    .:.::::  :::+:- 
+       .::::-:::=*-+=--=-::-+==-:-::      =-+=:..:- 
+       @-:=##*-:==:=--::---::.--:-==:--+-::-::::::: 
+       =:.-*+:::++-----:---+-=-===-==-::=***==::::: 
+       +==-::::::==--=--::-+:-+*-:-:-:::.. :-+.---: 
+      *@@=::::--*=-:-=-:--=:::::. :::--=:==--+==::= 
+      *:.:::=-::-*-==--=+=+=***+-+-::  -..==++--::@ 
+     #=**@@@@+:::+**--=--:::-:+*%%**=----:-+=-==-+# 
+    -@@@*:     :+ -@@**=======::==***++===+++=::::  
+            +@%-.+   @@@@@@@@@@@+-=++==+*+=*=---.   
+       *#@@@#+:=-*#@           +@@#-:++*%*=-..=.    
+        :@*=+=-=--:-%@+           -===%%@+:-=       
+          :@@@@*:=+:-*@@@@@@+       ***@*:.%        
+               #*@+::- :.-*%@@@@*    +%@:#          
+           @@    @#:::-*@%*%@@@%@@@= =@*-           
+           @@  -  %:-=         @#-+- #@= ##         
+            @     *:*. @@       +:  -@  #           
+          @:    @@+-+  @:     @  =  @               
+          :#*%@@@=   .  @=   *+ @@@@.               
+           - -#*   -=.        -@@@@:                
+           :+#+    :==**%++*#@@#=+                  
+           %#:  .:: ..::-==:.   =                   
+           =. :+*##-:+-.::...: -*                   
+          +  +@@@@**@% .:::.  =:                    
+         *@@@@@@@*+=   .:-: -*:                     
+         *@@@@@#     .. .-:=#=                      
+           -:  =@@@@@@@: :=#-                       
+           @.     -   @@ :@-                        
+"""                                                    
 
 if detectChoice == "1":
     os.system('./scripts/autopilot.py')
