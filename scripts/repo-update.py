@@ -263,7 +263,7 @@ if integrity == 1:
             print(color.BOLD+"         Target Version\n   "+color.BOLD+"          v"+webVersion,"\n"+color.END)
             print("   Something went wrong during the update and it was\n   not completed. Try updating manually.\n\n")  
 
-      elif detectChoice1 == "2":
+      elif detectChoice1 == "2" and noDelta == 0 or detectChoice1 and noDelta == 1:
          if args.version is not None:
             webVersion = args.version
          
