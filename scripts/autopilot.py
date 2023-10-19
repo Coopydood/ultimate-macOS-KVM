@@ -2183,7 +2183,18 @@ def autopilot():
                   apFileM = apFileM.replace("#    ./main.py","")
                   apFileM = apFileM.replace("############################################################."," ")
 
-                  apVars[19] = "macOS "+apVars[19]
+                  #apVars[19] = "macOS "+apVars[19]
+
+                  apVars[2] = apVars[2].replace("macOS ","")
+                  apVars[2] = apVars[2].replace("Mac OS X ","")
+
+                  macOSVer = int(apVars[2].replace(".",""))
+
+
+                  if int(macOSVer) <= 999 and int(macOSVer) > 99:
+                     apFileM = apFileM.replace("$USR_NAME","Mac OS X "+apVars[19]+"")
+                  else:
+                     apFileM = apFileM.replace("$USR_NAME","macOS "+apVars[19]+"")
 
                   cpydLog("info",("Converting to XML format"))
                   apFileM = apFileM.replace("$USR_NAME",apVars[19]+"")

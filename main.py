@@ -193,7 +193,7 @@ def startup():
     
     print(color.END+"      E. Extras...")
     print(color.END+"      W. What's new?")
-    #print(color.END+"      U. Check for updates")
+    print(color.END+"      U. Check for updates")
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
@@ -316,9 +316,9 @@ elif detectChoice == "w" or detectChoice == "W":
     time.sleep(6)
     clear()
     os.system('./main.py')
-#elif detectChoice == "u" or detectChoice == "U":
-#    clear()
-#    os.system('./scripts/repo-update.py')
+elif detectChoice == "u" or detectChoice == "U":
+    clear()
+    os.system('./scripts/repo-update.py')
 elif detectChoice == "q" or detectChoice == "Q":
     exit
 elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FILE == 1:
