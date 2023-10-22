@@ -178,7 +178,8 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 
 ## Legal
 
-This project contains a string of text known as an OS Key (OSK). 
+> [!WARNING]
+> This project contains a string of text known as an OS Key (OSK). 
 
 Apple uses this key to make it more difficult for non-Macintosh computers to run macOS, by requiring the key to be provided by the SMBIOS. 
 
