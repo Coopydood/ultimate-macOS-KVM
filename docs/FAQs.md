@@ -54,7 +54,7 @@ Does it run Crysis? Yes? You're wrong. Anyway, the answer is *probably*.
 
 Any recent Linux kernel has KVM built right in, meaning you don't have to do any extra setup on that front. 
 
-> [!WARNING]
+> [!IMPORTANT]
 > You **must** be booting in UEFI mode, and **NOT** legacy BIOS mode. Secure Boot should also ideally be disabled.
 
 CSM and ROM-BAR may need to be enabled / disabled based on your specific system. See the [gotchas page](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Gotchas) for more on this.
