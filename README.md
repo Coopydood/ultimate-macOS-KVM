@@ -101,7 +101,7 @@ $ git clone https://github.com/Coopydood/ultimate-macOS-KVM
 ```
 
 > [!NOTE]
-> Alternatively, you can download the latest release here: [Download](https://github.com/Coopydood/ultimate-macOS-KVM/archive/refs/heads/main.zip)
+> Alternatively, you can download the latest release [here](https://github.com/Coopydood/ultimate-macOS-KVM/archive/refs/heads/main.zip)
 
 Okay, so you've cloned my repo, and `cd`'d into the directory. Great!
 Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already. Here's an example for Arch-based systems:
