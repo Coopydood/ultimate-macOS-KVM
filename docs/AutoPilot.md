@@ -59,7 +59,8 @@ If this confuses you - and I don't blame you, I've confused myself - then leave 
 ## 5. Set CPU model
 This sets the model of the virtual CPU, and subsequently what the guest OS recognizes it as.
 
-**THIS SHOULD NOT BE CHANGED UNLESS YOU KNOW WHAT IT MEANS!** Refer to the [official QEMU documentation on CPU models](https://qemu-project.gitlab.io/qemu/system/qemu-cpu-models.html) for a comprehensive list of acceptable values.
+> [!WARNING]
+> **THIS SHOULD NOT BE CHANGED UNLESS YOU KNOW WHAT IT MEANS!** Refer to the [official QEMU documentation on CPU models](https://qemu-project.gitlab.io/qemu/system/qemu-cpu-models.html) for a comprehensive list of acceptable values.
 
 If you _**know**_ your **host** CPU model is supported natively by macOS (i.e. Intel Core i3, i5, i7, i9) or at least a **similar variant of a supported model** (such as the i9-10900K being similar to Apple's i9-10910), you can expose the real model to the guest using the `host` value. It might do something. Use at your own risk.
 
@@ -72,7 +73,8 @@ If you _**know**_ your **host** CPU model is supported natively by macOS (i.e. I
 ## 6. Set CPU feature arguments
 This lets you change the feature set of the virtual CPU. If you're a nerdy nerd nerd who nerds then you might find benefit in tinkering with this, but otherwise:
 
-**Don't change this unless you know what you're doing.**
+> [!WARNING]
+> **Don't change this unless you know what you're doing.**
 
 |                       **Default**                       |       Accepted      |    _Examples_    |
 |:-------------------------------------------------------:|:-------------------:|:----------------:|
@@ -83,7 +85,8 @@ This lets you change the feature set of the virtual CPU. If you're a nerdy nerd 
 ## 7. Set amount of allocated RAM
 This one is very similar to the virtual CPU cores option in that it should be scaled relative to your host's hardware. macOS is surprisingly lenient when it comes to lesser RAM amounts, so you don't need to overdo it. 
 
-My only recommendation would be: [_total host RAM_] − [_host idle RAM usage_] − 1GB >= **total virtual RAM**
+> [!NOTE]
+> My only recommendation would be: [_total host RAM_] − [_host idle RAM usage_] − 1GB >= **total virtual RAM**
 
 Example: If your host has 16GB total RAM, your host uses 4GB of RAM when idle, don't use any more than 11GB of RAM for the virtual machine. ([_16GB_] − [_4GB_] − 1GB = 11GB)
 
@@ -97,7 +100,8 @@ You should think carefully about this one as it might be hard to change later. T
 
 If you're just testing the project, you can leave it as is. If you plan on using the virtual machine long-term, perhaps make it a bit bigger to give yourself room.
 
-**NOTE: This is a dynamically-growing disk. The virtual hard disk file will grow as you use it. The full capacity is NOT used on the host's storage upon creation. If you've ever used VMware's virtual disks, it's the same as that.** Please also note that the _actual_ virtual capacity of the hard disk may be slightly larger than the value you specify.
+> [!NOTE]
+> **This is a dynamically-growing disk. The virtual hard disk file will grow as you use it. The full capacity is NOT used on the host's storage upon creation. If you've ever used VMware's virtual disks, it's the same as that.** Please also note that the _actual_ virtual capacity of the hard disk may be slightly larger than the value you specify.
 
 | **Default** |    Accepted   |      _Examples_     |
 |:-----------:|:-------------:|:-------------------:|
@@ -151,7 +155,8 @@ The default resolution is **1280x720** and is recommended for most users - at le
 
 Custom values are not supported. When inputting a value at this stage, you will be given a list of supported resolutions to select from. You must then type the number next to the corresponding resolution to select it, *do not type the resolution itself*.
 
-**NOTE: This becomes irrelevant if you use GPU passthrough. Virtual screens are replaced by your physical monitors and their EDID data, which defines available resolutions. This stage is only useful for those not interested in using passthrough.**
+> [!NOTE]
+> **This becomes irrelevant if you use GPU passthrough. Virtual screens are replaced by your physical monitors and their EDID data, which defines available resolutions. This stage is only useful for those not interested in using passthrough.**
 
 | **Default** |                                             Accepted                                            |       _Examples_      |
 |:-----------:|:-----------------------------------------------------------------------------------------------:|:---------------------:|

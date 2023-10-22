@@ -54,7 +54,8 @@ Does it run Crysis? Yes? You're wrong. Anyway, the answer is *probably*.
 
 Any recent Linux kernel has KVM built right in, meaning you don't have to do any extra setup on that front. 
 
-You **must** be booting in UEFI mode, and **NOT** legacy BIOS mode. Secure Boot should also ideally be disabled.
+> [!WARNING]
+> You **must** be booting in UEFI mode, and **NOT** legacy BIOS mode. Secure Boot should also ideally be disabled.
 
 CSM and ROM-BAR may need to be enabled / disabled based on your specific system. See the [gotchas page](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Gotchas) for more on this.
 
@@ -124,7 +125,8 @@ When the project mentions "configs", it's typically referring to *files generate
 
 To show off your AutoPilot progress or virtual machine status on your Discord profile, you have to enable **Discord rich presence**.
 
-You must have the ``pypresence`` dependency installed. This can be done via a system wide package, ``python-pypresence``, or by using ``pip install pypresence`` for external environments.
+> [!NOTE]
+> You must have the ``pypresence`` dependency installed. This can be done via a system wide package, ``python-pypresence``, or by using ``pip install pypresence`` for external environments.
 
 The project will detect whether or not this is installed when you run AutoPilot, and marks the generated script accordingly. If you create an AutoPilot script with the dependency installed, your generated script will automatically have Discord rich presence enabled, and you don't have to do anything.
 
@@ -216,7 +218,8 @@ Anything below the variables should not be changed, except the designated lines 
 ##########################################################################
 ```
 
-You may prefer to comment-out the lines instead, in case you need to re-attach the base system image again later.
+> [!NOTE]
+> You may prefer to comment-out the lines instead, in case you need to re-attach the base system image again later.
 
 </details>
 

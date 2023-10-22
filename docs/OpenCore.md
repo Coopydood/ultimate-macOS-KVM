@@ -27,7 +27,8 @@ So, in order to sign in to your own Apple ID safely, you need your *own* serial 
 #### Getting your own serial number
 Now that you understand the *"why"*, it's time to learn the *"how"*.
 
-Unless you're booting macOS for the first time *with an already-modified OpenCore image containing a unique serial number*, you **should NOT sign in with your Apple ID during Setup Assistant under ANY CIRCUMSTANCES.**
+> [!IMPORTANT]
+> Unless you're booting macOS for the first time *with an already-modified OpenCore image containing a unique serial number*, you **should NOT sign in with your Apple ID during Setup Assistant under ANY CIRCUMSTANCES.**
 
 Create a "local" user account by skipping the Apple ID stage of the Setup Assistant. After you complete the Setup Assistant with a regular local account, you can continue.
 

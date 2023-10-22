@@ -4,10 +4,9 @@ Make sure you have **all** [dependencies](https://github.com/Coopydood/ultimate-
 
 ***
 
-**⚠ VERSION WARNING**
-
-As of v0.9.0, the main menu file is now `main.py`. This wiki has been updated to reflect this change.
-If you are on an older project version (<= v0.8.6), this file will still be named `setup.py`.
+> [!WARNING]
+> As of v0.9.0, the main menu file is now `main.py`. This wiki has been updated to reflect this change.
+> If you are on an older project version (<= v0.8.6), this file will still be named `setup.py`.
 ***
 
 ```
@@ -36,8 +35,6 @@ When using the script, make sure you are cd'd into the `ultimate-macOS-KVM` repo
 ```
 
 ***
-**⚠ WARNING!**
-
-Do *not* use `sudo`. If you're in the habit of running everything with superuser permissions - break that habit before it breaks you.
-
-None of my scripts require `sudo` or root permissions. The only exception to this would be when running a config script *with a physical PCI device passed through using VFIO-PCI*, as this may require superuser permissions as you're dealing with physical devices.
+> [!IMPORTANT]
+> Do *not* use `sudo`. If you're in the habit of running everything with superuser permissions - break that habit before it breaks you.
+> None of my scripts require `sudo` or root permissions. The only exception to this would be when running a config script *with a physical PCI device passed through using VFIO-PCI*, as this may require superuser permissions as you're dealing with physical devices.

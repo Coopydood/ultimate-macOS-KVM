@@ -7,7 +7,8 @@ You know those computery things that make you facepalm and want to give up becau
 
 This document contains numerous issues that you may encounter when using both this project and macOS itself - ranging from AutoPilot to GPU passthrough issues. This document is a better, more organised version of the old ``Gotchas.md`` file.
 
-This document will be updated frequently.
+> [!NOTE]
+> This document will be updated frequently.
 
 ***
 
@@ -55,7 +56,8 @@ If you're **sure** this is an error, you can bypass this check with the `--skip-
 $ ./main.py --skip-os-check
 ```
 
-Doing so with an unsupported OS may have unexpected consequences, and ones I am not prepared to take responsibility for. The check is implemented for a reason - although mostly to save you the disappointment.
+> [!WARNING]
+> Doing so with an unsupported OS may have unexpected consequences, and ones I am not prepared to take responsibility for. The check is implemented for a reason - although mostly to save you the disappointment.
 
 </details>
 
@@ -273,7 +275,8 @@ Even if the AutoPilot script **is** valid, it may still be incompatible.
 
 This is because the underlying structure of AP config files was changed in [v0.9.2](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-9-2.md), and the XML conversion tool looks for this structure.
 
-Therefore, any AutoPilot config files created using **v0.9.1 or earlier** should **NOT** be used with the XML conversion tool. 
+> [!WARNING]
+> Therefore, any AutoPilot config files created using **v0.9.1 or earlier** should **NOT** be used with the XML conversion tool. 
 
 Support for updating legacy AP files may come in the future, but for now it is recommended that you simply create a new AP config. **You can keep your data** - just have your existing ``HDD.qcow2`` file in the root ``ultimate-macOS-KVM`` folder, and when AutoPilot reaches the hard disk creation stage, you'll be given the option to use the existing HDD file. You can also skip the macOS image stage if macOS is already installed.
 

@@ -40,7 +40,8 @@ Here's a table with my best judgement on minimum, recommended, and best system r
 
 ## Dependencies
 
-You must also have all the required dependencies installed before starting. 
+> [!IMPORTANT]
+> You must have all the required dependencies installed before starting. 
 
 Optional dependencies can enhance your experience, such as using your VM in a GUI, or showing what macOS version you're currently running on your Discord profile.
 
@@ -99,7 +100,8 @@ Make sure you have **all** [dependencies](https://github.com/Coopydood/ultimate-
 $ git clone https://github.com/Coopydood/ultimate-macOS-KVM
 ```
 
-Alternatively, you can download the latest release here: [Download](https://github.com/Coopydood/ultimate-macOS-KVM/archive/refs/heads/main.zip)
+> [!NOTE]
+> Alternatively, you can download the latest release here: [Download](https://github.com/Coopydood/ultimate-macOS-KVM/archive/refs/heads/main.zip)
 
 Okay, so you've cloned my repo, and `cd`'d into the directory. Great!
 Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already. Here's an example for Arch-based systems:
@@ -144,7 +146,8 @@ Alongside the tutorial and explanation documents, this project includes troubles
 
 You can search for your problem and find solutions in the [**Issues and Troubleshooting**](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Issues-and-Troubleshooting) section of the project wiki.
 
-If an unexpected problem with the ULTMOS project itself arises, it may be a bug, and can be reported [here](https://github.com/Coopydood/ultimate-macOS-KVM/issues/new).
+> [!NOTE]
+> If an unexpected problem with the ULTMOS project itself arises, it may be a bug, and can be reported [here](https://github.com/Coopydood/ultimate-macOS-KVM/issues/new).
 
 ## Updates
 
