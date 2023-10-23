@@ -74,7 +74,9 @@ Here's a table with my best judgment on minimum, recommended, and best system re
 <br>
 
 ## Dependencies
-The project requires several other packages to function properly, while others can be optionally installed to enhance your experience. All of the dependencies, both required and optional, are listed below
+The project requires several other packages to function properly, while others can be optionally installed to enhance your experience. 
+
+All of the dependencies, both required and optional, are listed below.
 
 <b>Required</b>
 <ul>
@@ -109,7 +111,7 @@ Shocker; KVM is a module built into the *Linux kernel*, not **Windows Subsystem 
 The easiest way to do this is by grabbing some mainstream Linux distro, like **Ubuntu, Linux Mint, Manjaro, endeavourOS** - among many, many others. You can pick any one you like. If it's Linux - you can use this project. *I use Arch BTW.*
 
 > [!NOTE]
-> Running this on Windows or macOS is as pointless as those ice cube dispensers on fridge doors
+> Running this on Windows or macOS is as pointless as those ice cube dispensers on fridge doors...
 
 ***
 
