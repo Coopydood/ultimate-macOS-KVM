@@ -1,4 +1,6 @@
-<a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/492731ef1d95d2da534c660b001550f4d76a6c68/resources/images/bannerAlphaBasic.png?raw=true" alt="ultimate-macOS-KVM" width="500"/></a>
+<p align="center">
+  <a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/492731ef1d95d2da534c660b001550f4d76a6c68/resources/images/bannerAlphaBasic.png?raw=true" alt="ultimate-macOS-KVM" width="500"/></a>
+</p>
 
 ### v0.10.2
 
@@ -7,6 +9,8 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 *[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-10-2.md)*
 
 [![ULTMOS VERSION](https://img.shields.io/github/v/release/Coopydood/ultimate-macOS-KVM?style=for-the-badge&color=1793D1&logo=github&logoColor=white&label=)](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest) [![GitHub](https://img.shields.io/github/license/Coopydood/ultimate-macOS-KVM?label=Licence&logo=unlicense&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/LICENSE) [![GitHub repo size](https://img.shields.io/github/repo-size/Coopydood/ultimate-macOS-KVM?color=07b55b&label=Size&logo=envoy-proxy&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM) [![Discord](https://img.shields.io/discord/574943603466436628?color=7d86ff&label=Discord&logo=discord&logoColor=white&style=for-the-badge)](https://sl.coopydood.com/discord)
+
+<br>
 
 ***
 
@@ -21,6 +25,8 @@ Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little h
 <br>
 <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1244b64e-95b2-469a-8271-43c56e72b065" alt="ultimate-macOS-KVM" width="1400"/>
 <p align="center"><i>SussyMac v2.0 - Full virtual Hackintosh setup powered by ULTMOS.</i></p>
+
+<br>
 
 ***
 
@@ -49,6 +55,8 @@ Easily convert any AutoPilot-generated QEMU scripts into an importable XML file 
 
 <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ac766b58-5e66-4b70-9742-8e318f065fc2" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ee451491-35fa-436e-957b-888d2f7d488e" width="45%"></img>
 
+<br>
+
 ***
 
 ## Requirements
@@ -71,12 +79,15 @@ Here's a table with my best judgment on minimum, recommended, and best system re
 
 > [!NOTE]
 > The recommended and optimal specifications are for reference only.
+
 <br>
+
+***
 
 ## Dependencies
 The project requires several other packages to function properly, while others can be optionally installed to enhance your experience. All of the dependencies, both required and optional, are listed below
 
-<b>Required</b>
+**Required**
 <ul>
 <li><b>Git</b> 》 <code>git</code></li>
 <li><b>Wget</b> 》 <code>wget</code></li>
@@ -85,7 +96,8 @@ The project requires several other packages to function properly, while others c
 <li><b>DNSmasq</b> 》 <code>dnsmasq</code></li>
 <li><b>Python</b> 》 <code>python</code></li>
 </ul>
-<b>Optional</b>
+
+**Optional**
 <ul>
 <li><b>Virtual Machine Manager (GUI)</b> 》 <code>virt-manager</code></li>
 <li><b>Virsh</b> 》 <code>virsh</code></li>
@@ -94,22 +106,25 @@ The project requires several other packages to function properly, while others c
 </ul>
 
 > [!WARNING]
-> You **must** have all of the required dependencies installed before using this project. 
+> You ***must*** have all of the required dependencies installed before using this project. 
 
 > [!NOTE]
 > Optional dependencies can enhance your experience, such as using your VM in a GUI, or showing what macOS version you're currently running on your Discord profile.
 >
-> Your experience is automatically adapted based on the dependencies you have installed. For example, if you have ``pypresence`` installed, Discord rich presence will be enabled automatically on AutoPilot scripts.
-<br>
+> Your experience is automatically adapted based on the dependencies you have installed. For example, if you have ``pypresence`` installed, Discord Rich Presence will be enabled automatically on AutoPilot scripts.
+
+
 
 ## Oh, and you NEED Linux.
 
-Shocker; KVM is a module built into the *Linux kernel*, not **Windows Subsystem for Linux** or some UNIX-like terminal. You need a <ins>full install</ins> of at least base Linux **on your host**. Don't try any of that VM inception shenanigans.
+Shocker; KVM is a module built into the *Linux kernel*, not **Windows Subsystem for Linux** or some UNIX-like terminal. You need a <ins>full install</ins> of at least base Linux **on your host**. Don't try any of those VM inception shenanigans.
 
 The easiest way to do this is by grabbing some mainstream Linux distro, like **Ubuntu, Linux Mint, Manjaro, endeavourOS** - among many, many others. You can pick any one you like. If it's Linux - you can use this project. *I use Arch BTW.*
 
-> [!NOTE]
+> [!IMPORTANT]
 > Running this on Windows or macOS is as pointless as those ice cube dispensers on fridge doors
+
+<br>
 
 ***
 
@@ -137,7 +152,6 @@ and/or check the status of the daemon with
 ```sh
 $ systemctl status libvirtd
 ```
-<br>
 
 ## Usage
 
@@ -151,6 +165,8 @@ $ ./main.py
 > [!IMPORTANT]
 > Most sub-scripts included in the project should *not* be run on their own.
 
+<br>
+
 ***
 
 ## I'm here for GPU passthrough
@@ -158,8 +174,6 @@ $ ./main.py
 ...and you've come to the right place. ultimate-macOS-KVM includes several handy built-in tools to make VFIO-PCI passthrough (including GPUs) as pain-free as possible. Please see the documentation on how to get started with these tools.
 
 Oh, and speaking of...
-
-<br>
 
 ## Documentation
 
@@ -169,8 +183,6 @@ This is continually updated and made better as the project develops. Feel free t
 
 Or, you can find some in the included [docs folder](https://github.com/Coopydood/ultimate-macOS-KVM/tree/main/docs).
 
-<br>
-
 ## Help and Troubleshooting Issues
 
 Alongside the tutorial and explanation documents, this project includes troubleshooting guides for a wide variety of issues - ranging from project issues such as those in *AutoPilot*, or other issues such as GPU passthrough.
@@ -178,7 +190,9 @@ Alongside the tutorial and explanation documents, this project includes troubles
 You can search for your problem and find solutions in the [**Issues and Troubleshooting**](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Issues-and-Troubleshooting) section of the project wiki.
 
 > [!NOTE]
-> If an unexpected problem with the ULTMOS project itself arises, it may be a bug, and can be reported [here](https://github.com/Coopydood/ultimate-macOS-KVM/issues/new).
+> If an unexpected problem with the ULTMOS project itself arises, it may be a bug and can be reported [here](https://github.com/Coopydood/ultimate-macOS-KVM/issues/new).
+
+<br>
 
 ***
 
@@ -190,13 +204,17 @@ As you use it to generate your personal files, having to re-clone the entire rep
 
 Of course, if you're just testing the project, then a "clean install" is probably still preferable.
 
+<br>
+
 ***
 
 ## Gallery
 
-Here's a few screenshots showing **ultimate-macOS-KVM** in action!
+Here are a few screenshots showing **ultimate-macOS-KVM** in action!
 
 <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/02c6abd3-40b3-416b-ba1f-5979314ad2f9" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8712cc11-e352-40ba-9373-d0da13c4bd89" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/5fa35111-1559-42d5-b8d2-87aa35d64489" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1c10c6e0-263d-409c-996e-2d0fc5cf1287" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/232f3bae-b31b-4e18-bee9-8c03a472d5a0" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ac766b58-5e66-4b70-9742-8e318f065fc2" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1fd0add5-c0c8-46a1-8897-3b80c37f98a1" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8380632b-dceb-41e7-acb0-b2bd15cbf575" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b32c2701-a934-42ce-ab69-06b1ae350f1b" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ee451491-35fa-436e-957b-888d2f7d488e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/c4e394c3-a666-4aab-9aa7-b40b1e84d977" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/feb19dce-7a9a-4527-884c-8b2f2d445e2f" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4a8b5249-3029-49d3-8539-229b3c179816" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4e7678f3-5ee4-4e69-93a7-d9ba9881cea7" width="45%"></img> 
+
+<br>
 
 ***
 
@@ -208,12 +226,10 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 - I'm not responsible if you make an oopsie whoopsie.
 - Do NOT run anything as ``sudo`` unless absolutely necessary. If you have an urge to then you need to break that habit _**asap.**_ Most of my scripts do not require superuser privileges, however, the ones that do are clearly marked with a yellow ⚠️ next to the operation requiring such permissions.
 - Expect headaches. Some severe.
-- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassles, you WILL run into [stupid gotchas](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Gotchas) that require trial and error out of my control.
+- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassles, you WILL run into [stupid gotchas](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Issues) that require trial and error out of my control.
 - I'm by no means an expert on this stuff nor would I claim to be.
 - I've simply made *what I had to go through **easier** for you*. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
-  
-<br>
 
 ## Legal
 
@@ -224,9 +240,11 @@ Apple uses this key to make it more difficult for non-Macintosh computers to run
 
 This OS key is widely available on the Internet and is no longer considered a "secret", and was even included in a [public court document](http://www.rcfp.org/sites/default/files/docs/20120105_202426_apple_sealing.pdf).
 
-Apple has attempted to classify the OSK as a trade secret but has ultimately failed in doing so. As a result, it is freely included within this project, as with [OSX-KVM](https://github.com/kholia/OSX-KVM).
+Apple has attempted to classify the OSK as a trade secret but has ultimately failed in doing so. As a result, it is freely included within this project, as it does with [OSX-KVM](https://github.com/kholia/OSX-KVM).
 
 <br>
+
+***
 
 ## Credits & Greetz
 
@@ -236,12 +254,14 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[Kholia](https://github.com/kholia)** 》 Development of scripts and documentation. ultimate-macOS-KVM is intended as an extension to [OSX-KVM](https://github.com/kholia/OSX-KVM).
 - **[thenickdude](https://github.com/thenickdude)** 》 Personal support throughout my KVM misadventures and countless community contribs. Cheers.
 - **[vu1tur](to@vu1tur.eu.org)** 》 Open source dmg to img conversion tool; used and bundled by this project.
-- **[Eversiege](https://github.com/eversiege)** 》 Support and testing, та мій улюблений українець. Also made the project's main [website](https://coopydood.github.io/ultimate-macOS-KVM).
+- **[Eversiege](https://github.com/eversiege)** 》 Support and testing, та мій улюблений українець. Also made the project's main [website](https://coopydood.github.io/ultimate-macOS-KVM). <!-- editor note: currently looks bad -->
 - **[CyberneticSquid](https://github.com/cyberneticsquid)** 》 Testing for me at stupid-o'-clock because he's a cool Aussie.
 - **[Cake](https://github.com/cam-jm)** 》 Another Aussie testing for me in the middle of my sleep-deprived nights, with a slight obsession over cake.
-- **[DomTrues](https://github.com/domtrues)** 》 My personal constitution-munching American. Legend has it that I live in his attic, although even I'm not sure. Love this guy either way.
+- **[DomTrues](https://github.com/domtrues)** 》 My personal constitution-munching American. Legend has it that I live in his attic, although even I'm not sure. Love this guy either way. Has proudly made the OpenCore Mounting System. <!-- yes I am gonna call it like that. No, I am not changing it. -->
 - **[Kaz](https://github.com/Eaz11)** 》 Other than his brilliant English accent's pronunciations (including "macOS Syria"), he's done extensive testing. Say hi to your nephew for me.
 - **[GigantTech](https://twitter.com/TechGigant)** 》 Moderately annoying German guy that I convinced to install Linux subsequently letting him test my project. It's free real estate!
+
+<br>
 
 ***
 
