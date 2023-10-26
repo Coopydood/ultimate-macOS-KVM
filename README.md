@@ -210,7 +210,7 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 - I'm not responsible if you make an oopsie whoopsie.
 - Do NOT run anything as ``sudo`` unless absolutely necessary. If you have an urge to then you need to break that habit _**asap.**_ Most of my scripts do not require superuser privileges, however, the ones that do are clearly marked with a yellow ⚠️ next to the operation requiring such permissions.
 - Expect headaches. Some severe.
-- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassles, you WILL run into [stupid gotchas](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Gotchas) that require trial and error out of my control.
+- You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassles, you WILL run into [stupid gotchas](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Issues-and-Troubleshooting) that require trial and error out of my control.
 - I'm by no means an expert on this stuff nor would I claim to be.
 - I've simply made *what I had to go through **easier** for you*. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
