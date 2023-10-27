@@ -5,6 +5,9 @@
 This script was created by Coopydood as part of the ultimate-macOS-KVM project.
 It will not work outside of this project.
 
+It CAN be used manually from the root ultimate-macOS-KVM repo folder.
+See     $ ./scripts/repo-update.py --help     for further assistance.
+
 https://github.com/user/Coopydood
 https://github.com/Coopydood/ultimate-macOS-KVM
 Signature: 4CD28348A3DD016F
@@ -32,7 +35,7 @@ global version
 
 # INTERNAL VERSION OF THIS UTILITY
 # May be used in the future
-updaterVersion = "2.2"
+updaterVersion = "2.3"
 
 if os.path.exists("./.version"):
    version = open("./.version")
@@ -43,6 +46,7 @@ version = version.read()
 
 
 global webVersion
+global versionDash
 
 def clear(): print("\n" * 150)
 
@@ -66,6 +70,7 @@ parser.add_argument("-v", "--version", dest="version", help="Upgrade/downgrade t
 parser.add_argument("-f", "--force", dest="force", help="Force install the latest version, even if it is already installed. Use only to skip ahead to latest commit", action="store_true")
 parser.add_argument("--forceDelta", dest="forceDelta", help="Skip the delta update compatibility check and allow upgrading forcefully. THIS IS UNSAFE!", action="store_true")
 parser.add_argument("--noDelta", dest="noDelta", help="For debugging only. Flags all updates as incompatible even if they aren't", action="store_true")
+parser.add_argument("--menuFlow", dest="menuFlow", help="To be used by other internal scripts only", action="store_true")
 
 args = parser.parse_args()
 
@@ -158,6 +163,10 @@ if integrity == 1:
    if args.forceDelta == True:
       noDelta = 0
 
+   if args.menuFlow == True:
+      menuFlow = 1
+   else:
+      menuFlow = 0
 
 
    if args.version is not None:
@@ -183,6 +192,7 @@ if integrity == 1:
    def updateBrains():
 
       global webVersion
+      global versionDash
       global version
 
       if detectChoice1 == "1" and noDelta == 0:
@@ -254,7 +264,29 @@ if integrity == 1:
             print(color.END+color.GRAY+"         Previous Version\n   "+"          v"+version,color.END+"\n")
             print(color.BOLD+"               ✔\n")
             print(color.BOLD+"         Current Version\n   "+color.BOLD+"          v"+webVersion,"\n"+color.END)
-            print("   You can now use this version.\n   It is safe to exit this window.\n\n")
+            print("   You can now use this version.\n   It is safe to exit this window.\n")
+            versionDash = webVersion.replace(".","-")
+            if menuFlow == 1:
+               print(color.BOLD+"      W. What's new?")
+               print(color.END+"         Open the changelog of v"+webVersion+" in your browser\n")
+               print(color.END+"      M. Main menu")
+               print(color.END+"      Q. Exit\n")
+               detectChoice3 = str(input(color.BOLD+"Select> "+color.END))
+
+               if detectChoice3 == "W" or detectChoice3 == "w":
+                  clear()
+                  print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING RELEASE NOTES IN DEFAULT BROWSER"+color.END,"")
+                  print("   Continue in your browser\n")
+                  print("\n   I have attempted to open the release notes in\n   your default browser. Please be patient.\n\n   You will be returned to the main menu in 5 seconds.\n\n\n\n\n")
+                  os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v'+versionDash+".md > /dev/null 2>&1")
+                  time.sleep(6)
+                  clear()
+                  os.system('./main.py')
+               elif detectChoice3 == "M" or detectChoice3 == "m":
+                  clear()
+                  os.system("./main.py")
+               elif detectChoice3 == "Q" or detectChoice3 == "q":
+                  exit
          else:
             print("\n\n   "+color.BOLD+color.RED+"✖  UPDATE FAILED"+color.END,"")
             print("   The update could not be installed\n")
@@ -337,11 +369,36 @@ if integrity == 1:
 
    if versionInt == webVersionInt and args.force is not True and args.version is None:
       clear()
+     
       print("\n\n   "+color.BOLD+color.GREEN+"✔  NO UPDATES AVAILABLE"+color.END,"")
       print("   You're on the latest version\n")
-      print(color.BOLD+"   Current Version\n   "+color.END+"v"+version,"\n\n\n\n")
+      print(color.BOLD+"   Current Version\n   "+color.END+"v"+version,"\n")
+      
+      print("   Check back periodically to ensure you're always using\n   the latest version of the project."+"\n")
+      versionDash = webVersion.replace(".","-")
+      if menuFlow == 1:
+         print(color.BOLD+"      M. Main menu")
+         print(color.END+"         Return to the ULTMOS main menu\n")
+         print(color.END+"      W. What's new?")
+         print(color.END+"      Q. Exit\n")
+         detectChoice3 = str(input(color.BOLD+"Select> "+color.END))
 
-      print("   Check back periodically to ensure you're always using\n   the latest version of the project."+"\n\n")
+         if detectChoice3 == "W" or detectChoice3 == "w":
+            clear()
+            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING RELEASE NOTES IN DEFAULT BROWSER"+color.END,"")
+            print("   Continue in your browser\n")
+            print("\n   I have attempted to open the release notes in\n   your default browser. Please be patient.\n\n   You will be returned to the main menu in 5 seconds.\n\n\n\n\n")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v'+versionDash+".md > /dev/null 2>&1")
+            time.sleep(6)
+            clear()
+            os.system('./main.py')
+         elif detectChoice3 == "M" or detectChoice3 == "m":
+            clear()
+            os.system("./main.py")
+         elif detectChoice3 == "Q" or detectChoice3 == "q":
+            exit
+      else:
+         print("\n\n\n")
    elif versionInt > webVersionInt and args.version is None:# and versionInt is int and webVersionInt is int:
       clear()
       print("\n\n   "+color.BOLD+color.PURPLE+"⚛  PRE-RELEASE VERSION"+color.END,"")
@@ -370,7 +427,10 @@ if integrity == 1:
       detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
       if detectChoice1 == "1":
          detectChoice1 == "2"
-      updateBrains()
+         updateBrains()
+      elif detectChoice1 == "q" or detectChoice1 == "Q":
+         exit
+      
    elif versionInt < webVersionInt and noDelta == 0 and args.version is None or args.force == True and noDelta == 0 and args.version is None or args.version is not None and argsVersionInt > versionInt:
       clear()
       if args.install is not True and args.download is not True:
