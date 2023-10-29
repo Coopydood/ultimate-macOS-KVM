@@ -71,7 +71,8 @@ Here's a table with my best judgment on minimum, recommended, and best system re
 
 > [!NOTE]
 > The recommended and optimal specifications are for reference only.
-<br>
+
+***
 
 ## Dependencies
 The project requires several other packages to function properly, while others can be optionally installed to enhance your experience. 
@@ -102,7 +103,8 @@ All of the dependencies, both required and optional, are listed below.
 > Optional dependencies can enhance your experience, such as using your VM in a GUI, or showing what macOS version you're currently running on your Discord profile.
 >
 > Your experience is automatically adapted based on the dependencies you have installed. For example, if you have ``pypresence`` installed, Discord rich presence will be enabled automatically on AutoPilot scripts.
-<br>
+
+***
 
 ## Oh, and you NEED Linux.
 
@@ -133,13 +135,16 @@ Now, before running the script - and to avoid the subsequent and inevitable gotc
 ```sh
 $ sudo systemctl enable libvirtd
 ```
+> [!WARNING]
+> This command requires superuser priviledges.
 
 and/or check the status of the daemon with
 
 ```sh
 $ systemctl status libvirtd
 ```
-<br>
+
+***
 
 ## Usage
 
@@ -161,7 +166,7 @@ $ ./main.py
 
 Oh, and speaking of...
 
-<br>
+***
 
 ## Documentation
 
@@ -171,7 +176,7 @@ This is continually updated and made better as the project develops. Feel free t
 
 Or, you can find some in the included [docs folder](https://github.com/Coopydood/ultimate-macOS-KVM/tree/main/docs).
 
-<br>
+***
 
 ## Help and Troubleshooting Issues
 
@@ -215,7 +220,7 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 - I've simply made *what I had to go through **easier** for you*. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
   
-<br>
+***
 
 ## Legal
 
@@ -228,7 +233,22 @@ This OS key is widely available on the Internet and is no longer considered a "s
 
 Apple has attempted to classify the OSK as a trade secret but has ultimately failed in doing so. As a result, it is freely included within this project, as with [OSX-KVM](https://github.com/kholia/OSX-KVM).
 
-<br>
+***
+
+## Useful Links
+
+Here are some external links to other resources that you might find useful.
+
+- **[OSX-KVM](https://github.com/kholia/OSX-KVM)** 》 The original basis of this project, providing many resources for running macOS under KVM.
+- **[Dortania's OpenCore Guide](https://dortania.github.io/OpenCore-Install-Guide/)** 》 An extensive website of documentation on Hackintosh systems as a whole, useful for troubleshooting issues on both physical and virtual machines.
+- **[GPU Buyer's Guide](https://dortania.github.io/GPU-Buyers-Guide/)** 》 An excellent write up on Dortania's website to help you make informed GPU buying decisions for maximum success rates. This is the primary source of data used in the *GPU compatibility checker* script included in ULTMOS.
+- **[LegacyOSXKVM](https://github.com/royalgraphx/LegacyOSXKVM)** 》 Documentation and resources on running legacy OS X versions. Legacy support in ULTMOS is based on this project.
+- **[OpenCore Configurator](https://mackie100projects.altervista.org/download-opencore-configurator/)** 》 Download page for OCC, an application used to edit OpenCore configs from within macOS.  
+
+> [!WARNING]
+> These links and their contents are not authored, monitored, or maintained by Coopydood, and are not affiliated as such. They are provided for convenience purposes only.
+
+***
 
 ## Credits & Greetz
 
@@ -237,7 +257,8 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[Dortania](https://github.com/Dortania)** 》 Extensive documentation and Hackintosh development.
 - **[Kholia](https://github.com/kholia)** 》 Development of scripts and documentation. ultimate-macOS-KVM is intended as an extension to [OSX-KVM](https://github.com/kholia/OSX-KVM).
 - **[thenickdude](https://github.com/thenickdude)** 》 Personal support throughout my KVM misadventures and countless community contribs. Cheers.
-- **[vu1tur](to@vu1tur.eu.org)** 》 Open source dmg to img conversion tool; used and bundled by this project.
+- **[vit9696](https://github.com/vit9696)** 》 Author of many macOS hacks including kexts, and other source material used in this project. Probably knows the macOS boot process better than Apple.
+- **[vu1tur](to@vu1tur.eu.org)** 》 Open source dmg to img conversion tool; used and bundled in this project.
 - **[Eversiege](https://github.com/eversiege)** 》 Support and testing, та мій улюблений українець. Also made the project's main [website](https://coopydood.github.io/ultimate-macOS-KVM).
 - **[CyberneticSquid](https://github.com/cyberneticsquid)** 》 Testing for me at stupid-o'-clock because he's a cool Aussie.
 - **[Cake](https://github.com/cam-jm)** 》 Another Aussie testing for me in the middle of my sleep-deprived nights, with a slight obsession over cake.
