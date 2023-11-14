@@ -318,7 +318,7 @@ elif detectChoice == "w" or detectChoice == "W":
     os.system('./main.py')
 elif detectChoice == "u" or detectChoice == "U":
     clear()
-    os.system('./scripts/repo-update.py')
+    os.system('./scripts/repo-update.py --menuFlow')
 elif detectChoice == "q" or detectChoice == "Q":
     exit
 elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FILE == 1:

@@ -1852,11 +1852,11 @@ def autopilot():
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/legacy_new/OpenCore.qcow2 boot/OpenCore.qcow2")
             cpydLog("ok",("OpenCore image copied"))
-         elif USR_TARGET_OS >= 1400:
-            cpydLog("ok",("Selected EXPERIMENTAL OpenCore image"))
-            cpydLog("info",("Copying OpenCore image in place"))
-            os.system("cp resources/oc_store/experimental/OpenCore.qcow2 boot/OpenCore.qcow2")
-            cpydLog("ok",("OpenCore image copied"))
+         #elif USR_TARGET_OS >= 1400:
+         #   cpydLog("ok",("Selected EXPERIMENTAL OpenCore image"))
+         #   cpydLog("info",("Copying OpenCore image in place"))
+         #   os.system("cp resources/oc_store/experimental/OpenCore.qcow2 boot/OpenCore.qcow2")
+         #   cpydLog("ok",("OpenCore image copied"))
          else:
             cpydLog("ok",("Selected NEW OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
@@ -2430,8 +2430,10 @@ def autopilot():
                cpydLog("fatal",("User quit"))
                exit
 
-         USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 209756160
-
+         if USR_TARGET_OS >= 1013:
+            USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 209756160
+         else:
+            USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 343973888
 
 
          if os.path.exists("./HDD.qcow2"):
