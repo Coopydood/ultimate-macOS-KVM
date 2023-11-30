@@ -167,7 +167,7 @@ def convertBrains():
             global apVars
             global useBlobs
             apFileS = source.read()
-            apVars = ["macOS","macOS",apFilePath,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            apVars = ["macOS","macOS",apFilePath,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
             
             
             if autodetect == False:
@@ -185,8 +185,8 @@ def convertBrains():
 
                 #with open("./blobs/user/USR_NAME.apb") as blob: apVars[0] = str(blob.read())
                 with open("./blobs/user/USR_TARGET_OS.apb") as blob: macOSVer = int(blob.read())
-                with open("./blobs/user/USR_TARGET_OS.apb") as blob: apVars[1] = "macOS "+str(blob.read())
-                with open("./blobs/user/USR_TARGET_OS_NAME.apb") as blob: apVars[18] = "macOS "+str(blob.read())
+                with open("./blobs/user/USR_TARGET_OS.apb") as blob: apVars[1] = ""+str(blob.read())
+                with open("./blobs/user/USR_TARGET_OS_NAME.apb") as blob: apVars[18] = ""+str(blob.read())
                 with open("./blobs/user/USR_ALLOCATED_RAM.apb") as blob: apVars[4] = str(blob.read())
                 with open("./blobs/user/USR_CPU_CORES.apb") as blob: apVars[6] = str(blob.read())
                 with open("./blobs/user/USR_CPU_THREADS.apb") as blob: apVars[7] = str(blob.read())
@@ -194,10 +194,14 @@ def convertBrains():
                 with open("./blobs/user/USR_CPU_FEATURE_ARGS.apb") as blob: apVars[9] = str(blob.read())
                 with open("./blobs/user/USR_NETWORK_DEVICE.apb") as blob: apVars[16] = str(blob.read())
                 with open("./blobs/user/USR_MAC_ADDRESS.apb") as blob: apVars[17] = str(blob.read())
-
+                if os.path.exists("./blobs/user/USR_HDD_PATH.apb"):
+                    with open("./blobs/user/USR_HDD_PATH.apb") as blob: apVars[19] = str(blob.read())
+                else:
+                    apVars[19] = "$REPO_PATH/HDD.qcow2"
+                    apVars[19] = apVars[19].replace("$REPO_PATH",workdir)
                 useBlobs = True
 
-                if int(macOSVer) <= 999 and int(macOSVer) > 99:
+                if int(macOSVer) <= 110 and int(macOSVer) > 99:
                     apVars[18] = apVars[18].replace("macOS","Mac OS X")
                 
 
@@ -318,11 +322,16 @@ def convertBrains():
             apFileM = apFileM.replace("$USR_CPU_THREADS",str(apThreadsCvt))
             apFileM = apFileM.replace("$USR_CPU_MODEL",apVars[8])
             apFileM = apFileM.replace("$OVMF_DIR","ovmf")
-            apFileM = apFileM.replace("$REPO_DIR",workdir)
+            
             apFileM = apFileM.replace("$USR_CPU_ARGS",apVars[9])
             apFileM = apFileM.replace("$USR_CPU_CORES",apVars[6])
             apFileM = apFileM.replace("$USR_NETWORK_ADAPTER",apVars[16])
             apFileM = apFileM.replace("$USR_MAC_ADDRESS",apVars[17])
+            if apVars[19] == 0:
+                apFileM = apFileM.replace("$USR_HDD_PATH","$REPO_PATH/HDD.qcow2")
+            else:
+                apFileM = apFileM.replace("$USR_HDD_PATH",apVars[19])
+            apFileM = apFileM.replace("$REPO_PATH",workdir)
             apFileM = apFileM.replace("$USR_OS_VERSION",apOSCvt)
             apFileM = apFileM.replace("$USR_OS_NAME",apVars[18])
             apFileM = apFileM.replace("$USR_HEADER","Converted from "+apFilePath)

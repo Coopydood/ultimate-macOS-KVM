@@ -32,6 +32,7 @@ REQUIRES_SUDO=0
 VFIO_PTA=0
 VFIO_DEVICES=0
 GEN_EPOCH=000000000
+FEATURE_LEVEL=0
 VERBOSE=1
 DISCORD_RPC=1
 
@@ -58,6 +59,8 @@ MAC_ADDRESS="$USR_MAC_ADDRESS"
 
 OS_ID="$USR_OS_NAME"
 
+HDD_PATH="$USR_HDD_PATH"
+
 #   You should not have to touch anything below this line, especially if you
 #   don't really know what you're doing. It'll probably break something.
 
@@ -79,7 +82,7 @@ args=(
 -device ich9-intel-hda -device hda-duplex
 -device ich9-ahci,id=sata
 -drive id=OpenCore,if=none,format=qcow2,file="$REPO_PATH/boot/OpenCore.qcow2"
--drive id=HDD,if=none,file="$REPO_PATH/HDD.qcow2",format=qcow2
+-drive id=HDD,if=none,file="$HDD_PATH",format=qcow2
 -device ide-hd,bus=sata.2,drive=OpenCore
 -device ide-hd,bus=sata.3,drive=HDD
 

@@ -214,6 +214,7 @@ def autopilot():
    global USR_MAC_ADDRESS
    global USR_SCREEN_RES
    global USR_TARGET_OS_NAME
+   global FEATURE_LEVEL
 
    global startTime
 
@@ -234,8 +235,10 @@ def autopilot():
    USR_MAC_ADDRESS = "00:16:cb:00:21:09"
    USR_SCREEN_RES = "1280x720"
    USR_TARGET_OS_NAME = "Catalina"
-   
-   
+
+   ###############################
+   FEATURE_LEVEL = 5                   # DO NOT CHANGE - WILL BREAK THINGS!
+   ###############################
 
    global currentStage
    currentStage = 1
@@ -258,6 +261,8 @@ def autopilot():
       global USR_CFG
       global USR_TARGET_OS
       global USR_HDD_SIZE
+      global USR_HDD_PATH
+      global USR_HDD_PATH_F      
       global USR_BOOT_FILE
       global USR_TARGET_OS_F
       global USR_CPU_TOTAL_F
@@ -265,6 +270,7 @@ def autopilot():
       global USR_CREATE_XML
       global USR_CFG_XML
       global USR_TARGET_OS_NAME
+      
       cpydLog("ok",str("Interrogation complete, displaying summary and AP autoflow sliproad"))
       USR_CFG_XML = USR_CFG.replace(".sh",".xml")
       try: # DISCORD RPC
@@ -278,8 +284,10 @@ def autopilot():
 
       if USR_TARGET_OS > 1000:
          USR_TARGET_OS_F = USR_TARGET_OS / 100
-      else:
+      elif USR_TARGET_OS >= 100 and USR_TARGET_OS < 1000:
          USR_TARGET_OS_F = USR_TARGET_OS / 10
+      else:
+         USR_TARGET_OS_F = USR_TARGET_OS
 
       if USR_BOOT_FILE == "-1":
          USR_BOOT_FILE_F = "Download from Apple..."
@@ -287,6 +295,9 @@ def autopilot():
          USR_BOOT_FILE_F = "Not configured"
       else:
          USR_BOOT_FILE_F = "Local image file"
+
+      if USR_HDD_SIZE == "-1":
+         USR_HDD_PATH_F = "Existing disk file (\""+os.path.basename(USR_HDD_PATH)+"\")"
 
       clear()
       if USR_CREATE_XML == "True":
@@ -296,24 +307,43 @@ def autopilot():
       #print("   "+"Review your preferences")
       print("   "+"The config wizard is complete.\n   Review your preferences below and continue when ready."+color.END)
       print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+
       if USR_CREATE_XML == "True":
          print("   "+color.BOLD+color.PURPLE+"FILES   ",color.END+color.END+USR_CFG+", "+USR_CFG_XML)
       else:
          print("   "+color.BOLD+color.PURPLE+"FILE    ",color.END+color.END+USR_CFG+color.END)
-      if USR_TARGET_OS < 1012:
+
+
+      if USR_TARGET_OS < 1012 and USR_TARGET_OS >= 100:
          print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"Mac OS X",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
       else:
          print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"macOS",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
+
+
       print("   "+color.BOLD+color.YELLOW+"BOOT    ",color.END+color.END+USR_BOOT_FILE_F,color.END)
+
+
       print("   "+color.BOLD+color.CYAN+"CPU     ",color.END+color.END+USR_CPU_MODEL+",",USR_CPU_CORES,"cores,",USR_CPU_THREADS,"threads","("+USR_CPU_TOTAL_F+")"+color.END)  
-      #print("   "+color.BOLD+color.CYAN+"        ",color.END+color.BOLD+USR_CPU_FEATURE_ARGS+color.END)
-      print("   "+color.BOLD+color.CYAN+"RAM     ",color.END+color.END+USR_ALLOCATED_RAM_F+" GB"+color.END)
-      print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_SIZE_F+" GB (dynamic)"+color.END)
       
+
+      #print("   "+color.BOLD+color.CYAN+"        ",color.END+color.BOLD+USR_CPU_FEATURE_ARGS+color.END)
+
+
+      print("   "+color.BOLD+color.CYAN+"RAM     ",color.END+color.END+USR_ALLOCATED_RAM_F+" GB"+color.END)
+
+
+      if USR_HDD_SIZE == "-1":
+         print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_PATH_F+color.END)
+      else:
+         print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_SIZE_F+" GB (dynamic)"+color.END)
+
+
       if USR_MAC_ADDRESS != "00:16:cb:00:21:09":
          print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+" ("+USR_MAC_ADDRESS+")")
       else:
          print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+"")
+
+
       print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
       if USR_BOOT_FILE == "-1":
          print(color.BOLD+"\n      1. Download and generate...")
@@ -810,6 +840,7 @@ def autopilot():
 
    def stage8():
       global USR_HDD_SIZE
+      global USR_HDD_PATH
       global customValue
       global currentStage
       defaultValue = "80G"
@@ -821,9 +852,10 @@ def autopilot():
          None
 
       clear()
-      print("\n   "+color.BOLD+"Set hard disk capacity"+color.END)
+      print("\n   "+color.BOLD+"Set hard disk"+color.END)
       print("   Step 8")
-      print("\n   Set the maximum virtual hard disk size (capacity). \n   Change this based on how much storage you think you'll need.\n   NOTE: The file will grow dynamically, and is not allocated in full."+color.END)
+      print("\n   Set the maximum virtual hard disk size (capacity). \n   Change this based on how much storage you think you'll need.\n   You can also select an existing qcow2 HDD file."+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"The disk file will grow dynamically\n         and is not allocated in full."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
@@ -832,17 +864,41 @@ def autopilot():
          cpydLog("wait",("Waiting for user input"))
          customInput = str(input(color.BOLD+"Value> "+color.END))
          cpydLog("ok",("User input received"))
+         USR_HDD_PATH = "$REPO_PATH/HDD.qcow2"
          USR_HDD_SIZE = customInput
          cpydLog("ok",str("Custom value was set to "+str(customInput)))               #+".sh" #<--- change required prefix/suffix
          currentStage = currentStage + 1
          customValue = 0
+         blob = open("./blobs/USR_HDD_PATH.apb","w")
+         blob.write(USR_HDD_PATH)
+         blob.close()
          blob = open("./blobs/USR_HDD_SIZE.apb","w")
          blob.write(USR_HDD_SIZE)
          blob.close()
          stage9()
+      elif customValue == 2:
+         cpydLog("info",str("Custom value requested, setting up"))
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:",color.YELLOW+""+color.END+color.BOLD+"<full path to HDD file>"+color.END+"\n   Drag the *.qcow2 file onto this window (or type the path) and hit ENTER.\n"+color.END+"\n   ")
+         cpydLog("wait",("Waiting for user input"))
+         customInput = str(input(color.BOLD+"File> "+color.END))
+         cpydLog("ok",("User input received"))
+         USR_HDD_PATH = customInput
+         USR_HDD_SIZE = "-1"
+         cpydLog("ok",str("Custom HDD file set to "+str(customInput)))               #+".sh" #<--- change required prefix/suffix
+         currentStage = currentStage + 1
+         customValue = 0
+         blob = open("./blobs/USR_HDD_PATH.apb","w")
+         blob.write(USR_HDD_PATH)
+         blob.close()
+         blob = open("./blobs/USR_HDD_SIZE.apb","w")
+         blob.write("-1")
+         blob.close()
+         stage9()
       else:
          print(color.BOLD+"\n      1. Use default value")
-         print(color.END+"      2. Custom value...")
+         print(color.END+"      2. Change capacity...")
+         print(color.END+"      3. Use existing...")
          print(color.END+"\n      B. Back")
          print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
@@ -851,6 +907,10 @@ def autopilot():
          if stageSelect == "1":
             cpydLog("ok",str("Using default value of "+str(defaultValue)))
             USR_HDD_SIZE = defaultValue
+            USR_HDD_PATH = "$REPO_PATH/HDD.qcow2"
+            blob = open("./blobs/USR_HDD_PATH.apb","w")
+            blob.write(USR_HDD_PATH)
+            blob.close()
             blob = open("./blobs/USR_HDD_SIZE.apb","w")
             blob.write(USR_HDD_SIZE)
             blob.close()
@@ -859,6 +919,10 @@ def autopilot():
 
          elif stageSelect == "2":
             customValue = 1
+            stage8()
+
+         elif stageSelect == "3":
+            customValue = 2
             stage8()
 
          elif stageSelect == "b" or stageSelect == "B":
@@ -1035,7 +1099,7 @@ def autopilot():
       global USR_TARGET_OS
       global customValue
       global currentStage
-      if USR_TARGET_OS >= 1013:
+      if USR_TARGET_OS >= 1013 or USR_TARGET_OS <= 99:
          defaultValue = "Haswell-noTSX"
       else:
          defaultValue = "Penryn"
@@ -1190,8 +1254,8 @@ def autopilot():
       defaultValue = 2
       cpydLog("ok",str("Stage 3 sequence initiated"))
 
-      if USR_TARGET_OS >= 11 and USR_TARGET_OS <= 99:
-         USR_TARGET_OS = USR_TARGET_OS * 100
+      #if USR_TARGET_OS >= 11 and USR_TARGET_OS <= 99:
+      #   USR_TARGET_OS = USR_TARGET_OS * 100
 
       USR_TARGET_OS_NAME = "N/A"
       if USR_TARGET_OS == 102:
@@ -1222,20 +1286,20 @@ def autopilot():
          USR_TARGET_OS_NAME = "Mojave"
       elif USR_TARGET_OS == 1015:
          USR_TARGET_OS_NAME = "Catalina"
-      elif USR_TARGET_OS == 1100:
+      elif USR_TARGET_OS == 11:
          USR_TARGET_OS_NAME = "Big Sur"
-      elif USR_TARGET_OS == 1200:
+      elif USR_TARGET_OS == 12:
          USR_TARGET_OS_NAME = "Monterey"
-      elif USR_TARGET_OS == 1300:
+      elif USR_TARGET_OS == 13:
          USR_TARGET_OS_NAME = "Ventura"
-      elif USR_TARGET_OS == 1400:
+      elif USR_TARGET_OS == 14:
          USR_TARGET_OS_NAME = "Sonoma"
 
       global osIcon
 
       osIcon = "ap-"+USR_TARGET_OS_NAME.lower().replace(" ","")
          
-      if USR_TARGET_OS < 1013:
+      if int(USR_TARGET_OS) < 1013 and int(USR_TARGET_OS) >= 100:
          osIcon = "ap-legacy"
 
       osName = "macOS "+USR_TARGET_OS_NAME
@@ -1249,13 +1313,13 @@ def autopilot():
       blob.write(str(USR_TARGET_OS_NAME))
       blob.close()
 
-      if USR_TARGET_OS == 1400:
+      if USR_TARGET_OS == 14:
          USR_TARGET_OS_ID = "sonoma"
-      elif USR_TARGET_OS == 1300:
+      elif USR_TARGET_OS == 13:
          USR_TARGET_OS_ID = "ventura"
-      elif USR_TARGET_OS == 1200:
+      elif USR_TARGET_OS == 12:
          USR_TARGET_OS_ID = "monterey"
-      elif USR_TARGET_OS == 1100:
+      elif USR_TARGET_OS == 11:
          USR_TARGET_OS_ID = "big-sur"
       elif USR_TARGET_OS == 1015:
          USR_TARGET_OS_ID = "catalina"
@@ -1766,13 +1830,13 @@ def autopilot():
          elif PROC_FETCHDL == 2 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Downloading recovery image"+color.END)
 
-         if PROC_GENHDD == 0:
+         if PROC_GENHDD == 0 and USR_HDD_SIZE != "-1":
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
-         elif PROC_GENHDD == 1:
+         elif PROC_GENHDD == 1 and USR_HDD_SIZE != "-1":
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Creating virtual hard disk"+color.END)
-         elif PROC_GENHDD == 2:
+         elif PROC_GENHDD == 2 and USR_HDD_SIZE != "-1":
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
-         elif PROC_GENHDD == 3:
+         elif PROC_GENHDD == 3 and USR_HDD_SIZE != "-1":
             print("      "+color.BOLD+color.CYAN+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
 
          if PROC_APPLYPREFS == 0:
@@ -1829,25 +1893,25 @@ def autopilot():
             backupOCPath = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
             os.system("mkdir boot/"+backupOCPath)
             os.system("mv boot/*.qcow2 boot/"+backupOCPath+"/")
-            os.system("mv boot/*.plist boot/"+backupOCPath+"/")
-            os.system("mv boot/EFI boot/"+backupOCPath+"/EFI")
+            #os.system("mv boot/*.plist boot/"+backupOCPath+"/")
+            #os.system("mv boot/EFI boot/"+backupOCPath+"/EFI")
             cpydLog("ok",("Existing image backed up to ./boot/"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))))
             #os.system("rm -rf boot/EFI")
             time.sleep(2)
          cpydLog("info",("Selecting appropriate OpenCore image"))
-         if USR_TARGET_OS <= 1015 and USR_TARGET_OS >= 1013 and USR_TARGET_OS < 1400:
+         if USR_TARGET_OS <= 1015 and USR_TARGET_OS >= 1013 and USR_TARGET_OS > 99:
             cpydLog("ok",("Selected OLD OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
             os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
             os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
             cpydLog("ok",("OpenCore image copied"))
-         elif USR_TARGET_OS <= 1012 and USR_TARGET_OS >= 108:
+         elif USR_TARGET_OS <= 1012 and USR_TARGET_OS >= 108 and USR_TARGET_OS >= 100:
             cpydLog("ok",("Selected NEW LEGACY OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/legacy_new/OpenCore.qcow2 boot/OpenCore.qcow2")
             cpydLog("ok",("OpenCore image copied"))
-         elif USR_TARGET_OS <= 1012 and USR_TARGET_OS <= 107:
+         elif USR_TARGET_OS <= 1012 and USR_TARGET_OS <= 107 and USR_TARGET_OS >= 100:
             cpydLog("ok",("Selected OLD LEGACY OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/legacy_new/OpenCore.qcow2 boot/OpenCore.qcow2")
@@ -2091,7 +2155,7 @@ def autopilot():
          configData = configData.replace("$USR_ALLOCATED_RAM",str(USR_ALLOCATED_RAM))
          configData = configData.replace("$USR_REPO_PATH",workdir)
          configData = configData.replace("$USR_NETWORK_DEVICE",str(USR_NETWORK_DEVICE))
-         if USR_TARGET_OS >= 1013:
+         if USR_TARGET_OS >= 1013 or USR_TARGET_OS <= 99:
             configData = configData.replace("$USR_NAME","macOS "+str(USR_TARGET_OS_F))
             configData = configData.replace("$USR_ID","macOS")
          else:
@@ -2101,11 +2165,17 @@ def autopilot():
          configData = configData.replace("$USR_CFG",str(USR_CFG))
          configData = configData.replace("$USR_MAC_ADDRESS",str(USR_MAC_ADDRESS))
          configData = configData.replace("$USR_SCREEN_RES",str(USR_SCREEN_RES))
+         configData = configData.replace("$USR_HDD_PATH",str(USR_HDD_PATH))
          cpydLog("ok",("Variable injection complete"))
 
          cpydLog("info",("Stamping with ULTMOS version"))
          configData = configData.replace("ULTMOS=0.0.0","ULTMOS="+str(version))
          cpydLog("ok",("Marked working script as using ULTMOS v"+str(version)))
+
+         cpydLog("info",("Stamping with feature level"))
+         configData = configData.replace("FEATURE_LEVEL=0","FEATURE_LEVEL="+str(FEATURE_LEVEL))
+         cpydLog("ok",("Marked working script as feature level "+str(FEATURE_LEVEL)))
+
          cpydLog("info",("Checking if Discord rich presence is available"))
          output_stream1 = os.popen("pip show pypresence")
          vfcPresence = output_stream1.read()
@@ -2191,7 +2261,7 @@ def autopilot():
                   macOSVer = int(apVars[2].replace(".",""))
 
 
-                  if int(macOSVer) <= 999 and int(macOSVer) > 99:
+                  if int(macOSVer) <= 110 and int(macOSVer) > 99:
                      apFileM = apFileM.replace("$USR_NAME","Mac OS X "+apVars[19]+"")
                   else:
                      apFileM = apFileM.replace("$USR_NAME","macOS "+apVars[19]+"")
@@ -2230,15 +2300,16 @@ def autopilot():
                   apFileM = apFileM.replace("$USR_CPU_THREADS",str(apThreadsCvt))
                   apFileM = apFileM.replace("$USR_CPU_MODEL",apVars[9])
                   apFileM = apFileM.replace("$OVMF_DIR","ovmf")
-                  apFileM = apFileM.replace("$REPO_DIR",workdir)
                   apFileM = apFileM.replace("$USR_CPU_ARGS",apVars[10])
                   apFileM = apFileM.replace("$USR_CPU_CORES",apVars[7])
                   apFileM = apFileM.replace("$USR_NETWORK_ADAPTER",apVars[17])
                   apFileM = apFileM.replace("$USR_MAC_ADDRESS",apVars[18])
+                  apFileM = apFileM.replace("$USR_HDD_PATH",apVars[20])
                   apFileM = apFileM.replace("$USR_OS_VERSION",apOSCvt)
                   apFileM = apFileM.replace("$USR_OS_NAME",apVars[19])
                   apFileM = apFileM.replace("$USR_HEADER","Converted from "+str(apVars[3]))
                   apFileM = apFileM.replace("$REPO_VERSION",version)
+                  apFileM = apFileM.replace("$REPO_PATH",workdir)
                   apFileM = apFileM.replace("$XML_FILE",apVars[3].replace(".sh",".xml"))
                   apFileM = apFileM.replace("$AP_FILE",apVars[3])
                   apFileM = apFileM.replace("$AP_RUNTIME",str(datetime.today().strftime('%H:%M:%S %d/%m/%Y')))
@@ -2594,7 +2665,13 @@ def autopilot():
          cpydLog("ok",("User is using their own macOS recovery image, disarming downloader"))
          cpydLog("ok",("Switching to local copy mode"))
          apcLocalCopy()
-      apcGenHDD()
+
+      if PROC_GENHDD == 0 and USR_HDD_SIZE != "-1":
+         cpydLog("ok",("User requested a new HDD file, generation will go ahead"))
+         apcGenHDD()
+         
+      
+      
       apcApplyPrefs()
       apcFixPerms()
       apcCleanUp()
@@ -2620,7 +2697,6 @@ def autopilot():
       global USR_NAME
       global USR_CFG
       global USR_TARGET_OS
-      global USR_HDD_SIZE
       global USR_TARGET_OS_F
       global USR_CPU_TOTAL_F
       global USR_CFG_XML
@@ -2647,6 +2723,8 @@ def autopilot():
       else: print("   "+color.BOLD+color.PURPLE+"FILE     ",color.END+color.END+USR_CFG+color.END)
       print("   "+color.BOLD+color.RED+"COMMAND  ",color.END+color.END+"$ ./"+USR_CFG,color.END)
       print("   "+color.BOLD+color.CYAN+"TIME    ",color.END+color.END,str(exTime),"seconds",color.END+"")
+      print("   "+color.BOLD+color.GREEN+"LOG     ",color.END+color.END,"APC_RUN_"+logTime+".log",color.END+"")
+      
       print("   "+color.BOLD+"────────────────────────────────────────────",color.END)
       print("   "+color.BOLD+"\n   Created by Coopydood"+color.END)
       print("   "+"Helpful? Consider supporting the project on GitHub! <3"+color.END)
@@ -2677,26 +2755,26 @@ def autopilot():
             cpydLog("info",("Handing off to XML importer experience flow"))
             #cpydLog("ok",str("Using default value of "+str(defaultValue)))
             clear()
-            cpydLog("fatal",("Bye"))
+            cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             
             os.system("./scripts/extras/xml-convert.py --import "+USR_CFG_XML)
          
          elif stageSelect == "2":
             cpydLog("info",("Handing off to QEMU; booting "+USR_CFG))
-            cpydLog("fatal",("Bye"))
+            cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.system("./"+USR_CFG)
 
          elif stageSelect == "3":
             cpydLog("info",("Returning to main menu"))
-            cpydLog("fatal",("Bye"))
+            cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.system("./main.py")
 
          elif stageSelect == "q" or stageSelect == "Q":
             cpydLog("fatal",("User quit"))
-            cpydLog("fatal",("Bye"))
+            cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             exit
 
@@ -2705,27 +2783,27 @@ def autopilot():
             #cpydLog("ok",str("Using default value of "+str(defaultValue)))
             clear()
             cpydLog("info",("Handing off to QEMU; booting "+USR_CFG))
-            cpydLog("fatal",("Bye"))
+            cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.system("./"+USR_CFG)
            
          
          elif stageSelect == "2":
             cpydLog("info",("Attempting to open "+USR_CFG+"; contacting xdg-open"))
-            cpydLog("fatal",("Bye"))
+            cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.system("xdg-open ./"+USR_CFG)
             
 
          elif stageSelect == "3":
             cpydLog("info",("Returning to main menu"))
-            cpydLog("fatal",("Bye"))
+            cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.system("./main.py")
 
          elif stageSelect == "q" or stageSelect == "Q":
             cpydLog("fatal",("User quit"))
-            cpydLog("fatal",("Bye"))
+            cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             exit
 
