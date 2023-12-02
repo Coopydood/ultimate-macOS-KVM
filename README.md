@@ -136,7 +136,7 @@ Now, before running the script - and to avoid the subsequent and inevitable gotc
 $ sudo systemctl enable libvirtd
 ```
 > [!WARNING]
-> This command requires superuser priviledges.
+> This command requires superuser privileges.
 
 and/or check the status of the daemon with
 
