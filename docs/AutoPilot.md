@@ -95,10 +95,13 @@ Example: If your host has 16GB total RAM, your host uses 4GB of RAM when idle, d
 |      4G     | [number]**G** | 2G<br>8G<br>16G |
 
 ***
-## 8. Set hard disk capacity
+## 8. Create virtual disk
 You should think carefully about this one as it might be hard to change later. This is the capacity of your primary virtual hard drive that will be used for your macOS installation. Keep in mind **macOS uses upwards of 40GB for the system**, so you should base your total on how much you think you'll need. 
 
 If you're just testing the project, you can leave it as is. If you plan on using the virtual machine long-term, perhaps make it a bit bigger to give yourself room.
+
+> [!NOTE]
+> As of **v0.10.4**, you can now select an existing virtual qcow2 disk file without making a new one.
 
 > [!NOTE]
 > **This is a dynamically-growing disk. The virtual hard disk file will grow as you use it. The full capacity is NOT used on the host's storage upon creation. If you've ever used VMware's virtual disks, it's the same as that.** Please also note that the _actual_ virtual capacity of the hard disk may be slightly larger than the value you specify.
@@ -108,7 +111,22 @@ If you're just testing the project, you can leave it as is. If you plan on using
 |     80G     | [number]**G** | 60G<br>120G<br>256G |
 
 ***
-## 9. Set network adapter model
+## 9. Virtual disk type
+
+In **v0.10.5** and later, you can now select what type of storage you'd like the virtual drive to present itself as. 
+
+You can select from **HDD** (default), **SSD**, and even **NVMe**. Each option changes the way the virtual disk is connected to the virtual machine, including whether or not it is solid state.
+
+Switching the virtual disk type to **SSD** can be beneficial if your virtual disk file is being stored on a real SSD, as the guest OS inside the VM will behave with solid state storage in mind - enabling features such as TRIM.
+
+> [!NOTE]
+> This option is unlikely to affect performance. Its purpose is to allow you to properly represent your storage medium to the guest OS.
+
+> [!NOTE]
+> Changing the virtual disk type to *SSD* or *NVMe* while storing the disk file on a host HDD yields no advantages and would be purely cosmetic.
+
+***
+## 10. Set network adapter model
 This one is a bit more picky. macOS has a limited number of network drivers due to the limited hardware configurations that natively run macOS, therefore you need to pick a model with driver support. 
 
 **Based on your target OS you chose earlier, the default option will auto-select the best model for your macOS version.** 
@@ -121,7 +139,7 @@ You can still override this if you'd like, but for most people, whatever is auto
 |    vmxnet3    |                 |                   |
 
 ***
-## 10. Network MAC address
+## 11. Network MAC address
 The virtual network adapter needs a virtual MAC address to identify it. 
 
 **The default is fine unless you intend on using features such as iMessage and FaceTime, as these services require specific MAC address values.**
@@ -133,7 +151,7 @@ In this case, you should use your own custom one, or you can even have the scrip
 | 00:16:cb:00:21:09 | XX:XX:XX:XX:XX:XX | 00:16:cb:00:48:02<br>00:16:ca:00:27:09<br>00:16:cr:00:87:33 |
 
 ***
-## 11. macOS Recovery image file
+## 12. macOS Recovery image file
 To install macOS, you'll need an image of the macOS Recovery. 
 
 The script can automatically download a recovery image of a macOS version of your choosing, or you can use one you already have. If you are using a custom image, it should be in the ***.img** format. You can drag a file onto the terminal window, or place a file called `BaseSystem.img` in the root of the project directory to have it be detected automatically. If it is in the ***.dmg** format - this is okay - the script will automatically detect this and convert it for you during the configuration process.
@@ -146,7 +164,7 @@ You can also choose to skip this step, but this is not recommended.
 |                | [file_name].dmg |   BaseSystem.dmg<br>InstallESD.dmg  |
 
 ***
-## 12. Screen resolution
+## 13. Screen resolution
 As of [v0.9.2](https://github.com/Coopydood/ultimate-macOS-KVM/releases/tag/v0.9.2), you can now pre-select what screen resolution you'd like to use for the virtual screen.
 
 This is done by utilising a pre-made OVMF variable file, with the desired screen resolution built in. Based on what you choose, the corresponding OVMF variable file will be used by AutoPilot to complete setup. 
@@ -163,7 +181,7 @@ Custom values are not supported. When inputting a value at this stage, you will 
 |   1280x720  | 800x600<br>1024x768<br>1280x720<br>1280x1024<br>1440x900<br>1920x1080<br>2560x1440<br>3840x2160 | 1024x768<br>1920x1080 |
 
 ***
-## 13. Generate XML file
+## 14. Generate XML file
 As of [v0.9.3](https://github.com/Coopydood/ultimate-macOS-KVM/releases/tag/v0.9.3), XML files can be generated through conversion of a valid AutoPilot config file using the **XML Conversion tool**. This can be accessed through the **Extras** menu. 
 
 However, with the [v0.9.5](https://github.com/Coopydood/ultimate-macOS-KVM/releases/tag/v0.9.5) update, this functionality is also built right in as an AutoPilot stage.

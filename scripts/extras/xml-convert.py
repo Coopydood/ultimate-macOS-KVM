@@ -31,6 +31,7 @@ import pathlib
 global apFileSelect
 global autodetect
 global useBlobs
+global domainTitle
 
 detectChoice = 1
 latestOSName = "Ventura"
@@ -58,6 +59,7 @@ version = version.read()
 parser = argparse.ArgumentParser("xml-convert")
 parser.add_argument("-i", "--import", dest="importfile", help="Import existing XML domain file",metavar="<file>", type=str)
 parser.add_argument("-c", "--convert", dest="convert", help="Convert existing config script to XML", metavar="<file>", type=str)
+parser.add_argument("--no-blobs", dest="noblobs", help="Blocks the initialisation of arrays using AP blobs", action="store_true")
 #parser.add_argument("-f", "--force", dest="forceModel", metavar="<model>", help="Override auto-detected GPU with a custom model. Pretty useless, mostly for debugging.", type=str)
 args = parser.parse_args()
 
@@ -102,6 +104,12 @@ def importXML():
     global cpydPassthrough
     clear()
     if cpydPassthrough != 1:
+        if not os.path.exists("./ovmf/OVMF_VARS.fd"):
+            if os.path.exists("./ovmf/user_store/OVMF_VARS.fd"): # Might be tainted?
+                os.system("cp ./ovmf/user_store/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+            else:
+                os.system("cp ./resources/ovmf/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+
         print("\n\n   "+color.BOLD+color.BLUE+"❖  IMPORT XML FILE"+color.END,"")
         print("   For use with virsh / virt-manager\n")
         global apFile
@@ -170,9 +178,10 @@ def convertBrains():
             apVars = ["macOS","macOS",apFilePath,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
             
             
-            if autodetect == False:
+            if autodetect == False or args.noblobs is True:
                 apVars = (re.findall(r'"([^"]*)"', apFileS))
                 useBlobs = False
+                USR_BOOT_FILE = 0
             else:
                 # NEW BLOB MODE yay
 
@@ -194,6 +203,15 @@ def convertBrains():
                 with open("./blobs/user/USR_CPU_FEATURE_ARGS.apb") as blob: apVars[9] = str(blob.read())
                 with open("./blobs/user/USR_NETWORK_DEVICE.apb") as blob: apVars[16] = str(blob.read())
                 with open("./blobs/user/USR_MAC_ADDRESS.apb") as blob: apVars[17] = str(blob.read())
+                with open("./blobs/user/USR_BOOT_FILE.apb") as blob: apVars[21] = str(blob.read())
+
+                # REQUIRES FL 6
+                if os.path.exists("./blobs/user/USR_HDD_TYPE.apb"):
+                    with open("./blobs/user/USR_HDD_TYPE.apb") as blob: apVars[20] = str(blob.read())
+                    USR_HDD_TYPE = apVars[20]
+                else: USR_HDD_TYPE == "HDD"
+
+                # REQUIRES FL 5
                 if os.path.exists("./blobs/user/USR_HDD_PATH.apb"):
                     with open("./blobs/user/USR_HDD_PATH.apb") as blob: apVars[19] = str(blob.read())
                 else:
@@ -209,7 +227,12 @@ def convertBrains():
                     macOSVer = open("./blobs/user/USR_TARGET_OS_NAME.apb")
                     macOSVer = macOSVer.read()
             
+                USR_BOOT_FILE = apVars[21]
 
+
+                
+                
+                
 
 
 
@@ -277,6 +300,12 @@ def convertBrains():
             apFileM = apFileM.replace("############################################################."," ")
 
             
+            # Decide whether or not to probe array for VHD type
+            if apVars[20] != 0 and useBlobs == False:
+                USR_HDD_TYPE = apVars[20]
+            elif useBlobs == False:
+                USR_HDD_TYPE = "HDD" # Couldn't determine, fallback to regular HDD
+
 
             apVars[1] = apVars[1].replace("macOS ","")
             apVars[1] = apVars[1].replace("Mac OS X ","")
@@ -286,8 +315,10 @@ def convertBrains():
 
             if int(macOSVer) <= 999 and int(macOSVer) > 99:
                 apFileM = apFileM.replace("$USR_NAME","Mac OS X "+apVars[18]+"")
+                domainTitle = "Mac OS X "+apVars[18]
             else:
                 apFileM = apFileM.replace("$USR_NAME","macOS "+apVars[18]+"")
+                domainTitle = "macOS "+apVars[18]
 
             apFileM = apFileM.replace("$USR_NAME",apVars[18]+"")
             apFileM = apFileM.replace("$USR_UUID",str(uuid.uuid4()))
@@ -315,6 +346,22 @@ def convertBrains():
             apOSCvt = apOSCvt.replace("macOS ","")
             apOSCvt = apOSCvt.replace("Mac OS X ","")
             apOSCvt = apOSCvt.replace(".","")
+
+            if USR_HDD_TYPE == "HDD":       # DISK TYPE ROUTINE; REQUIRES CONFIG FL 6!
+                    None
+            elif USR_HDD_TYPE == "SSD":
+                apFileM = apFileM.replace("rotation_rate=\"7200\"","rotation_rate=\"1\"")
+            elif USR_HDD_TYPE == "NVMe":
+                apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=raw,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
+                apFileM = apFileM.replace("<disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->","<!-- <disk type=\"file\" device=\"disk\">")
+                apFileM = apFileM.replace("</disk> <!-- HDD FOOTER -->","</disk> -->")
+
+
+            if USR_BOOT_FILE == "-2" and useBlobs == True:       # DISABLE THE DETACHED BASESYSTEM; REQUIRES BLOB METHOD!
+                apFileM = apFileM.replace("<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############-->","<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############")
+                apFileM = apFileM.replace("<!--#######################################################################-->","    #######################################################################-->")
+                apFileM = apFileM.replace("<!-- BASESYSTEM HEADER -->","")
+                apFileM = apFileM.replace("<!-- BASESYSTEM FOOTER -->","")
 
             apFileM = apFileM.replace("$USR_MEMORY",str(apMemCvt))
             apFileM = apFileM.replace("$USR_CPU_CORES",apVars[6])
@@ -392,7 +439,7 @@ def convertBrains():
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
             print("   XML domain has been defined\n")
-            print("   The requested XML file has been successfully defined\n   using virsh, and is now available in virt-manager.\n   The name is displayed below.\n\n   "+color.BOLD+apVars[18]+" (ULTMOS)"+color.END+"\n\n\n\n\n\n\n") 
+            print("   The requested XML file has been successfully defined\n   using virsh, and is now available in virt-manager.\n   The name is displayed below.\n\n   "+color.BOLD+domainTitle+" (ULTMOS)"+color.END+"\n\n\n\n\n\n\n") 
             time.sleep(5)
 def manualAPSelect():
         global apFile

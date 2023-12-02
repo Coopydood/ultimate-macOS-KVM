@@ -60,6 +60,7 @@ MAC_ADDRESS="$USR_MAC_ADDRESS"
 OS_ID="$USR_OS_NAME"
 
 HDD_PATH="$USR_HDD_PATH"
+DISK_TYPE="$USR_HDD_TYPE"
 
 #   You should not have to touch anything below this line, especially if you
 #   don't really know what you're doing. It'll probably break something.
@@ -84,7 +85,7 @@ args=(
 -drive id=OpenCore,if=none,format=qcow2,file="$REPO_PATH/boot/OpenCore.qcow2"
 -drive id=HDD,if=none,file="$HDD_PATH",format=qcow2
 -device ide-hd,bus=sata.2,drive=OpenCore
--device ide-hd,bus=sata.3,drive=HDD
+-device ide-hd,bus=sata.3,drive=HDD,rotation_rate=7200
 
 ############## REMOVE THESE LINES AFTER MACOS INSTALLATION ###############
 -drive id=BaseSystem,if=none,file="$REPO_PATH/BaseSystem.img",format=raw

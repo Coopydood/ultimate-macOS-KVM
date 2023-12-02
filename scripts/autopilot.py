@@ -210,6 +210,8 @@ def autopilot():
    global USR_CFG
    global USR_TARGET_OS
    global USR_HDD_SIZE
+   global USR_HDD_PATH
+   global USR_HDD_TYPE
    global USR_BOOT_FILE
    global USR_MAC_ADDRESS
    global USR_SCREEN_RES
@@ -231,13 +233,16 @@ def autopilot():
    USR_CFG = "boot.sh"
    USR_TARGET_OS = 1015
    USR_HDD_SIZE = "80G"
+   USR_HDD_PATH = "$REPO_PATH"
+   USR_HDD_TYPE = "HDD"
    USR_BOOT_FILE = "BaseSystem.img"
    USR_MAC_ADDRESS = "00:16:cb:00:21:09"
    USR_SCREEN_RES = "1280x720"
    USR_TARGET_OS_NAME = "Catalina"
 
+
    ###############################
-   FEATURE_LEVEL = 5                   # DO NOT CHANGE - WILL BREAK THINGS!
+   FEATURE_LEVEL = 6                   # DO NOT CHANGE - WILL BREAK THINGS!
    ###############################
 
    global currentStage
@@ -246,8 +251,9 @@ def autopilot():
    global customValue
    customValue = 0
 
+   cpydLog("info",("FEATURE LEVEL "+str(FEATURE_LEVEL)))
    
-   def stage14():
+   def stage15():
       global USR_CPU_SOCKS
       global USR_CPU_CORES
       global USR_CPU_THREADS
@@ -346,10 +352,10 @@ def autopilot():
 
       print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
       if USR_BOOT_FILE == "-1":
-         print(color.BOLD+"\n      1. Download and generate...")
+         print(color.BOLD+"\n      1. Start...")
          print(color.END+"         Fetch a new recovery image, then create the config\n         and hard disk files in the repo folder\n")
       else:
-         print(color.BOLD+"\n      1. Generate")
+         print(color.BOLD+"\n      1. Start...")
          print(color.END+"         Copy the local recovery image, then create the config\n         and hard disk files in the repo folder\n")
       
       print("    "+color.END+"  B. Back")
@@ -363,7 +369,7 @@ def autopilot():
          handoff()
 
       elif stageSelect == "b" or stageSelect == "B":
-         stage13()
+         stage14()
 
       elif stageSelect == "x" or stageSelect == "X":
          global customValue
@@ -380,20 +386,20 @@ def autopilot():
             os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#review-your-preferences > /dev/null 2>&1')
             time.sleep(6)
             clear()
-            stage14()
+            stage15()
          
       elif stageSelect == "q" or stageSelect == "Q":
          exit   
 
       else:
-            stage14()
+            stage15()
 
-   def stage13():
+   def stage14():
       global customValue
       global currentStage
       global USR_CREATE_XML
       defaultValue = "True"
-      cpydLog("ok",str("Stage 13 sequence initiated"))
+      cpydLog("ok",str("Stage 14 sequence initiated"))
 
       try: # DISCORD RPC
          RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring XML generation",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
@@ -402,7 +408,7 @@ def autopilot():
 
       clear()
       print("\n   "+color.BOLD+"Generate XML file"+color.END)
-      print("   Step 13")
+      print("   Step 14")
       print("\n   You can now generate an XML file during AutoPilot. \n   This will be created alongside your boot script file,\n   and can be imported into virt-manager. This will allow\n   you to use the VM through the GUI, for easy access.\n\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"You can convert boot scripts to XML files at\n         any time using the built-in converter tool."+color.END)
       
       print(color.BOLD+"\n      1. Generate and import XML")
@@ -419,7 +425,7 @@ def autopilot():
          blob.write(USR_CREATE_XML)
          blob.close()
          currentStage = currentStage + 1
-         stage14()
+         stage15()
 
       elif stageSelect == "2":
          cpydLog("ok",str("XML generation will be skipped from AP flow"))
@@ -428,34 +434,34 @@ def autopilot():
          blob.write(USR_CREATE_XML)
          blob.close()
          customValue = 1
-         stage14()
+         stage15()
 
       elif stageSelect == "b" or stageSelect == "B":
          currentStage = 1
-         stage12()
+         stage13()
          
       elif stageSelect == "?":
          clear()
          print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
          print("   Continue in your browser\n")
          print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
-         os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#13-generate-xml-file > /dev/null 2>&1')
+         os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#14-generate-xml-file > /dev/null 2>&1')
          time.sleep(6)
          clear()
-         stage13()
+         stage14()
 
       elif stageSelect == "q" or stageSelect == "Q":
          exit   
 
       else:
-            stage13()
+            stage14()
    
-   def stage12():
+   def stage13():
       global customValue
       global currentStage
       global USR_SCREEN_RES
       defaultValue = "1280x720"
-      cpydLog("ok",str("Stage 12 sequence initiated"))
+      cpydLog("ok",str("Stage 13 sequence initiated"))
       clear()
       try: # DISCORD RPC
          RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring resolution",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
@@ -471,10 +477,10 @@ def autopilot():
          blob.write("fresh_cdn")
          blob.close()
          currentStage = currentStage + 1
-         stage13()
+         stage14()
       else:   
          print("\n   "+color.BOLD+"Screen resolution"+color.END)
-         print("   Step 12")
+         print("   Step 13")
          print("\n   Select a compatible booter screen resolution. \n   This resolution will apply to both the bootloader and\n   macOS, and can be changed later in OVMF Plaform Settings. If you\n   intend on using GPU passthrough, your GPU/monitor determines this."+color.END)
          print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
          if customValue == 1:
@@ -516,7 +522,7 @@ def autopilot():
             blob = open("./blobs/USR_SCREEN_RES.apb","w")
             blob.write(USR_SCREEN_RES)
             blob.close()
-            stage13()
+            stage14()
          else:
             print(color.BOLD+"\n      1. 1280x720")
             print(color.END+"      2. More resolutions...")
@@ -535,15 +541,15 @@ def autopilot():
                blob.write("fresh_cdn")
                blob.close()
                currentStage = currentStage + 1
-               stage13()
+               stage14()
 
             elif stageSelect == "2":
                customValue = 1
-               stage12()
+               stage13()
 
             elif stageSelect == "b" or stageSelect == "B":
                currentStage = 1
-               stage11()
+               stage12()
                
             elif stageSelect == "?":
                clear()
@@ -551,24 +557,24 @@ def autopilot():
                print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
                print("   Continue in your browser\n")
                print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
-               os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#12-screen-resolution > /dev/null 2>&1')
+               os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#13-screen-resolution > /dev/null 2>&1')
                time.sleep(6)
                clear()
-               stage12()
+               stage13()
 
             elif stageSelect == "q" or stageSelect == "Q":
                exit   
 
             else:
-               stage12()
+               stage13()
 
 
-   def stage11():
+   def stage12():
       global customValue
       global currentStage
       global USR_BOOT_FILE
       defaultValue = "BaseSystem.img"
-      cpydLog("ok",str("Stage 11 sequence initiated"))
+      cpydLog("ok",str("Stage 12 sequence initiated"))
 
       try: # DISCORD RPC
          RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring macOS recovery image",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
@@ -577,8 +583,8 @@ def autopilot():
 
       clear()
       print("\n   "+color.BOLD+"macOS Recovery image file"+color.END)
-      print("   Step 11")
-      print("\n   Choose a bootable image file the virtual machine should boot to. \n   You need a macOS Recovery image (BaseSystem.img). You can either\n   select an existing one or the wizard can download one for you.\n   It must be in the *.img file format."+color.END)
+      print("   Step 12")
+      print("\n   Choose a bootable image file the virtual machine should boot to. \n   You need a macOS Recovery image (BaseSystem). You can either\n   select an existing one or the wizard can download one for you.\n   It must be in the *.img or *.dmg file format."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"This stage is optional. You can skip it if\n         you intend on using an existing HDD file."+color.END)
       if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
          print(color.YELLOW+"\n     ⚠"+color.END+color.BOLD+"   Download flow disabled for legacy versions.\n         You must download an image manually."+color.END)
@@ -598,7 +604,7 @@ def autopilot():
          blob = open("./blobs/USR_BOOT_FILE.apb","w")
          blob.write(USR_BOOT_FILE)
          blob.close()
-         stage12()
+         stage13()
       else:
          if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
             print(color.END+color.GRAY+"\n      1. Download from Apple..."+color.END)
@@ -612,7 +618,7 @@ def autopilot():
          print(color.END+"      Q. Exit\n   ")
          stageSelect = str(input(color.BOLD+"Select> "+color.END))
          if stageSelect == "1" and USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
-            stage11()
+            stage12()
          elif stageSelect == "1":
             cpydLog("info","Arming download mechanism")
             USR_BOOT_FILE = "-1"
@@ -625,12 +631,12 @@ def autopilot():
             blob.write("fresh_cdn")
             blob.close()
             currentStage = currentStage + 1
-            stage12()
+            stage13()
 
          elif stageSelect == "2":
             
             customValue = 1
-            stage11()
+            stage12()
 
          elif stageSelect == "3":
             cpydLog("warn","No system image will be used in this session")
@@ -642,11 +648,11 @@ def autopilot():
             blob.write("fresh_cdn")
             blob.close()
             currentStage = currentStage + 1
-            stage12()
+            stage13()
 
          elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
-            stage10()
+            stage11()
             
          elif stageSelect == "?":
             clear()
@@ -654,23 +660,23 @@ def autopilot():
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
             print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
-            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#11-macos-recovery-image-file > /dev/null 2>&1')
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#12-macos-recovery-image-file > /dev/null 2>&1')
             time.sleep(6)
             clear()
-            stage11()
+            stage12()
 
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
          
          else:
-            stage11()
+            stage12()
 
-   def stage10():
+   def stage11():
       global customValue
       global currentStage
       global USR_MAC_ADDRESS
       defaultValue = "00:16:cb:00:21:09"
-      cpydLog("ok",str("Stage 10 sequence initiated"))
+      cpydLog("ok",str("Stage 11 sequence initiated"))
 
       try: # DISCORD RPC
          RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring MAC address",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
@@ -679,7 +685,7 @@ def autopilot():
 
       clear()
       print("\n   "+color.BOLD+"Network MAC address"+color.END)
-      print("   Step 10")
+      print("   Step 11")
       print("\n   The network adapter needs a virtual MAC address. \n   The default is fine unless you intend on using features such\n   as iMessage and FaceTime, as these services require specific\n   MAC address values. In this case, you should use one\n   generated by this script or your own custom one."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
       if customValue == 1:
@@ -696,7 +702,7 @@ def autopilot():
          blob = open("./blobs/USR_MAC_ADDRESS.apb","w")
          blob.write(USR_MAC_ADDRESS)
          blob.close()
-         stage11()
+         stage12()
       else:
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Generate automatically")
@@ -716,11 +722,11 @@ def autopilot():
             blob.write("fresh_cdn")
             blob.close()
             currentStage = currentStage + 1
-            stage11()
+            stage12()
 
          elif stageSelect == "3":
             customValue = 1
-            stage10()
+            stage11()
 
          elif stageSelect == "2":
             cpydLog("info",str("Generating compatible MAC address"))
@@ -736,11 +742,11 @@ def autopilot():
             blob.write("fresh_cdn")
             blob.close()
             currentStage = currentStage + 1
-            stage11()
+            stage12()
 
          elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
-            stage9()
+            stage10()
 
          elif stageSelect == "?":
             clear()
@@ -748,23 +754,23 @@ def autopilot():
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
             print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
-            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#10-network-mac-address > /dev/null 2>&1')
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#11-network-mac-address > /dev/null 2>&1')
             time.sleep(6)
             clear()
-            stage10()
+            stage11()
             
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
 
          else:
-            stage10()
+            stage11()
 
-   def stage9():
+   def stage10():
       global USR_NETWORK_DEVICE
       global customValue
       global currentStage
       global USR_TARGET_OS
-      cpydLog("ok",str("Stage 9 sequence initiated"))
+      cpydLog("ok",str("Stage 10 sequence initiated"))
       if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
          defaultValue = "e1000-82545em"
       else:
@@ -778,7 +784,7 @@ def autopilot():
 
       clear()
       print("\n   "+color.BOLD+"Set network adapter model"+color.END)
-      print("   Step 9")
+      print("   Step 10")
       print("\n   Set the model of the virtual network adapter. \n   The default below has been selected based on your target OS,\n   so there shouldn't be a need to change it."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
       if customValue == 1:
@@ -795,7 +801,7 @@ def autopilot():
          blob = open("./blobs/USR_NETWORK_DEVICE.apb","w")
          blob.write(USR_NETWORK_DEVICE)
          blob.close()
-         stage10()
+         stage11()
       else:
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Custom value...")
@@ -811,15 +817,15 @@ def autopilot():
             blob.write(USR_NETWORK_DEVICE)
             blob.close()
             currentStage = currentStage + 1
-            stage10()
+            stage11()
 
          elif stageSelect == "2":
             customValue = 1
-            stage9()
+            stage10()
 
          elif stageSelect == "b" or stageSelect == "B":
             currentStage = 1
-            stage8()
+            stage9()
             
          elif stageSelect == "?":
             clear()
@@ -827,16 +833,92 @@ def autopilot():
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
             print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
-            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#9-set-network-adapter-model > /dev/null 2>&1')
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#10-set-network-adapter-model > /dev/null 2>&1')
             time.sleep(6)
             clear()
-            stage9()
+            stage10()
 
          elif stageSelect == "q" or stageSelect == "Q":
             exit   
 
          else:
-            stage9() 
+            stage10() 
+
+   def stage9():
+      global USR_HDD_TYPE
+      global customValue
+      global currentStage
+      defaultValue = "HDD"
+      cpydLog("ok",str("Stage 9 sequence initiated"))
+
+      try: # DISCORD RPC
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring virtual hard disk",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      except:
+         None
+
+      clear()
+      print("\n   "+color.BOLD+"Virtual disk type"+color.END)
+      print("   Step 9")
+      print("\n   Select what type of storage you'd like to emulate. \n   If your virtual disk file itself is being stored on an SSD,\n   it might be beneficial to present it as an SSD to the guest\n   too so you can access SSD-based features, such as TRIM."+color.END)
+      #print("\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"   "+color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      
+      print(color.BOLD+"\n      1. Hard disk drive (HDD)")
+      print(color.END+"      2. Solid state drive (SSD)")
+      print(color.END+"      3. NVM express (NVMe)")
+      print(color.END+"\n      B. Back")
+      print(color.END+"      ?. Help")
+      print(color.END+"      Q. Exit\n   ")
+      stageSelect = str(input(color.BOLD+"Select> "+color.END))
+      
+      if stageSelect == "1":
+         cpydLog("ok",str("Using default value of "+str(defaultValue)))
+         cpydLog("ok",str("Will set virtual disk up as an HDD"))
+         USR_HDD_TYPE = defaultValue
+         blob = open("./blobs/USR_HDD_TYPE.apb","w")
+         blob.write(USR_HDD_TYPE)
+         blob.close()
+         currentStage = currentStage + 1
+         stage10()
+
+      elif stageSelect == "2":
+         cpydLog("ok",str("Will set virtual disk up as an SSD"))
+         USR_HDD_TYPE = "SSD"
+         blob = open("./blobs/USR_HDD_TYPE.apb","w")
+         blob.write(USR_HDD_TYPE)
+         blob.close()
+         currentStage = currentStage + 1
+         stage10()
+
+      elif stageSelect == "3":
+         cpydLog("ok",str("Will set virtual disk up as NVMe"))
+         USR_HDD_TYPE = "NVMe"
+         blob = open("./blobs/USR_HDD_TYPE.apb","w")
+         blob.write(USR_HDD_TYPE)
+         blob.close()
+         currentStage = currentStage + 1
+         stage10()
+
+      elif stageSelect == "b" or stageSelect == "B":
+         currentStage = 1
+         stage8()
+         
+      elif stageSelect == "?":
+         clear()
+         cpydLog("ok",("Contacting xdg-open with URL"))
+         print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+         print("   Continue in your browser\n")
+         print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+         os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#9-virtual-disk-type > /dev/null 2>&1')
+         time.sleep(6)
+         clear()
+         stage9()
+
+      elif stageSelect == "q" or stageSelect == "Q":
+         exit   
+
+      else:
+         stage9()
 
    def stage8():
       global USR_HDD_SIZE
@@ -852,7 +934,7 @@ def autopilot():
          None
 
       clear()
-      print("\n   "+color.BOLD+"Set hard disk"+color.END)
+      print("\n   "+color.BOLD+"Create virtual disk"+color.END)
       print("   Step 8")
       print("\n   Set the maximum virtual hard disk size (capacity). \n   Change this based on how much storage you think you'll need.\n   You can also select an existing qcow2 HDD file."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"The disk file will grow dynamically\n         and is not allocated in full."+color.END)
@@ -884,8 +966,10 @@ def autopilot():
          customInput = str(input(color.BOLD+"File> "+color.END))
          cpydLog("ok",("User input received"))
          USR_HDD_PATH = customInput
+         USR_HDD_PATH = USR_HDD_PATH.replace("'","")
+         USR_HDD_PATH = USR_HDD_PATH.replace("  ","")
          USR_HDD_SIZE = "-1"
-         cpydLog("ok",str("Custom HDD file set to "+str(customInput)))               #+".sh" #<--- change required prefix/suffix
+         cpydLog("ok",str("Custom disk file set to "+str(customInput)))               #+".sh" #<--- change required prefix/suffix
          currentStage = currentStage + 1
          customValue = 0
          blob = open("./blobs/USR_HDD_PATH.apb","w")
@@ -935,7 +1019,7 @@ def autopilot():
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
             print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
-            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#8-set-hard-disk-capacity > /dev/null 2>&1')
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#8-create-virtual-disk > /dev/null 2>&1')
             time.sleep(6)
             clear()
             stage8()
@@ -2166,6 +2250,25 @@ def autopilot():
          configData = configData.replace("$USR_MAC_ADDRESS",str(USR_MAC_ADDRESS))
          configData = configData.replace("$USR_SCREEN_RES",str(USR_SCREEN_RES))
          configData = configData.replace("$USR_HDD_PATH",str(USR_HDD_PATH))
+         configData = configData.replace("$USR_HDD_TYPE",str(USR_HDD_TYPE))
+
+         cpydLog("info",("Checking virtual disk type"))
+
+         if USR_HDD_TYPE == "HDD":
+            cpydLog("ok",("Virtual disk type is HDD, leaving rotation rate as default"))
+         elif USR_HDD_TYPE == "SSD":
+            cpydLog("warn",("Virtual disk type is SSD, modifying rotation rate"))
+            configData = configData.replace("rotation_rate=7200","rotation_rate=1")
+            cpydLog("ok",("Rotation rate updated"))
+         elif USR_HDD_TYPE == "NVMe":
+            cpydLog("warn",("Virtual disk type is NVMe, modifying device"))
+            configData = configData.replace("-device ide-hd,bus=sata.3,drive=HDD,rotation_rate=7200","-device nvme,drive=HDD,serial=ULTMOS")
+            cpydLog("ok",("Disk device updated"))
+         else:
+            cpydLog("warn",("Virtual disk type is UNKNOWN, won't change anything"))
+         
+
+
          cpydLog("ok",("Variable injection complete"))
 
          cpydLog("info",("Stamping with ULTMOS version"))
@@ -2294,6 +2397,26 @@ def autopilot():
                   apOSCvt = apOSCvt.replace("Mac OS X ","")
                   apOSCvt = apOSCvt.replace(".","")
 
+
+
+
+                  if USR_HDD_TYPE == "HDD":
+                     cpydLog("ok",("Virtual disk type is HDD, leaving rotation rate as default"))
+                  elif USR_HDD_TYPE == "SSD":
+                     cpydLog("warn",("Virtual disk type is SSD, modifying rotation rate"))
+                     apFileM = apFileM.replace("rotation_rate=\"7200\"","rotation_rate=\"1\"")
+                     cpydLog("ok",("Rotation rate updated"))
+                  elif USR_HDD_TYPE == "NVMe":
+                     cpydLog("warn",("Virtual disk type is NVMe, modifying device"))
+                     apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=raw,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
+                     cpydLog("ok",("Disk device updated"))
+                     cpydLog("warn",("Disabling hard drive in XML"))
+                     apFileM = apFileM.replace("<disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->","<!-- <disk type=\"file\" device=\"disk\">")
+                     apFileM = apFileM.replace("</disk> <!-- HDD FOOTER -->","</disk> -->")
+                  else:
+                     cpydLog("warn",("Virtual disk type is UNKNOWN, won't change anything"))
+
+
                   apFileM = apFileM.replace("$USR_MEMORY",str(apMemCvt))
                   apFileM = apFileM.replace("$USR_CPU_CORES",apVars[7])
                   apFileM = apFileM.replace("$USR_CPU_TOTAL",str(apTotalCvt))
@@ -2317,6 +2440,14 @@ def autopilot():
                   apFileM = apFileM.replace("$AP_AUTO","N/A")
                   apFileM = apFileM.replace("$AP_BLOB","N/A")
                   
+                  if USR_BOOT_FILE == "-2":
+                     cpydLog("warn",("BaseSystem is detached, disabling in domain"))
+                     apFileM = apFileM.replace("<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############-->","<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############")
+                     apFileM = apFileM.replace("<!--#######################################################################-->","    #######################################################################-->")
+                     apFileM = apFileM.replace("<!-- BASESYSTEM HEADER -->","")
+                     apFileM = apFileM.replace("<!-- BASESYSTEM FOOTER -->","")
+
+
                   cpydLog("ok",("Converted to XML structure"))
             # apFileM = apFileM.replace("$USR_",apVars[])
             
@@ -2723,7 +2854,9 @@ def autopilot():
       else: print("   "+color.BOLD+color.PURPLE+"FILE     ",color.END+color.END+USR_CFG+color.END)
       print("   "+color.BOLD+color.RED+"COMMAND  ",color.END+color.END+"$ ./"+USR_CFG,color.END)
       print("   "+color.BOLD+color.CYAN+"TIME    ",color.END+color.END,str(exTime),"seconds",color.END+"")
-      print("   "+color.BOLD+color.GREEN+"LOG     ",color.END+color.END,"APC_RUN_"+logTime+".log",color.END+"")
+
+      if enableLog == True:
+         print("   "+color.BOLD+color.GREEN+"LOG     ",color.END+color.END,"APC_RUN_"+logTime+".log",color.END+"")
       
       print("   "+color.BOLD+"────────────────────────────────────────────",color.END)
       print("   "+color.BOLD+"\n   Created by Coopydood"+color.END)

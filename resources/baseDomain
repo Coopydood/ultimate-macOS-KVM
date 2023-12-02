@@ -67,21 +67,21 @@
       <target dev="sda" bus="sata"/>
       <address type="drive" controller="0" bus="0" target="0" unit="0"/>
     </disk>
-    <disk type="file" device="disk">
+    <disk type="file" device="disk"> <!-- HDD HEADER -->
       <driver name="qemu" type="qcow2"/>
       <source file="$USR_HDD_PATH"/>
-      <target dev="sdb" bus="sata"/>
+      <target dev="sdb" bus="sata" rotation_rate="7200"/>
       <address type="drive" controller="0" bus="0" target="0" unit="1"/>
-    </disk>
+    </disk> <!-- HDD FOOTER -->
 
 <!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############-->
 
-    <disk type="file" device="disk">
+    <disk type="file" device="disk"> <!-- BASESYSTEM HEADER -->
       <driver name="qemu" type="raw"/>
       <source file="$REPO_PATH/BaseSystem.img"/>
       <target dev="sdc" bus="sata"/>
       <address type="drive" controller="0" bus="0" target="0" unit="2"/>
-	  </disk>
+	  </disk> <!-- BASESYSTEM FOOTER -->
 	
 <!--#######################################################################-->
 
@@ -186,8 +186,8 @@
     <memballoon model="none"/>
   </devices>
   <qemu:commandline>
-	<qemu:arg value="-global"/>
-	<qemu:arg value="ICH9-LPC.acpi-pci-hotplug-with-bridge-support=off"/>
+    <qemu:arg value="-global"/>
+    <qemu:arg value="ICH9-LPC.acpi-pci-hotplug-with-bridge-support=off"/>
     <qemu:arg value="-device"/>
     <qemu:arg value="isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"/>
     <qemu:arg value="-smbios"/>
@@ -196,5 +196,6 @@
     <qemu:arg value="$USR_CPU_MODEL,kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,$USR_CPU_ARGS"/>
     <qemu:arg value="-global"/>
     <qemu:arg value="nec-usb-xhci.msi=off"/>
+    <!-- NVME HEADER -->
   </qemu:commandline>
 </domain>
