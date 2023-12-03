@@ -39,11 +39,11 @@ if enableLog == True: # LOG SUPPORT
       os.system("mkdir ./logs")
 
    logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
-   os.system("echo ULTMOS OCMA LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/OCMA_RUN_"+logTime+".log")
-   os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/OCMA_RUN_"+logTime+".log")
+   os.system("echo ULTMOS DTGE LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/DTGE_RUN_"+logTime+".log")
+   os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/DTGE_RUN_"+logTime+".log")
 
    def cpydLog(logStatus,logMsg,*args):
-      logFile = open("./logs/OCMA_RUN_"+logTime+".log","a")
+      logFile = open("./logs/DTGE_RUN_"+logTime+".log","a")
       #if logStatus == "ok":      logStatus = "[ ✔ ]"
       #if logStatus == "info":    logStatus = "[ ✦ ]"
       #if logStatus == "warn":    logStatus = "[ ⚠ ]"
@@ -68,7 +68,7 @@ else:
 
 script = "grub-args.py"
 scriptName = "Grub Editor"
-scriptID = "OCMA"
+scriptID = "DTGE"
 scriptVendor = "DomTrues"
 
 cpydLog("info",("ULTMOS v"+version))
@@ -78,7 +78,7 @@ cpydLog("info",("File       : "+script))
 cpydLog("info",("Identifier : "+scriptID))
 cpydLog("info",("Vendor     : "+scriptVendor))
 cpydLog("info",(" "))
-cpydLog("info",("Logging to ./logs/OCMA_RUN_"+logTime+".log"))
+cpydLog("info",("Logging to ./logs/DTGE_RUN_"+logTime+".log"))
 
 
 # Right, so we want to be able to check for existing boot arguments, and add other arguments at the user's discretion.
@@ -251,8 +251,8 @@ def menu():
       exit()
    if (detectchoice == "M"):
       clear()
-      cpydLog("info", "User has returned to ULTMOS main menu.")
-      os.system("./main.py")
+      cpydLog("info", "User has returned to ULTMOS extras menu.")
+      os.system("./scripts/extras.py")
    menu()
 
 vfio()
