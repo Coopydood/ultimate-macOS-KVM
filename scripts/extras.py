@@ -61,6 +61,7 @@ def startup():
         print(color.END+"      4. VFIO-PCI tools...")
         print(color.END+"      5. OpenCore configuration assistant...")
         print(color.END+"      6. Boot Argument Editor...")
+        print(color.END+"      7. Grub Argument Editor...")
         print(color.RED+"      R. Restore tools...")
         print(color.END+"      I. Report an issue...")
         print(color.END+"      B. Back...")
@@ -82,6 +83,7 @@ def startup():
         print(color.END+"      4. VFIO-PCI tools...")
         print(color.END+"      5. OpenCore configuration assistant...")
         print(color.END+"      6. Boot Argument Editor...")
+        print(color.END+"      7. Grub Argument Editor...")
         print(color.RED+"      R. Restore tools...")
         print(color.END+"      I. Report an issue...")
         print(color.END+"      B. Back...")
@@ -143,6 +145,8 @@ elif detectChoice == "5":
     os.system('./scripts/domtrues/nbdassistant.py')
 elif detectChoice == "6":
     os.system('./scripts/extras/boot-args.py')
+elif detectChoice == "7":
+    os.system('./scripts/domtrues/grub-args.py')
 
 elif detectChoice == "i" or detectChoice == "I":
     
