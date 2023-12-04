@@ -42,6 +42,10 @@ client_id = "1149434759152422922"
 parser = argparse.ArgumentParser("autopilot")
 parser.add_argument("--disable-logging", dest="disableLog", help="Disables the logfile",action="store_true")
 parser.add_argument("--disable-rpc", dest="disableRPC", help="Disables Discord rich presence",action="store_true")
+parser.add_argument("--disable-blob-check", dest="disableBlobCheck", help="Bypasses checking of blob integrity",action="store_true")
+parser.add_argument("--skip-summary", dest="skipSummary", help="Starts the AutoPilot flow immediately after questioning",action="store_true")
+parser.add_argument("--no-auto-download", dest="customDownload", help="Asks the user what to download during run",action="store_true")
+parser.add_argument("--no-cleanup", dest="disableCleanup", help="Doesn't clean blob files after run",action="store_true")
 
 
 args = parser.parse_args()
@@ -53,12 +57,28 @@ runs = 0
 
 enableLog = True
 enableRPC = True
+enableClean = True
+enableBlobCheck = True
+customDownload = False
+showSummary = True
 
 if args.disableLog == True:
    enableLog = False
 
 if args.disableRPC == True:
    enableRPC = False
+
+if args.disableCleanup == True:
+   enableClean = False
+
+if args.disableBlobCheck == True:
+   enableBlobCheck = False
+
+if args.customDownload == True:
+   customDownload = True
+
+if args.skipSummary == True:
+   showSummary = False
 
 version = open("./.version")
 version = version.read()
@@ -306,93 +326,96 @@ def autopilot():
          USR_HDD_PATH_F = "Existing disk file (\""+os.path.basename(USR_HDD_PATH)+"\")"
 
       clear()
-      if USR_CREATE_XML == "True":
-         print("   "+"\n   "+color.BOLD+"Ready to generate files"+color.END)
-      else:
-         print("   "+"\n   "+color.BOLD+"Ready to generate config file"+color.END)
-      #print("   "+"Review your preferences")
-      print("   "+"The config wizard is complete.\n   Review your preferences below and continue when ready."+color.END)
-      print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+      if showSummary == True:
+         if USR_CREATE_XML == "True":
+            print("   "+"\n   "+color.BOLD+"Ready to generate files"+color.END)
+         else:
+            print("   "+"\n   "+color.BOLD+"Ready to generate config file"+color.END)
+         #print("   "+"Review your preferences")
+         print("   "+"The config wizard is complete.\n   Review your preferences below and continue when ready."+color.END)
+         print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
 
-      if USR_CREATE_XML == "True":
-         print("   "+color.BOLD+color.PURPLE+"FILES   ",color.END+color.END+USR_CFG+", "+USR_CFG_XML)
-      else:
-         print("   "+color.BOLD+color.PURPLE+"FILE    ",color.END+color.END+USR_CFG+color.END)
-
-
-      if USR_TARGET_OS < 1012 and USR_TARGET_OS >= 100:
-         print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"Mac OS X",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
-      else:
-         print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"macOS",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
+         if USR_CREATE_XML == "True":
+            print("   "+color.BOLD+color.PURPLE+"FILES   ",color.END+color.END+USR_CFG+", "+USR_CFG_XML)
+         else:
+            print("   "+color.BOLD+color.PURPLE+"FILE    ",color.END+color.END+USR_CFG+color.END)
 
 
-      print("   "+color.BOLD+color.YELLOW+"BOOT    ",color.END+color.END+USR_BOOT_FILE_F,color.END)
+         if USR_TARGET_OS < 1012 and USR_TARGET_OS >= 100:
+            print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"Mac OS X",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
+         else:
+            print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"macOS",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
 
 
-      print("   "+color.BOLD+color.CYAN+"CPU     ",color.END+color.END+USR_CPU_MODEL+",",USR_CPU_CORES,"cores,",USR_CPU_THREADS,"threads","("+USR_CPU_TOTAL_F+")"+color.END)  
-      
-
-      #print("   "+color.BOLD+color.CYAN+"        ",color.END+color.BOLD+USR_CPU_FEATURE_ARGS+color.END)
+         print("   "+color.BOLD+color.YELLOW+"BOOT    ",color.END+color.END+USR_BOOT_FILE_F,color.END)
 
 
-      print("   "+color.BOLD+color.CYAN+"RAM     ",color.END+color.END+USR_ALLOCATED_RAM_F+" GB"+color.END)
-
-
-      if USR_HDD_SIZE == "-1":
-         print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_PATH_F+color.END)
-      else:
-         print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_SIZE_F+" GB (dynamic)"+color.END)
-
-
-      if USR_MAC_ADDRESS != "00:16:cb:00:21:09":
-         print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+" ("+USR_MAC_ADDRESS+")")
-      else:
-         print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+"")
-
-
-      print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
-      if USR_BOOT_FILE == "-1":
-         print(color.BOLD+"\n      1. Start...")
-         print(color.END+"         Fetch a new recovery image, then create the config\n         and hard disk files in the repo folder\n")
-      else:
-         print(color.BOLD+"\n      1. Start...")
-         print(color.END+"         Copy the local recovery image, then create the config\n         and hard disk files in the repo folder\n")
-      
-      print("    "+color.END+"  B. Back")
-      print("    "+color.END+"  X. Start Over")
-      print("    "+color.END+"  ?. Help")
-      print("    "+color.END+"  Q. Exit\n")
-      stageSelect = str(input(color.BOLD+"Select> "+color.END))
-   
-      if stageSelect == "1":
-         #cpydLog("ok",str("Using default value of "+str(defaultValue)))
-         handoff()
-
-      elif stageSelect == "b" or stageSelect == "B":
-         stage14()
-
-      elif stageSelect == "x" or stageSelect == "X":
-         global customValue
-         currentStage = 1
-         customValue = 0
-         stage1()
-
-      elif stageSelect == "?":
-            clear()
-            cpydLog("ok",("Contacting xdg-open with URL"))
-            print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
-            print("   Continue in your browser\n")
-            print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
-            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#review-your-preferences > /dev/null 2>&1')
-            time.sleep(6)
-            clear()
-            stage15()
+         print("   "+color.BOLD+color.CYAN+"CPU     ",color.END+color.END+USR_CPU_MODEL+",",USR_CPU_CORES,"cores,",USR_CPU_THREADS,"threads","("+USR_CPU_TOTAL_F+")"+color.END)  
          
-      elif stageSelect == "q" or stageSelect == "Q":
-         exit   
 
+         #print("   "+color.BOLD+color.CYAN+"        ",color.END+color.BOLD+USR_CPU_FEATURE_ARGS+color.END)
+
+
+         print("   "+color.BOLD+color.CYAN+"RAM     ",color.END+color.END+USR_ALLOCATED_RAM_F+" GB"+color.END)
+
+
+         if USR_HDD_SIZE == "-1":
+            print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_PATH_F+color.END)
+         else:
+            print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_SIZE_F+" GB (dynamic)"+color.END)
+
+
+         if USR_MAC_ADDRESS != "00:16:cb:00:21:09":
+            print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+" ("+USR_MAC_ADDRESS+")")
+         else:
+            print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+"")
+
+
+         print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+         if USR_BOOT_FILE == "-1":
+            print(color.BOLD+"\n      1. Start...")
+            print(color.END+"         Fetch a new recovery image, then create the config\n         and hard disk files in the repo folder\n")
+         else:
+            print(color.BOLD+"\n      1. Start...")
+            print(color.END+"         Copy the local recovery image, then create the config\n         and hard disk files in the repo folder\n")
+         
+         print("    "+color.END+"  B. Back")
+         print("    "+color.END+"  X. Start Over")
+         print("    "+color.END+"  ?. Help")
+         print("    "+color.END+"  Q. Exit\n")
+         stageSelect = str(input(color.BOLD+"Select> "+color.END))
+      
+         if stageSelect == "1":
+            #cpydLog("ok",str("Using default value of "+str(defaultValue)))
+            handoff()
+
+         elif stageSelect == "b" or stageSelect == "B":
+            stage14()
+
+         elif stageSelect == "x" or stageSelect == "X":
+            global customValue
+            currentStage = 1
+            customValue = 0
+            stage1()
+
+         elif stageSelect == "?":
+               clear()
+               cpydLog("ok",("Contacting xdg-open with URL"))
+               print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
+               print("   Continue in your browser\n")
+               print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
+               os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#review-your-preferences > /dev/null 2>&1')
+               time.sleep(6)
+               clear()
+               stage15()
+            
+         elif stageSelect == "q" or stageSelect == "Q":
+            exit   
+
+         else:
+               stage15()
       else:
-            stage15()
+         handoff()
 
    def stage14():
       global customValue
@@ -586,6 +609,12 @@ def autopilot():
       print("   Step 12")
       print("\n   Choose a bootable image file the virtual machine should boot to. \n   You need a macOS Recovery image (BaseSystem). You can either\n   select an existing one or the wizard can download one for you.\n   It must be in the *.img or *.dmg file format."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"This stage is optional. You can skip it if\n         you intend on using an existing HDD file."+color.END)
+      if customDownload == True:
+       print("\n   "+"  "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+       print("   "+color.BOLD+color.YELLOW+"   ⚠ "+color.END+color.BOLD+" AUTO DOWNLOAD DISABLED"+color.END)
+       print("   "+color.END+"      Automatic version download has been disabled. You will be\n         asked to choose a download during the AutoPilot process."+color.END)
+       print("   "+"  "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+      
       if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
          print(color.YELLOW+"\n     ⚠"+color.END+color.BOLD+"   Download flow disabled for legacy versions.\n         You must download an image manually."+color.END)
 
@@ -1872,12 +1901,13 @@ def autopilot():
          elif PROC_PREPARE == 2:
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Preparing files"+color.END)
 
-         if PROC_CHECKBLOBS == 0:
-            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Checking preferences"+color.END)
-         elif PROC_CHECKBLOBS == 1:
-            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Checking preferences"+color.END)
-         elif PROC_CHECKBLOBS == 2:
-            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Checking preferences"+color.END)
+         if enableBlobCheck == True:
+            if PROC_CHECKBLOBS == 0:
+               print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Checking preferences"+color.END)
+            elif PROC_CHECKBLOBS == 1:
+               print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Checking preferences"+color.END)
+            elif PROC_CHECKBLOBS == 2:
+               print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Checking preferences"+color.END)
 
          if PROC_GENCONFIG == 0:
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Generating config script"+color.END)
@@ -1937,12 +1967,13 @@ def autopilot():
          elif PROC_FIXPERMS == 2:
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Fixing up permissions"+color.END)
 
-         if PROC_CLEANUP == 0:
-            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Cleaning up"+color.END)
-         elif PROC_CLEANUP == 1:
-            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Cleaning up"+color.END)
-         elif PROC_CLEANUP == 2:
-            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Cleaning up"+color.END)
+         if enableClean == True:
+            if PROC_CLEANUP == 0:
+               print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Cleaning up"+color.END)
+            elif PROC_CLEANUP == 1:
+               print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Cleaning up"+color.END)
+            elif PROC_CLEANUP == 2:
+               print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Cleaning up"+color.END)
 
          print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
          if PROC_FETCHDL != 1:
@@ -2484,7 +2515,7 @@ def autopilot():
          time.sleep(2)
          cpydLog("info",("Setting target OS to "+str(USR_TARGET_OS)))
          print(color.BOLD+"   Downloading macOS",str(USR_TARGET_OS_F)+"...")
-         if len(USR_TARGET_OS_ID) > 1:
+         if len(USR_TARGET_OS_ID) > 1 and customDownload == False:
             cpydLog("ok",("OS ID is valid, sending to dlosx script"))
             os.system("./scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID)
          else:
@@ -2787,7 +2818,8 @@ def autopilot():
          time.sleep(1)
 
       apcPrepare()
-      apcBlobCheck()
+      if enableBlobCheck == True:
+         apcBlobCheck()
       apcGenConfig()
       if PROC_FETCHDL == 0 and USR_BOOT_FILE != "-2":
          cpydLog("ok",("User requested a new macOS recovery image, arming downloader"))
@@ -2805,7 +2837,8 @@ def autopilot():
       
       apcApplyPrefs()
       apcFixPerms()
-      apcCleanUp()
+      if enableClean == True:
+         apcCleanUp()
       cpydLog("info",("Stopping timer"))
       stopTime = timeit.default_timer()
       try: # DISCORD RPC
