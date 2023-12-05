@@ -26,8 +26,8 @@ import http.client as httplib
 global noDelta
 
 detectChoice = 1
-latestOSName = "Ventura"
-latestOSVer = "13"
+latestOSName = "Sonoma"
+latestOSVer = "14"
 runs = 0
 noDelta = 0
 
@@ -35,7 +35,7 @@ global version
 
 # INTERNAL VERSION OF THIS UTILITY
 # May be used in the future
-updaterVersion = "2.3"
+updaterVersion = "2.4"
 
 if os.path.exists("./.version"):
    version = open("./.version")
@@ -68,6 +68,7 @@ parser.add_argument("-a", "--auto", dest="install", help="Automatically download
 parser.add_argument("-d", "--download", dest="download", help="Automatically download (but not install) available updates without asking",action="store_true")
 parser.add_argument("-v", "--version", dest="version", help="Upgrade/downgrade to a specific version. Must be used with --force.", metavar="<X.X.X>", type=str)
 parser.add_argument("-f", "--force", dest="force", help="Force install the latest version, even if it is already installed. Use only to skip ahead to latest commit", action="store_true")
+parser.add_argument("--switchBranch", dest="switchBranch", help="Switch to the development branch", action="store_true")
 parser.add_argument("--forceDelta", dest="forceDelta", help="Skip the delta update compatibility check and allow upgrading forcefully. THIS IS UNSAFE!", action="store_true")
 parser.add_argument("--noDelta", dest="noDelta", help="For debugging only. Flags all updates as incompatible even if they aren't", action="store_true")
 parser.add_argument("--menuFlow", dest="menuFlow", help="To be used by other internal scripts only", action="store_true")
@@ -83,6 +84,7 @@ def have_internet() -> bool:
     global integrity
     conn = httplib.HTTPSConnection("8.8.8.8", timeout=5)
     try:
+        
         conn.request("HEAD", "/")
         return True
     except Exception:
