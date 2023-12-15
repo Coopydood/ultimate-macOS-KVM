@@ -197,6 +197,8 @@ As you use it to generate your personal files, having to re-clone the entire rep
 
 Of course, if you're just testing the project, then a "clean install" is probably still preferable.
 
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b3578d2d-3d31-41a6-a7f0-85a857ef1f5b" width="60%"></img>
+
 ***
 
 ## Gallery
