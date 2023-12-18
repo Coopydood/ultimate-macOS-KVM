@@ -1,11 +1,9 @@
----
 name: AutoPilot
-about: Report an issue with the AutoPilot feature or generated files
+description: Report an issue with the AutoPilot feature or generated files
 title: "[AUTOPILOT]"
 labels: Bug, Pending
 assignees: Coopydood
 
----
 body:
   - type: markdown
     attributes:
@@ -68,4 +66,3 @@ body:
         '
     validations:
       required: true
-
