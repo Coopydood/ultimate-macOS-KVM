@@ -44,7 +44,7 @@ body:
         ---
 
   - type: textarea
-    id: autopilot-additional
+    id: additional
     attributes:
       label: "Additional Information"
       description: Please provide any additional information you think may be relevant.

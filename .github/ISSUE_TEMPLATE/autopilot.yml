@@ -43,7 +43,7 @@ body:
         Please enter your host system details to help contextualise the issue.
 
   - type: textarea
-    id: autopilot-systeminfo
+    id: systeminfo
     attributes:
       label: "System Specifications"
       description: Please provide details of your host system. The main points of interest are already filled in for you. Please replace the text in square brackets with the relevant information.
@@ -71,7 +71,7 @@ body:
         Please enter the version of ULTMOS you are using, and any other relevant information.
 
   - type: input
-    id: autopilot-version
+    id: ultmos-version
     attributes:
       label: "Version"
       placeholder: vX.X.X
@@ -79,7 +79,7 @@ body:
       required: true
 
   - type: dropdown
-    id: autopilot-branch
+    id: ultmos-branch
     attributes:
       label: "Branch"
       description: Please select the branch you are using.
@@ -134,7 +134,7 @@ body:
         ---
 
   - type: textarea
-    id: autopilot-additional
+    id: additional
     attributes:
       label: "Additional Information"
       description: Please provide any additional information you think may be relevant.
