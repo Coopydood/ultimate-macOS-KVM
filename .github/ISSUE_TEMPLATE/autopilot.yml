@@ -1,0 +1,104 @@
+---
+name: AutoPilot
+about: Report an issue with the AutoPilot feature or generated files
+title: "[AUTOPILOT]"
+labels: Bug, Pending
+assignees: Coopydood
+
+---
+body:
+  - type: markdown
+    attributes:
+      value: |
+       > [!NOTE]
+       > This should be used only to report a bug relating to AutoPilot, or with the files it generates.
+
+  - type: textarea
+    id: autopilot-issue
+    attributes:
+      label: "## Describe the Issue"
+      description: Please describe your issue relating to **AutoPilot**.
+      placeholder: Please describe your issue relating to **AutoPilot**.
+      value: ''
+    validations:
+      required: true
+      
+  - type: textarea
+    id: autopilot-reproduce
+    attributes:
+      label: "## Reproduce the Issue"
+      description: Describe how to accurately reproduce / exhibit the issue.
+      placeholder: Please describe how to reproduce the issue.
+      value: ''
+
+  - type: textarea
+    id: autopilot-expectation
+    attributes:
+      label: "## Expectation"
+      description: What did you expect to happen instead?
+      placeholder: Please describe what you expected to happen.
+      value: ''
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        # System Information
+
+        Please enter your host system details to help contextualise the issue.
+
+
+  - type: textarea
+    id: autopilot-systeminfo
+    attributes:
+      label: "## System Specifications"
+      description: Please provide details of your host system. The main points of interest are already filled in for you. Please replace the text in square brackets with the relevant information.
+      placeholder: |
+        **OS:** [OS name]
+        **Kernel:** [full kernel version]
+        **Processor:** [CPU model]
+        **Memory:** [RAM installed in GBs]
+        **Graphics:** [GPU models in use with the project, if any]
+      value: '
+        **OS: [OS name]
+        **Kernel:** [full kernel version]
+        **Processor:** [CPU model]
+        **Memory:** [RAM installed in GBs]
+        **Graphics:** [GPU models in use with the project, if any]
+        '
+    validations:
+      required: true
+
+
+
+## ULTMOS
+Please provide details of your ULTMOS repo setup.
+
+**Version:** [vX.X.X]
+**Branch:** [main / dev]
+
+***
+
+## Generated Files
+Please provide the full contents of any generated files made by AutoPilot.
+
+**Generated Script File:**
+```sh
+[PASTE SCRIPT HERE]
+```
+
+**Generated XML File (if applicable):**
+```xml
+[PASTE XML HERE]
+```
+
+**Generated Log File:**
+```
+[PASTE LOG HERE]
+```
+
+> [!NOTE]
+> AutoPilot log files can be found in the ``logs`` folder of the repo directory.
+
+> [!WARNING]
+> Remember to redact any personal information, such as user names from file paths.
