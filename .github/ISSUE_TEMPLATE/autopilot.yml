@@ -17,7 +17,6 @@ body:
       label: "## Describe the Issue"
       description: Please describe your issue relating to **AutoPilot**.
       placeholder: Please describe your issue relating to **AutoPilot**.
-      value: ''
     validations:
       required: true
       
@@ -27,7 +26,6 @@ body:
       label: "## Reproduce the Issue"
       description: Describe how to accurately reproduce / exhibit the issue.
       placeholder: Please describe how to reproduce the issue.
-      value: ''
 
   - type: textarea
     id: autopilot-expectation
@@ -35,7 +33,6 @@ body:
       label: "## Expectation"
       description: What did you expect to happen instead?
       placeholder: Please describe what you expected to happen.
-      value: ''
 
   - type: markdown
     attributes:
