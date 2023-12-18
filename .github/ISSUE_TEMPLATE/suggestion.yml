@@ -1,0 +1,55 @@
+name: Suggestion
+description: Suggest feature changes or additions
+title: "[SUGGESTION] <title>"
+labels: New Feature, Pending
+assignees: Coopydood
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!NOTE]
+        > This should be used only to submit **suggestions**, NOT issues and bugs.
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: "Describe the Suggestion"
+      placeholder: Please describe your suggestion for **ultimate-macOS-KVM**.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: suggestion-type
+    attributes:
+      label: "Suggestion Type"
+      description: What type of suggestion is this?
+      options:
+        - label: "New Feature"
+        - label: "Related to an existing feature"
+        - label: "Other"
+      validations:
+        required: true
+
+  - type: textarea
+    id: suggestion-images
+    attributes:
+      label: Concept Images
+      description: If required, please add some concept images showing the suggestion.
+      placeholder: Please paste/drag & drop concept images regarding the suggestion.
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: textarea
+    id: autopilot-additional
+    attributes:
+      label: "Additional Information"
+      description: Please provide any additional information you think may be relevant.
+
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to make a suggestion. Please review the information you have provided and ensure it is correct before submitting the suggestion.
