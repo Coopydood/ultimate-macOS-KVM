@@ -69,36 +69,3 @@ body:
     validations:
       required: true
 
-
-
-## ULTMOS
-Please provide details of your ULTMOS repo setup.
-
-**Version:** [vX.X.X]
-**Branch:** [main / dev]
-
-***
-
-## Generated Files
-Please provide the full contents of any generated files made by AutoPilot.
-
-**Generated Script File:**
-```sh
-[PASTE SCRIPT HERE]
-```
-
-**Generated XML File (if applicable):**
-```xml
-[PASTE XML HERE]
-```
-
-**Generated Log File:**
-```
-[PASTE LOG HERE]
-```
-
-> [!NOTE]
-> AutoPilot log files can be found in the ``logs`` folder of the repo directory.
-
-> [!WARNING]
-> Remember to redact any personal information, such as user names from file paths.
