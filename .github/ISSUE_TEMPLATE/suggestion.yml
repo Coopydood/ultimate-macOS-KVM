@@ -28,8 +28,8 @@ body:
         - label: "New Feature"
         - label: "Related to an existing feature"
         - label: "Other"
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: textarea
     id: suggestion-images
