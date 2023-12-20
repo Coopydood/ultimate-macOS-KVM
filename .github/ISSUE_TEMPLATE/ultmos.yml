@@ -1,6 +1,6 @@
 name: ULTMOS
 description: Report a general issue with the ULTMOS project or a specific feature
-title: "[ULTMOS] <title>"
+title: "[ULTMOS] "
 labels: Bug, Pending
 assignees: Coopydood
 
