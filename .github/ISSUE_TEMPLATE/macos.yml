@@ -1,6 +1,6 @@
 name: macOS
 description: Report macOS issues unique to ULTMOS usage
-title: "[macOS] <title>"
+title: "[macOS] "
 labels: Bug, Pending
 assignees: Coopydood
 
