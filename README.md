@@ -1,10 +1,10 @@
 <a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/492731ef1d95d2da534c660b001550f4d76a6c68/resources/images/bannerAlphaBasic.png?raw=true" alt="ultimate-macOS-KVM" width="500"/></a>
 
-### v0.10.5
+### v0.11.0
 
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
-*[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-10-5.md)*
+*[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-11-0.md)*
 
 [![ULTMOS VERSION](https://img.shields.io/github/v/release/Coopydood/ultimate-macOS-KVM?style=for-the-badge&color=1793D1&logo=github&logoColor=white&label=)](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest) [![GitHub](https://img.shields.io/github/license/Coopydood/ultimate-macOS-KVM?label=Licence&logo=unlicense&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/LICENSE) [![GitHub repo size](https://img.shields.io/github/repo-size/Coopydood/ultimate-macOS-KVM?color=07b55b&label=Size&logo=envoy-proxy&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM) [![Discord](https://img.shields.io/discord/574943603466436628?color=7d86ff&label=Discord&logo=discord&logoColor=white&style=for-the-badge)](https://sl.coopydood.com/discord)
 
@@ -196,6 +196,8 @@ This project has been designed to be updated and made better over time.
 As you use it to generate your personal files, having to re-clone the entire repo yourself while preserving your files would be a right pain in the backside. Therefore, there's an automated updater script built right in that you can use to safely update in-place to newer versions of this project, without affecting any of your personal config files, virtual hard drives, or anything else not part of the project files. And, if an update dramatically changes directory structures from your current version, the updater automatically disables its in-place update mechanism to prevent data loss.
 
 Of course, if you're just testing the project, then a "clean install" is probably still preferable.
+
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b3578d2d-3d31-41a6-a7f0-85a857ef1f5b" width="60%"></img>
 
 ***
 

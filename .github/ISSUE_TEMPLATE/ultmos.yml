@@ -1,0 +1,119 @@
+name: ULTMOS
+description: Report a general issue with the ULTMOS project or a specific feature
+title: "[ULTMOS] <title>"
+labels: Bug, Pending
+assignees: Coopydood
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!NOTE]
+        > This should be used only to report a bug relating to the ULTMOS project itself, **not** macOS.
+
+        > [!IMPORTANT]
+        > To report an issue related to *AutoPilot* or any generated files, please use the dedicated AutoPilot issue template.
+
+  - type: textarea
+    id: ultmos-issue
+    attributes:
+      label: "Describe the Issue"
+      description: Please describe your issue relating to **ultimate-macOS-KVM**.
+      placeholder: Please describe your issue relating to the ULTMOS project.
+    validations:
+      required: true
+
+  - type: textarea
+    id: ultmos-reproduce
+    attributes:
+      label: "Reproduce the Issue"
+      description: Describe how to accurately reproduce/exhibit the issue.
+      placeholder: Please describe how to reproduce the issue.
+
+  - type: textarea
+    id: ultmos-expectation
+    attributes:
+      label: "Expectation"
+      description: What did you expect to happen instead?
+      placeholder: Please describe what you expected to happen.
+
+  - type: textarea
+    id: ultmos-screenshots
+    attributes:
+      label: "Screenshots"
+      description: If available, please add some screenshots showing the issue.
+      placeholder: Please paste/drag & drop screenshots regarding the issue.
+
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        # System Information
+
+        Please enter your host system details to help contextualise the issue.
+
+  - type: textarea
+    id: ultmos-systeminfo
+    attributes:
+      label: "System Specifications"
+      description: Please provide details of your host system. The main points of interest are already filled in for you. Please replace the text in square brackets with the relevant information.
+      placeholder: |
+        **OS:** [OS name]
+        **Kernel:** [full kernel version]
+        **Processor:** [CPU model]
+        **Memory:** [RAM installed in GBs]
+        **Graphics:** [GPU models in use with the project, if any]
+      value: |
+        **OS: [OS name]
+        **Kernel:** [full kernel version]
+        **Processor:** [CPU model]
+        **Memory:** [RAM installed in GBs]
+        **Graphics:** [GPU models in use with the project, if any]
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        # ultimate-macOS-KVM Information and logs
+
+        Please enter the version of ULTMOS you are using, and any other relevant information.
+
+  - type: input
+    id: ultmos-version
+    attributes:
+      label: "Version"
+      placeholder: vX.X.X
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ultmos-branch
+    attributes:
+      label: "Branch"
+      description: Please select the branch you are using.
+      options:
+        - main
+        - dev
+        - other
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: "Additional Information"
+      description: Please provide any additional information you think may be relevant.
+
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report this issue. Please review the information you have provided and ensure it is correct before submitting the issue.
+

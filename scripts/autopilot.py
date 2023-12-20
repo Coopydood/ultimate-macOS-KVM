@@ -262,7 +262,7 @@ def autopilot():
 
 
    ###############################
-   FEATURE_LEVEL = 6                   # DO NOT CHANGE - WILL BREAK THINGS!
+   FEATURE_LEVEL = 7                   # DO NOT CHANGE - WILL BREAK THINGS!
    ###############################
 
    global currentStage
