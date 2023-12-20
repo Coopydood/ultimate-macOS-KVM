@@ -66,16 +66,14 @@ body:
   - type: input
     id: host-ram
     attributes:
-      label: "RAM amount"
+      label: "RAM (in GB)"
     validations:
       required: true
 
   - type: input
     id: host-gpu
     attributes:
-      label: "Graphics adapter(s)"
-    validations:
-      required: true
+      label: "GPU(s)"
 
 
   - type: markdown
