@@ -40,27 +40,43 @@ body:
         ---
         # System Information
 
-        Please enter your host system details to help contextualise the issue.
+        Please provide details of your host system. The main points of interest are provided for you.
 
-  - type: textarea
-    id: systeminfo
+  - type: input
+    id: host-os
     attributes:
-      label: "System Specifications"
-      description: Please provide details of your host system. The main points of interest are already filled in for you. Please replace the text in square brackets with the relevant information.
-      placeholder: |
-        **OS:** [OS name]
-        **Kernel:** [full kernel version]
-        **Processor:** [CPU model]
-        **Memory:** [RAM installed in GBs]
-        **Graphics:** [GPU models in use with the project, if any]
-      value: |
-        **OS: [OS name]
-        **Kernel:** [full kernel version]
-        **Processor:** [CPU model]
-        **Memory:** [RAM installed in GBs]
-        **Graphics:** [GPU models in use with the project, if any]
+      label: "Operating System"
     validations:
       required: true
+
+  - type: input
+    id: host-kernel
+    attributes:
+      label: "Kernel"
+    validations:
+      required: true
+
+  - type: input
+    id: host-cpu
+    attributes:
+      label: "Processor"
+    validations:
+      required: true
+  
+  - type: input
+    id: host-ram
+    attributes:
+      label: "RAM amount"
+    validations:
+      required: true
+
+  - type: input
+    id: host-gpu
+    attributes:
+      label: "Graphics adapter(s)"
+    validations:
+      required: true
+
 
   - type: markdown
     attributes:
