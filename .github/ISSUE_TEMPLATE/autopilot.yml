@@ -1,6 +1,6 @@
 name: AutoPilot
 description: Report an issue with the AutoPilot feature or generated files
-title: "[AUTOPILOT] <title>"
+title: "[AUTOPILOT] "
 labels: Bug, Pending
 assignees: Coopydood
 
