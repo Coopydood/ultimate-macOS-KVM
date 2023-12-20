@@ -1,6 +1,6 @@
 name: Suggestion
 description: Suggest feature changes or additions
-title: "[SUGGESTION] <title>"
+title: "[SUGGESTION] "
 labels: New Feature, Pending
 assignees: Coopydood
 
