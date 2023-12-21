@@ -352,7 +352,7 @@ def convertBrains():
             elif USR_HDD_TYPE == "SSD":
                 apFileM = apFileM.replace("rotation_rate=\"7200\"","rotation_rate=\"1\"")
             elif USR_HDD_TYPE == "NVMe":
-                apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=raw,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
+                apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=qcow2,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
                 apFileM = apFileM.replace("<disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->","<!-- <disk type=\"file\" device=\"disk\">")
                 apFileM = apFileM.replace("</disk> <!-- HDD FOOTER -->","</disk> -->")
 

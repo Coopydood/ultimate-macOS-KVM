@@ -10,7 +10,7 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 
 ***
 
-## Introduction
+## 👋》Introduction
 
 Tired of all the restraints and poor performance of macOS VMs in hypervisors like VirtualBox or VMware? Well, the story changes when you run your virtual machines in **kernel space**. Welcome to the world of **K**ernel **V**irtual **M**achines.
 
@@ -24,7 +24,7 @@ Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little h
 
 ***
 
-## Features
+## 💎》Features
 
 <ul>
 <li><b>AutoPilot</b></li>
@@ -51,7 +51,7 @@ Easily convert any AutoPilot-generated QEMU scripts into an importable XML file 
 
 ***
 
-## Requirements
+## 🎲》Requirements
 
 As with all other virtual machines / hypervisors, you don't need an *uber-powerful* PC, but you should expect guest performance to be relative to your host's. Performance *can* change dramatically based on guest properties, such as virtual cores, allocated memory, and virtual CPU threads - but it really does boil down to how beefy your host's hardware is.
 
@@ -74,7 +74,7 @@ Here's a table with my best judgment on minimum, recommended, and best system re
 
 ***
 
-## Dependencies
+## 📦》Dependencies
 The project requires several other packages to function properly, while others can be optionally installed to enhance your experience. 
 
 All of the dependencies, both required and optional, are listed below.
@@ -106,7 +106,7 @@ All of the dependencies, both required and optional, are listed below.
 
 ***
 
-## Oh, and you NEED Linux.
+## 🐧》Oh, and you NEED Linux.
 
 Shocker; KVM is a module built into the *Linux kernel*, not **Windows Subsystem for Linux** or some UNIX-like terminal. You need a <ins>full install</ins> of at least base Linux **on your host**. Don't try any of that VM inception shenanigans.
 
@@ -117,7 +117,7 @@ The easiest way to do this is by grabbing some mainstream Linux distro, like **U
 
 ***
 
-## Getting Started
+## 🛫》Getting Started
 
 It's easy to get up and running. Simply clone the repo using ``git``.
 Make sure you have **all** [dependencies](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/README.md#requirements) installed before getting started.
@@ -146,7 +146,7 @@ $ systemctl status libvirtd
 
 ***
 
-## Usage
+## 🧭》Usage
 
 Okay, now you're ready to use **ultimate-macOS-KVM**. Use the ``main.py`` file.
 
@@ -160,7 +160,7 @@ $ ./main.py
 
 ***
 
-## I'm here for GPU passthrough
+## 🖥️》I'm here for GPU passthrough
 
 ...and you've come to the right place. ultimate-macOS-KVM includes several handy built-in tools to make VFIO-PCI passthrough (including GPUs) as pain-free as possible. Please see the documentation on how to get started with these tools.
 
@@ -168,7 +168,7 @@ Oh, and speaking of...
 
 ***
 
-## Documentation
+## 📖》Documentation
 
 More detailed write-ups on the project and the scripts included, as well as some tutorials can be found on this [repo's wiki](https://github.com/Coopydood/ultimate-macOS-KVM/wiki).
 
@@ -178,7 +178,7 @@ Or, you can find some in the included [docs folder](https://github.com/Coopydood
 
 ***
 
-## Help and Troubleshooting Issues
+## 🛟》Help and Troubleshooting
 
 Alongside the tutorial and explanation documents, this project includes troubleshooting guides for a wide variety of issues - ranging from project issues such as those in *AutoPilot*, or other issues such as GPU passthrough.
 
@@ -189,7 +189,7 @@ You can search for your problem and find solutions in the [**Issues and Troubles
 
 ***
 
-## Updates
+## ⬇️》Updates
 
 This project has been designed to be updated and made better over time.
 
@@ -201,7 +201,7 @@ Of course, if you're just testing the project, then a "clean install" is probabl
 
 ***
 
-## Gallery
+## 🖼️》Gallery
 
 Here's a few screenshots showing **ultimate-macOS-KVM** in action!
 
@@ -210,7 +210,7 @@ Here's a few screenshots showing **ultimate-macOS-KVM** in action!
 
 ***
 
-## Disclaimer
+## ☢️》Disclaimer
 
 This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't expect much as this is a passion project and not a priority in my life.
 
@@ -225,7 +225,7 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
   
 ***
 
-## Legal
+## ⚖️》Legal
 
 > [!WARNING]
 > This project contains a string of text known as an OS Key (OSK). 
@@ -238,7 +238,7 @@ Apple has attempted to classify the OSK as a trade secret but has ultimately fai
 
 ***
 
-## Useful Links
+## 🌐》Useful Links
 
 Here are some external links to other resources that you might find useful.
 
@@ -253,7 +253,15 @@ Here are some external links to other resources that you might find useful.
 
 ***
 
-## Credits & Greetz
+## ❤️》Sponsors
+
+These awesome people were generous enough to donate financially to help fuel the 3AM misadventures this project is made from. Thank you so much!
+
+<!-- sponsors --><a href="https://github.com/WaveringAna"><img src="https://images.weserv.nl/?url=https://github.com/WaveringAna.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="WaveringAna"></a><!-- sponsors -->
+
+***
+
+## 🤝》Credits & Greetz
 
 While I am the creator of these automation/ease-of-use scripts, this project is not possible without both the prior and current works of some very talented people. The people who have tested the project are also included.
 

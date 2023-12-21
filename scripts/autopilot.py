@@ -2439,7 +2439,7 @@ def autopilot():
                      cpydLog("ok",("Rotation rate updated"))
                   elif USR_HDD_TYPE == "NVMe":
                      cpydLog("warn",("Virtual disk type is NVMe, modifying device"))
-                     apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=raw,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
+                     apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=qcow2,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
                      cpydLog("ok",("Disk device updated"))
                      cpydLog("warn",("Disabling hard drive in XML"))
                      apFileM = apFileM.replace("<disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->","<!-- <disk type=\"file\" device=\"disk\">")
