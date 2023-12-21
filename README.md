@@ -238,21 +238,6 @@ Apple has attempted to classify the OSK as a trade secret but has ultimately fai
 
 ***
 
-## 🌐》Useful Links
-
-Here are some external links to other resources that you might find useful.
-
-- **[OSX-KVM](https://github.com/kholia/OSX-KVM)** 》 The original basis of this project, providing many resources for running macOS under KVM.
-- **[Dortania's OpenCore Guide](https://dortania.github.io/OpenCore-Install-Guide/)** 》 An extensive website of documentation on Hackintosh systems as a whole, useful for troubleshooting issues on both physical and virtual machines.
-- **[GPU Buyer's Guide](https://dortania.github.io/GPU-Buyers-Guide/)** 》 An excellent write up on Dortania's website to help you make informed GPU buying decisions for maximum success rates. This is the primary source of data used in the *GPU compatibility checker* script included in ULTMOS.
-- **[LegacyOSXKVM](https://github.com/royalgraphx/LegacyOSXKVM)** 》 Documentation and resources on running legacy OS X versions. Legacy support in ULTMOS is based on this project.
-- **[OpenCore Configurator](https://mackie100projects.altervista.org/download-opencore-configurator/)** 》 Download page for OCC, an application used to edit OpenCore configs from within macOS.  
-
-> [!WARNING]
-> These links and their contents are not authored, monitored, or maintained by Coopydood, and are not affiliated as such. They are provided for convenience purposes only.
-
-***
-
 ## ❤️》Sponsors
 
 These awesome people were generous enough to donate financially to help fuel the 3AM misadventures this project is made from. Thank you so much!
@@ -281,6 +266,8 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[GigantTech](https://twitter.com/TechGigant)** 》 Moderately annoying German guy that I convinced to install Linux subsequently letting him test my project. It's free real estate!
 
 ***
+
+
 
 <p align="center">
   <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/39d78d4b-8ce8-44f4-bba7-fefdbf2f80db" width="10%"> </img>
