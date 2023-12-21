@@ -251,6 +251,16 @@ Here are some external links to other resources that you might find useful.
 
 ***
 
+## Sponsors
+
+These awesome people were generous enough to donate financially to help fuel the 3AM misadventures this project is made from. Thank you so much!
+
+<!-- sponsors --><a href="https://github.com/WaveringAna"><img src="https://images.weserv.nl/?url=https://github.com/WaveringAna.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="WaveringAna"></a><!-- sponsors -->
+
+<sup>If you find this project helpful, and want to support development, you can <a href="https://github.com/sponsors/Coopydood">sponsor it</a>! Any and all donations are incredibly appreciated and never expected or required! </sup>
+
+***
+
 ## Credits & Greetz
 
 While I am the creator of these automation/ease-of-use scripts, this project is not possible without both the prior and current works of some very talented people. The people who have tested the project are also included.
