@@ -4,7 +4,9 @@
 
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
-*[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-10-5.md)*
+*[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest)*
+
+<br>
 
 [![ULTMOS VERSION](https://img.shields.io/github/v/release/Coopydood/ultimate-macOS-KVM?style=for-the-badge&color=1793D1&logo=github&logoColor=white&label=)](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest) [![GitHub](https://img.shields.io/github/license/Coopydood/ultimate-macOS-KVM?label=Licence&logo=unlicense&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/LICENSE) [![GitHub repo size](https://img.shields.io/github/repo-size/Coopydood/ultimate-macOS-KVM?color=07b55b&label=Size&logo=envoy-proxy&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM) [![Discord](https://img.shields.io/discord/574943603466436628?color=7d86ff&label=Discord&logo=discord&logoColor=white&style=for-the-badge)](https://sl.coopydood.com/discord)
 
@@ -27,8 +29,17 @@ Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little h
 ## 💎》Features
 
 <ul>
-<li><b>AutoPilot</b></li>
+<li><b>AutoPilot <a href="https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot">⎋</a></b></li> 
 Automatically generates a valid, customised, and ready-to-use QEMU config script in seconds.
+
+<li><b>VFIO-PCI Passthrough Assistant <a href="https://github.com/Coopydood/ultimate-macOS-KVM/wiki/VFIO%E2%80%90PCI-Passthrough-Assistant">⎋</a></b></li>
+Advanced passthrough tinkering made easy with auto-detection and configuration walkthroughs.
+
+<li><b>OpenCore Configuration Assistant</b></li>
+Automatically mount and edit your OpenCore image from your host, using Network Block Devices.
+
+<li><b>Boot Argument Assistant + AutoPatch</b></li>
+Easily edit the macOS boot arguments of your OpenCore image, and even automatically apply relevant patches for your setup (e.g. AMD RX 5000 series black screen patch).
 
 <li><b>Automatic System Checks</b></li>
 Several check scripts can be used to make sure your system is correctly prepared for both passthrough and non-passthrough KVM.
@@ -39,11 +50,13 @@ Detects GPUs in your host system and checks them against a list of known compati
 <li><b>VFIO-IDs and IOMMU Helpers</b></li>
 Auto-detects and lists IOMMU groups, VFIO-IDs, and checks if devices are stubbed to kernel driver correctly.
 
-<li><b>VFIO-PCI Passthrough Assistant</b></li>
-Advanced passthrough tinkering made easy with auto-detection and configuration walkthroughs.
+<li><b>Convert to XML for virt-manager <a href="https://github.com/Coopydood/ultimate-macOS-KVM/wiki/XML-Converter">⎋</a></b></li>
+Easily convert any AutoPilot-generated QEMU scripts into an importable XML file for virt-manager (GUI). VFIO-PCI passthrough and USB configurations are also converted.
 
-<li><b>Import to virt-manager</b></li>
-Easily convert any AutoPilot-generated QEMU scripts into an importable XML file for virt-manager (GUI).
+<br><br>
+
+> [!TIP]
+> Click the [**⎋**]() icon next to a feature to read more about it in greater detail.
 
 </ul>
 
@@ -99,7 +112,7 @@ All of the dependencies, both required and optional, are listed below.
 > [!WARNING]
 > You **must** have all of the required dependencies installed before using this project. 
 
-> [!NOTE]
+> [!tip]
 > Optional dependencies can enhance your experience, such as using your VM in a GUI, or showing what macOS version you're currently running on your Discord profile.
 >
 > Your experience is automatically adapted based on the dependencies you have installed. For example, if you have ``pypresence`` installed, Discord rich presence will be enabled automatically on AutoPilot scripts.
@@ -112,9 +125,6 @@ Shocker; KVM is a module built into the *Linux kernel*, not **Windows Subsystem 
 
 The easiest way to do this is by grabbing some mainstream Linux distro, like **Ubuntu, Linux Mint, Manjaro, endeavourOS** - among many, many others. You can pick any one you like. If it's Linux - you can use this project. *I use Arch BTW.*
 
-> [!NOTE]
-> Running this on Windows or macOS is as pointless as those ice cube dispensers on fridge doors...
-
 ***
 
 ## 🛫》Getting Started
@@ -126,8 +136,10 @@ Make sure you have **all** [dependencies](https://github.com/Coopydood/ultimate-
 $ git clone https://github.com/Coopydood/ultimate-macOS-KVM
 ```
 
-> [!NOTE]
+> [!TIP]
 > Alternatively, you can download the latest release [here](https://github.com/Coopydood/ultimate-macOS-KVM/archive/refs/heads/main.zip).
+
+<br>
 
 Okay, so you've cloned my repo, and `cd`'d into the directory. Great!
 Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already. Here's an example for Arch-based systems:
@@ -137,6 +149,8 @@ $ sudo systemctl enable libvirtd
 ```
 > [!WARNING]
 > This command requires superuser privileges.
+
+<br>
 
 and/or check the status of the daemon with
 
@@ -155,8 +169,8 @@ This is your main menu / central hub for the project and everything can be acces
 ```sh
 $ ./main.py
 ```
-> [!IMPORTANT]
-> Most sub-scripts included in the project should *not* be run on their own.
+> [!CAUTION]
+> Most sub-scripts included in the project should *not* be run on their own. Always use ``main.py`` unless the script was user-generated or stated otherwise.
 
 ***
 
@@ -174,7 +188,10 @@ More detailed write-ups on the project and the scripts included, as well as some
 
 This is continually updated and made better as the project develops. Feel free to help out and [write your own!](https://github.com/Coopydood/ultimate-macOS-KVM/new/main/docs)
 
-Or, you can find some in the included [docs folder](https://github.com/Coopydood/ultimate-macOS-KVM/tree/main/docs).
+Changelogs can be found on the [releases](https://github.com/Coopydood/ultimate-macOS-KVM/releases) page.
+
+> [!TIP]
+> All documentation and changelogs are included in the [docs folder](https://github.com/Coopydood/ultimate-macOS-KVM/tree/main/docs) for offline reading.
 
 ***
 
@@ -208,6 +225,9 @@ Here's a few screenshots showing **ultimate-macOS-KVM** in action!
 <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/d93d92e1-5923-436f-a00d-d311c75c1680" width="90%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a9dfb145-d557-46f3-89f4-f891ffff27e0" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/593e8388-8b2d-4b12-99b4-1dbd7802dea8" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/232f3bae-b31b-4e18-bee9-8c03a472d5a0" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ac766b58-5e66-4b70-9742-8e318f065fc2" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1fd0add5-c0c8-46a1-8897-3b80c37f98a1" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8380632b-dceb-41e7-acb0-b2bd15cbf575" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b32c2701-a934-42ce-ab69-06b1ae350f1b" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ee451491-35fa-436e-957b-888d2f7d488e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/c4e394c3-a666-4aab-9aa7-b40b1e84d977" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/feb19dce-7a9a-4527-884c-8b2f2d445e2f" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4a8b5249-3029-49d3-8539-229b3c179816" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4e7678f3-5ee4-4e69-93a7-d9ba9881cea7" width="45%"></img>
 <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/dd012a63-415a-4b87-b096-feabdd3f8a5e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/32d2992d-a39a-4b34-976b-5e7ee5d5c926" width="45%"></img> 
 
+> [!TIP]
+> More screenshots of ULTMOS in action can be found included in the [docs](https://github.com/Coopydood/ultimate-macOS-KVM/tree/main/docs/screenshots) folder!
+
 ***
 
 ## ☢️》Disclaimer
@@ -216,12 +236,15 @@ This is my way of giving back to the QEMU, KVM, and VFIO community. Please don't
 
 - I'm not responsible for any time you waste using this project.
 - I'm not responsible if you make an oopsie whoopsie.
-- Do NOT run anything as ``sudo`` unless absolutely necessary. If you have an urge to then you need to break that habit _**asap.**_ Most of my scripts do not require superuser privileges, however, the ones that do are clearly marked with a yellow ⚠️ next to the operation requiring such permissions.
 - Expect headaches. Some severe.
 - You need a LOT of patience. I mean it. Despite me trying to alleviate some of the hassles, you WILL run into [stupid gotchas](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Issues-and-Troubleshooting) that require trial and error out of my control.
 - I'm by no means an expert on this stuff nor would I claim to be.
 - I've simply made *what I had to go through **easier** for you*. Hopefully.
 - Yes, my Python is pretty bad. But if it works, it works.
+
+> [!CAUTION]
+> Do NOT run anything as ``sudo`` unless absolutely necessary. If you have an urge to then you need to break that habit _**asap.**_ <br><br>
+> Most of my scripts do not require superuser privileges, however, the ones that do are clearly marked with a yellow ⚠️ next to the operation requiring such permissions.
   
 ***
 
