@@ -56,7 +56,7 @@ Auto-detects and lists IOMMU groups, VFIO-IDs, and checks if devices are stubbed
 <li><b>Convert to XML for virt-manager <a href="https://github.com/Coopydood/ultimate-macOS-KVM/wiki/XML-Converter">⎋</a></b></li>
 Easily convert any AutoPilot-generated QEMU scripts into an importable XML file for virt-manager (GUI). VFIO-PCI passthrough and USB configurations are also converted.
 
-<br>
+<br><br>
 
 > [!TIP]
 > Click the [**⎋**]() icon next to a feature to read more about it in greater detail.
