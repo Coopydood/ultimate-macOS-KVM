@@ -37,9 +37,6 @@ version = version.read()
 enableLog = True
 parser = argparse.ArgumentParser("autopilot")
 parser.add_argument("--disable-logging", dest="disableLog", help="Disables the logfile",action="store_true")
-parser.add_argument("-m","--mount", dest="mount", help="Immediately mount detected OC image",action="store_true")
-parser.add_argument("-u","--unmount", dest="unmount", help="Immediately unmount detected OC image",action="store_true")
-parser.add_argument("-q","--quiet", dest="quiet", help="Don't print any verbose information",action="store_true")
 args = parser.parse_args()
 global logTime
 logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
@@ -49,10 +46,10 @@ if enableLog == True: # LOG SUPPORT
     if not os.path.exists("./logs"):
         os.system("mkdir ./logs")
     logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
-    os.system("echo ULTMOS DTUM LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/DTUM_RUN_"+logTime+".log")
-    os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/DTUM_RUN_"+logTime+".log")
+    os.system("echo ULTMOS DTUA LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/DTUA_RUN_"+logTime+".log")
+    os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/DTUA_RUN_"+logTime+".log")
     def cpydLog(logStatus,logMsg,*args):
-        logFile = open("./logs/DTUM_RUN_"+logTime+".log","a")
+        logFile = open("./logs/DTUA_RUN_"+logTime+".log","a")
         #if logStatus == "ok":      logStatus = "[ ✔ ]"
         #if logStatus == "info":    logStatus = "[ ✦ ]"
         #if logStatus == "warn":    logStatus = "[ ⚠ ]"
@@ -74,8 +71,8 @@ else:
     def cpydLog(logStatus,logMsg,*args):
         None
 script = "usb-menu.py"
-scriptName = "USB Menu"
-scriptID = "DTUM"
+scriptName = "USB Assistant"
+scriptID = "DTUA"
 scriptVendor = "DomTrues"
 cpydLog("info",("ULTMOS v"+version))
 cpydLog("info",(" "))
@@ -84,7 +81,7 @@ cpydLog("info",("File       : "+script))
 cpydLog("info",("Identifier : "+scriptID))
 cpydLog("info",("Vendor     : "+scriptVendor))
 cpydLog("info",(" "))
-cpydLog("info",("Logging to ./logs/DTUM_RUN_"+logTime+".log"))
+cpydLog("info",("Logging to ./logs/DTUA_RUN_"+logTime+".log"))
 
 
 
@@ -162,11 +159,9 @@ def preliminary():
     if (len(usb_ids) == 0 or len(usb_names) == 0):
         # TODO: LOGGING SHIT GOING SOUTH
         clear()
-        print(f"   \033[91m\033[1mSHIT A BRICK.\033[0m\n")
-        print(f"   No, seriously. Your computer is a literal brick. Call your friendly")
-        print(f"   neighborhood tech support scammer, perhaps?\n")
-        print(f"   I legitimately don't even know how you've even got here, I hope it's")
-        print(f"   because you modified the script, otherwise, your USB situation is fucked.\n")
+        print(f"   \033[91m\033[1m✖ NO USB DEVICES FOUND\033[0m\n")
+        print(f"   There were no USB devices detected on your computer.")
+        print(f"   How did you even manage that?\n")
         pause()
         clear()
         os.system("python3 ./scripts/extras.py")
@@ -196,11 +191,10 @@ def phase1():
         # Menu Text
         print("   Welcome to \033[36m\033[1mUSB Passthrough Assistant\033[0m")
         print("   Created by \033[1mDomTrues\033[0m")
-        print("\n   This script abstracts the process of adding your host's\n   USB devices to your ULTMOS KVM in an attempt to simplify\n   the end user experience. If you made it this far, your")
-        print("   computer is more mentally sound than a sleep-deprived\n   cabbage, congratulations.\n")
-        print(f"   \033[1mThis script has detected a total of \033[36m{str(len(usb_ids))}\033[0m\033[1m USB devices.\033[0m\n")
+        print("\n   This script simplifies the process of adding \n   your host's USB devices to your boot script.\n")
+        print(f"   \033[1mThis script has detected a total of \033[32m{str(len(usb_ids))}\033[0m\033[1m USB devices.\033[0m\n")
         print("   Select an option to continue.\n")
-        print("      \033[1m1. Passthrough USB devices\033[0m\n         Select the USB devices you want from\n         a list to load into QEMU.\n")
+        print("      \033[1m1. Passthrough USB devices\033[0m\n         Select the USB devices you want from\n         a list to add to your script.\n")
         print("      2. Refresh USB devices")
         print("      M. Main Menu")
         print("      Q. Quit\n")
@@ -246,7 +240,7 @@ def phase2():
 
         print("\n   \033[1mSelect USB devices\033[0m")
         print("   Step 1")
-        print("\n   Type in the devices you want by their associated number on\n   the list below. If you added a device by mistake, type its\n   number to take it off. Once you are finished with selecting\n   devices, type \033[37mdone\033[0m and you will continue onto the next step.")
+        print("\n   Type in the devices you want by using their associated \n   number on the list below. To deselect a device, type its\n   number to remove it. Once you are finished selecting\n   devices, type \033[37mdone\033[0m to continue onto the next step.")
 
         # List the unselected USB devices.
         print("\n   \033[1mSELECTED DEVICES\033[0m\n")
@@ -320,7 +314,7 @@ def phase3():
         # Display Menu
         print("\n   \033[1mValidate USB devices\033[0m")
         print("   Step 2")
-        print("\n   QEMU flags have been generated based on your devices selected.\n   If these are correct, type \033[37mY\033[0m to add them to your QEMU config.\n   If there is an inconsistency, or you've changed your mind, you\n   can type \033[37mN\033[0m to return.\n")
+        print("\n   USB entries have been generated based on your selection.\n   If this looks correct, type \033[37mY\033[0m to continue.\n   If you want to change something, type \033[37mN\033[0m to go back.\n")
 
         # Generate QEMU flags per device
         for i in range(len(selected_usb_ids)):
