@@ -52,7 +52,7 @@ if enableLog == True: # LOG SUPPORT
     os.system("echo ULTMOS DTUM LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/DTUM_RUN_"+logTime+".log")
     os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/DTUM_RUN_"+logTime+".log")
     def cpydLog(logStatus,logMsg,*args):
-        logFile = open("./logs/DTGE_RUN_"+logTime+".log","a")
+        logFile = open("./logs/DTUM_RUN_"+logTime+".log","a")
         #if logStatus == "ok":      logStatus = "[ ✔ ]"
         #if logStatus == "info":    logStatus = "[ ✦ ]"
         #if logStatus == "warn":    logStatus = "[ ⚠ ]"
@@ -84,7 +84,7 @@ cpydLog("info",("File       : "+script))
 cpydLog("info",("Identifier : "+scriptID))
 cpydLog("info",("Vendor     : "+scriptVendor))
 cpydLog("info",(" "))
-cpydLog("info",("Logging to ./logs/DTYN_RUN_"+logTime+".log"))
+cpydLog("info",("Logging to ./logs/DTUM_RUN_"+logTime+".log"))
 
 
 
@@ -330,7 +330,7 @@ def phase3():
 
         # Display visual flags for QEMU.
         for i in range(len(selected_usb_ids)):
-            print(f"   {usb_names[usb_ids.index(selected_usb_ids[i])]}")
+            print(f"   \033[1m{usb_names[usb_ids.index(selected_usb_ids[i])]}\033[0m")
             vendor_id: str = usb_ids[i].split(":")[0]
             product_id: str = usb_ids[i].split(":")[1]
             print(f"      \033[37m{qemu_flags[i]}\033[0m")
@@ -345,11 +345,10 @@ def phase3():
             usb_names.clear()
             selected_usb_ids.clear()
             qemu_flags.clear()
+            preliminary()
+            break
         elif (user_choice.lower() == "y"):
-            # TODO: implement appending flags
-            
             autoAPSelect()
-
             exit()
             break
 
