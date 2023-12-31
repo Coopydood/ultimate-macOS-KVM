@@ -205,6 +205,13 @@ def convertBrains():
                 with open("./blobs/user/USR_MAC_ADDRESS.apb") as blob: apVars[17] = str(blob.read())
                 with open("./blobs/user/USR_BOOT_FILE.apb") as blob: apVars[21] = str(blob.read())
 
+
+                # REQUIRES FL 7
+                if os.path.exists("./blobs/user/USR_HDD_ISPHYSICAL.apb"):
+                    with open("./blobs/user/USR_HDD_ISPHYSICAL.apb") as blob: apVars[21] = str(blob.read())
+                    USR_HDD_ISPHYSICAL = apVars[21]
+                else: USR_HDD_ISPHYSICAL = False
+
                 # REQUIRES FL 6
                 if os.path.exists("./blobs/user/USR_HDD_TYPE.apb"):
                     with open("./blobs/user/USR_HDD_TYPE.apb") as blob: apVars[20] = str(blob.read())
@@ -306,6 +313,12 @@ def convertBrains():
             elif useBlobs == False:
                 USR_HDD_TYPE = "HDD" # Couldn't determine, fallback to regular HDD
 
+            # Decide whether or not to probe array for physical disk
+            if apVars[21] != 0 and useBlobs == False:
+                USR_HDD_ISPHYSICAL = apVars[21]
+            elif useBlobs == False:
+                USR_HDD_ISPHYSICAL = False # Couldn't determine, fallback to regular HDD
+
 
             apVars[1] = apVars[1].replace("macOS ","")
             apVars[1] = apVars[1].replace("Mac OS X ","")
@@ -352,9 +365,12 @@ def convertBrains():
             elif USR_HDD_TYPE == "SSD":
                 apFileM = apFileM.replace("rotation_rate=\"7200\"","rotation_rate=\"1\"")
             elif USR_HDD_TYPE == "NVMe":
-                apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=raw,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
+                apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=qcow2,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
                 apFileM = apFileM.replace("<disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->","<!-- <disk type=\"file\" device=\"disk\">")
                 apFileM = apFileM.replace("</disk> <!-- HDD FOOTER -->","</disk> -->")
+
+            if USR_HDD_ISPHYSICAL == True:
+                apFileM = apFileM.replace("type=\"qcow2\"","type=\"raw\"")
 
 
             if USR_BOOT_FILE == "-2" and useBlobs == True:       # DISABLE THE DETACHED BASESYSTEM; REQUIRES BLOB METHOD!

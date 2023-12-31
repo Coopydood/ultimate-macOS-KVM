@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # pylint: disable=C0301,C0116,C0103,R0903
 
-# Vendor         : DomTrues and Coopydood
+# Vendor         : DomTrues
 # Provisioned by : Coopydood
 
 
@@ -46,10 +46,10 @@ if enableLog == True: # LOG SUPPORT
     if not os.path.exists("./logs"):
         os.system("mkdir ./logs")
     logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
-    os.system("echo ULTMOS DTVP LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/DTVP_RUN_"+logTime+".log")
-    os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/DTVP_RUN_"+logTime+".log")
+    os.system("echo ULTMOS DTUA LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/DTUA_RUN_"+logTime+".log")
+    os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/DTUA_RUN_"+logTime+".log")
     def cpydLog(logStatus,logMsg,*args):
-        logFile = open("./logs/DTVP_RUN_"+logTime+".log","a")
+        logFile = open("./logs/DTUA_RUN_"+logTime+".log","a")
         #if logStatus == "ok":      logStatus = "[ ✔ ]"
         #if logStatus == "info":    logStatus = "[ ✦ ]"
         #if logStatus == "warn":    logStatus = "[ ⚠ ]"
@@ -70,9 +70,9 @@ if enableLog == True: # LOG SUPPORT
 else:
     def cpydLog(logStatus,logMsg,*args):
         None
-script = "vfio-passthrough.py"
-scriptName = "VFIO Passthrough Assistant"
-scriptID = "DTVP"
+script = "usb-menu.py"
+scriptName = "USB Assistant"
+scriptID = "DTUA"
 scriptVendor = "DomTrues"
 cpydLog("info",("ULTMOS v"+version))
 cpydLog("info",(" "))
@@ -81,7 +81,7 @@ cpydLog("info",("File       : "+script))
 cpydLog("info",("Identifier : "+scriptID))
 cpydLog("info",("Vendor     : "+scriptVendor))
 cpydLog("info",(" "))
-cpydLog("info",("Logging to ./logs/DTVP_RUN_"+logTime+".log"))
+cpydLog("info",("Logging to ./logs/DTUA_RUN_"+logTime+".log"))
 
 
 
@@ -109,7 +109,7 @@ def center(text: str):
 
 # Declare method of "Press enter to continue", like pause on Windows...
 def pause():
-   input("   Press [ENTER] to continue...\n")
+   input("   Press [ENTER] to continue...")
 
 
 
@@ -121,12 +121,10 @@ for all of us.
 
 
 
-# VFIO-PCI things to keep track of
-vfio_ids: list = []
-pci_ids: list = []
-gpu_ids: list = []
-vfio_names: list = []
-selected_vfio_ids: list = []
+# USB things to keep track of
+usb_ids: list = []
+usb_names: list = []
+selected_usb_ids: list = []
 qemu_flags: list = []
 
 # Symbol for Lists (because Gigantech got us all fucked up in the first place and now we can't decide on our UI thingy)
@@ -141,39 +139,29 @@ def preliminary():
     clear()
 
     # Global Variables
-    global vfio_ids, vfio_names, pci_ids, gpu_ids
+    global usb_ids, usb_names
 
     # Logging
     print ("Detecting devices, please wait...")
     # TODO: LOGGING DEVICES BEING DETECTED
 
-    # Get VFIO-PCI IDs
-    vfio_ids = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | grep -oP \"[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}\" | sort -u | tr '\n' ' '").read().split(" ")
+    # Get USB IDs
+    usb_ids = os.popen("lsusb | sort -k6 -u | cut -b24- | grep -oP \"[0-9a-fA-F]{4}:[0-9a-fA-F]{4}\" | tr '\n' ' '").read().split(" ")
     # Remove the empty thingy
-    vfio_ids.pop(-1)
+    usb_ids.pop(-1)
 
-    # Get PCI IDs
-    pci_ids = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | awk '{print $1}' | sort -u | tr '\n' ' '").read().split(" ")
+    # Get USB Names
+    usb_names = os.popen("lsusb | sort -k6 -u | awk '{ for (i = 7; i <= NF; i++) { printf $i \" \" }; printf \"\\n\"}'").read().split("\n")
     # Remove the empty thingy
-    pci_ids.pop(-1)
-
-    # Get GPU IDs
-    gpu_ids = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep \"VGA compatible controller\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | awk '{print $1}' | sort -u | tr '\n' ' '").read().split(" ")
-    # Remove the empty thingy
-    gpu_ids.pop(-1)
-
-    # Get PCI Names
-    vfio_names = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | sort -u | sed -E 's/[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}\.[0-9A-Fa-f] ((\w|-)+( )?)* \[[0-9A-Fa-f]*\]: //' | sed -E 's/\[[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}\]( \(.*\))?//' | sed 's/Advanced Micro Devices, Inc. \[AMD\/ATI\] //g' | tr '\n' '@'").read().split("@")
-    # Remove the empty thingy
-    vfio_names.pop(-1)
+    usb_names.pop(-1)
 
     # If the length of either is 0, something has gone horribly, horribly wrong.
-    if (len(vfio_ids) == 0 or len(vfio_names) == 0 or len(pci_ids) == 0):
+    if (len(usb_ids) == 0 or len(usb_names) == 0):
         # TODO: LOGGING SHIT GOING SOUTH
         clear()
-        print(f"   \033[91m\033[1m✖ NO VFIO-PCI DEVICES FOUND\033[0m\n")
-        print(f"   The script couldn't find any stubbed PCI devices")
-        print(f"   to use with VFIO. Check your boot arguments!!!\n")
+        print(f"   \033[91m\033[1m✖ NO USB DEVICES FOUND\033[0m\n")
+        print(f"   There were no USB devices detected on your computer.")
+        print(f"   How did you even manage that?\n")
         pause()
         clear()
         os.system("python3 ./scripts/extras.py")
@@ -185,11 +173,11 @@ def preliminary():
 
 
 
-# Phase 1 - Selecting VFIO-PCI devices
+# Phase 1 - Selecting USB devices
 def phase1():
     
     # Global Variables
-    global vfio_ids, vfio_names, pci_ids
+    global usb_ids, usb_names
 
     # Local Variables
     user_choice: str = ""
@@ -201,13 +189,13 @@ def phase1():
         clear() 
 
         # Menu Text
-        print(f"   Welcome to {color.PURPLE}\033[1mVFIO-PCI Passthrough Assistant\033[0m")
+        print("   Welcome to \033[36m\033[1mUSB Passthrough Assistant\033[0m")
         print("   Created by \033[1mDomTrues\033[0m")
-        print("\n   This script simplifies the process of adding your host's\n   stubbed VFIO devices to your boot script in an attempt to simplify\n   the end user experience.")
-        print(f"\n   \033[1mThis script has detected a total of {color.GREEN}{str(len(vfio_ids))}\033[0m\033[1m VFIO-PCI devices.\033[0m\n")
+        print("\n   This script simplifies the process of adding \n   your host's USB devices to your boot script.\n")
+        print(f"   \033[1mThis script has detected a total of \033[32m{str(len(usb_ids))}\033[0m\033[1m USB devices.\033[0m\n")
         print("   Select an option to continue.\n")
-        print("      \033[1m1. Passthrough VFIO-PCI devices\033[0m\n         Select the stubbed PCI devices you want from\n         a list to add to your script.\n")
-        print("      2. Refresh VFIO-PCI devices")
+        print("      \033[1m1. Passthrough USB devices\033[0m\n         Select the USB devices you want from\n         a list to add to your script.\n")
+        print("      2. Refresh USB devices")
         print("      M. Main Menu")
         print("      Q. Quit\n")
 
@@ -215,12 +203,12 @@ def phase1():
         user_choice = input("\033[1mSelect>\033[0m ")
 
         # Menu Branching
-        if (len(user_choice) == 0 or user_choice == "1"): # Passthrough VFIO-PCI devices
+        if (len(user_choice) == 0 or user_choice == "1"): # Passthrough USB devices
             # Goto Phase 2 and Break
             clear()
             phase2()
             break
-        elif (len(user_choice) == 0 or user_choice == "2"): # Refresh VFIO-PCI devices
+        elif (len(user_choice) == 0 or user_choice == "2"): # Refresh USB devices
             # Restart Preliminary and Break
             clear()
             preliminary()
@@ -238,11 +226,11 @@ def phase1():
 
 
 
-# Phase 2 - User Selects VFIO-PCI Devices
+# Phase 2 - User Selects USB Devices
 def phase2():
 
     # Global Variables
-    global vfio_ids,vfio_names,selected_vfio_ids,symbol,pci_ids
+    global usb_ids,usb_names,selected_usb_ids,symbol
     
     # Menu Loop
     while (True):
@@ -250,37 +238,37 @@ def phase2():
         # Clear the screen, "the Coopydoopydoo way"
         clear()
 
-        print("\n   \033[1mSelect VFIO-PCI devices\033[0m")
+        print("\n   \033[1mSelect USB devices\033[0m")
         print("   Step 1")
         print("\n   Type in the devices you want by using their associated \n   number on the list below. To deselect a device, type its\n   number to remove it. Once you are finished selecting\n   devices, type \033[37mdone\033[0m to continue onto the next step.")
 
-        # List the unselected VFIO-PCI devices.
+        # List the unselected USB devices.
         print("\n   \033[1mSELECTED DEVICES\033[0m\n")
         # Python has to be special, fuck me. (R.I.P. for(i = 0; i < sdgasdg; i++))
-        if (len(selected_vfio_ids) == 0):
+        if (len(selected_usb_ids) == 0):
             print("\033[37m       None\033[0m")
         else:
-            for i in range(len(pci_ids)):
+            for i in range(len(usb_ids)):
                 if (i < 9):
-                    if (pci_ids[i] in selected_vfio_ids):
-                        print(f"       \033[0m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}  {vfio_names[i]}\033[0m")
+                    if (usb_ids[i] in selected_usb_ids):
+                        print(f"       \033[0m{str(i + 1)} {symbol}  {usb_names[i]}\033[0m")
                 else:
-                    if (pci_ids[i] in selected_vfio_ids):
-                        print(f"      \033[0m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}  {vfio_names[i]}\033[0m")
+                    if (usb_ids[i] in selected_usb_ids):
+                        print(f"      \033[0m{str(i + 1)} {symbol}  {usb_names[i]}\033[0m")
 
-        # List the unselected VFIO-PCI devices.
+        # List the unselected USB devices.
         print("\n   \033[1mAVAILABLE DEVICES\033[0m\n")
         # Python has to be special, fuck me. (R.I.P. for(i = 0; i < sdgasdg; i++))
-        if (len(selected_vfio_ids) == len(pci_ids)):
+        if (len(selected_usb_ids) == len(usb_ids)):
             print("\033[37m      None\033[0m")
         else:
-            for i in range(len(pci_ids)):
+            for i in range(len(usb_ids)):
                 if (i < 9):
-                    if (pci_ids[i] not in selected_vfio_ids):
-                        print(f"       \033[37m{str(i + 1)} {symbol}  {pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
+                    if (usb_ids[i] not in selected_usb_ids):
+                        print(f"       \033[37m{str(i + 1)} {symbol}  {usb_names[i]}\033[0m")
                 else:
-                    if (pci_ids[i] not in selected_vfio_ids):
-                        print(f"      \033[37m{str(i + 1)} {symbol}  {pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
+                    if (usb_ids[i] not in selected_usb_ids):
+                        print(f"      \033[37m{str(i + 1)} {symbol}  {usb_names[i]}\033[0m")
         
         # User Selection
         user_choice: str = input("\n\033[1mDevice #> \033[0m")
@@ -296,10 +284,10 @@ def phase2():
             int_choice: int = int(user_choice)
             if (int_choice <= 0):
                 continue
-            if (pci_ids[int_choice - 1] not in selected_vfio_ids):
-                selected_vfio_ids.append(pci_ids[int_choice - 1])
+            if (usb_ids[int_choice - 1] not in selected_usb_ids):
+                selected_usb_ids.append(usb_ids[int_choice - 1])
             else:
-                selected_vfio_ids.remove(pci_ids[int_choice - 1])
+                selected_usb_ids.remove(usb_ids[int_choice - 1])
         except:
             # If the user is fucked up, just pretend it didn't happen.
             continue
@@ -308,14 +296,14 @@ def phase2():
 
 
 
-# Phase 3 - Adding VFIO-PCI devices to QEMU
+# Phase 3 - Adding USB devices to QEMU
 def phase3():
 
     # Global Variables
-    global vfio_ids,vfio_names,selected_vfio_ids,qemu_flags,pci_ids
+    global usb_ids,usb_names,selected_usb_ids,qemu_flags
     
     # If no devices were selected, return to the preliminary menu.
-    if (len(selected_vfio_ids) == 0):
+    if (len(selected_usb_ids) == 0):
         preliminary()
 
     # Menu Loop
@@ -324,20 +312,22 @@ def phase3():
         clear()
 
         # Display Menu
-        print("\n   \033[1mValidate VFIO-PCI devices\033[0m")
+        print("\n   \033[1mValidate USB devices\033[0m")
         print("   Step 2")
-        print("\n   VFIO-PCI entries have been generated based on your selection.\n   If this looks correct, type \033[37mY\033[0m to continue.\n   If you want to change something, type \033[37mN\033[0m to go back.\n")
+        print("\n   USB entries have been generated based on your selection.\n   If this looks correct, type \033[37mY\033[0m to continue.\n   If you want to change something, type \033[37mN\033[0m to go back.\n")
 
         # Generate QEMU flags per device
-        for i in range(len(selected_vfio_ids)):
-            if selected_vfio_ids[i] in gpu_ids:
-                qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",multifunction=on,bus=pcie.0")
-            else:
-                qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",bus=pcie.0")
+        for i in range(len(selected_usb_ids)):
+            vendor_id: str = usb_ids[i].split(":")[0]
+            product_id: str = usb_ids[i].split(":")[1]
+            qemu_flags.append(f"-device usb-host,vendorid=0x{vendor_id},productid=0x{product_id}")
 
         # Display visual flags for QEMU.
-        for i in range(len(selected_vfio_ids)):
-            print(f"\033[1m   {selected_vfio_ids[i]} {vfio_names[pci_ids.index(selected_vfio_ids[i])]}\n\033[0m      {qemu_flags[i]}")
+        for i in range(len(selected_usb_ids)):
+            print(f"   \033[1m{usb_names[usb_ids.index(selected_usb_ids[i])]}\033[0m")
+            vendor_id: str = usb_ids[i].split(":")[0]
+            product_id: str = usb_ids[i].split(":")[1]
+            print(f"      \033[37m{qemu_flags[i]}\033[0m")
 
         # Get user input
         user_choice: str = input("\n\033[1mY/N> \033[0m")
@@ -345,18 +335,14 @@ def phase3():
         # Branching
         if (user_choice.lower() == "n"):
             # Clear the lists and gtfo.
-            vfio_ids.clear()
-            pci_ids.clear()
-            vfio_names.clear()
-            selected_vfio_ids.clear()
+            usb_ids.clear()
+            usb_names.clear()
+            selected_usb_ids.clear()
             qemu_flags.clear()
             preliminary()
             break
         elif (user_choice.lower() == "y"):
-            # TODO: implement appending flags
-            
             autoAPSelect()
-
             exit()
             break
 
@@ -374,7 +360,7 @@ def autoAPSelect():
                 
                 print(color.BOLD+"   "+apFile.name+color.END)
                 print("\n   Do you want to use this file?\n"+color.END)
-                print(color.BOLD+"      1. Add VFIO-PCI devices to detected file")
+                print(color.BOLD+"      1. Add USB devices to detected file")
                 print(color.END+"         Adds the generated arguments to this file\n")
                 print(color.END+"      2. Select another file...")
                 print(color.END+"      Q. Exit\n")
@@ -390,29 +376,21 @@ def autoAPSelect():
                         
                         print("\n\n   "+color.BOLD+color.BLUE+"⧖ APPLYING..."+color.END,"")
                         print("   Please wait\n")
-                        print("   The assistant is now configuring your AutoPilot config file\n   for use with your VFIO-PCI devices.")
+                        print("   The assistant is now configuring your AutoPilot config file\n   for use with your USB devices.")
                         print(color.BOLD+"\n   This may take a few moments.\n   Your current config will be backed up.\n")
                         time.sleep(2)
                         apFilePathNoExt = apFilePath.replace(".sh","")
                         try:
-                            checker = open("./"+apFilePathNoExt+"-noPT.sh")
+                            checker = open("./"+apFilePathNoExt+"-noUSB.sh")
                             checker.close()
                         except:
-                            os.system("cp ./"+apFilePath+" ./"+apFilePathNoExt+"-noPT.sh")
+                            os.system("cp ./"+apFilePath+" ./"+apFilePathNoExt+"-noUSB.sh")
                         with open("./"+apFilePath,"r") as file1:
                             apFileM = file1.read()
                             currentDispVal = len(qemu_flags) - 1
                             while currentDispVal >= 0:
-                                apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+qemu_flags[currentDispVal])
+                                apFileM = apFileM.replace("#USB_DEV_BEGIN","#USB_DEV_BEGIN\n"+qemu_flags[currentDispVal])
                                 currentDispVal -= 1
-                            apFileM = apFileM.replace("#-vga qxl","-vga none")
-                            #apFileM = apFileM.replace("-monitor stdio","-monitor none")
-                            apFileM = apFileM.replace("#-display none","-display none")
-                            apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
-                            apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
-                            apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
-                            os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
-                            os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS.fd")
                             clear()
                             print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
                             print("   QEMU arguments have been added\n")
@@ -441,7 +419,7 @@ def manualAPSelect():
     clear()
     print("\n\n   "+color.BOLD+"Select AutoPilot Config File"+color.END,"")
     print("   Input a valid AutoPilot-generated config\n")
-    print("   You must use a valid file generated by AutoPilot.\n   Any existing VFIO-PCI args will be kept.\n   AutoPilot-generated config scripts end in .sh")
+    print("   You must use a valid file generated by AutoPilot.\n   Any existing USB args will be kept.\n   AutoPilot-generated config scripts end in .sh")
         
     print(color.BOLD+"\n   Drag the *.sh file onto this window (or type the path) and hit ENTER.\n")
     apFileSelect = str(input(color.BOLD+"AutoPilot Config File> "+color.END))
@@ -460,7 +438,7 @@ def manualAPSelect():
             
             print(color.BOLD+"   "+apFile.name+color.END)
             print("\n   Do you want to use this file?\n   It will be copied to the repo folder.\n"+color.END)
-            print(color.BOLD+"      1. Add VFIO-PCI devices to this file")
+            print(color.BOLD+"      1. Add USB devices to this file")
             print(color.END+"         Adds the generated arguments to this file\n")
             print(color.END+"      2. Select another file...")
             print(color.END+"      Q. Exit\n")
@@ -481,7 +459,7 @@ def manualAPSelect():
                         
                     print("\n\n   "+color.BOLD+color.BLUE+"⧖ APPLYING..."+color.END,"")
                     print("   Please wait\n")
-                    print("   The assistant is now configuring your AutoPilot config file\n   for use with your VFIO-PCI devices.")
+                    print("   The assistant is now configuring your AutoPilot config file\n   for use with your USB devices.")
                     print(color.BOLD+"\n   This may take a few moments.\n   Your current config will be backed up.\n")
                     time.sleep(2)
                     if apFilePath[0] == "/" and apFilePath[1] == "/":
@@ -489,12 +467,12 @@ def manualAPSelect():
                     if apFilePath[0] == "." and len(apFilePath) > 10:
                         apFilePath = apFilePath.replace(".","",1)
                     apFilePathNoExt = apFilePath.replace(".sh","")
-                    os.system("cp "+apFilePath+" "+apFilePathNoExt+"-noPT.sh")
+                    os.system("cp "+apFilePath+" "+apFilePathNoExt+"-noUSB.sh")
                     with open(apFilePath,"r") as file1:
                         apFileM = file1.read()
                         '''
-                        currentDispVal = len(vfio_ids)
-                        for y in range(len(vfio_ids)):
+                        currentDispVal = len(usb_ids)
+                        for y in range(len(usb_ids)):
                             
                             currentDispVal = currentDispVal - 1
                             devLineF = str(dev[currentDispVal])
@@ -510,16 +488,8 @@ def manualAPSelect():
                         '''    
                         currentDispVal = len(qemu_flags) - 1
                         while currentDispVal >= 0:
-                            apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+qemu_flags[currentDispVal])
+                            apFileM = apFileM.replace("#USB_DEV_BEGIN","#USB_DEV_BEGIN\n"+qemu_flags[currentDispVal])
                             currentDispVal -= 1
-                        apFileM = apFileM.replace("#-vga qxl","-vga none")
-                        #apFileM = apFileM.replace("-monitor stdio","-monitor none")
-                        apFileM = apFileM.replace("#-display none","-display none")
-                        apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
-                        apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
-                        apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
-                        os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
-                        os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS.fd")
                         clear()
                         print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
                         print("   QEMU arguments have been added\n")

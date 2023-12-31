@@ -95,7 +95,7 @@ class color:
 
 def startup():
     global detectChoice
-    print("\n\n   Welcome to"+color.BOLD+color.CYAN,"Ultimate macOS KVM"+color.END,"(v"+version+")")
+    print("\n\n   Welcome to"+color.BOLD+color.CYAN,"ULTMOS"+color.END,"(v"+version+")")
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
 
     if not os.path.exists("resources/script_store/main.py"): # BACKUP ORIGINAL FILES TO STORE
