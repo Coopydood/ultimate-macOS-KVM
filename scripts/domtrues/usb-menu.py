@@ -330,7 +330,7 @@ def phase3():
 
         # Display visual flags for QEMU.
         for i in range(len(selected_usb_ids)):
-            print(f"   {usb_names[usb_ids.index(selected_usb_ids[i])]}")
+            print(f"   \033[1m{usb_names[usb_ids.index(selected_usb_ids[i])]}\033[0m")
             vendor_id: str = usb_ids[i].split(":")[0]
             product_id: str = usb_ids[i].split(":")[1]
             print(f"      \033[37m{qemu_flags[i]}\033[0m")
