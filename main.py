@@ -90,13 +90,14 @@ class color:
    BOLD = '\033[1m'
    UNDERLINE = '\033[4m'
    END = '\033[0m'
+   GRAY = '\u001b[38;5;245m'
 
 
 
 def startup():
     global detectChoice
-    print("\n\n   Welcome to"+color.BOLD+color.CYAN,"ULTMOS"+color.END,"(v"+version+")")
-    print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+    print(color.BOLD+"\n\n   Welcome to"+color.CYAN,"ULTMOS"+color.END+color.GRAY,"v"+version+color.END)
+    print("   by Coopydood\n"+color.END)
 
     if not os.path.exists("resources/script_store/main.py"): # BACKUP ORIGINAL FILES TO STORE
         os.system("cp -R ./scripts/* ./resources/script_store/")
@@ -108,10 +109,10 @@ def startup():
     if os.path.exists("blobs/user/USR_CFG.apb"):
             tainted = 1
     else:
-        print("   This project can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, checking your system, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.\n")
+        print("   This project can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, checking your system, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.")
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    print("   Select an option to continue.")
+    #print("   Select an option to continue.")
 
 
     if os.path.exists("./blobs/USR_TARGET_OS.apb") and not os.path.exists("./blobs/user/USR_TARGET_OS.apb"):  # Rescue live blobs if coming from older repo version
@@ -187,8 +188,8 @@ def startup():
     #print(color.END+"      6. Verify devices bound to vfio-pci")
     
     print(color.END+"      2. Download macOS...")
-    print(color.END+"      3. System compatibility checks...")
-    print(color.END+"      4. VFIO-PCI passthrough tools...")
+    print(color.END+"      3. Compatibility checks...")
+    print(color.END+"      4. Passthrough tools...\n")
     
     
     print(color.END+"      E. Extras...")

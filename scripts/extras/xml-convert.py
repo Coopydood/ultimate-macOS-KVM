@@ -91,7 +91,7 @@ def startup():
     print(color.END+"         Use this option if you already have an XML file.\n         This option lets you import a previously-created XML file\n         into virsh for use with virt-manager.\n")
   
     print(color.END+"      ?. Help...")
-    print(color.END+"      M. Main menu")
+    print(color.END+"      B. Back...")
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
@@ -360,6 +360,9 @@ def convertBrains():
             apOSCvt = apOSCvt.replace("Mac OS X ","")
             apOSCvt = apOSCvt.replace(".","")
 
+            if USR_HDD_ISPHYSICAL == True:
+                apFileM = apFileM.replace("    <disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"qcow2\"/>\n      <source file=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->","    <disk type=\"block\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"raw\"/>\n      <source dev=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->")
+
             if USR_HDD_TYPE == "HDD":       # DISK TYPE ROUTINE; REQUIRES CONFIG FL 6!
                     None
             elif USR_HDD_TYPE == "SSD":
@@ -368,9 +371,6 @@ def convertBrains():
                 apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=qcow2,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
                 apFileM = apFileM.replace("<disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->","<!-- <disk type=\"file\" device=\"disk\">")
                 apFileM = apFileM.replace("</disk> <!-- HDD FOOTER -->","</disk> -->")
-
-            if USR_HDD_ISPHYSICAL == True:
-                apFileM = apFileM.replace("type=\"qcow2\"","type=\"raw\"")
 
 
             if USR_BOOT_FILE == "-2" and useBlobs == True:       # DISABLE THE DETACHED BASESYSTEM; REQUIRES BLOB METHOD!
@@ -594,6 +594,11 @@ elif detectChoice == "3":
 elif detectChoice == "2":
     clear()
     importXML()
+elif (len(detectChoice) == 0 or detectChoice.lower() == "b"): # Main Menu
+            # Goto Extras and Break
+            clear()
+            os.system("./scripts/vfio-menu.py")
+            
 elif detectChoice == "?":
     clear()
     print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING HELP PAGE IN DEFAULT BROWSER"+color.END,"")

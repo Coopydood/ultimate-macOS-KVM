@@ -118,6 +118,7 @@ then
 echo
 echo \ \ \──────────────────────────────────────────────
 echo \ \ \ \ \ $NAME
+echo \ \ \ \ \ macOS $OS_ID
 echo
 echo \ \ \ \ \ $FILE
 echo \ \ \ \ \ Built with ULTMOS v$ULTMOS
