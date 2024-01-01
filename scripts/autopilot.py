@@ -908,7 +908,8 @@ def autopilot():
       
       print(color.BOLD+"\n      1. Hard disk drive (HDD)")
       print(color.END+"      2. Solid state drive (SSD)")
-      print(color.END+"      3. NVM express (NVMe)")
+      if USR_HDD_ISPHYSICAL != True:
+         print(color.END+"      3. NVM express (NVMe)")
       print(color.END+"\n      B. Back")
       print(color.END+"      ?. Help")
       print(color.END+"      Q. Exit\n   ")
@@ -933,7 +934,7 @@ def autopilot():
          currentStage = currentStage + 1
          stage10()
 
-      elif stageSelect == "3":
+      elif stageSelect == "3" and USR_HDD_ISPHYSICAL != True:
          cpydLog("ok",str("Will set disk up as NVMe"))
          USR_HDD_TYPE = "NVMe"
          blob = open("./blobs/USR_HDD_TYPE.apb","w")
@@ -2499,7 +2500,8 @@ def autopilot():
 
                   if USR_HDD_ISPHYSICAL == True:
                      cpydLog("warn",("Physical disk detected, changing type to RAW"))
-                     apFileM = apFileM.replace("type=\"qcow2\"","type=\"raw\"")
+                     apFileM = apFileM.replace("    <disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"qcow2\"/>\n      <source file=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->","    <disk type=\"block\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"raw\"/>\n      <source dev=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->")
+
 
                   if USR_HDD_TYPE == "HDD":
                      cpydLog("ok",("Virtual disk type is HDD, leaving rotation rate as default"))
