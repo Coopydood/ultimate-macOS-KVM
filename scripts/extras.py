@@ -68,7 +68,7 @@ def startup():
         print(color.END+"      B. Back...")
         print(color.END+"      Q. Exit\n")
     else:
-        print("\n\n   Welcome to"+color.BOLD+color.BLUE,"Ultimate macOS KVM Extras"+color.END,"")
+        print("\n\n   Welcome to"+color.BOLD+color.BLUE,"ULTMOS Extras"+color.END,"")
         print("   Created by",color.BOLD+"Coopydood\n"+color.END)
         if detected == True:
             print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)

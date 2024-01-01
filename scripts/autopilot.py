@@ -2080,8 +2080,8 @@ def autopilot():
             cpydLog("ok",("Selected OLD OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
-            os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
-            os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
+            #os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
+            #os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
             cpydLog("ok",("OpenCore image copied"))
          elif USR_TARGET_OS <= 1012 and USR_TARGET_OS >= 108 and USR_TARGET_OS >= 100:
             cpydLog("ok",("Selected NEW LEGACY OpenCore image"))
@@ -2102,8 +2102,8 @@ def autopilot():
             cpydLog("ok",("Selected NEW OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/compat_new/OpenCore.qcow2 boot/OpenCore.qcow2")
-            os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
-            os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
+            #os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
+            #os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
             cpydLog("ok",("OpenCore image copied"))
          
          cpydLog("info",("Copying OVMF code into place"))
