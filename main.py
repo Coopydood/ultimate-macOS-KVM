@@ -187,8 +187,8 @@ def startup():
     #print(color.END+"      6. Verify devices bound to vfio-pci")
     
     print(color.END+"      2. Download macOS...")
-    print(color.END+"      3. System compatibility checks...")
-    print(color.END+"      4. VFIO-PCI passthrough tools...")
+    print(color.END+"      3. Compatibility checks...")
+    print(color.END+"      4. Passthrough tools...")
     
     
     print(color.END+"      E. Extras...")

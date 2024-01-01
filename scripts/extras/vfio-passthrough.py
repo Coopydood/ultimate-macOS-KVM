@@ -208,7 +208,7 @@ def phase1():
         print("   Select an option to continue.\n")
         print("      \033[1m1. Passthrough VFIO-PCI devices\033[0m\n         Select the stubbed PCI devices you want from\n         a list to add to your script.\n")
         print("      2. Refresh VFIO-PCI devices")
-        print("      M. Main Menu")
+        print("      B. Back...")
         print("      Q. Quit\n")
 
         # Get User Input
@@ -225,10 +225,10 @@ def phase1():
             clear()
             preliminary()
             break
-        elif (len(user_choice) == 0 or user_choice.lower() == "m"): # Main Menu
+        elif (len(user_choice) == 0 or user_choice.lower() == "b"): # Main Menu
             # Goto Extras and Break
             clear()
-            os.system("python3 ./scripts/extras.py")
+            os.system("./scripts/vfio-menu.py")
             break
         elif (len(user_choice) == 0 or user_choice.lower() == "q"): # Quit
             # Exit (and break just in case)

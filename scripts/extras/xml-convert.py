@@ -91,7 +91,7 @@ def startup():
     print(color.END+"         Use this option if you already have an XML file.\n         This option lets you import a previously-created XML file\n         into virsh for use with virt-manager.\n")
   
     print(color.END+"      ?. Help...")
-    print(color.END+"      M. Main menu")
+    print(color.END+"      B. Back...")
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
@@ -594,6 +594,11 @@ elif detectChoice == "3":
 elif detectChoice == "2":
     clear()
     importXML()
+elif (len(detectChoice) == 0 or detectChoice.lower() == "b"): # Main Menu
+            # Goto Extras and Break
+            clear()
+            os.system("./scripts/vfio-menu.py")
+            
 elif detectChoice == "?":
     clear()
     print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING HELP PAGE IN DEFAULT BROWSER"+color.END,"")
