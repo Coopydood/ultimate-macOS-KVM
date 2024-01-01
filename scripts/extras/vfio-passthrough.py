@@ -46,10 +46,10 @@ if enableLog == True: # LOG SUPPORT
     if not os.path.exists("./logs"):
         os.system("mkdir ./logs")
     logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
-    os.system("echo ULTMOS DTVP LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/DTVP_RUN_"+logTime+".log")
-    os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/DTVP_RUN_"+logTime+".log")
+    os.system("echo ULTMOS VPTA LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/VPTA_RUN_"+logTime+".log")
+    os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/VPTA_RUN_"+logTime+".log")
     def cpydLog(logStatus,logMsg,*args):
-        logFile = open("./logs/DTVP_RUN_"+logTime+".log","a")
+        logFile = open("./logs/VPTA_RUN_"+logTime+".log","a")
         #if logStatus == "ok":      logStatus = "[ ✔ ]"
         #if logStatus == "info":    logStatus = "[ ✦ ]"
         #if logStatus == "warn":    logStatus = "[ ⚠ ]"
@@ -72,8 +72,8 @@ else:
         None
 script = "vfio-passthrough.py"
 scriptName = "VFIO Passthrough Assistant"
-scriptID = "DTVP"
-scriptVendor = "DomTrues"
+scriptID = "VPTA"
+scriptVendor = "DomTrues, Coopydood"
 cpydLog("info",("ULTMOS v"+version))
 cpydLog("info",(" "))
 cpydLog("info",("Name       : "+scriptName))
@@ -81,7 +81,7 @@ cpydLog("info",("File       : "+script))
 cpydLog("info",("Identifier : "+scriptID))
 cpydLog("info",("Vendor     : "+scriptVendor))
 cpydLog("info",(" "))
-cpydLog("info",("Logging to ./logs/DTVP_RUN_"+logTime+".log"))
+cpydLog("info",("Logging to ./logs/VPTA_RUN_"+logTime+".log"))
 
 
 

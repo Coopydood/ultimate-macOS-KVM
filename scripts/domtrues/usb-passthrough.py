@@ -46,10 +46,10 @@ if enableLog == True: # LOG SUPPORT
     if not os.path.exists("./logs"):
         os.system("mkdir ./logs")
     logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
-    os.system("echo ULTMOS DTUA LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/DTUA_RUN_"+logTime+".log")
-    os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/DTUA_RUN_"+logTime+".log")
+    os.system("echo ULTMOS UPTA LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/UPTA_RUN_"+logTime+".log")
+    os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/UPTA_RUN_"+logTime+".log")
     def cpydLog(logStatus,logMsg,*args):
-        logFile = open("./logs/DTUA_RUN_"+logTime+".log","a")
+        logFile = open("./logs/UPTA_RUN_"+logTime+".log","a")
         #if logStatus == "ok":      logStatus = "[ ✔ ]"
         #if logStatus == "info":    logStatus = "[ ✦ ]"
         #if logStatus == "warn":    logStatus = "[ ⚠ ]"
@@ -72,7 +72,7 @@ else:
         None
 script = "usb-menu.py"
 scriptName = "USB Assistant"
-scriptID = "DTUA"
+scriptID = "UPTA"
 scriptVendor = "DomTrues"
 cpydLog("info",("ULTMOS v"+version))
 cpydLog("info",(" "))
@@ -81,7 +81,7 @@ cpydLog("info",("File       : "+script))
 cpydLog("info",("Identifier : "+scriptID))
 cpydLog("info",("Vendor     : "+scriptVendor))
 cpydLog("info",(" "))
-cpydLog("info",("Logging to ./logs/DTUA_RUN_"+logTime+".log"))
+cpydLog("info",("Logging to ./logs/UPTA_RUN_"+logTime+".log"))
 
 
 
