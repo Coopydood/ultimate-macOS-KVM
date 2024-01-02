@@ -97,7 +97,7 @@ class color:
 def startup():
     global detectChoice
     print(color.BOLD+"\n\n   Welcome to"+color.CYAN,"ULTMOS"+color.END+color.GRAY,"v"+version+color.END)
-    print("   by Coopydood\n"+color.END)
+    print("   by Coopydood"+color.END)
 
     if not os.path.exists("resources/script_store/main.py"): # BACKUP ORIGINAL FILES TO STORE
         os.system("cp -R ./scripts/* ./resources/script_store/")
@@ -105,11 +105,11 @@ def startup():
         os.system("cp ./.version ./resources/script_store/")
 
     if isVM == True:
-        print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
+        print(color.YELLOW+"\n   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
     if os.path.exists("blobs/user/USR_CFG.apb"):
             tainted = 1
     else:
-        print("   This project can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, checking your system, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.")
+        print("\n   This project can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, checking your system, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.")
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     #print("   Select an option to continue.")

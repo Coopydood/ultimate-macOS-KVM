@@ -202,13 +202,13 @@ def phase1():
 
         # Menu Text
         print(f"   Welcome to {color.PURPLE}\033[1mVFIO-PCI Passthrough Assistant\033[0m")
-        print("   Created by \033[1mDomTrues\033[0m")
+        print("   Created by \033[1mDomTrues\033[0m and \033[1mCoopydood\033[0m")
         print("\n   This script simplifies the process of adding your host's\n   stubbed VFIO devices to your boot script in an attempt to simplify\n   the end user experience.")
         print(f"\n   \033[1mThis script has detected a total of {color.GREEN}{str(len(vfio_ids))}\033[0m\033[1m VFIO-PCI devices.\033[0m\n")
         print("   Select an option to continue.\n")
         print("      \033[1m1. Passthrough VFIO-PCI devices\033[0m\n         Select the stubbed PCI devices you want from\n         a list to add to your script.\n")
         print("      2. Refresh VFIO-PCI devices")
-        print("      B. Back...")
+        print("      M. Main Menu")
         print("      Q. Quit\n")
 
         # Get User Input
@@ -225,10 +225,10 @@ def phase1():
             clear()
             preliminary()
             break
-        elif (len(user_choice) == 0 or user_choice.lower() == "b"): # Main Menu
+        elif (len(user_choice) == 0 or user_choice.lower() == "m"): # Main Menu
             # Goto Extras and Break
             clear()
-            os.system("./scripts/vfio-menu.py")
+            os.system("python3 ./scripts/extras.py")
             break
         elif (len(user_choice) == 0 or user_choice.lower() == "q"): # Quit
             # Exit (and break just in case)
@@ -318,6 +318,25 @@ def phase3():
     if (len(selected_vfio_ids) == 0):
         preliminary()
 
+    # Generate QEMU flags per device
+    for i in range(len(selected_vfio_ids)):
+        if selected_vfio_ids[i] in gpu_ids:
+            clear()
+            print(f"   {color.BOLD}{color.GREEN}✔  GPU DETECTED{color.END}\n")
+            print(f"   {color.BOLD}{vfio_names[pci_ids.index(selected_vfio_ids[i])]}{color.END}\n")
+            print(f"   Some GPUs need a romfile to function in a VM, others do not.\n   Please specify the direct path to a VBIOS romfile below,\n   or type \"skip\" if you don't need one.")
+            user_input: str = input(f"{color.BOLD}\nAbsolute Path of VBIOS>{color.END} ")
+            if (user_input == "" or user_input == None):
+                qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",multifunction=on,bus=pcie.0")
+            if (user_input != "skip"):
+                os.system(f"cp {user_input} ./roms/")
+                filename = user_input.split("/")[-1]
+                qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",romfile=\"./roms/{filename}\",multifunction=on,bus=pcie.0")
+            else:
+                qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",multifunction=on,bus=pcie.0")
+        else:
+            qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",bus=pcie.0")
+
     # Menu Loop
     while (True):
 
@@ -327,13 +346,6 @@ def phase3():
         print("\n   \033[1mValidate VFIO-PCI devices\033[0m")
         print("   Step 2")
         print("\n   VFIO-PCI entries have been generated based on your selection.\n   If this looks correct, type \033[37mY\033[0m to continue.\n   If you want to change something, type \033[37mN\033[0m to go back.\n")
-
-        # Generate QEMU flags per device
-        for i in range(len(selected_vfio_ids)):
-            if selected_vfio_ids[i] in gpu_ids:
-                qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",multifunction=on,bus=pcie.0")
-            else:
-                qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",bus=pcie.0")
 
         # Display visual flags for QEMU.
         for i in range(len(selected_vfio_ids)):

@@ -111,8 +111,6 @@ def center(text: str):
 def pause():
    input("   Press [ENTER] to continue...")
 
-
-
 '''
 This is where the fun begins.
 You can thank Gigantech for simultaneously making this easier and harder
@@ -144,6 +142,7 @@ def preliminary():
     # Logging
     print ("Detecting devices, please wait...")
     # TODO: LOGGING DEVICES BEING DETECTED
+    cpydLog("wait", "Detecting USB devices...")
 
     # Get USB IDs
     usb_ids = os.popen("lsusb | sort -k6 -u | cut -b24- | grep -oP \"[0-9a-fA-F]{4}:[0-9a-fA-F]{4}\" | tr '\n' ' '").read().split(" ")
@@ -162,6 +161,7 @@ def preliminary():
         print(f"   \033[91m\033[1m✖ NO USB DEVICES FOUND\033[0m\n")
         print(f"   There were no USB devices detected on your computer.")
         print(f"   How did you even manage that?\n")
+        cpydLog("fatal", "User's machine apparently has no USB devices. How did that happen?")
         pause()
         clear()
         os.system("python3 ./scripts/extras.py")
