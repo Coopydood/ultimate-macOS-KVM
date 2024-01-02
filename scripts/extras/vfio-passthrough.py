@@ -146,6 +146,7 @@ def preliminary():
     # Logging
     print ("Detecting devices, please wait...")
     # TODO: LOGGING DEVICES BEING DETECTED
+    cpydLog("wait", "Detecting VFIO-PCI devices...")
 
     # Get VFIO-PCI IDs
     vfio_ids = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | grep -oP \"[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}\" | sort -u | tr '\n' ' '").read().split(" ")
@@ -174,6 +175,7 @@ def preliminary():
         print(f"   \033[91m\033[1m✖ NO VFIO-PCI DEVICES FOUND\033[0m\n")
         print(f"   The script couldn't find any stubbed PCI devices")
         print(f"   to use with VFIO. Check your boot arguments!!!\n")
+        cpydLog("fatal", "User's machine does not have any stubbed VFIO-PCI devices.")
         pause()
         clear()
         os.system("python3 ./scripts/extras.py")
@@ -181,6 +183,7 @@ def preliminary():
 
     # If nothing has gone wrong, move on to phase 1.
     # TODO: LOG AMOUNT OF DEVICES
+    cpydLog("info", f"Detected {len(vfio_ids)} VFIO-PCI devices")
     phase1()
 
 
@@ -199,6 +202,7 @@ def phase1():
 
         # Clear the screen, "the Coopydoopydoo way"
         clear() 
+        cpydLog("wait", "Main Menu >> Awaiting input from user")
 
         # Menu Text
         print(f"   Welcome to {color.PURPLE}\033[1mVFIO-PCI Passthrough Assistant\033[0m")
@@ -218,21 +222,25 @@ def phase1():
         if (len(user_choice) == 0 or user_choice == "1"): # Passthrough VFIO-PCI devices
             # Goto Phase 2 and Break
             clear()
+            cpydLog("info", "User has selected 'Passthrough VFIO-PCI devices'")
             phase2()
             break
         elif (len(user_choice) == 0 or user_choice == "2"): # Refresh VFIO-PCI devices
             # Restart Preliminary and Break
             clear()
+            cpydLog("info", "User has selected 'Refresh VFIO-PCI devices'")
             preliminary()
             break
         elif (len(user_choice) == 0 or user_choice.lower() == "m"): # Main Menu
             # Goto Extras and Break
             clear()
+            cpydLog("info", "User has selected 'Main Menu'")
             os.system("python3 ./scripts/extras.py")
             break
         elif (len(user_choice) == 0 or user_choice.lower() == "q"): # Quit
             # Exit (and break just in case)
             clear()
+            cpydLog("info", "User has selected 'Quit'")
             exit()
             break
 
@@ -249,6 +257,7 @@ def phase2():
 
         # Clear the screen, "the Coopydoopydoo way"
         clear()
+        cpydLog("wait", "Select VFIO-PCI devices >> Awaiting input from user")
 
         print("\n   \033[1mSelect VFIO-PCI devices\033[0m")
         print("   Step 1")
@@ -288,6 +297,7 @@ def phase2():
         # If the user has finished, continue to Phase 3
         if (user_choice == "done"):
             clear()
+            cpydLog("info", "User has finished selecting VFIO-PCI devices")
             phase3()
             break
 
@@ -298,8 +308,10 @@ def phase2():
                 continue
             if (pci_ids[int_choice - 1] not in selected_vfio_ids):
                 selected_vfio_ids.append(pci_ids[int_choice - 1])
+                cpydLog("info", f"User has selected ID {pci_ids[int_choice - 1]}")
             else:
                 selected_vfio_ids.remove(pci_ids[int_choice - 1])
+                cpydLog("info", f"User has deselected ID {pci_ids[int_choice - 1]}")
         except:
             # If the user is fucked up, just pretend it didn't happen.
             continue
@@ -316,7 +328,10 @@ def phase3():
     
     # If no devices were selected, return to the preliminary menu.
     if (len(selected_vfio_ids) == 0):
+        cpydLog("info", f"No devices selected, returning to original menu...")
         preliminary()
+
+    cpydLog("info", f"{len(gpu_ids)} GPU detected." if len(gpu_ids) == 1 else f"{len(gpu_ids)} GPUs detected.")
 
     # Generate QEMU flags per device
     for i in range(len(selected_vfio_ids)):
@@ -325,22 +340,29 @@ def phase3():
             print(f"   {color.BOLD}{color.GREEN}✔  GPU DETECTED{color.END}\n")
             print(f"   {color.BOLD}{vfio_names[pci_ids.index(selected_vfio_ids[i])]}{color.END}\n")
             print(f"   Some GPUs need a romfile to function in a VM, others do not.\n   Please specify the direct path to a VBIOS romfile below,\n   or type \"skip\" if you don't need one.")
+            cpydLog("wait", f"Awaiting for user input on GPU romfile for {selected_vfio_ids[i]}")
             user_input: str = input(f"{color.BOLD}\nAbsolute Path of VBIOS>{color.END} ")
             if (user_input == "" or user_input == None):
                 qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",multifunction=on,bus=pcie.0")
+                cpydLog("info", f"User has opted out of selecting a romfile")
             if (user_input != "skip"):
                 os.system(f"cp {user_input} ./roms/")
                 filename = user_input.split("/")[-1]
+                cpydLog("info", f"User has selected a romfile from {user_input}")
                 qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",romfile=\"./roms/{filename}\",multifunction=on,bus=pcie.0")
             else:
+                cpydLog("info", f"User has opted out of selecting a romfile")
                 qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",multifunction=on,bus=pcie.0")
         else:
             qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",bus=pcie.0")
+
+    cpydLog("info", f"Validate VFIO-PCI devices >> User has selected a total of {len(selected_vfio_ids)} VFIO-PCI devices")
 
     # Menu Loop
     while (True):
 
         clear()
+        cpydLog("wait", f"Validate VFIO-PCI devices >> Awaiting input from user...")
 
         # Display Menu
         print("\n   \033[1mValidate VFIO-PCI devices\033[0m")
@@ -362,13 +384,13 @@ def phase3():
             vfio_names.clear()
             selected_vfio_ids.clear()
             qemu_flags.clear()
+            cpydLog("info", f"User has opted to not follow through with their current VFIO-PCI devices")
             preliminary()
             break
         elif (user_choice.lower() == "y"):
             # TODO: implement appending flags
-            
+            cpydLog("info", f"User has opted to follow through with their current USB devices")
             autoAPSelect()
-
             exit()
             break
 

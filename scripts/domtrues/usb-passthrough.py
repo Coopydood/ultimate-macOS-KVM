@@ -169,6 +169,7 @@ def preliminary():
 
     # If nothing has gone wrong, move on to phase 1.
     # TODO: LOG AMOUNT OF DEVICES
+    cpydLog("info", f"Detected {len(usb_ids)} USB devices")
     phase1()
 
 
@@ -187,6 +188,7 @@ def phase1():
 
         # Clear the screen, "the Coopydoopydoo way"
         clear() 
+        cpydLog("wait", "Main Menu >> Awaiting input from user")
 
         # Menu Text
         print("   Welcome to \033[36m\033[1mUSB Passthrough Assistant\033[0m")
@@ -206,21 +208,25 @@ def phase1():
         if (len(user_choice) == 0 or user_choice == "1"): # Passthrough USB devices
             # Goto Phase 2 and Break
             clear()
+            cpydLog("info", "User has selected 'Passthrough USB devices'")
             phase2()
             break
         elif (len(user_choice) == 0 or user_choice == "2"): # Refresh USB devices
             # Restart Preliminary and Break
             clear()
+            cpydLog("info", "User has selected 'Refresh USB devices'")
             preliminary()
             break
         elif (len(user_choice) == 0 or user_choice.lower() == "b"): # Main Menu
             # Goto Extras and Break
             clear()
+            cpydLog("info", "User has selected 'Main Menu'")
             os.system("./scripts/extras.py")
             break
         elif (len(user_choice) == 0 or user_choice.lower() == "q"): # Quit
             # Exit (and break just in case)
             clear()
+            cpydLog("info", "User has selected 'Quit'")
             exit()
             break
 
@@ -237,6 +243,7 @@ def phase2():
 
         # Clear the screen, "the Coopydoopydoo way"
         clear()
+        cpydLog("wait", "Select USB devices >> Awaiting input from user")
 
         print("\n   \033[1mSelect USB devices\033[0m")
         print("   Step 1")
@@ -276,6 +283,7 @@ def phase2():
         # If the user has finished, continue to Phase 3
         if (user_choice == "done"):
             clear()
+            cpydLog("info", "User has finished selecting USB devices")
             phase3()
             break
 
@@ -286,8 +294,10 @@ def phase2():
                 continue
             if (usb_ids[int_choice - 1] not in selected_usb_ids):
                 selected_usb_ids.append(usb_ids[int_choice - 1])
+                cpydLog("info", f"User has selected ID {usb_ids[int_choice - 1]}")
             else:
                 selected_usb_ids.remove(usb_ids[int_choice - 1])
+                cpydLog("info", f"User has deselected ID {usb_ids[int_choice - 1]}")
         except:
             # If the user is fucked up, just pretend it didn't happen.
             continue
@@ -304,12 +314,16 @@ def phase3():
     
     # If no devices were selected, return to the preliminary menu.
     if (len(selected_usb_ids) == 0):
+        cpydLog("info", f"No devices selected, returning to original menu...")
         preliminary()
+
+    cpydLog("info", f"Validate USB devices >> User has selected a total of {len(selected_usb_ids)} USB devices")
 
     # Menu Loop
     while (True):
 
         clear()
+        cpydLog("wait", f"Validate USB devices >> Awaiting input from user")
 
         # Display Menu
         print("\n   \033[1mValidate USB devices\033[0m")
@@ -339,9 +353,11 @@ def phase3():
             usb_names.clear()
             selected_usb_ids.clear()
             qemu_flags.clear()
+            cpydLog("info", f"User has opted to not follow through with their current USB devices")
             preliminary()
             break
         elif (user_choice.lower() == "y"):
+            cpydLog("info", f"User has opted to follow through with their current USB devices")
             autoAPSelect()
             exit()
             break
