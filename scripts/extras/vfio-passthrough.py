@@ -445,6 +445,7 @@ def autoAPSelect():
                             apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
                             apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
                             apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
+                            
                             os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
                             os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS.fd")
                             clear()

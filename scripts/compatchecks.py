@@ -45,7 +45,7 @@ class color:
 
 def startup():
     global detectChoice
-    print("\n\n   Welcome to"+color.BOLD+color.BLUE,"System Compatibility Tools"+color.END,"")
+    print("\n\n   "+color.BOLD+color.GREEN+"COMPATIBILITY CHECKS"+color.END,"")
     print("   Created by",color.BOLD+"Coopydood\n"+color.END)
     print("   This project includes several system compatibility and setup\n   checks, such as"+color.BOLD,"GPU compatibility, IOMMU grouping, VFIO-PCI driver status,"+color.END+"\n   and if your system is prepared for both"+color.BOLD,"basic KVM and PCI passthrough.\n"+color.END)
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
