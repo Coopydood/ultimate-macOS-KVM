@@ -272,10 +272,10 @@ def phase2():
             for i in range(len(pci_ids)):
                 if (i < 9):
                     if (pci_ids[i] in selected_vfio_ids):
-                        print(f"       \033[0m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}  {vfio_names[i]}\033[0m")
+                        print(f"       \033[0m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
                 else:
                     if (pci_ids[i] in selected_vfio_ids):
-                        print(f"      \033[0m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}  {vfio_names[i]}\033[0m")
+                        print(f"      \033[0m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
 
         # List the unselected VFIO-PCI devices.
         print("\n   \033[1mAVAILABLE DEVICES\033[0m\n")
@@ -286,10 +286,10 @@ def phase2():
             for i in range(len(pci_ids)):
                 if (i < 9):
                     if (pci_ids[i] not in selected_vfio_ids):
-                        print(f"       \033[37m{str(i + 1)} {symbol}  {pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
+                        print(f"       \033[37m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
                 else:
                     if (pci_ids[i] not in selected_vfio_ids):
-                        print(f"      \033[37m{str(i + 1)} {symbol}  {pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
+                        print(f"      \033[37m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
         
         # User Selection
         user_choice: str = input("\n\033[1mDevice #> \033[0m")
