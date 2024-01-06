@@ -169,8 +169,8 @@ def startup():
 
     sparkTime = int(time.time())
 
-    print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"AutoPilot"+color.END,"")
-    print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+    print("\n\n   "+color.BOLD+color.PURPLE+"AUTOPILOT"+color.END,"")
+    print("   by",color.BOLD+"Coopydood\n"+color.END)
     print("   The purpose of this script is to automatically guide you through \n   the process of",color.BOLD+"creating and running a basic macOS VM",color.END+"using settings \n   based on answers to a number of questions. \n\n   Many of the values can be left to default - especially if you are unsure.\n   It won't be perfect, but it's supposed to make it as"+color.BOLD,"easy as possible."+color.END)
     #print(color.BOLD+"\n"+"   Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"      Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM") # no shameless plugs anymore :[

@@ -205,9 +205,9 @@ def phase1():
         cpydLog("wait", "Main Menu >> Awaiting input from user")
 
         # Menu Text
-        print(f"   Welcome to {color.PURPLE}\033[1mVFIO-PCI Passthrough Assistant\033[0m")
-        print("   Created by \033[1mDomTrues\033[0m and \033[1mCoopydood\033[0m")
-        print("\n   This script simplifies the process of adding your host's\n   stubbed VFIO devices to your boot script in an attempt to simplify\n   the end user experience.")
+        print(f"   {color.PURPLE}\033[1mVFIO-PCI PASSTHROUGH ASSISTANT\033[0m")
+        print("   by \033[1mDomTrues\033[0m and \033[1mCoopydood\033[0m")
+        print("\n   This script simplifies the process of adding your host's\n   stubbed VFIO devices to your boot script in an attempt to \n   simplify the end user experience.")
         print(f"\n   \033[1mThis script has detected a total of {color.GREEN}{str(len(vfio_ids))}\033[0m\033[1m VFIO-PCI devices.\033[0m\n")
         print("   Select an option to continue.\n")
         print("      \033[1m1. Passthrough VFIO-PCI devices\033[0m\n         Select the stubbed PCI devices you want from\n         a list to add to your script.\n")

@@ -97,8 +97,8 @@ def menu():
         i += 1
     # Menu
     if args.mount != True and args.unmount != True:
-        print(spaces + "   Welcome to \033[94mOpenCore Configuration Assistant\033[0m")
-        print("   Created by \033[1mDomTrues\033[0m\n")
+        print(spaces + "   \033[1m\033[94mOPENCORE ASSISTANT\033[0m")
+        print("   by \033[1mDomTrues\033[0m\n")
         print("   This script was created with the sole purpose of simplifying\n   the process of mounting and unmounting your OpenCore.qcow2\n   so you can make any modifications necessary. \033[37m(e.g. config.plist)\n\n\033[93m   It is highly recommended that you \033[91m\033[1mBACKUP\033[0m\033[93m your OpenCore.qcow2\n   in case you mess something up.\033[0m\n")
         #print("   \033[93mAlso, please note that it is \033[91m\033[1mREQUIRED\033[0m\033[93m to have NBD installed on\n   your system.\033[0m\n")
         print("   Select an option to continue.\n")

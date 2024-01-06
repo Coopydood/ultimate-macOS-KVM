@@ -46,7 +46,7 @@ class color:
 def startup():
     global detectChoice
     print("\n\n  "+color.BOLD+color.PURPLE,"PASSTHROUGH TOOLS"+color.END,"")
-    print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+    print("   by",color.BOLD+"Coopydood\n"+color.END)
     print("   This menu includes some advanced tools to help prepare\n   and configure"+color.BOLD,"USB & PCI passthrough, IOMMU grouping, "+color.END+"and the\n  "+color.BOLD,"VFIO-PCI kernel driver.\n"+color.END)
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")

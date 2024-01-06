@@ -191,8 +191,8 @@ def phase1():
         cpydLog("wait", "Main Menu >> Awaiting input from user")
 
         # Menu Text
-        print("   Welcome to \033[36m\033[1mUSB Passthrough Assistant\033[0m")
-        print("   Created by \033[1mDomTrues\033[0m")
+        print("   \033[95m\033[1mUSB PASSTHROUGH ASSISTANT\033[0m")
+        print("   by \033[1mDomTrues\033[0m")
         print("\n   This script simplifies the process of adding \n   your host's USB devices to your boot script.\n")
         print(f"   \033[1mThis script has detected a total of \033[32m{str(len(usb_ids))}\033[0m\033[1m USB devices.\033[0m\n")
         print("   Select an option to continue.\n")
