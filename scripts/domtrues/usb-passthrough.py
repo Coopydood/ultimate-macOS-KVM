@@ -258,10 +258,10 @@ def phase2():
             for i in range(len(usb_ids)):
                 if (i < 9):
                     if (usb_ids[i] in selected_usb_ids):
-                        print(f"       \033[0m{str(i + 1)} {symbol}{usb_names[i]}\033[0m")
+                        print(f"       \033[0m{str(i + 1)} {symbol}{usb_ids[i]} {usb_names[i]}\033[0m")
                 else:
                     if (usb_ids[i] in selected_usb_ids):
-                        print(f"      \033[0m{str(i + 1)} {symbol}{usb_names[i]}\033[0m")
+                        print(f"      \033[0m{str(i + 1)} {symbol}{usb_ids[i]} {usb_names[i]}\033[0m")
 
         # List the unselected USB devices.
         print("\n   \033[1mAVAILABLE DEVICES\033[0m\n")
@@ -272,10 +272,10 @@ def phase2():
             for i in range(len(usb_ids)):
                 if (i < 9):
                     if (usb_ids[i] not in selected_usb_ids):
-                        print(f"       \033[37m{str(i + 1)} {symbol}{usb_names[i]}\033[0m")
+                        print(f"       \033[37m{str(i + 1)} {symbol}{usb_ids[i]} {usb_names[i]}\033[0m")
                 else:
                     if (usb_ids[i] not in selected_usb_ids):
-                        print(f"      \033[37m{str(i + 1)} {symbol}{usb_names[i]}\033[0m")
+                        print(f"      \033[37m{str(i + 1)} {symbol}{usb_ids[i]} {usb_names[i]}\033[0m")
         
         # User Selection
         user_choice: str = input("\n\033[1mDevice #> \033[0m")
@@ -332,15 +332,15 @@ def phase3():
 
         # Generate QEMU flags per device
         for i in range(len(selected_usb_ids)):
-            vendor_id: str = usb_ids[i].split(":")[0]
-            product_id: str = usb_ids[i].split(":")[1]
+            vendor_id: str = selected_usb_ids[i].split(":")[0]
+            product_id: str = selected_usb_ids[i].split(":")[1]
             qemu_flags.append(f"-device usb-host,vendorid=0x{vendor_id},productid=0x{product_id}")
 
         # Display visual flags for QEMU.
         for i in range(len(selected_usb_ids)):
             print(f"   \033[1m{usb_names[usb_ids.index(selected_usb_ids[i])]}\033[0m")
-            vendor_id: str = usb_ids[i].split(":")[0]
-            product_id: str = usb_ids[i].split(":")[1]
+            vendor_id: str = selected_usb_ids[i].split(":")[0]
+            product_id: str = selected_usb_ids[i].split(":")[1]
             print(f"      \033[37m{qemu_flags[i]}\033[0m")
 
         # Get user input
