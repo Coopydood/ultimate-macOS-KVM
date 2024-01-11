@@ -4,7 +4,7 @@
 
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
-[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Switch to dev branch... ⎋](https://github.com/Coopydood/ultimate-macOS-KVM/tree/dev)
+**[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;**[Switch to dev branch... ⎋](https://github.com/Coopydood/ultimate-macOS-KVM/tree/dev)
 
 <br>
 
