@@ -2737,9 +2737,12 @@ def autopilot():
 
          if USR_TARGET_OS >= 1013:
             USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 209756160
+         elif USR_TARGET_OS >= 13 and USR_TARGET_OS <= 99:
+            USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 209756160
          else:
             USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 343973888
 
+         
 
          if os.path.exists("./HDD.qcow2"):
             existingWarning1()
