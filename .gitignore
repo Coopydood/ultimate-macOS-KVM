@@ -42,3 +42,4 @@ docs/screenshots/ventura
 BaseSystem.dmg
 .gitignore
 boot.xml
+ovmf/OVMF_VARS_PT.fd
