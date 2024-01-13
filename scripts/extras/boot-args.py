@@ -42,12 +42,11 @@ class color:
 def startup():
     global detectChoice
     clear()
-    print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"Boot Argument Editor"+color.END,"")
-    print("   Created by",color.BOLD+"Coopydood and DomTrues\n"+color.END)
+    print("\n\n  "+color.BOLD+color.PURPLE,"BOOT ARGUMENT EDITOR"+color.END,"")
+    print("   by",color.BOLD+"Coopydood and DomTrues\n"+color.END)
     print("   This script can automatically mount your OpenCore image\n   and modify its boot arguments without booting macOS."+color.END)
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    print("\n   Please choose what you'd like to do below.")
     print("\n   "+color.YELLOW,"⚠  "+color.END+color.BOLD+"Requires superuser privileges."+color.END)
 
     print(color.BOLD+"\n      1. AutoPatch..."+color.YELLOW,"⚠"+color.END)

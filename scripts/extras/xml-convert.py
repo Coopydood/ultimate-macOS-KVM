@@ -290,6 +290,55 @@ def convertBrains():
                     vfioXML.append("<hostdev mode=\"subsystem\" type=\"pci\" managed=\"yes\">\n      <source>\n        <address domain=\"0x0000\" bus=\"0x"+vfioBuses[x]+"\" slot=\"0x00\" function=\"0x"+str(vfioFunctions[x])+"\"/>\n      </source>\n      <address type=\"pci\" domain=\"0x0000\" bus=\"0x0"+str(vfioAddresses[x])+"\" slot=\"0x00\" function=\"0x0\"/>\n    </hostdev>")
 
 
+
+
+
+            if "-device usb-host" in apFileS:
+                usbargs = apFileS.split("#USB_DEV_BEGIN",1)[1]
+                usbargs = usbargs.replace("\n","",1)
+                usbargs = usbargs.split("#USB_DEV_END",1)[0]
+                usbargsN = usbargs.count('\n')
+                #print(usbargs,usbargsN)
+
+                usbargsBlock = []
+
+                #usbargs = io.StringIO(usbargs)
+
+                usbargsBlock = usbargs.splitlines()
+
+            #    <hostdev mode="subsystem" type="pci" managed="yes">
+            #        <source>                     ##  usbVendor ##        ##  usbFunctions ##  
+            #                                            \/                         \/
+            #            <address domain="0x0000" bus="0x04" slot="0x00" function="0x0"/>
+            #        </source>                          ##  busDrivers  ##
+            #                                                   \/
+            #        <address type="pci" domain="0x0000" bus="0x02" slot="0x00" function="0x0"/>
+            #    </hostdev>
+
+                busDrivers = 1
+
+                usbVendor = []
+                usbProduct = []
+                usbConstructor = []
+                usbXML = []
+
+                # ESTABLISH ARRAYS
+                for x in range(usbargsN):
+                    usbargsBlock[x] = usbargsBlock[x].replace("-device usb-host,vendorid=","")
+                    usbargsBlock[x] = usbargsBlock[x].replace("productid=","")
+                    usbargsBlock[x] = usbargsBlock[x].replace(",","")
+                    #usbargsBlock[x] = usbargsBlock[x].split(",",1)[0]
+
+                    usbVendor.append(usbargsBlock[x].split("0x")[1])
+                    usbProduct.append(usbargsBlock[x].split("0x")[2])
+
+                # FEED THE XML!
+                for x in range(usbargsN):
+                    usbXML.append("<hostdev mode=\"subsystem\" type=\"usb\" managed=\"yes\">\n      <source>\n        <vendor id=\"0x"+usbVendor[x]+"\"/>\n        <product id=\"0x"+usbProduct[x]+"\"/>\n      </source>\n    </hostdev>")
+                    
+
+                
+
         apFilePathNoExt = apFilePath.replace(".sh","")
         apFilePathNoExt = r"{}".format(apFilePathNoExt)
         
@@ -420,6 +469,9 @@ def convertBrains():
 
             if "-device vfio-pci" in apFileS:
                 apFileM = apFileM.replace("<!-- VFIO-PCI HEADER -->",('\n    '.join(vfioXML)))
+
+            if "-device usb-host" in apFileS:
+                apFileM = apFileM.replace("<!-- USB HEADER -->",('\n    '.join(usbXML)))
         # apFileM = apFileM.replace("$USR_",apVars[])
         
         file1.close
