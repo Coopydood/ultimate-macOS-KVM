@@ -334,7 +334,7 @@ def autopilot():
          else:
             print("   "+"\n   "+color.BOLD+"Ready to generate config file"+color.END)
          #print("   "+"Review your preferences")
-         print("   "+"The config wizard is complete.\n   Review your preferences below and continue when ready."+color.END)
+         print("   "+"Review your preferences below and continue when ready."+color.END)
          print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
 
          if USR_CREATE_XML == "True":
@@ -1586,7 +1586,7 @@ def autopilot():
       print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,"Monterey (12)",color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
-         print(color.END+"\n      1. Sonoma (14) (EXPERIMENTAL)")
+         print(color.END+"\n      1. Sonoma (14)")
          print(color.END+"      2. Ventura (13)")
          print(color.BOLD+"      3. Monterey (12)")
          print(color.END+"      4. Big Sur (11)")

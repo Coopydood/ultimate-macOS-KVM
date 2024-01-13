@@ -481,8 +481,8 @@ def main():
     def clear(): print("\n" * 150)
 
     clear()
-    print("\n\n   Welcome to"+color.BOLD+color.YELLOW,"macOS Image Downloader"+color.END,"")
-    print("   Created by",color.BOLD+"vit9696"+color.END,"and modified by"+color.BOLD,"Coopydood\n"+color.END)
+    print("\n\n  "+color.BOLD+color.YELLOW,"DOWNLOAD MACOS RECOVERY IMAGE"+color.END,"")
+    print("   by",color.BOLD+"vit9696"+color.END,"and modified by"+color.BOLD,"Coopydood"+color.END)
     print("\n   This script will"+color.BOLD,"download and convert a macOS base image for you.\n"+color.END+"   It will be placed in your"+color.BOLD,"ultimate-macOS-KVM"+color.END,"directory.\n")
     
     for index, product in enumerate(products):

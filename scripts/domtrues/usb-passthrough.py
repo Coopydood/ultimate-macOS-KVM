@@ -138,7 +138,9 @@ def preliminary():
     global usb_ids, usb_names
 
     # Logging
-    print ("Detecting devices, please wait...")
+    print (color.BOLD+"Detecting devices, please wait...")
+    print(color.END+"\n  "+color.YELLOW+"⚠ "+color.END+" If you have been stuck on this screen for\n     at least 30 seconds, make sure the devices\n     are not currently in use by the system.")
+    
     # TODO: LOGGING DEVICES BEING DETECTED
     cpydLog("wait", "Detecting USB devices...")
 
@@ -192,7 +194,7 @@ def phase1():
         print("   \033[95m\033[1mUSB PASSTHROUGH ASSISTANT\033[0m")
         print("   by \033[1mDomTrues\033[0m")
         print("\n   This script simplifies the process of adding \n   your host's USB devices to your boot script.\n")
-        print(f"   \033[1mThis script has detected a total of \033[32m{str(len(usb_ids))}\033[0m\033[1m USB devices.\033[0m\n")
+        print(f"   \033[1mDetected a total of {color.GREEN}{str(len(usb_ids))}\033[0m\033[1m USB devices.\033[0m\n")
         print("   Select an option to continue.\n")
         print("      \033[1m1. Passthrough USB devices\033[0m\n         Select the USB devices you want from\n         a list to add to your script.\n")
         print("      2. Refresh USB devices")

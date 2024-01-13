@@ -39,6 +39,11 @@ class color:
    END = '\033[0m'
    GRAY = '\u001b[38;5;245m'
 
+#parser = argparse.ArgumentParser("boot-args")
+#parser.add_argument("--autopatch", dest="autoPatch", help="Immediately list available AutoPatch patches",action="store_true")
+#args = parser.parse_args()
+
+
 def startup():
     global detectChoice
     clear()
@@ -108,6 +113,7 @@ if detectChoice == "1":
         
             print("   "+color.BOLD+color.RED+"ERROR:"+color.END+color.BOLD,"The selected patch is already applied."+color.END+"\n\n\n\n\n")
             time.sleep(3)
+            os.system("./scripts/domtrues/nbdassistant.py -u -q")
 
 
 
@@ -150,7 +156,9 @@ if detectChoice == "1":
             
             elif detectChoice2 == "B" or detectChoice2 == "b":
                 os.system("./scripts/extras/boot-args.py")
+                os.system("./scripts/domtrues/nbdassistant.py -u -q")
             elif detectChoice == "Q" or detectChoice == "q":
+                os.system("./scripts/domtrues/nbdassistant.py -u -q")
                 exit
     
     if detectChoice1 == "2": # R7 HD Patch
@@ -163,7 +171,7 @@ if detectChoice == "1":
         
             print("   "+color.BOLD+color.RED+"ERROR:"+color.END+color.BOLD,"The selected patch is already applied."+color.END+"\n\n\n\n\n")
             time.sleep(3)
-
+            os.system("./scripts/domtrues/nbdassistant.py -u -q")
 
 
         else:
@@ -205,8 +213,11 @@ if detectChoice == "1":
             
             elif detectChoice2 == "B" or detectChoice2 == "b":
                 os.system("./scripts/extras/boot-args.py")
+                os.system("./scripts/domtrues/nbdassistant.py -u -q")
             elif detectChoice == "Q" or detectChoice == "q":
+                os.system("./scripts/domtrues/nbdassistant.py -u -q")
                 exit
+                
    
 
     elif detectChoice == "M" or detectChoice == "m":
@@ -295,7 +306,9 @@ elif detectChoice == "2":
             
             elif detectChoice2 == "B" or detectChoice2 == "b":
                 os.system('./scripts/extras/boot-args.py')
+                os.system("./scripts/domtrues/nbdassistant.py -u -q")
             elif detectChoice == "Q" or detectChoice == "q":
+                os.system("./scripts/domtrues/nbdassistant.py -u -q")
                 exit
         enterArgs()
     
@@ -355,13 +368,17 @@ elif detectChoice == "X" or detectChoice == "x":
     
     elif detectChoice2 == "B" or detectChoice2 == "b":
         os.system("./scripts/extras/boot-args.py")
+        os.system("./scripts/domtrues/nbdassistant.py -u -q")
     elif detectChoice == "Q" or detectChoice == "q":
+        os.system("./scripts/domtrues/nbdassistant.py -u -q")
         exit
     
     elif detectChoice == "M" or detectChoice == "m":
+        
         startup()
 
     elif detectChoice == "Q" or detectChoice == "q":
+        os.system("./scripts/domtrues/nbdassistant.py -u -q")
         exit
 
 elif detectChoice == "?":
@@ -379,6 +396,7 @@ elif detectChoice == "M" or detectChoice == "m":
     os.system("./scripts/extras.py")
 
 elif detectChoice == "Q" or detectChoice == "q":
+    os.system("./scripts/domtrues/nbdassistant.py -u -q")
     exit
 
 else:

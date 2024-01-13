@@ -46,8 +46,8 @@ class color:
 def startup():
     global detectChoice3
     if detected == 0:
-        print("\n\n   Welcome to"+color.RED+color.BOLD,"Restore Tools"+color.END,"")
-        print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+        print("\n\n  "+color.RED+color.BOLD,"RESTORE TOOLS"+color.END,"")
+        print("   by",color.BOLD+"Coopydood\n"+color.END)
         print("   This menu lets you reset and restore various aspects\n   of the repository, such as"+color.BOLD,"the vNVRAM, OpenCore image, OVMF\n   firmware, and even the repo itself."+color.END+"\n"+color.RED,"\n   Most things in this menu are intentionally destructive!"+color.END)
         #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
         #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")

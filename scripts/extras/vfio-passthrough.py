@@ -144,7 +144,8 @@ def preliminary():
     global vfio_ids, vfio_names, pci_ids, gpu_ids
 
     # Logging
-    print ("Detecting devices, please wait...")
+    print (color.BOLD+"Detecting devices, please wait...")
+    print(color.END+"\n  "+color.YELLOW+"⚠ "+color.END+" If you have been stuck on this screen for\n     at least 30 seconds, make sure the devices\n     are not currently in use by the system.")
     # TODO: LOGGING DEVICES BEING DETECTED
     cpydLog("wait", "Detecting VFIO-PCI devices...")
 
@@ -208,10 +209,10 @@ def phase1():
         print(f"   {color.PURPLE}\033[1mVFIO-PCI PASSTHROUGH ASSISTANT\033[0m")
         print("   by \033[1mDomTrues\033[0m and \033[1mCoopydood\033[0m")
         print("\n   This script simplifies the process of adding your host's\n   stubbed VFIO devices to your boot script in an attempt to \n   simplify the end user experience.")
-        print(f"\n   \033[1mThis script has detected a total of {color.GREEN}{str(len(vfio_ids))}\033[0m\033[1m VFIO-PCI devices.\033[0m\n")
+        print(f"\n   \033[1mDetected a total of {color.GREEN}{str(len(vfio_ids))}\033[0m\033[1m VFIO-PCI devices.\033[0m\n")
         print("   Select an option to continue.\n")
         print("      \033[1m1. Passthrough VFIO-PCI devices\033[0m\n         Select the stubbed PCI devices you want from\n         a list to add to your script.\n")
-        print("      2. Refresh VFIO-PCI devices")
+        #print("      2. Refresh VFIO-PCI devices")
         print("      M. Main Menu")
         print("      Q. Quit\n")
 
@@ -324,7 +325,7 @@ def phase2():
 def phase3():
 
     # Global Variables
-    global vfio_ids,vfio_names,selected_vfio_ids,qemu_flags,pci_ids
+    global vfio_ids,vfio_names,selected_vfio_ids,qemu_flags,pci_ids,naviDetected
     
     # If no devices were selected, return to the preliminary menu.
     if (len(selected_vfio_ids) == 0):
@@ -336,8 +337,11 @@ def phase3():
     # Generate QEMU flags per device
     for i in range(len(selected_vfio_ids)):
         if selected_vfio_ids[i] in gpu_ids:
+            if "Navi" in vfio_names[pci_ids.index(selected_vfio_ids[i])]:
+                naviDetected = 1
             clear()
-            print(f"   {color.BOLD}{color.GREEN}✔  GPU DETECTED{color.END}\n")
+            print(f"   {color.BOLD}{color.BLUE}❖  GPU DETECTED{color.END}")
+            print(f"   VBIOS ROM file selection{color.END}\n")
             print(f"   {color.BOLD}{vfio_names[pci_ids.index(selected_vfio_ids[i])]}{color.END}\n")
             print(f"   Some GPUs need a romfile to function in a VM, others do not.\n   Please specify the direct path to a VBIOS romfile below,\n   or type \"skip\" if you don't need one.")
             cpydLog("wait", f"Awaiting for user input on GPU romfile for {selected_vfio_ids[i]}")
@@ -355,6 +359,16 @@ def phase3():
                 qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",multifunction=on,bus=pcie.0")
         else:
             qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",bus=pcie.0")
+    #if naviDetected == 1:
+    #    clear()
+    #    print("\n\n   "+color.BOLD+color.YELLOW+"⚠  BOOT PATCH AVAILABLE"+color.END,"")
+    #    print("   You may need to apply a fix to boot macOS\n")
+    #    print("   The assistant has detected that you may have a"+color.BOLD+" Navi-based"+color.END+" GPU. \n   A patch is available to fix the macOS boot process. I can add\n   this patch for you automatically just now, or you can do it\n   later using the macOS Boot Argument Assistant.")
+    #    print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)
+    #    print(color.BOLD+"      1. Apply Patch"+color.YELLOW,"⚠"+color.END)
+    #    print(color.END+"         Mounts your OpenCore image and applies\n         the patch automatically\n")
+    #    print(color.END+"      2. Skip\n")
+    #    detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
 
     cpydLog("info", f"Validate VFIO-PCI devices >> User has selected a total of {len(selected_vfio_ids)} VFIO-PCI devices")
 
@@ -367,7 +381,7 @@ def phase3():
         # Display Menu
         print("\n   \033[1mValidate VFIO-PCI devices\033[0m")
         print("   Step 2")
-        print("\n   VFIO-PCI entries have been generated based on your selection.\n   If this looks correct, type \033[37mY\033[0m to continue.\n   If you want to change something, type \033[37mN\033[0m to go back.\n")
+        print("\n   VFIO-PCI entries have been generated based on your selection.\n   Does this look correct?\n")
 
         # Display visual flags for QEMU.
         for i in range(len(selected_vfio_ids)):
@@ -445,9 +459,9 @@ def autoAPSelect():
                             apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
                             apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
                             apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
-                            
+                            apFileM = apFileM.replace("/OVMF_VARS.fd","/OVMF_VARS_PT.fd")
                             os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
-                            os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS.fd")
+                            os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS_PT.fd")
                             clear()
                             print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
                             print("   QEMU arguments have been added\n")

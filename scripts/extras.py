@@ -54,33 +54,14 @@ def startup():
         #print("   Select an option to continue.")
         print(color.BOLD+"      1. Convert and import XML file")
         print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
-        print(color.END+"      2. Passthrough tools...")
-        print(color.END+"      3. OpenCore configuration assistant...")
-        print(color.END+"      4. macOS Boot Argument Editor...")
-        print(color.END+"      5. GRUB Argument Editor...\n")
+        #print(color.END+"      2. Passthrough tools...")
+        print(color.END+"      2. OpenCore configuration assistant...")
+        print(color.END+"      3. macOS Boot Argument Editor...")
+        print(color.END+"      4. GRUB Argument Editor...\n")
         print(color.RED+"      R. Restore tools...")
         print(color.END+"      I. Report an issue...")
         print(color.END+"      B. Back...")
-        print(color.END+"      Q. Exit\n")
-    else:
-        print("\n\n   Welcome to"+color.BOLD+color.BLUE,"EXTRAS"+color.END,"")
-        print("   Created by",color.BOLD+"Coopydood\n"+color.END)
-        if detected == True:
-            print(color.YELLOW+"   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
-        print("   These tools can assist you in more advanced post-install\n   processes like"+color.BOLD,"PCI/GPU passthrough, dumping your VBIOS,\n   "+color.END+"and"+color.BOLD,"importing your VM into the virt-manager GUI.\n"+color.END)
-        #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
-        #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-        #print("   Select an option to continue.")
-        print(color.BOLD+"      1. Convert and import XML file")
-        print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
-        print(color.END+"      2. Passthrough tools..."+color.YELLOW,"⚠")
-        print(color.END+"      3. OpenCore configuration assistant...")
-        print(color.END+"      4. macOS Boot Argument Editor...")
-        print(color.END+"      5. GRUB Argument Editor...\n")
-        print(color.RED+"      R. Restore tools...")
-        print(color.END+"      I. Report an issue...")
-        print(color.END+"      B. Back...")
-        print(color.END+"      Q. Exit\n")      
+        print(color.END+"      Q. Exit\n")  
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
        
@@ -92,26 +73,10 @@ os.system("chmod +x scripts/*.py")
 os.system("chmod +x scripts/*.sh")
 os.system("chmod +x resources/dmg2img")
 
-output_stream = os.popen('lspci')
-vmc1 = output_stream.read()
-
 detected = 0
 
-global isVM
 
-isVM = False
 
-if "VMware" in vmc1:
-   detected = 1
-
-if "VirtualBox" in vmc1 or "Oracle" in vmc1:
-   detected = 1
-
-if "Redhat" in vmc1 or "RedHat" in vmc1 or "QEMU" in vmc1:
-   detected = 1
-
-if "Bochs" in vmc1 or "Sea BIOS" in vmc1 or "SeaBIOS" in vmc1:
-   detected = 1
 
 
 startup()
@@ -119,9 +84,9 @@ clear()
 
 if detectChoice == "1":
     os.system('./scripts/extras/xml-convert.py')
-elif detectChoice == "2":
+elif detectChoice == "99":
     os.system('./scripts/vfio-menu.py')
-elif detectChoice == "3":
+elif detectChoice == "2":
     os.system('./scripts/domtrues/nbdassistant.py')
 #elif detectChoice == "3":
 #    
@@ -132,9 +97,9 @@ elif detectChoice == "3":
 #    time.sleep(6)
 #    clear()
 #    os.system('./scripts/extras.py')
-elif detectChoice == "4":
+elif detectChoice == "3":
     os.system('./scripts/extras/boot-args.py')
-elif detectChoice == "5":
+elif detectChoice == "4":
     os.system('./scripts/domtrues/grub-args.py')
 
 elif detectChoice == "i" or detectChoice == "I":
