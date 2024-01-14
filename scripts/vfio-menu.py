@@ -100,7 +100,7 @@ clear()
 if detectChoice == "1":
     os.system('./scripts/extras/vfio-passthrough.py')
 elif detectChoice == "2":
-    os.system('./scripts/domtrues/usb-passthrough.py')
+    os.system('./scripts/hyperchromatic/usb-passthrough.py')
 elif detectChoice == "3":
     os.system('./scripts/extras/vfio-check.py')
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # pylint: disable=C0301,C0116,C0103,R0903
 
-# Vendor         : DomTrues and Coopydood
+# Vendor         : Hyperchromatic and Coopydood
 # Provisioned by : Coopydood
 
 
@@ -73,7 +73,7 @@ else:
 script = "vfio-passthrough.py"
 scriptName = "VFIO Passthrough Assistant"
 scriptID = "VPTA"
-scriptVendor = "DomTrues, Coopydood"
+scriptVendor = "Hyperchromatic, Coopydood"
 cpydLog("info",("ULTMOS v"+version))
 cpydLog("info",(" "))
 cpydLog("info",("Name       : "+scriptName))
@@ -128,12 +128,31 @@ gpu_ids: list = []
 vfio_names: list = []
 selected_vfio_ids: list = []
 qemu_flags: list = []
-
-# Symbol for Lists (because Gigantech got us all fucked up in the first place and now we can't decide on our UI thingy)
+gpuDetected = 0
+# Symbol for Lists (because Gigantech got us all f*cked up in the first place and now we can't decide on our UI thingy)
 symbol: str = "》"
 
+def usbOffer():
+    time.sleep(3)
+    clear()
+    print("\n\n   "+color.BOLD+color.YELLOW+"⚠  VIRTUAL INPUT DEVICES REMOVED"+color.END,"")
+    print("   Virtual monitor was removed\n")
+    print("   The assistant has detected that you "+color.BOLD+"passed through a GPU."+color.END+"\n   To accommodate this, the virtual guest monitor had to be\n   removed. This also means you can't use the virtual input\n   devices that utilise the monitor.\n\n   To send input to the guest, you may want to passthrough\n   USB input devices attached to your host. This project\n   can do this for you. You don't need this if you also\n   passed through a host USB controller.\n")
+    #print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)
+    print(color.BOLD+"      1. Run USB Passthrough Assistant"+color.YELLOW,""+color.END)
+    print(color.END+"         Starts the USB passthrough assistant\n")
+    print(color.END+"      2. Skip and Exit\n")
+    detectChoice4 = str(input(color.BOLD+"Select> "+color.END))
 
-
+    if detectChoice4 == "1":
+        clear()
+        os.system('./scripts/hyperchromatic/usb-passthrough.py')
+    elif detectChoice4 == "2":
+        clear()
+        exit
+    else:
+        usbOffer()
+        
 # Main Menu
 def preliminary():
    
@@ -149,7 +168,7 @@ def preliminary():
     # TODO: LOGGING DEVICES BEING DETECTED
     cpydLog("wait", "Detecting VFIO-PCI devices...")
 
-    # Get VFIO-PCI IDs
+    # Get VFIO-PCI IDs      # why is dom so good at awk???
     vfio_ids = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | grep -oP \"[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}\" | sort -u | tr '\n' ' '").read().split(" ")
     # Remove the empty thingy
     vfio_ids.pop(-1)
@@ -207,7 +226,7 @@ def phase1():
 
         # Menu Text
         print(f"   {color.PURPLE}\033[1mVFIO-PCI PASSTHROUGH ASSISTANT\033[0m")
-        print("   by \033[1mDomTrues\033[0m and \033[1mCoopydood\033[0m")
+        print("   by \033[1mHyperchromatic\033[0m and \033[1mCoopydood\033[0m")
         print("\n   This script simplifies the process of adding your host's\n   stubbed VFIO devices to your boot script in an attempt to \n   simplify the end user experience.")
         print(f"\n   \033[1mDetected a total of {color.GREEN}{str(len(vfio_ids))}\033[0m\033[1m VFIO-PCI devices.\033[0m\n")
         print("   Select an option to continue.\n")
@@ -262,11 +281,11 @@ def phase2():
 
         print("\n   \033[1mSelect VFIO-PCI devices\033[0m")
         print("   Step 1")
-        print("\n   Type in the devices you want by using their associated \n   number on the list below. To deselect a device, type its\n   number to remove it. Once you are finished selecting\n   devices, type \033[37mdone\033[0m to continue onto the next step.")
+        print("\n   Type in the devices you want by using their associated \n   number on the list below. To deselect a device, type its\n   number to remove it. Once you are finished selecting\n   devices, type  \033[1mdone\033[0m  to continue onto the next step.")
 
         # List the unselected VFIO-PCI devices.
         print("\n   \033[1mSELECTED DEVICES\033[0m\n")
-        # Python has to be special, fuck me. (R.I.P. for(i = 0; i < sdgasdg; i++))
+        # Python has to be special, f*ck me. (R.I.P. for(i = 0; i < sdgasdg; i++))
         if (len(selected_vfio_ids) == 0):
             print("\033[37m       None\033[0m")
         else:
@@ -280,7 +299,7 @@ def phase2():
 
         # List the unselected VFIO-PCI devices.
         print("\n   \033[1mAVAILABLE DEVICES\033[0m\n")
-        # Python has to be special, fuck me. (R.I.P. for(i = 0; i < sdgasdg; i++))
+        # Python has to be special, f*ck me. (R.I.P. for(i = 0; i < sdgasdg; i++))
         if (len(selected_vfio_ids) == len(pci_ids)):
             print("\033[37m      None\033[0m")
         else:
@@ -314,7 +333,7 @@ def phase2():
                 selected_vfio_ids.remove(pci_ids[int_choice - 1])
                 cpydLog("info", f"User has deselected ID {pci_ids[int_choice - 1]}")
         except:
-            # If the user is fucked up, just pretend it didn't happen.
+            # If the user is f*cked up, just pretend it didn't happen.
             continue
 
         
@@ -325,7 +344,7 @@ def phase2():
 def phase3():
 
     # Global Variables
-    global vfio_ids,vfio_names,selected_vfio_ids,qemu_flags,pci_ids,naviDetected
+    global vfio_ids,vfio_names,selected_vfio_ids,qemu_flags,pci_ids,naviDetected,gpuDetected
     
     # If no devices were selected, return to the preliminary menu.
     if (len(selected_vfio_ids) == 0):
@@ -339,6 +358,7 @@ def phase3():
         if selected_vfio_ids[i] in gpu_ids:
             if "Navi" in vfio_names[pci_ids.index(selected_vfio_ids[i])]:
                 naviDetected = 1
+            gpuDetected = 1
             clear()
             print(f"   {color.BOLD}{color.BLUE}❖  GPU DETECTED{color.END}")
             print(f"   VBIOS ROM file selection{color.END}\n")
@@ -359,16 +379,21 @@ def phase3():
                 qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",multifunction=on,bus=pcie.0")
         else:
             qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",bus=pcie.0")
-    #if naviDetected == 1:
-    #    clear()
-    #    print("\n\n   "+color.BOLD+color.YELLOW+"⚠  BOOT PATCH AVAILABLE"+color.END,"")
-    #    print("   You may need to apply a fix to boot macOS\n")
-    #    print("   The assistant has detected that you may have a"+color.BOLD+" Navi-based"+color.END+" GPU. \n   A patch is available to fix the macOS boot process. I can add\n   this patch for you automatically just now, or you can do it\n   later using the macOS Boot Argument Assistant.")
-    #    print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)
-    #    print(color.BOLD+"      1. Apply Patch"+color.YELLOW,"⚠"+color.END)
-    #    print(color.END+"         Mounts your OpenCore image and applies\n         the patch automatically\n")
-    #    print(color.END+"      2. Skip\n")
-    #    detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
+    if naviDetected == 1:
+        clear()
+        print("\n\n   "+color.BOLD+color.YELLOW+"⚠  BOOT PATCH AVAILABLE"+color.END,"")
+        print("   You may need to apply a fix to boot macOS\n")
+        print("   The assistant has detected that you may have a"+color.BOLD+" Navi-based"+color.END+" GPU. \n   A patch is available to fix the macOS boot process. I can add\n   this patch for you automatically just now, or you can do it\n   later using the macOS Boot Argument Assistant.")
+        print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)
+        print(color.BOLD+"      1. Apply Patch"+color.YELLOW,"⚠"+color.END)
+        print(color.END+"         Mounts your OpenCore image and applies\n         the patch automatically\n")
+        print(color.END+"      2. Skip\n")
+        detectChoice5 = str(input(color.BOLD+"Select> "+color.END))
+
+        if detectChoice5 == "1":
+            os.system("./scripts/extras/boot-args.py --autopatch \"navi\"")
+        else:
+            None
 
     cpydLog("info", f"Validate VFIO-PCI devices >> User has selected a total of {len(selected_vfio_ids)} VFIO-PCI devices")
 
@@ -470,7 +495,10 @@ def autoAPSelect():
 
                         with open("./"+apFilePath,"w") as file:
                             file.write(apFileM)
-                        
+
+                        if gpuDetected == 1:
+                            usbOffer()
+
                         exit()
 
                 if detectChoice2 == "2":
@@ -578,6 +606,9 @@ def manualAPSelect():
 
                     with open(apFilePath,"w") as file:
                         file.write(apFileM)
+                    
+                    if gpuDetected == 1:
+                            usbOffer()
                     
             if detectChoice1 == "2":
                 clear()

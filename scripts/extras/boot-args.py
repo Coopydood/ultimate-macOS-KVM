@@ -25,6 +25,7 @@ detectChoice = 1
 latestOSName = "Sonoma"
 latestOSVer = "14"
 runs = 0
+bypassMenus = 0
 
 class color:
    PURPLE = '\033[95m'
@@ -39,34 +40,40 @@ class color:
    END = '\033[0m'
    GRAY = '\u001b[38;5;245m'
 
-#parser = argparse.ArgumentParser("boot-args")
-#parser.add_argument("--autopatch", dest="autoPatch", help="Immediately list available AutoPatch patches",action="store_true")
-#args = parser.parse_args()
+parser = argparse.ArgumentParser("boot-args")
+parser.add_argument("--autopatch", dest="autoPatch", help="Immediately apply the specified patch",action="store")
+args = parser.parse_args()
+
+if args.autoPatch is not None:
+    bypassMenus = 1
 
 
 def startup():
     global detectChoice
     clear()
-    print("\n\n  "+color.BOLD+color.PURPLE,"BOOT ARGUMENT EDITOR"+color.END,"")
-    print("   by",color.BOLD+"Coopydood and DomTrues\n"+color.END)
-    print("   This script can automatically mount your OpenCore image\n   and modify its boot arguments without booting macOS."+color.END)
-    #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
-    #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    print("\n   "+color.YELLOW,"⚠  "+color.END+color.BOLD+"Requires superuser privileges."+color.END)
+    if bypassMenus != 1:
+        print("\n\n  "+color.BOLD+color.PURPLE,"BOOT ARGUMENT EDITOR"+color.END,"")
+        print("   by",color.BOLD+"Coopydood and Hyperchromatic\n"+color.END)
+        print("   This script can automatically mount your OpenCore image\n   and modify its boot arguments without booting macOS."+color.END)
+        #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
+        #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
+        print("\n   "+color.YELLOW,"⚠  "+color.END+color.BOLD+"Requires superuser privileges."+color.END)
 
-    print(color.BOLD+"\n      1. AutoPatch..."+color.YELLOW,"⚠"+color.END)
-    print(color.END+"         This option lists a set of available\n         boot argument related fixes and instantly applies them.\n")
-    print(color.BOLD+"      2. View or Change..."+color.YELLOW,"⚠"+color.END)
-    print(color.END+"         This option will allow you to enter new\n         boot arguments to be used.\n")
-    
-    print(color.BOLD+"      X. Restore Default..."+color.YELLOW,"⚠"+color.END)
-    print(color.END+"         This option will restore the default boot\n         arguments that originally came with the image.\n")
-    print(color.END+"      M. Main menu")
-    print(color.END+"      ?. Help")
-    print(color.END+"      Q. Exit\n")
-    detectChoice = str(input(color.BOLD+"Select> "+color.END))
+        print(color.BOLD+"\n      1. AutoPatch..."+color.YELLOW,"⚠"+color.END)
+        print(color.END+"         This option lists a set of available\n         boot argument related fixes and instantly applies them.\n")
+        print(color.BOLD+"      2. View or Change..."+color.YELLOW,"⚠"+color.END)
+        print(color.END+"         This option will allow you to enter new\n         boot arguments to be used.\n")
+        
+        print(color.BOLD+"      X. Restore Default..."+color.YELLOW,"⚠"+color.END)
+        print(color.END+"         This option will restore the default boot\n         arguments that originally came with the image.\n")
+        print(color.END+"      M. Main menu")
+        print(color.END+"      ?. Help")
+        print(color.END+"      Q. Exit\n")
+        detectChoice = str(input(color.BOLD+"Select> "+color.END))
+    else:
+        detectChoice = "1"
     clear()
-    os.system("./scripts/domtrues/nbdassistant.py -u -q") # Ensure no stale mounts
+    os.system("./scripts/hyperchromatic/nbdassistant.py -u -q") # Ensure no stale mounts
        
 
 
@@ -77,7 +84,7 @@ startup()
 if detectChoice == "1":
     clear()
     print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To mount the OpenCore image,\n   the script needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
-    os.system("./scripts/domtrues/nbdassistant.py -m -q")
+    os.system("./scripts/hyperchromatic/nbdassistant.py -m -q")
     # NOTE: IMPLEMENT ERROR CATCH HERE
     clear()
     plistFile = open("./boot/mnt/EFI/OC/config.plist","r")
@@ -86,22 +93,27 @@ if detectChoice == "1":
     plistSplit = plist.split("<key>boot-args</key>",1)[1]
     plistSplit = plistSplit.split("</string>",1)[0]
     bootArgs = plistSplit.split("<string>",1)[1]
+    if bypassMenus != 1:
+        print("   "+"\n   "+color.BOLD+"AutoPatch"+color.END)
+        print("   "+"Choose an available patch")
+        print("   "+"\n   A list of predefined patches are listed below.\n   The patch will be appended to your existing arguments."+color.END)#print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
+        print("\n   "+color.BOLD+color.CYAN+"CURRENT:"+color.END+color.BOLD,bootArgs+color.END)
+        
+        #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
+        print(color.BOLD+"\n      1. Fix black screen or reset on Navi GPUs")
+        print(color.END+"         Fixes the post-install blackout on AMD RX 5xxx / 6xxx (Navi) GPUs")
+        print(color.BOLD+"\n      2. Fix GPU initialisation on HD 7000 / R7 GPUs")
+        print(color.END+"         Fixes the initialisation of AMD Radeon HD 7000 and R7 series GPUs")
     
-    print("   "+"\n   "+color.BOLD+"AutoPatch"+color.END)
-    print("   "+"Choose an available patch")
-    print("   "+"\n   A list of predefined patches are listed below.\n   The patch will be appended to your existing arguments."+color.END)#print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
-    print("\n   "+color.BOLD+color.CYAN+"CURRENT:"+color.END+color.BOLD,bootArgs+color.END)
-    
-    #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    print(color.BOLD+"\n      1. Fix black screen or reset on Navi GPUs")
-    print(color.END+"         Fixes the post-install blackout on AMD RX 5xxx / 6xxx (Navi) GPUs")
-    print(color.BOLD+"\n      2. Fix GPU initialisation on HD 7000 / R7 GPUs")
-    print(color.END+"         Fixes the initialisation of AMD Radeon HD 7000 and R7 series GPUs")
-  
-    #print(color.END+"\n      ?. Help...")
-    print(color.END+"\n      M. Main menu")
-    print(color.END+"      Q. Exit\n")
-    detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
+        #print(color.END+"\n      ?. Help...")
+        print(color.END+"\n      M. Main menu")
+        print(color.END+"      Q. Exit\n")
+        detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
+    else:
+        if args.autoPatch == "navi":
+            detectChoice1 = "1"
+        elif args.autoPatch == "hd7k":
+            detectChoice1 = "2"
 
     if detectChoice1 == "1": # Navi Patch
         clear()
@@ -113,7 +125,7 @@ if detectChoice == "1":
         
             print("   "+color.BOLD+color.RED+"ERROR:"+color.END+color.BOLD,"The selected patch is already applied."+color.END+"\n\n\n\n\n")
             time.sleep(3)
-            os.system("./scripts/domtrues/nbdassistant.py -u -q")
+            os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
 
 
 
@@ -151,14 +163,14 @@ if detectChoice == "1":
                 print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
                 #print("     "+color.BOLD+"   ▼")
                 print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-                os.system("./scripts/domtrues/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
                 time.sleep(3)
             
             elif detectChoice2 == "B" or detectChoice2 == "b":
                 os.system("./scripts/extras/boot-args.py")
-                os.system("./scripts/domtrues/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
             elif detectChoice == "Q" or detectChoice == "q":
-                os.system("./scripts/domtrues/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
                 exit
     
     if detectChoice1 == "2": # R7 HD Patch
@@ -171,7 +183,7 @@ if detectChoice == "1":
         
             print("   "+color.BOLD+color.RED+"ERROR:"+color.END+color.BOLD,"The selected patch is already applied."+color.END+"\n\n\n\n\n")
             time.sleep(3)
-            os.system("./scripts/domtrues/nbdassistant.py -u -q")
+            os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
 
 
         else:
@@ -208,14 +220,14 @@ if detectChoice == "1":
                 print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
                 #print("     "+color.BOLD+"   ▼")
                 print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-                os.system("./scripts/domtrues/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
                 time.sleep(3)
             
             elif detectChoice2 == "B" or detectChoice2 == "b":
                 os.system("./scripts/extras/boot-args.py")
-                os.system("./scripts/domtrues/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
             elif detectChoice == "Q" or detectChoice == "q":
-                os.system("./scripts/domtrues/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
                 exit
                 
    
@@ -229,7 +241,7 @@ if detectChoice == "1":
 elif detectChoice == "2":
     clear()
     print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To mount the OpenCore image,\n   the script needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
-    os.system("./scripts/domtrues/nbdassistant.py -m -q")
+    os.system("./scripts/hyperchromatic/nbdassistant.py -m -q")
     # NOTE: IMPLEMENT ERROR CATCH HERE
     clear()
     plistFile = open("./boot/mnt/EFI/OC/config.plist","r")
@@ -297,7 +309,7 @@ elif detectChoice == "2":
                 print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
                 #print("     "+color.BOLD+"   ▼")
                 print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-                os.system("./scripts/domtrues/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
                 time.sleep(3)
             
             elif detectChoice2 == "2":
@@ -306,9 +318,9 @@ elif detectChoice == "2":
             
             elif detectChoice2 == "B" or detectChoice2 == "b":
                 os.system('./scripts/extras/boot-args.py')
-                os.system("./scripts/domtrues/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
             elif detectChoice == "Q" or detectChoice == "q":
-                os.system("./scripts/domtrues/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
                 exit
         enterArgs()
     
@@ -321,7 +333,7 @@ elif detectChoice == "2":
 elif detectChoice == "X" or detectChoice == "x":
     clear()
     print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To mount the OpenCore image,\n   the script needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
-    os.system("./scripts/domtrues/nbdassistant.py -m -q")
+    os.system("./scripts/hyperchromatic/nbdassistant.py -m -q")
     # NOTE: IMPLEMENT ERROR CATCH HERE
     clear()
     plistFile = open("./boot/mnt/EFI/OC/config.plist","r")
@@ -363,14 +375,14 @@ elif detectChoice == "X" or detectChoice == "x":
         print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
         #print("     "+color.BOLD+"   ▼")
         print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-        os.system("./scripts/domtrues/nbdassistant.py -u -q")
+        os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
         time.sleep(3)
     
     elif detectChoice2 == "B" or detectChoice2 == "b":
         os.system("./scripts/extras/boot-args.py")
-        os.system("./scripts/domtrues/nbdassistant.py -u -q")
+        os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
     elif detectChoice == "Q" or detectChoice == "q":
-        os.system("./scripts/domtrues/nbdassistant.py -u -q")
+        os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
         exit
     
     elif detectChoice == "M" or detectChoice == "m":
@@ -378,7 +390,7 @@ elif detectChoice == "X" or detectChoice == "x":
         startup()
 
     elif detectChoice == "Q" or detectChoice == "q":
-        os.system("./scripts/domtrues/nbdassistant.py -u -q")
+        os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
         exit
 
 elif detectChoice == "?":
@@ -396,7 +408,7 @@ elif detectChoice == "M" or detectChoice == "m":
     os.system("./scripts/extras.py")
 
 elif detectChoice == "Q" or detectChoice == "q":
-    os.system("./scripts/domtrues/nbdassistant.py -u -q")
+    os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
     exit
 
 else:
