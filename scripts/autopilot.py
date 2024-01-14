@@ -31,7 +31,7 @@ try:
     from pypresence import Presence
 except:
      None
-
+global FEATURE_LEVEL
 
 script = "autopilot.py"
 scriptName = "AutoPilot"
@@ -54,6 +54,10 @@ detectChoice = 1
 latestOSName = "Sonoma"
 latestOSVer = "14"
 runs = 0
+
+###############################
+FEATURE_LEVEL = 7                   # DO NOT CHANGE - WILL BREAK THINGS!
+###############################
 
 enableLog = True
 enableRPC = True
@@ -169,7 +173,7 @@ def startup():
 
     sparkTime = int(time.time())
 
-    print("\n\n   "+color.BOLD+color.PURPLE+"AUTOPILOT"+color.END,"")
+    print("\n\n   "+color.BOLD+color.PURPLE+"AUTOPILOT"+color.END+color.GRAY,"(FL"+str(FEATURE_LEVEL)+")"+color.END)
     print("   by",color.BOLD+"Coopydood\n"+color.END)
     print("   The purpose of this script is to automatically guide you through \n   the process of",color.BOLD+"creating and running a basic macOS VM",color.END+"using settings \n   based on answers to a number of questions. \n\n   Many of the values can be left to default - especially if you are unsure.\n   It won't be perfect, but it's supposed to make it as"+color.BOLD,"easy as possible."+color.END)
     #print(color.BOLD+"\n"+"   Profile:"+color.END,"https://github.com/Coopydood")
