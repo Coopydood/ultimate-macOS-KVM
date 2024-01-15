@@ -182,6 +182,7 @@
       <address type="pci" domain="0x0000" bus="0x09" slot="0x01" function="0x0"/>
     </video>
     <!-- VFIO-PCI HEADER -->
+    <!-- USB HEADER -->
     <!--<watchdog model="itco" action="reset"/> -->
     <memballoon model="none"/>
   </devices>

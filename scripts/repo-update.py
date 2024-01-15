@@ -68,7 +68,7 @@ parser.add_argument("-a", "--auto", dest="install", help="Automatically download
 parser.add_argument("-d", "--download", dest="download", help="Automatically download (but not install) available updates without asking",action="store_true")
 parser.add_argument("-v", "--version", dest="version", help="Upgrade/downgrade to a specific version. Must be used with --force.", metavar="<X.X.X>", type=str)
 parser.add_argument("-f", "--force", dest="force", help="Force install the latest version, even if it is already installed. Use only to skip ahead to latest commit", action="store_true")
-parser.add_argument("--switchBranch", dest="switchBranch", help="Switch to the development branch", action="store_true")
+parser.add_argument("--targetBranch", dest="switchBranch", help="Select the target branch for update search", action="store")
 parser.add_argument("--forceDelta", dest="forceDelta", help="Skip the delta update compatibility check and allow upgrading forcefully. THIS IS UNSAFE!", action="store_true")
 parser.add_argument("--noDelta", dest="noDelta", help="For debugging only. Flags all updates as incompatible even if they aren't", action="store_true")
 parser.add_argument("--menuFlow", dest="menuFlow", help="To be used by other internal scripts only", action="store_true")
@@ -105,13 +105,19 @@ if integrity == 1 and args.version is None:
 elif integrity == 1 and args.version is not None:
    print("Searching for update...")
 
+targetBranch = "main"
+
+if args.switchBranch is not None:
+   targetBranch = args.switchBranch
+
+#print("wget -q --output-document=./resources/.webversion --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/"+str(targetBranch)+"/.version")
 
 if integrity == 1:
    if os.path.exists("./resources/.webversion"): os.system("rm ./resources/.webversion")
-   #os.system("wget -q --output-document=./resources/.webversion --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/VERSION")
-   os.system("wget -q --output-document=./resources/.webversion --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/.version")
+   #os.system("wget -q --output-document=./resources/.webversion --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/"+str(targetBranch)+"/VERSION")
+   os.system("wget -q --output-document=./resources/.webversion --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/"+str(targetBranch)+"/.version")
    if os.path.exists("./resources/.upgrade"): os.system("rm ./resources/.upgrade")
-   os.system("wget -q --output-document=./resources/.upgrade --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/resources/.upgrade")
+   os.system("wget -q --output-document=./resources/.upgrade --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/"+str(targetBranch)+"/resources/.upgrade")
 
    # COMPATIBILITY MODE
    if os.path.exists("./resources/WEBVERSION"): os.system("rm ./resources/WEBVERSION")
@@ -224,9 +230,13 @@ if integrity == 1:
          print(color.BOLD+"         Target Version\n   "+color.BOLD+"          v"+webVersion,"\n"+color.END)
          print("   The update you requested is being downloaded and installed.\n   Do NOT terminate this script or close the window.\n\n")
          time.sleep(2)
-         if args.version is not None:
+         if args.version is not None and args.targetBranch is None:
             targetVersion = args.version
             os.system("git reset --hard tags/v"+targetVersion)
+         elif args.targetBranch is not None:
+            os.system("git switch "+str(targetBranch)+" > /dev/null 2>&1")
+            os.system("git pull -f -q > /dev/null 2>&1")
+            os.system("git merge --autostash origin/main > /dev/null 2>&1")
          else:
             #os.system("git reset --hard HEAD")
             #os.system("git clean -xffd > /dev/null 2>&1")
@@ -280,7 +290,7 @@ if integrity == 1:
                   print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING RELEASE NOTES IN DEFAULT BROWSER"+color.END,"")
                   print("   Continue in your browser\n")
                   print("\n   I have attempted to open the release notes in\n   your default browser. Please be patient.\n\n   You will be returned to the main menu in 5 seconds.\n\n\n\n\n")
-                  os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v'+versionDash+".md > /dev/null 2>&1")
+                  os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/blob/"+str(targetBranch)+"/docs/changelogs/v'+versionDash+".md > /dev/null 2>&1")
                   time.sleep(6)
                   clear()
                   os.system('./main.py')
@@ -390,7 +400,7 @@ if integrity == 1:
             print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING RELEASE NOTES IN DEFAULT BROWSER"+color.END,"")
             print("   Continue in your browser\n")
             print("\n   I have attempted to open the release notes in\n   your default browser. Please be patient.\n\n   You will be returned to the main menu in 5 seconds.\n\n\n\n\n")
-            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v'+versionDash+".md > /dev/null 2>&1")
+            os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/blob/"+str(targetBranch)+"/docs/changelogs/v'+versionDash+".md > /dev/null 2>&1")
             time.sleep(6)
             clear()
             os.system('./main.py')
@@ -439,6 +449,9 @@ if integrity == 1:
          if args.version is not None:
             print("\n\n   "+color.BOLD+color.BLUE+"⎋  TARGET UPDATE FOUND"+color.END,"")
             print("   User specified update found\n")
+         elif targetBranch != "main":
+            print("\n\n   "+color.BOLD+color.PURPLE+"⥂  SWITCH TO "+str(targetBranch.upper())+" BRANCH"+color.END,"")
+            print("   Update to a development version\n")
          else:
             print("\n\n   "+color.BOLD+color.BLUE+"⎋  UPDATE AVAILABLE"+color.END,"")
             print("   Updates are ready to download and install\n")
@@ -447,6 +460,10 @@ if integrity == 1:
          if args.version is not None:
             print(color.BOLD+"         Target Version\n   "+color.BOLD+"          v"+args.version,"\n"+color.END)
             print("   No support is available for this update because it was\n   specifically chosen by you. Compatibility with your\n   current version is not guaranteed or verified.")
+         elif targetBranch != "main":
+            print(color.BOLD+"         Target Version\n   "+color.BOLD+"         v"+webVersion,color.PURPLE+"⚛\n"+color.END)
+            print("   No support is available for this update because it is\n   on an unsupported branch. Compatibility with your\n   current version is not guaranteed or verified.")
+         
          else:
             print(color.BOLD+"         Latest Version\n   "+color.BOLD+"          v"+webVersion,"\n"+color.END)
             print("   Updates can introduce important fixes and new features. Downloading and\n   installing this update does not affect non-repo files, such as any\n   personal config scripts, hard disk images, ROMs, or boot files.")
@@ -493,4 +510,4 @@ else:
    print(color.BOLD+"   Your Reported Version\n   "+color.END+"v"+version,"\n")
    print("   The updater cannot connect to the update server.\n   Check your internet connection status."+"\n\n")
 
-   #https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/main/.version
+   #https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/"+str(targetBranch)+"/.version

@@ -45,18 +45,19 @@ class color:
 
 def startup():
     global detectChoice
-    print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"VFIO-PCI Tools"+color.END,"")
-    print("   Created by",color.BOLD+"Coopydood\n"+color.END)
-    print("   This menu includes some advanced tools to help prepare\n   and configure"+color.BOLD,"PCI passthrough, IOMMU grouping, "+color.END+"and the\n  "+color.BOLD,"VFIO-PCI kernel driver.\n"+color.END)
+    print("\n\n  "+color.BOLD+color.PURPLE,"PASSTHROUGH TOOLS"+color.END,"")
+    print("   by",color.BOLD+"Coopydood\n"+color.END)
+    print("   This menu includes some advanced tools to help prepare\n   and configure"+color.BOLD,"USB & PCI passthrough, IOMMU grouping, "+color.END+"and the\n  "+color.BOLD,"VFIO-PCI kernel driver.\n"+color.END)
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    print("   Select an option to continue.")
-    print(color.BOLD+"\n      1. VFIO-PCI passthrough assistant")
+    #print("   Select an option to continue.")
+    print(color.BOLD+"      1. VFIO-PCI passthrough assistant")
     print(color.END+"         Automatically configure PCI passthrough with ease\n         using an existing AutoPilot config file\n")
-    print(color.END+"      2. Check if your system is ready...")
-    print(color.END+"      3. Display system IOMMU grouping")
-    print(color.END+"      4. Get and display vfio-pci device IDs")
-    print(color.END+"      5. Verify devices bound to vfio-pci driver")
+    print(color.END+"      2. USB passthrough assistant")
+    print(color.END+"      3. Check if your system is ready...")
+    print(color.END+"      4. Display system IOMMU grouping")
+    print(color.END+"      5. Get and display vfio-pci device IDs")
+    print(color.END+"      6. Verify devices bound to vfio-pci driver\n")
     #print(color.END+"      6. Dump VBIOS to ROM file")
     print(color.END+"      B. Back...")
     print(color.END+"      Q. Exit\n")
@@ -99,16 +100,16 @@ clear()
 if detectChoice == "1":
     os.system('./scripts/extras/vfio-passthrough.py')
 elif detectChoice == "2":
+    os.system('./scripts/hyperchromatic/usb-passthrough.py')
+elif detectChoice == "3":
     os.system('./scripts/extras/vfio-check.py')
 
-elif detectChoice == "3":
-    os.system('./scripts/iommu.sh')
 elif detectChoice == "4":
-    os.system('./scripts/vfio-ids.py')
+    os.system('./scripts/iommu.sh')
 elif detectChoice == "5":
-    os.system('./scripts/vfio-pci.py')
+    os.system('./scripts/vfio-ids.py')
 elif detectChoice == "6":
-    os.system('./scripts/extras/vbios-dump.py')
+    os.system('./scripts/vfio-pci.py')
 
 elif detectChoice == "r" or detectChoice == "R":
     os.system('./scripts/vifo-pci.py')

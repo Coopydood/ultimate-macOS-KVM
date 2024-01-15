@@ -1,10 +1,10 @@
 <a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/492731ef1d95d2da534c660b001550f4d76a6c68/resources/images/bannerAlphaBasic.png?raw=true" alt="ultimate-macOS-KVM" width="500"/></a>
 
-### v0.10.5
+### v0.11.0
 
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
-**[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;**[Try the v0.11.0 preview... ⎋](https://github.com/Coopydood/ultimate-macOS-KVM/releases/tag/v0.11.0-pre4)
+**[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;**[Switch to dev branch... ⎋](https://github.com/Coopydood/ultimate-macOS-KVM/tree/dev)
 
 <br>
 
@@ -34,6 +34,9 @@ Automatically generates a valid, customised, and ready-to-use QEMU config script
 
 <li><b>VFIO-PCI Passthrough Assistant <a href="https://github.com/Coopydood/ultimate-macOS-KVM/wiki/VFIO%E2%80%90PCI-Passthrough-Assistant">⎋</a></b></li>
 Advanced passthrough tinkering made easy with auto-detection and configuration walkthroughs.
+
+<li><b>USB Passthrough Assistant</b></li>
+Allows you to select any of your host's attached USB devices for use with the macOS guest, and automatically configures them.
 
 <li><b>OpenCore Configuration Assistant</b></li>
 Automatically mount and edit your OpenCore image from your host, using Network Block Devices.
@@ -283,7 +286,7 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[Eversiege](https://github.com/eversiege)** 》 Support and testing, та мій улюблений українець. Also made the project's main [website](https://coopydood.github.io/ultimate-macOS-KVM).
 - **[CyberneticSquid](https://github.com/cyberneticsquid)** 》 Testing for me at stupid-o'-clock because he's a cool Aussie.
 - **[Cake](https://github.com/cam-jm)** 》 Another Aussie testing for me in the middle of my sleep-deprived nights, with a slight obsession over cake.
-- **[DomTrues](https://github.com/domtrues)** 》 My personal constitution-munching American. Legend has it that I live in his attic, although even I'm not sure. Love this guy either way.
+- **[Hyperchromiac](https://github.com/hyperchromiac)** 》 My personal constitution-munching American. Legend has it that I live in his attic, although even I'm not sure. Love this guy either way.
 - **[Kaz](https://github.com/Eaz11)** 》 Other than his brilliant English accent's pronunciations (including "macOS Syria"), he's done extensive testing. Say hi to your nephew for me.
 - **[GigantTech](https://twitter.com/TechGigant)** 》 Moderately annoying German guy that I convinced to install Linux subsequently letting him test my project. It's free real estate!
 

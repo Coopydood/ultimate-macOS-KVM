@@ -91,7 +91,7 @@ def startup():
     print(color.END+"         Use this option if you already have an XML file.\n         This option lets you import a previously-created XML file\n         into virsh for use with virt-manager.\n")
   
     print(color.END+"      ?. Help...")
-    print(color.END+"      M. Main menu")
+    print(color.END+"      B. Back...")
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
@@ -205,6 +205,13 @@ def convertBrains():
                 with open("./blobs/user/USR_MAC_ADDRESS.apb") as blob: apVars[17] = str(blob.read())
                 with open("./blobs/user/USR_BOOT_FILE.apb") as blob: apVars[21] = str(blob.read())
 
+
+                # REQUIRES FL 7
+                if os.path.exists("./blobs/user/USR_HDD_ISPHYSICAL.apb"):
+                    with open("./blobs/user/USR_HDD_ISPHYSICAL.apb") as blob: apVars[21] = str(blob.read())
+                    USR_HDD_ISPHYSICAL = apVars[21]
+                else: USR_HDD_ISPHYSICAL = False
+
                 # REQUIRES FL 6
                 if os.path.exists("./blobs/user/USR_HDD_TYPE.apb"):
                     with open("./blobs/user/USR_HDD_TYPE.apb") as blob: apVars[20] = str(blob.read())
@@ -283,6 +290,55 @@ def convertBrains():
                     vfioXML.append("<hostdev mode=\"subsystem\" type=\"pci\" managed=\"yes\">\n      <source>\n        <address domain=\"0x0000\" bus=\"0x"+vfioBuses[x]+"\" slot=\"0x00\" function=\"0x"+str(vfioFunctions[x])+"\"/>\n      </source>\n      <address type=\"pci\" domain=\"0x0000\" bus=\"0x0"+str(vfioAddresses[x])+"\" slot=\"0x00\" function=\"0x0\"/>\n    </hostdev>")
 
 
+
+
+
+            if "-device usb-host" in apFileS:
+                usbargs = apFileS.split("#USB_DEV_BEGIN",1)[1]
+                usbargs = usbargs.replace("\n","",1)
+                usbargs = usbargs.split("#USB_DEV_END",1)[0]
+                usbargsN = usbargs.count('\n')
+                #print(usbargs,usbargsN)
+
+                usbargsBlock = []
+
+                #usbargs = io.StringIO(usbargs)
+
+                usbargsBlock = usbargs.splitlines()
+
+            #    <hostdev mode="subsystem" type="pci" managed="yes">
+            #        <source>                     ##  usbVendor ##        ##  usbFunctions ##  
+            #                                            \/                         \/
+            #            <address domain="0x0000" bus="0x04" slot="0x00" function="0x0"/>
+            #        </source>                          ##  busDrivers  ##
+            #                                                   \/
+            #        <address type="pci" domain="0x0000" bus="0x02" slot="0x00" function="0x0"/>
+            #    </hostdev>
+
+                busDrivers = 1
+
+                usbVendor = []
+                usbProduct = []
+                usbConstructor = []
+                usbXML = []
+
+                # ESTABLISH ARRAYS
+                for x in range(usbargsN):
+                    usbargsBlock[x] = usbargsBlock[x].replace("-device usb-host,vendorid=","")
+                    usbargsBlock[x] = usbargsBlock[x].replace("productid=","")
+                    usbargsBlock[x] = usbargsBlock[x].replace(",","")
+                    #usbargsBlock[x] = usbargsBlock[x].split(",",1)[0]
+
+                    usbVendor.append(usbargsBlock[x].split("0x")[1])
+                    usbProduct.append(usbargsBlock[x].split("0x")[2])
+
+                # FEED THE XML!
+                for x in range(usbargsN):
+                    usbXML.append("<hostdev mode=\"subsystem\" type=\"usb\" managed=\"yes\">\n      <source>\n        <vendor id=\"0x"+usbVendor[x]+"\"/>\n        <product id=\"0x"+usbProduct[x]+"\"/>\n      </source>\n    </hostdev>")
+                    
+
+                
+
         apFilePathNoExt = apFilePath.replace(".sh","")
         apFilePathNoExt = r"{}".format(apFilePathNoExt)
         
@@ -305,6 +361,12 @@ def convertBrains():
                 USR_HDD_TYPE = apVars[20]
             elif useBlobs == False:
                 USR_HDD_TYPE = "HDD" # Couldn't determine, fallback to regular HDD
+
+            # Decide whether or not to probe array for physical disk
+            if apVars[21] != 0 and useBlobs == False:
+                USR_HDD_ISPHYSICAL = apVars[21]
+            elif useBlobs == False:
+                USR_HDD_ISPHYSICAL = False # Couldn't determine, fallback to regular HDD
 
 
             apVars[1] = apVars[1].replace("macOS ","")
@@ -347,12 +409,15 @@ def convertBrains():
             apOSCvt = apOSCvt.replace("Mac OS X ","")
             apOSCvt = apOSCvt.replace(".","")
 
+            if USR_HDD_ISPHYSICAL == True:
+                apFileM = apFileM.replace("    <disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"qcow2\"/>\n      <source file=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->","    <disk type=\"block\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"raw\"/>\n      <source dev=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->")
+
             if USR_HDD_TYPE == "HDD":       # DISK TYPE ROUTINE; REQUIRES CONFIG FL 6!
                     None
             elif USR_HDD_TYPE == "SSD":
                 apFileM = apFileM.replace("rotation_rate=\"7200\"","rotation_rate=\"1\"")
             elif USR_HDD_TYPE == "NVMe":
-                apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=raw,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
+                apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=qcow2,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
                 apFileM = apFileM.replace("<disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->","<!-- <disk type=\"file\" device=\"disk\">")
                 apFileM = apFileM.replace("</disk> <!-- HDD FOOTER -->","</disk> -->")
 
@@ -404,6 +469,9 @@ def convertBrains():
 
             if "-device vfio-pci" in apFileS:
                 apFileM = apFileM.replace("<!-- VFIO-PCI HEADER -->",('\n    '.join(vfioXML)))
+
+            if "-device usb-host" in apFileS:
+                apFileM = apFileM.replace("<!-- USB HEADER -->",('\n    '.join(usbXML)))
         # apFileM = apFileM.replace("$USR_",apVars[])
         
         file1.close
@@ -436,6 +504,7 @@ def convertBrains():
             print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To define the domain, virsh needs superuser to continue.\n"+color.END)
             os.system("sudo virsh define "+apFilePathNoExt+".xml")
             time.sleep(4)
+            os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
             print("   XML domain has been defined\n")
@@ -555,6 +624,7 @@ if detectChoice == "1":
 
                     if detectChoice2 == "1":
                         #apFileR = apFile.read()
+                        os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
                         apFileChosen = 1
                         apFile = open("./"+apFilePath,"r")
                         autodetect = True
@@ -578,6 +648,11 @@ elif detectChoice == "3":
 elif detectChoice == "2":
     clear()
     importXML()
+elif (len(detectChoice) == 0 or detectChoice.lower() == "b"): # Main Menu
+            # Goto Extras and Break
+            clear()
+            os.system("./scripts/vfio-menu.py")
+            
 elif detectChoice == "?":
     clear()
     print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING HELP PAGE IN DEFAULT BROWSER"+color.END,"")

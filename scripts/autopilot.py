@@ -31,7 +31,7 @@ try:
     from pypresence import Presence
 except:
      None
-
+global FEATURE_LEVEL
 
 script = "autopilot.py"
 scriptName = "AutoPilot"
@@ -54,6 +54,10 @@ detectChoice = 1
 latestOSName = "Sonoma"
 latestOSVer = "14"
 runs = 0
+
+###############################
+FEATURE_LEVEL = 7                   # DO NOT CHANGE - WILL BREAK THINGS!
+###############################
 
 enableLog = True
 enableRPC = True
@@ -169,8 +173,8 @@ def startup():
 
     sparkTime = int(time.time())
 
-    print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"AutoPilot"+color.END,"")
-    print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+    print("\n\n   "+color.BOLD+color.PURPLE+"AUTOPILOT"+color.END+color.GRAY,"(FL"+str(FEATURE_LEVEL)+")"+color.END)
+    print("   by",color.BOLD+"Coopydood\n"+color.END)
     print("   The purpose of this script is to automatically guide you through \n   the process of",color.BOLD+"creating and running a basic macOS VM",color.END+"using settings \n   based on answers to a number of questions. \n\n   Many of the values can be left to default - especially if you are unsure.\n   It won't be perfect, but it's supposed to make it as"+color.BOLD,"easy as possible."+color.END)
     #print(color.BOLD+"\n"+"   Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"      Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM") # no shameless plugs anymore :[
@@ -262,7 +266,7 @@ def autopilot():
 
 
    ###############################
-   FEATURE_LEVEL = 6                   # DO NOT CHANGE - WILL BREAK THINGS!
+   FEATURE_LEVEL = 7                   # DO NOT CHANGE - WILL BREAK THINGS!
    ###############################
 
    global currentStage
@@ -324,6 +328,8 @@ def autopilot():
 
       if USR_HDD_SIZE == "-1":
          USR_HDD_PATH_F = "Existing disk file (\""+os.path.basename(USR_HDD_PATH)+"\")"
+      elif USR_HDD_SIZE == "-2":
+         USR_HDD_PATH_F = "Physical disk ("+USR_HDD_PATH_F+")"
 
       clear()
       if showSummary == True:
@@ -332,7 +338,7 @@ def autopilot():
          else:
             print("   "+"\n   "+color.BOLD+"Ready to generate config file"+color.END)
          #print("   "+"Review your preferences")
-         print("   "+"The config wizard is complete.\n   Review your preferences below and continue when ready."+color.END)
+         print("   "+"Review your preferences below and continue when ready."+color.END)
          print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
 
          if USR_CREATE_XML == "True":
@@ -361,6 +367,8 @@ def autopilot():
 
          if USR_HDD_SIZE == "-1":
             print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_PATH_F+color.END)
+         elif USR_HDD_SIZE == "-2":
+            print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_PATH_F+color.END)
          else:
             print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_SIZE_F+" GB (dynamic)"+color.END)
 
@@ -372,12 +380,15 @@ def autopilot():
 
 
          print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
-         if USR_BOOT_FILE == "-1":
-            print(color.BOLD+"\n      1. Start...")
-            print(color.END+"         Fetch a new recovery image, then create the config\n         and hard disk files in the repo folder\n")
-         else:
-            print(color.BOLD+"\n      1. Start...")
-            print(color.END+"         Copy the local recovery image, then create the config\n         and hard disk files in the repo folder\n")
+         #if USR_BOOT_FILE == "-1":
+         print(color.BOLD+"\n      1. Start...")
+         print(color.END+"         Begin the AutoPilot run using the above setup\n")
+        # elif USR_HDD_SIZE != "-2":
+        #    print(color.BOLD+"\n      1. Start...")
+        #    print(color.END+"         Copy the local recovery image, then create the config\n         and hard disk files in the repo folder\n")
+        # else:
+        #    print(color.BOLD+"\n      1. Start...")
+        #    print(color.END+"         Copy the local recovery image, then create the config\n         and hard disk files in the repo folder\n")
          
          print("    "+color.END+"  B. Back")
          print("    "+color.END+"  X. Start Over")
@@ -875,26 +886,34 @@ def autopilot():
 
    def stage9():
       global USR_HDD_TYPE
+      global USR_HDD_ISPHYSICAL
       global customValue
       global currentStage
       defaultValue = "HDD"
       cpydLog("ok",str("Stage 9 sequence initiated"))
 
       try: # DISCORD RPC
-         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring virtual hard disk",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring hard disk",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
       except:
          None
 
       clear()
-      print("\n   "+color.BOLD+"Virtual disk type"+color.END)
-      print("   Step 9")
-      print("\n   Select what type of storage you'd like to emulate. \n   If your virtual disk file itself is being stored on an SSD,\n   it might be beneficial to present it as an SSD to the guest\n   too so you can access SSD-based features, such as TRIM."+color.END)
-      #print("\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"   "+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      if USR_HDD_ISPHYSICAL != True:
+         print("\n   "+color.BOLD+"Virtual disk type"+color.END)
+         print("   Step 9")
+         print("\n   Select what type of storage you'd like to emulate. \n   If your virtual disk file itself is being stored on an SSD,\n   it might be beneficial to present it as an SSD to the guest\n   too so you can access SSD-based features, such as TRIM."+color.END)
+         #print("\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"   "+color.END)
+         print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      elif USR_HDD_ISPHYSICAL == True:
+         print("\n   "+color.BOLD+"Physical disk type"+color.END)
+         print("   Step 9")
+         print("\n   Select what type of storage your physical disk is. \n   This affects SSD-based features, such as TRIM."+color.END)
+         print("\n   "+color.BOLD+color.GREEN+"YOUR DISK:",color.END+color.BOLD+USR_HDD_PATH_F+color.END)
       
       print(color.BOLD+"\n      1. Hard disk drive (HDD)")
       print(color.END+"      2. Solid state drive (SSD)")
-      print(color.END+"      3. NVM express (NVMe)")
+      if USR_HDD_ISPHYSICAL != True:
+         print(color.END+"      3. NVM express (NVMe)")
       print(color.END+"\n      B. Back")
       print(color.END+"      ?. Help")
       print(color.END+"      Q. Exit\n   ")
@@ -902,7 +921,7 @@ def autopilot():
       
       if stageSelect == "1":
          cpydLog("ok",str("Using default value of "+str(defaultValue)))
-         cpydLog("ok",str("Will set virtual disk up as an HDD"))
+         cpydLog("ok",str("Will set disk up as an HDD"))
          USR_HDD_TYPE = defaultValue
          blob = open("./blobs/USR_HDD_TYPE.apb","w")
          blob.write(USR_HDD_TYPE)
@@ -911,7 +930,7 @@ def autopilot():
          stage10()
 
       elif stageSelect == "2":
-         cpydLog("ok",str("Will set virtual disk up as an SSD"))
+         cpydLog("ok",str("Will set disk up as an SSD"))
          USR_HDD_TYPE = "SSD"
          blob = open("./blobs/USR_HDD_TYPE.apb","w")
          blob.write(USR_HDD_TYPE)
@@ -919,8 +938,8 @@ def autopilot():
          currentStage = currentStage + 1
          stage10()
 
-      elif stageSelect == "3":
-         cpydLog("ok",str("Will set virtual disk up as NVMe"))
+      elif stageSelect == "3" and USR_HDD_ISPHYSICAL != True:
+         cpydLog("ok",str("Will set disk up as NVMe"))
          USR_HDD_TYPE = "NVMe"
          blob = open("./blobs/USR_HDD_TYPE.apb","w")
          blob.write(USR_HDD_TYPE)
@@ -952,22 +971,36 @@ def autopilot():
    def stage8():
       global USR_HDD_SIZE
       global USR_HDD_PATH
+      global USR_HDD_PATH_F
+      global USR_HDD_ISPHYSICAL
       global customValue
       global currentStage
       defaultValue = "80G"
+      USR_HDD_ISPHYSICAL = False
       cpydLog("ok",str("Stage 8 sequence initiated"))
 
       try: # DISCORD RPC
-         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring virtual hard disk",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="loading",small_text="Waiting on user configuration...",state="Configuring disk",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
       except:
          None
 
       clear()
-      print("\n   "+color.BOLD+"Create virtual disk"+color.END)
+      if customValue != 3:
+         print("\n   "+color.BOLD+"Create or add virtual disk"+color.END)
+      elif customValue == 3:
+         print("\n   "+color.BOLD+"Use a physical disk (advanced)"+color.END)
       print("   Step 8")
-      print("\n   Set the maximum virtual hard disk size (capacity). \n   Change this based on how much storage you think you'll need.\n   You can also select an existing qcow2 HDD file."+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"The disk file will grow dynamically\n         and is not allocated in full."+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      if customValue != 3:
+         print("\n   Set the maximum virtual hard disk size (capacity). \n   You can also select an existing qcow2 HDD file, or\n   even use a physical disk."+color.END)
+         print("\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"The disk file will grow dynamically\n         and is not allocated in full."+color.END)
+         print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
+      elif customValue == 3:
+         print("\n   Instead of a virtual disk, you can use a physical disk\n   attached to your host. Before using a physical disk,\n   you should understand the following:"+color.END)
+         print("\n    • The entire disk and its contents are exposed to the guest")
+         print("    • The guest will have full write access to the disk")
+         print("    • For NVMe drives, you should use PCI passthrough instead")
+         print("\n   "+color.BOLD+color.GREEN+"TIP:",color.END+color.BOLD+"To list available disk IDs, run"+color.CYAN+"\n        $ ls /dev/disk/by-id/"+color.END+color.BOLD+" in a new terminal."+color.END)
+         #print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+defaultValue+color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
       #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
@@ -1006,12 +1039,40 @@ def autopilot():
          blob.close()
          blob = open("./blobs/USR_HDD_SIZE.apb","w")
          blob.write("-1")
+         blob = open("./blobs/USR_HDD_ISPHYSICAL.apb","w")
+         blob.write("False")
+         blob.close()
+         stage9()
+      elif customValue == 3:
+         cpydLog("info",str("Custom value requested, setting up"))
+      #   print(color.BOLD+color.PURPLE+"\n   FORMAT: "+color.YELLOW+"/dev/disk/by-id/"+color.END+color.BOLD+"<disk ID>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
+         print(color.BOLD+color.PURPLE+"\n   FORMAT:",color.YELLOW+""+color.END+color.BOLD+"<disk ID>"+color.END+"\n   Enter a valid disk ID. Do NOT include the path.\n   e.g. \"ata-SATA_SSD_55BD071B194500305381\""+color.END+"\n   ")
+         cpydLog("wait",("Waiting for user input"))
+         customInput = str(input(color.BOLD+"/dev/disk/by-id/"+color.END))
+         cpydLog("ok",("User input received"))
+         USR_HDD_PATH = "/dev/disk/by-id/"+customInput
+         USR_HDD_PATH_F = customInput
+         USR_HDD_ISPHYSICAL = True
+         USR_HDD_PATH = USR_HDD_PATH.replace("'","")
+         USR_HDD_PATH = USR_HDD_PATH.replace("  ","")
+         USR_HDD_SIZE = "-2"
+         cpydLog("ok",str("Physical disk set to "+str(customInput)))               #+".sh" #<--- change required prefix/suffix
+         currentStage = currentStage + 1
+         customValue = 0
+         blob = open("./blobs/USR_HDD_PATH.apb","w")
+         blob.write(USR_HDD_PATH)
+         blob.close()
+         blob = open("./blobs/USR_HDD_SIZE.apb","w")
+         blob.write("-2")
+         blob = open("./blobs/USR_HDD_ISPHYSICAL.apb","w")
+         blob.write("True")
          blob.close()
          stage9()
       else:
          print(color.BOLD+"\n      1. Use default value")
          print(color.END+"      2. Change capacity...")
          print(color.END+"      3. Use existing...")
+         print(color.END+"      4. Switch to physical...")
          print(color.END+"\n      B. Back")
          print(color.END+"      ?. Help")
          print(color.END+"      Q. Exit\n   ")
@@ -1026,6 +1087,8 @@ def autopilot():
             blob.close()
             blob = open("./blobs/USR_HDD_SIZE.apb","w")
             blob.write(USR_HDD_SIZE)
+            blob = open("./blobs/USR_HDD_ISPHYSICAL.apb","w")
+            blob.write("False")
             blob.close()
             currentStage = currentStage + 1
             stage9()
@@ -1036,6 +1099,10 @@ def autopilot():
 
          elif stageSelect == "3":
             customValue = 2
+            stage8()
+
+         elif stageSelect == "4":
+            customValue = 3
             stage8()
 
          elif stageSelect == "b" or stageSelect == "B":
@@ -1507,7 +1574,7 @@ def autopilot():
       global USR_TARGET_OS
       global customValue
       global currentStage
-      defaultValue = 1015
+      defaultValue = 12
 
       try: # DISCORD RPC
          RPC.update(large_image="ultmos",large_text=projectVer,details="AutoPilot",state="Selecting macOS version",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
@@ -1520,14 +1587,14 @@ def autopilot():
       print("\n   "+color.BOLD+"Set target OS"+color.END)
       print("   Step 2")
       print("\n   This configures networking and image download version. \n   The most suitable network adapter will be automatically\n   selected for you based on this later."+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,"Catalina (10.15)",color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,"Monterey (12)",color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
-         print(color.END+"\n      1. Sonoma (14) (EXPERIMENTAL)")
+         print(color.END+"\n      1. Sonoma (14)")
          print(color.END+"      2. Ventura (13)")
-         print(color.END+"      3. Monterey (12)")
+         print(color.BOLD+"      3. Monterey (12)")
          print(color.END+"      4. Big Sur (11)")
-         print(color.BOLD+"      5. Catalina (10.15)")
+         print(color.END+"      5. Catalina (10.15)")
          print(color.END+"      6. Mojave (10.14)")
          print(color.END+"      7. High Sierra (10.13)\n")
 
@@ -1944,13 +2011,13 @@ def autopilot():
          elif PROC_FETCHDL == 2 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Downloading recovery image"+color.END)
 
-         if PROC_GENHDD == 0 and USR_HDD_SIZE != "-1":
+         if PROC_GENHDD == 0 and USR_HDD_SIZE != "-1" and USR_HDD_SIZE != "-2":
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
-         elif PROC_GENHDD == 1 and USR_HDD_SIZE != "-1":
+         elif PROC_GENHDD == 1 and USR_HDD_SIZE != "-1" and USR_HDD_SIZE != "-2":
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Creating virtual hard disk"+color.END)
-         elif PROC_GENHDD == 2 and USR_HDD_SIZE != "-1":
+         elif PROC_GENHDD == 2 and USR_HDD_SIZE != "-1" and USR_HDD_SIZE != "-2":
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
-         elif PROC_GENHDD == 3 and USR_HDD_SIZE != "-1":
+         elif PROC_GENHDD == 3 and USR_HDD_SIZE != "-1" and USR_HDD_SIZE != "-2":
             print("      "+color.BOLD+color.CYAN+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
 
          if PROC_APPLYPREFS == 0:
@@ -2018,8 +2085,8 @@ def autopilot():
             cpydLog("ok",("Selected OLD OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
-            os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
-            os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
+            #os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
+            #os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
             cpydLog("ok",("OpenCore image copied"))
          elif USR_TARGET_OS <= 1012 and USR_TARGET_OS >= 108 and USR_TARGET_OS >= 100:
             cpydLog("ok",("Selected NEW LEGACY OpenCore image"))
@@ -2040,8 +2107,8 @@ def autopilot():
             cpydLog("ok",("Selected NEW OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/compat_new/OpenCore.qcow2 boot/OpenCore.qcow2")
-            os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
-            os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
+            #os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
+            #os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
             cpydLog("ok",("OpenCore image copied"))
          
          cpydLog("info",("Copying OVMF code into place"))
@@ -2283,20 +2350,26 @@ def autopilot():
          configData = configData.replace("$USR_HDD_PATH",str(USR_HDD_PATH))
          configData = configData.replace("$USR_HDD_TYPE",str(USR_HDD_TYPE))
 
-         cpydLog("info",("Checking virtual disk type"))
+
+         cpydLog("info",("Checking disk type"))
+
+         if USR_HDD_ISPHYSICAL == True:
+            cpydLog("warn",("Physical disk requested, changing type to RAW"))
+            configData = configData.replace("file=\"$HDD_PATH\",format=qcow2","file=\"$HDD_PATH\",format=raw")
+            configData = configData.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
 
          if USR_HDD_TYPE == "HDD":
-            cpydLog("ok",("Virtual disk type is HDD, leaving rotation rate as default"))
+            cpydLog("ok",("Disk type is HDD, leaving rotation rate as default"))
          elif USR_HDD_TYPE == "SSD":
-            cpydLog("warn",("Virtual disk type is SSD, modifying rotation rate"))
+            cpydLog("warn",("Disk type is SSD, modifying rotation rate"))
             configData = configData.replace("rotation_rate=7200","rotation_rate=1")
             cpydLog("ok",("Rotation rate updated"))
          elif USR_HDD_TYPE == "NVMe":
-            cpydLog("warn",("Virtual disk type is NVMe, modifying device"))
+            cpydLog("warn",("Disk type is NVMe, modifying device"))
             configData = configData.replace("-device ide-hd,bus=sata.3,drive=HDD,rotation_rate=7200","-device nvme,drive=HDD,serial=ULTMOS")
             cpydLog("ok",("Disk device updated"))
          else:
-            cpydLog("warn",("Virtual disk type is UNKNOWN, won't change anything"))
+            cpydLog("warn",("Disk type is UNKNOWN, won't change anything"))
          
 
 
@@ -2429,6 +2502,9 @@ def autopilot():
                   apOSCvt = apOSCvt.replace(".","")
 
 
+                  if USR_HDD_ISPHYSICAL == True:
+                     cpydLog("warn",("Physical disk detected, changing type to RAW"))
+                     apFileM = apFileM.replace("    <disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"qcow2\"/>\n      <source file=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->","    <disk type=\"block\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"raw\"/>\n      <source dev=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->")
 
 
                   if USR_HDD_TYPE == "HDD":
@@ -2439,7 +2515,7 @@ def autopilot():
                      cpydLog("ok",("Rotation rate updated"))
                   elif USR_HDD_TYPE == "NVMe":
                      cpydLog("warn",("Virtual disk type is NVMe, modifying device"))
-                     apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=raw,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
+                     apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=qcow2,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
                      cpydLog("ok",("Disk device updated"))
                      cpydLog("warn",("Disabling hard drive in XML"))
                      apFileM = apFileM.replace("<disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->","<!-- <disk type=\"file\" device=\"disk\">")
@@ -2665,9 +2741,12 @@ def autopilot():
 
          if USR_TARGET_OS >= 1013:
             USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 209756160
+         elif USR_TARGET_OS >= 13 and USR_TARGET_OS <= 99:
+            USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 209756160
          else:
             USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 343973888
 
+         
 
          if os.path.exists("./HDD.qcow2"):
             existingWarning1()
@@ -2829,7 +2908,7 @@ def autopilot():
          cpydLog("ok",("Switching to local copy mode"))
          apcLocalCopy()
 
-      if PROC_GENHDD == 0 and USR_HDD_SIZE != "-1":
+      if PROC_GENHDD == 0 and USR_HDD_SIZE != "-1" and USR_HDD_SIZE != "-2":
          cpydLog("ok",("User requested a new HDD file, generation will go ahead"))
          apcGenHDD()
          

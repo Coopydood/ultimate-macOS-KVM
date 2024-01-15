@@ -1,37 +1,22 @@
 #!/usr/bin/env python3
 # pylint: disable=C0301,C0116,C0103,R0903
 
-"""
-This script was created by Coopydood as part of the ultimate-macOS-KVM project.
-
-https://github.com/user/Coopydood
-https://github.com/Coopydood/ultimate-macOS-KVM
-Signature: 4CD28348A3DD016F
-
-"""
-
-# This script should NOT be run directly, but instead from the main "main.py" script.
+# Vendor         : Hyperchromiac and Coopydood
+# Provisioned by : Coopydood
 
 
+
+# Import Required Modules
 import os
 import time
-import subprocess
-import re 
-import json
-import sys
+from datetime import datetime
+# import subprocess
+# import re 
+# import json
+# import sys
 import argparse
+# import platform
 
-sys.path.insert(0, 'scripts')
-
-detectChoice = 1
-latestOSName = "Ventura"
-latestOSVer = "13"
-runs = 0
-
-#global USR_SCREEN_RES
-
-#USR_SCREEN_RES = open("./blobs/user/USR_SCREEN_RES.apb")
-#USR_SCREEN_RES = USR_SCREEN_RES.read()
 
 class color:
    PURPLE = '\033[95m'
@@ -45,76 +30,433 @@ class color:
    UNDERLINE = '\033[4m'
    END = '\033[0m'
 
-def startup():
-    global detectChoice
-    print("\n\n   Welcome to"+color.BOLD+color.PURPLE,"VFIO-PCI Passthrough Assistant"+color.END,"")
-    print("   Created by",color.BOLD+"Coopydood\n"+color.END)
-    print("   This script will attempt to guide you through the process\n   of passing through your host's physical PCI devices for use\n   within the guest. This is advanced and requires patience. Seriously.\n")
-    #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
-    #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    print("   Select an option to continue.")
-    print(color.BOLD+"\n      1. Start")
-    print(color.END+"         Continue to requirements list and prepare your sanity\n")
-    print(color.END+"      2. Check GPU compatibility")
-    print(color.END+"      B. Back...")
-    print(color.END+"      Q. Exit\n")
-    detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
-       
+# Coopydoopydoo Logs
+version = open("./.version")
+version = version.read()
+enableLog = True
+parser = argparse.ArgumentParser("autopilot")
+parser.add_argument("--disable-logging", dest="disableLog", help="Disables the logfile",action="store_true")
+args = parser.parse_args()
+global logTime
+logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
+if args.disableLog == True:
+    enableLog = False
+if enableLog == True: # LOG SUPPORT
+    if not os.path.exists("./logs"):
+        os.system("mkdir ./logs")
+    logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
+    os.system("echo ULTMOS VPTA LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/VPTA_RUN_"+logTime+".log")
+    os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/VPTA_RUN_"+logTime+".log")
+    def cpydLog(logStatus,logMsg,*args):
+        logFile = open("./logs/VPTA_RUN_"+logTime+".log","a")
+        #if logStatus == "ok":      logStatus = "[ ✔ ]"
+        #if logStatus == "info":    logStatus = "[ ✦ ]"
+        #if logStatus == "warn":    logStatus = "[ ⚠ ]"
+        #if logStatus == "error":   logStatus = "[ ✖ ]"
+        #if logStatus == "fatal":   logStatus = "[ ☠ ]"
+        #if logStatus == "wait":    logStatus = "[ ➜ ]"
+        if logStatus == "ok":      logStatus = "[    OK ]"
+        if logStatus == "info":    logStatus = "[  INFO ]"
+        if logStatus == "warn":    logStatus = "[  WARN ]"
+        if logStatus == "error":   logStatus = "[ ERROR ]"
+        if logStatus == "fatal":   logStatus = "[ FATAL ]"
+        if logStatus == "wait":    logStatus = "[  WAIT ]"
+        entryTime = str(datetime.today().strftime('%H:%M:%S.%f'))
+        entryTime = entryTime[:-3]
+        entryLine = ("["+entryTime+"]"+str(logStatus)+":  "+str(logMsg)+"\n")
+        logFile.write(entryLine)
+        logFile.close()
+else:
+    def cpydLog(logStatus,logMsg,*args):
+        None
+script = "vfio-passthrough.py"
+scriptName = "VFIO Passthrough Assistant"
+scriptID = "VPTA"
+scriptVendor = "Hyperchromiac, Coopydood"
+cpydLog("info",("ULTMOS v"+version))
+cpydLog("info",(" "))
+cpydLog("info",("Name       : "+scriptName))
+cpydLog("info",("File       : "+script))
+cpydLog("info",("Identifier : "+scriptID))
+cpydLog("info",("Vendor     : "+scriptVendor))
+cpydLog("info",(" "))
+cpydLog("info",("Logging to ./logs/VPTA_RUN_"+logTime+".log"))
 
 
-def clear(): print("\n" * 150)
+
+# Declare method of clearing the screen the Coopydoopydoo way.
+def clear():
+   os.system("clear")
+   spaces = ""
+   i = 0
+   terminal_size = os.get_terminal_size()
+   while i < terminal_size.lines:
+      spaces = spaces + "\n"
+      i += 1
+   print(spaces)
+
+def center(text: str):
+    spaces = ""
+    i = 0
+    terminal_size = (os.get_terminal_size().columns / 2) - (len(text))
+    while i < terminal_size:
+        spaces = spaces + " "
+        i += 1
+    print(spaces + text)
 
 
-def stage5():
-    global slotCount
-    global slotContainer
-    global slotContainerPT
-    global slotContainerType
-    global currentVID
-    global currentType
-    global slotContainerROM
-    global deviceLines
-    currentEditVal = -1
-    currentAddr = -1
-    deviceLines = []
+
+# Declare method of "Press enter to continue", like pause on Windows...
+def pause():
+   input("   Press [ENTER] to continue...\n")
 
 
-    def manualAPSelect():
-        print("\n\n   "+color.BOLD+"Select AutoPilot Config File"+color.END,"")
-        print("   Input a valid AutoPilot-generated config\n")
-        print("   You must use a valid file generated by AutoPilot.\n   Any existing VFIO-based args will be kept.\n   AutoPilot-generated config scripts end in .sh")
-        
-        print(color.BOLD+"\n   Drag the *.sh file onto this window (or type the path) and hit ENTER.\n")
-        apFileSelect = str(input(color.BOLD+"AutoPilot Config File> "+color.END))
+
+'''
+This is where the fun begins.
+You can thank Gigantech for simultaneously making this easier and harder
+for all of us.
+'''
+
+
+
+# VFIO-PCI things to keep track of
+vfio_ids: list = []
+pci_ids: list = []
+gpu_ids: list = []
+vfio_names: list = []
+selected_vfio_ids: list = []
+qemu_flags: list = []
+gpuDetected = 0
+# Symbol for Lists (because Gigantech got us all f*cked up in the first place and now we can't decide on our UI thingy)
+symbol: str = "》"
+
+def usbOffer():
+    time.sleep(3)
+    clear()
+    print("\n\n   "+color.BOLD+color.YELLOW+"⚠  VIRTUAL INPUT DEVICES REMOVED"+color.END,"")
+    print("   Virtual monitor was removed\n")
+    print("   The assistant has detected that you "+color.BOLD+"passed through a GPU."+color.END+"\n   To accommodate this, the virtual guest monitor had to be\n   removed. This also means you can't use the virtual input\n   devices that utilise the monitor.\n\n   To send input to the guest, you may want to passthrough\n   USB input devices attached to your host. This project\n   can do this for you. You don't need this if you also\n   passed through a host USB controller.\n")
+    #print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)
+    print(color.BOLD+"      1. Run USB Passthrough Assistant"+color.YELLOW,""+color.END)
+    print(color.END+"         Starts the USB passthrough assistant\n")
+    print(color.END+"      2. Skip and Exit\n")
+    detectChoice4 = str(input(color.BOLD+"Select> "+color.END))
+
+    if detectChoice4 == "1":
         clear()
-        time.sleep(1)
-        if "'" in apFileSelect:
-            apFileSelect = apFileSelect.replace("'","")
-        if " " in apFileSelect:
-            apFileSelect = apFileSelect.replace(" ","")
-        if os.path.exists(apFileSelect):
-            apFile = open(apFileSelect)
+        os.system('./scripts/hyperchromiac/usb-passthrough.py')
+    elif detectChoice4 == "2":
+        clear()
+        exit
+    else:
+        usbOffer()
+        
+# Main Menu
+def preliminary():
+   
+    # Clear the screen, "the Coopydoopydoo way"
+    clear()
+
+    # Global Variables
+    global vfio_ids, vfio_names, pci_ids, gpu_ids
+
+    # Logging
+    print (color.BOLD+"Detecting devices, please wait...")
+    print(color.END+"\n  "+color.YELLOW+"⚠ "+color.END+" If you have been stuck on this screen for\n     at least 30 seconds, make sure the devices\n     are not currently in use by the system.")
+    # TODO: LOGGING DEVICES BEING DETECTED
+    cpydLog("wait", "Detecting VFIO-PCI devices...")
+
+    # Get VFIO-PCI IDs      # why is dom so good at awk???
+    vfio_ids = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | grep -oP \"[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}\" | sort -u | tr '\n' ' '").read().split(" ")
+    # Remove the empty thingy
+    vfio_ids.pop(-1)
+
+    # Get PCI IDs
+    pci_ids = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | awk '{print $1}' | sort -u | tr '\n' ' '").read().split(" ")
+    # Remove the empty thingy
+    pci_ids.pop(-1)
+
+    # Get GPU IDs
+    gpu_ids = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep \"VGA compatible controller\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | awk '{print $1}' | sort -u | tr '\n' ' '").read().split(" ")
+    # Remove the empty thingy
+    gpu_ids.pop(-1)
+
+    # Get PCI Names
+    vfio_names = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | sort -u | sed -E 's/[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}\.[0-9A-Fa-f] ((\w|-)+( )?)* \[[0-9A-Fa-f]*\]: //' | sed -E 's/\[[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}\]( \(.*\))?//' | sed 's/Advanced Micro Devices, Inc. \[AMD\/ATI\] //g' | tr '\n' '@'").read().split("@")
+    # Remove the empty thingy
+    vfio_names.pop(-1)
+
+    # If the length of either is 0, something has gone horribly, horribly wrong.
+    if (len(vfio_ids) == 0 or len(vfio_names) == 0 or len(pci_ids) == 0):
+        # TODO: LOGGING SHIT GOING SOUTH
+        clear()
+        print(f"   \033[91m\033[1m✖ NO VFIO-PCI DEVICES FOUND\033[0m\n")
+        print(f"   The script couldn't find any stubbed PCI devices")
+        print(f"   to use with VFIO. Check your boot arguments!!!\n")
+        cpydLog("fatal", "User's machine does not have any stubbed VFIO-PCI devices.")
+        pause()
+        clear()
+        os.system("./scripts/vfio-menu.py")
+        exit()
+
+    # If nothing has gone wrong, move on to phase 1.
+    # TODO: LOG AMOUNT OF DEVICES
+    cpydLog("info", f"Detected {len(vfio_ids)} VFIO-PCI devices")
+    phase1()
+
+
+
+# Phase 1 - Selecting VFIO-PCI devices
+def phase1():
+    
+    # Global Variables
+    global vfio_ids, vfio_names, pci_ids
+
+    # Local Variables
+    user_choice: str = ""
+
+    # Menu Loop
+    while (True):
+
+        # Clear the screen, "the Coopydoopydoo way"
+        clear() 
+        cpydLog("wait", "Main Menu >> Awaiting input from user")
+
+        # Menu Text
+        print(f"   {color.PURPLE}\033[1mVFIO-PCI PASSTHROUGH ASSISTANT\033[0m")
+        print("   by \033[1mHyperchromiac\033[0m and \033[1mCoopydood\033[0m")
+        print("\n   This script simplifies the process of adding your host's\n   stubbed VFIO devices to your boot script in an attempt to \n   simplify the end user experience.")
+        print(f"\n   \033[1mDetected a total of {color.GREEN}{str(len(vfio_ids))}\033[0m\033[1m VFIO-PCI devices.\033[0m\n")
+        print("   Select an option to continue.\n")
+        print("      \033[1m1. Passthrough VFIO-PCI devices\033[0m\n         Select the stubbed PCI devices you want from\n         a list to add to your script.\n")
+        #print("      2. Refresh VFIO-PCI devices")
+        print("      M. Main Menu")
+        print("      Q. Quit\n")
+
+        # Get User Input
+        user_choice = input("\033[1mSelect>\033[0m ")
+
+        # Menu Branching
+        if (len(user_choice) == 0 or user_choice == "1"): # Passthrough VFIO-PCI devices
+            # Goto Phase 2 and Break
+            clear()
+            cpydLog("info", "User has selected 'Passthrough VFIO-PCI devices'")
+            phase2()
+            break
+        elif (len(user_choice) == 0 or user_choice == "2"): # Refresh VFIO-PCI devices
+            # Restart Preliminary and Break
+            clear()
+            cpydLog("info", "User has selected 'Refresh VFIO-PCI devices'")
+            preliminary()
+            break
+        elif (len(user_choice) == 0 or user_choice.lower() == "m"): # Main Menu
+            # Goto Extras and Break
+            clear()
+            cpydLog("info", "User has selected 'Main Menu'")
+            os.system("python3 ./scripts/extras.py")
+            break
+        elif (len(user_choice) == 0 or user_choice.lower() == "q"): # Quit
+            # Exit (and break just in case)
+            clear()
+            cpydLog("info", "User has selected 'Quit'")
+            exit()
+            break
+
+
+
+# Phase 2 - User Selects VFIO-PCI Devices
+def phase2():
+
+    # Global Variables
+    global vfio_ids,vfio_names,selected_vfio_ids,symbol,pci_ids
+    
+    # Menu Loop
+    while (True):
+
+        # Clear the screen, "the Coopydoopydoo way"
+        clear()
+        cpydLog("wait", "Select VFIO-PCI devices >> Awaiting input from user")
+
+        print("\n   \033[1mSelect VFIO-PCI devices\033[0m")
+        print("   Step 1")
+        print("\n   Type in the devices you want by using their associated \n   number on the list below. To deselect a device, type its\n   number to remove it. Once you are finished selecting\n   devices, type  \033[1mdone\033[0m  to continue onto the next step.")
+
+        # List the unselected VFIO-PCI devices.
+        print("\n   \033[1mSELECTED DEVICES\033[0m\n")
+        # Python has to be special, f*ck me. (R.I.P. for(i = 0; i < sdgasdg; i++))
+        if (len(selected_vfio_ids) == 0):
+            print("\033[37m       None\033[0m")
+        else:
+            for i in range(len(pci_ids)):
+                if (i < 9):
+                    if (pci_ids[i] in selected_vfio_ids):
+                        print(f"       \033[0m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
+                else:
+                    if (pci_ids[i] in selected_vfio_ids):
+                        print(f"      \033[0m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
+
+        # List the unselected VFIO-PCI devices.
+        print("\n   \033[1mAVAILABLE DEVICES\033[0m\n")
+        # Python has to be special, f*ck me. (R.I.P. for(i = 0; i < sdgasdg; i++))
+        if (len(selected_vfio_ids) == len(pci_ids)):
+            print("\033[37m      None\033[0m")
+        else:
+            for i in range(len(pci_ids)):
+                if (i < 9):
+                    if (pci_ids[i] not in selected_vfio_ids):
+                        print(f"       \033[37m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
+                else:
+                    if (pci_ids[i] not in selected_vfio_ids):
+                        print(f"      \033[37m{str(i + 1)} {symbol}{pci_ids[i]} {symbol}{vfio_names[i]}\033[0m")
+        
+        # User Selection
+        user_choice: str = input("\n\033[1mDevice #> \033[0m")
+
+        # If the user has finished, continue to Phase 3
+        if (user_choice == "done"):
+            clear()
+            cpydLog("info", "User has finished selecting VFIO-PCI devices")
+            phase3()
+            break
+
+        # Try to convert the input to an integer
+        try:
+            int_choice: int = int(user_choice)
+            if (int_choice <= 0):
+                continue
+            if (pci_ids[int_choice - 1] not in selected_vfio_ids):
+                selected_vfio_ids.append(pci_ids[int_choice - 1])
+                cpydLog("info", f"User has selected ID {pci_ids[int_choice - 1]}")
+            else:
+                selected_vfio_ids.remove(pci_ids[int_choice - 1])
+                cpydLog("info", f"User has deselected ID {pci_ids[int_choice - 1]}")
+        except:
+            # If the user is f*cked up, just pretend it didn't happen.
+            continue
+
+        
+
+
+
+# Phase 3 - Adding VFIO-PCI devices to QEMU
+def phase3():
+
+    # Global Variables
+    global vfio_ids,vfio_names,selected_vfio_ids,qemu_flags,pci_ids,naviDetected,gpuDetected
+    
+    # If no devices were selected, return to the preliminary menu.
+    if (len(selected_vfio_ids) == 0):
+        cpydLog("info", f"No devices selected, returning to original menu...")
+        preliminary()
+
+    cpydLog("info", f"{len(gpu_ids)} GPU detected." if len(gpu_ids) == 1 else f"{len(gpu_ids)} GPUs detected.")
+
+    # Generate QEMU flags per device
+    for i in range(len(selected_vfio_ids)):
+        if selected_vfio_ids[i] in gpu_ids:
+            if "Navi" in vfio_names[pci_ids.index(selected_vfio_ids[i])]:
+                naviDetected = 1
+            else:
+                naviDetected = 0
+            gpuDetected = 1
+            clear()
+            print(f"   {color.BOLD}{color.BLUE}❖  GPU DETECTED{color.END}")
+            print(f"   VBIOS ROM file selection{color.END}\n")
+            print(f"   {color.BOLD}{vfio_names[pci_ids.index(selected_vfio_ids[i])]}{color.END}\n")
+            print(f"   Some GPUs need a romfile to function in a VM, others do not.\n   Please specify the direct path to a VBIOS romfile below,\n   or type \"skip\" if you don't need one.")
+            cpydLog("wait", f"Awaiting for user input on GPU romfile for {selected_vfio_ids[i]}")
+            user_input: str = input(f"{color.BOLD}\nAbsolute Path of VBIOS>{color.END} ")
+            if (user_input == "" or user_input == None):
+                qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",multifunction=on,bus=pcie.0")
+                cpydLog("info", f"User has opted out of selecting a romfile")
+            if (user_input != "skip"):
+                os.system(f"cp {user_input} ./roms/")
+                filename = user_input.split("/")[-1]
+                cpydLog("info", f"User has selected a romfile from {user_input}")
+                qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",romfile=\"./roms/{filename}\",multifunction=on,bus=pcie.0")
+            else:
+                cpydLog("info", f"User has opted out of selecting a romfile")
+                qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",multifunction=on,bus=pcie.0")
+        else:
+            qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",bus=pcie.0")
+    if naviDetected == 1:
+        clear()
+        print("\n\n   "+color.BOLD+color.YELLOW+"⚠  BOOT PATCH AVAILABLE"+color.END,"")
+        print("   You may need to apply a fix to boot macOS\n")
+        print("   The assistant has detected that you may have a"+color.BOLD+" Navi-based"+color.END+" GPU. \n   A patch is available to fix the macOS boot process. I can add\n   this patch for you automatically just now, or you can do it\n   later using the macOS Boot Argument Assistant.")
+        print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)
+        print(color.BOLD+"      1. Apply Patch"+color.YELLOW,"⚠"+color.END)
+        print(color.END+"         Mounts your OpenCore image and applies\n         the patch automatically\n")
+        print(color.END+"      2. Skip\n")
+        detectChoice5 = str(input(color.BOLD+"Select> "+color.END))
+
+        if detectChoice5 == "1":
+            os.system("./scripts/extras/boot-args.py --autopatch \"navi\"")
+        else:
+            None
+
+    cpydLog("info", f"Validate VFIO-PCI devices >> User has selected a total of {len(selected_vfio_ids)} VFIO-PCI devices")
+
+    # Menu Loop
+    while (True):
+
+        clear()
+        cpydLog("wait", f"Validate VFIO-PCI devices >> Awaiting input from user...")
+
+        # Display Menu
+        print("\n   \033[1mValidate VFIO-PCI devices\033[0m")
+        print("   Step 2")
+        print("\n   VFIO-PCI entries have been generated based on your selection.\n   Does this look correct?\n")
+
+        # Display visual flags for QEMU.
+        for i in range(len(selected_vfio_ids)):
+            print(f"\033[1m   {selected_vfio_ids[i]} {vfio_names[pci_ids.index(selected_vfio_ids[i])]}\n\033[0m      {qemu_flags[i]}")
+
+        # Get user input
+        user_choice: str = input("\n\033[1mY/N> \033[0m")
+
+        # Branching
+        if (user_choice.lower() == "n"):
+            # Clear the lists and gtfo.
+            vfio_ids.clear()
+            pci_ids.clear()
+            vfio_names.clear()
+            selected_vfio_ids.clear()
+            qemu_flags.clear()
+            cpydLog("info", f"User has opted to not follow through with their current VFIO-PCI devices")
+            preliminary()
+            break
+        elif (user_choice.lower() == "y"):
+            # TODO: implement appending flags
+            cpydLog("info", f"User has opted to follow through with their current USB devices")
+            autoAPSelect()
+            exit()
+            break
+
+def autoAPSelect():
+    clear()
+    if os.path.exists("./blobs/user/USR_CFG.apb"):
+        apFilePath = open("./blobs/user/USR_CFG.apb")
+        apFilePath = apFilePath.read()
+        if os.path.exists("./"+apFilePath):
+            apFile = open("./"+apFilePath,"r")
             if "APC-RUN" in apFile.read():
-                print("\n\n   "+color.BOLD+color.GREEN+"✔ VALID AUTOPILOT CONFIG"+color.END,"")
+                print("\n\n   "+color.BOLD+color.GREEN+"✔ AUTOPILOT CONFIG AUTODETECTED"+color.END,"")
                 print("   Valid AutoPilot config found\n")
-                print("   The file you selected was generated by AutoPilot.\n   It appears to be valid.\n")
+                print("   An existing boot config file was found in the repo folder and\n   was generated by AutoPilot. It appears to be valid.\n")
                 
                 print(color.BOLD+"   "+apFile.name+color.END)
-                print("\n   Do you want to use this file?\n   It will be copied to the repo folder.\n"+color.END)
-                print(color.BOLD+"      1. Add VFIO-PCI to this file")
+                print("\n   Do you want to use this file?\n"+color.END)
+                print(color.BOLD+"      1. Add VFIO-PCI devices to detected file")
                 print(color.END+"         Adds the generated arguments to this file\n")
                 print(color.END+"      2. Select another file...")
                 print(color.END+"      Q. Exit\n")
                 apFile.close()
-                detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
+                detectChoice2 = str(input(color.BOLD+"Select> "+color.END))
 
-                if detectChoice1 == "1":
-                    apFilePath = apFileSelect
-                    apFile = open(apFileSelect)
-                    apFile = apFile.read()
-                    apFileChosen = 1
-                    clear()
+                if detectChoice2 == "1":
                     #apFileR = apFile.read()
                     apFileChosen = 1
                     
@@ -126,520 +468,163 @@ def stage5():
                         print("   The assistant is now configuring your AutoPilot config file\n   for use with your VFIO-PCI devices.")
                         print(color.BOLD+"\n   This may take a few moments.\n   Your current config will be backed up.\n")
                         time.sleep(2)
-                        if apFilePath[0] == "/" and apFilePath[1] == "/":
-                            apFilePath = apFilePath.replace("/","",1)
-                        if apFilePath[0] == "." and len(apFilePath) > 10:
-                            apFilePath = apFilePath.replace(".","",1)
                         apFilePathNoExt = apFilePath.replace(".sh","")
-                        os.system("cp "+apFilePath+" "+apFilePathNoExt+"-noPT.sh")
-                        with open(apFilePath,"r") as file1:
-                            apFileM = file1.read()
-                            currentDispVal = slotCount
-                            for y in range(slotCount):
-                                currentDispVal = currentDispVal - 1
-                                devLineF = str(deviceLines[currentDispVal])
-                                apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+devLineF)
-                                apFileM = apFileM.replace("#-vga qxl","-vga none")
-                                #apFileM = apFileM.replace("-monitor stdio","-monitor none")
-                                apFileM = apFileM.replace("#-display none","-display none")
-                                apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
-                                apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
-                                apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
-                                os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
-                                os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS.fd")
-                        file1.close
-
-                        with open(apFilePath,"w") as file:
-                            file.write(apFileM)
-
-                    apFile = open(apFilePath,"r")
-                    if devLineF in apFile.read():
-                        clear()
-                        print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
-                        print("   QEMU arguments have been added\n")
-                        print("   The QEMU argument lines were successfully added to\n   "+color.BOLD+apFilePath+color.END+"\n\n\n\n\n\n\n")
-                if detectChoice1 == "2":
-                    clear()
-                    manualAPSelect()
-        else:
-            print("\n\n   "+color.BOLD+color.RED+"✖ INVALID AUTOPILOT CONFIG"+color.END,"")
-            print("   Your file was not a valid AutoPilot config\n")
-            print("   You must use a valid file generated by AutoPilot.\n   Any existing VFIO-based args will be kept.\n   AutoPilot-generated config scripts end in .sh")
-            
-            print(color.BOLD+"\n   You will be returned to the input screen.\n")
-            time.sleep(8)
-            clear()
-            manualAPSelect()
-
-
-    for x in range(slotCount):
-            #global slotContainer
-            xF = str(x)
-            currentEditVal = currentEditVal + 1
-            currentVID = str(slotContainerPT[currentEditVal])
-            currentType = str(slotContainerType[currentEditVal])
-            currentROM = str(slotContainerROM[currentEditVal])
-            currentROM = currentROM.replace("./","$REPO_PATH/")
-            currentAddr = currentAddr + 1
-
-            if currentROM != "skip" and currentROM != None and currentType == "gpu":
-                #currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",multifunction=on,romfile=\""+currentROM+"\","+"bus=rp1,addr=0x0."+str(currentAddr))
-                currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",multifunction=on,romfile=\""+currentROM+"\",bus=pcie.0")
-            else: 
-                #currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",bus=rp1,addr=0x0."+str(currentAddr))
-                currentDeviceString = ("-device vfio-pci,host=\""+currentVID+"\",bus=pcie.0")
-
-
-            deviceLines.append(str(currentDeviceString))
-            #print(currentDeviceString)
-            #print(deviceLines)
-            clear()
-
-    print("\n\n   "+color.BOLD+color.GREEN+"✔ PASSTHROUGH ARGUMENTS READY"+color.END,"")
-    print("   QEMU arguments are ready for use\n")
-    print("   The QEMU argument lines listed below are ready to use in\n   your config file. Each line is for a single slot.\n")
-    currentDispVal = -1
-    for y in range(slotCount):
-        currentDispVal = currentDispVal + 1
-        devLineF = str(deviceLines[currentDispVal])
-        print(color.BOLD+"   "+devLineF+color.END)
-    print("\n   You can add these lines to a config manually, save them\n   to a file, or I can even add them for you automatically\n   if you've made a config file with AutoPilot previously.\n"+color.END)
-    print(color.BOLD+"      1. Save and add automatically")
-    print(color.END+"         Configure an existing AutoPilot script\n")
-    print(color.END+"      2. Save to file")
-    print(color.END+"      Q. Exit\n")
-    detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
-
-
-
-    if detectChoice1 == "1":
-        if os.path.exists("./vfio-args.txt"):
-            os.system("mv ./vfio-args.txt ./blobs/stale/vfio-args.old")
-        blob = open("./vfio-args.txt","w")
-        blob.write("# QEMU ARGUMENTS GENERATED BY VFIO-PASSTHROUGH ASSISTANT\n# Part of the ultimate-macOS-KVM project by Coopydood <3\n\n")
-        currentDispVal = -1
-        for y in range(slotCount):
-            currentDispVal = currentDispVal + 1
-            devLineF = str(deviceLines[currentDispVal])
-            blob.write(str(devLineF)+"\n")
-        blob.close()
-        clear()
-        time.sleep(1)
-        if os.path.exists("./blobs/user/USR_CFG.apb"):
-            apFilePath = open("./blobs/user/USR_CFG.apb")
-            apFilePath = apFilePath.read()
-            if os.path.exists("./"+apFilePath):
-                apFile = open("./"+apFilePath,"r")
-                if "APC-RUN" in apFile.read():
-                    print("\n\n   "+color.BOLD+color.GREEN+"✔ AUTOPILOT CONFIG AUTODETECTED"+color.END,"")
-                    print("   Valid AutoPilot config found\n")
-                    print("   An existing boot config file was found in the repo folder and\n   was generated by AutoPilot. It appears to be valid.\n")
-                    
-                    print(color.BOLD+"   "+apFile.name+color.END)
-                    print("\n   Do you want to use this file?\n"+color.END)
-                    print(color.BOLD+"      1. Add VFIO-PCI to detected file")
-                    print(color.END+"         Adds the generated arguments to this file\n")
-                    print(color.END+"      2. Select another file...")
-                    print(color.END+"      Q. Exit\n")
-                    apFile.close()
-                    detectChoice2 = str(input(color.BOLD+"Select> "+color.END))
-
-                    if detectChoice2 == "1":
-                        #apFileR = apFile.read()
-                        apFileChosen = 1
-                        
-                        clear()
-                        if apFilePath is not None:
-                            
-                            print("\n\n   "+color.BOLD+color.BLUE+"⧖ APPLYING..."+color.END,"")
-                            print("   Please wait\n")
-                            print("   The assistant is now configuring your AutoPilot config file\n   for use with your VFIO-PCI devices.")
-                            print(color.BOLD+"\n   This may take a few moments.\n   Your current config will be backed up.\n")
-                            time.sleep(2)
-                            apFilePathNoExt = apFilePath.replace(".sh","")
+                        try:
+                            checker = open("./"+apFilePathNoExt+"-noPT.sh")
+                            checker.close()
+                        except:
                             os.system("cp ./"+apFilePath+" ./"+apFilePathNoExt+"-noPT.sh")
-                            with open("./"+apFilePath,"r") as file1:
-                                apFileM = file1.read()
-                                currentDispVal = slotCount
-                                for y in range(slotCount):
-                                    currentDispVal = currentDispVal - 1
-                                    devLineF = str(deviceLines[currentDispVal])
-                                    apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+devLineF)
-                                    apFileM = apFileM.replace("#-vga qxl","-vga none")
-                                    #apFileM = apFileM.replace("-monitor stdio","-monitor none")
-                                    apFileM = apFileM.replace("#-display none","-display none")
-                                    apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
-                                    apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
-                                    apFileM = apFileM.replace("VFIO_DEVICES=0","VFIO_DEVICES="+str(slotCount))
-                                    apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
-                                    os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
-                                    os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS.fd")
-                            file1.close
-
-                            with open("./"+apFilePath,"w") as file:
-                                file.write(apFileM)
-
-                        apFile = open("./"+apFilePath,"r")
-                        if devLineF in apFile.read():
+                        with open("./"+apFilePath,"r") as file1:
+                            apFileM = file1.read()
+                            currentDispVal = len(qemu_flags) - 1
+                            while currentDispVal >= 0:
+                                apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+qemu_flags[currentDispVal])
+                                currentDispVal -= 1
+                            apFileM = apFileM.replace("#-vga qxl","-vga none")
+                            #apFileM = apFileM.replace("-monitor stdio","-monitor none")
+                            apFileM = apFileM.replace("#-display none","-display none")
+                            apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
+                            apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
+                            apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
+                            apFileM = apFileM.replace("/OVMF_VARS.fd","/OVMF_VARS_PT.fd")
+                            os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
+                            os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
+                            os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS_PT.fd")
                             clear()
                             print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
                             print("   QEMU arguments have been added\n")
                             print("   The QEMU argument lines were successfully added to\n   "+color.BOLD+apFilePath+color.END+"\n\n\n\n\n\n\n")
+                        file1.close
 
-                    if detectChoice2 == "2":
-                        clear()
-                        manualAPSelect()
+                        with open("./"+apFilePath,"w") as file:
+                            file.write(apFileM)
+
+                        if gpuDetected == 1:
+                            usbOffer()
+
+                        exit()
+
+                if detectChoice2 == "2":
+                    clear()
+                    manualAPSelect()
                 else:
                     clear()
                     manualAPSelect()
             else:
                 clear()
                 manualAPSelect()
-        else:
-            clear()
-            manualAPSelect()
-
-        
-        #if os.path.exists
-
-        
-
-    elif detectChoice1 == "2":
-        if os.path.exists("./vfio-args.txt"):
-            os.system("mv ./vfio-args.txt ./blobs/stale/vfio-args.old")
-        blob = open("./vfio-args.txt","w")
-        blob.write("# QEMU ARGUMENTS GENERATED BY VFIO-PASSTHROUGH ASSISTANT\n# Part of the ultimate-macOS-KVM project by Coopydood <3\n\n")
-        currentDispVal = -1
-        for y in range(slotCount):
-            currentDispVal = currentDispVal + 1
-            devLineF = str(deviceLines[currentDispVal])
-            blob.write(str(devLineF)+"\n")
-        blob.close()
-        time.sleep(1)
-        if os.path.exists("./vfio-args.txt"):
-            clear()
-            print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
-            print("   QEMU arguments have been saved\n")
-            print("   The QEMU argument lines were saved to\n   "+color.BOLD+"<repo>/vfio-args.txt\n\n\n\n\n\n\n")
-        else:
-            clear()
-            print("\n\n   "+color.BOLD+color.RED+"✖ FAILED"+color.END,"")
-            print("   QEMU arguments were not saved\n")
-            print("   The QEMU argument could not be saved.\n   You may not have the necessary permissions.\n\n\n\n\n\n\n")
-    elif detectChoice1 == "q" or detectChoice1 == "Q":
-        exit
-    #detectChoice3 = int(input(color.BOLD+"Select> "+color.END))
-    
-    #clear()
-            #-device vfio-pci,host="$VFIO_ID_0",multifunction=on,romfile="$VFIO_ROM",bus=rp1,addr=0x0.0
-
-def stage4():
-    global slotCount
-    global slotContainer
-    global slotContainerPT
-    global slotContainerType
-    global currentVID
-    global currentType
-    global slotContainerROM
-    slotContainerROM = []
-    currentEditVal = -1
-    
-    for x in range(slotCount):
-            #global slotContainer
-            xF = str(x)
-            currentEditVal = currentEditVal + 1
-            currentVID = str(slotContainerPT[currentEditVal])
-            currentType = str(slotContainerType[currentEditVal])
-
-
-            output_stream = os.popen("lspci -k | grep "+"\""+currentVID+"\"")
-            grepIDSingle = output_stream.read()
-
-            clear()
-
-            if currentType == "gpu":
-                print("\n\n   "+color.BOLD+"Provide a GPU VBIOS ROM file"+color.END)
-                print("   Select your dumped VBIOS ROM file")
-
-                outputStyle = ("\n"+grepIDSingle)
-                outputStyle = outputStyle.replace("\n","\n   ")
-                outputStyle = outputStyle.replace("Audio device: ","")
-                outputStyle = outputStyle.replace("Multimedia controller: ","")
-                outputStyle = outputStyle.replace("VGA compatible controller: ","")
-
-                print(outputStyle)
-                print("   This is to correctly initialise the card.\n   You might not need a ROM file on some cards. If you know\n   that you don't need a VBIOS ROM file for your card, type \"skip\"."+color.END)
-                
-                
-                print(color.BOLD+"\n      Drag the *.ROM file onto this window and hit ENTER.\n")
-               
-                romFile = str(input(color.BOLD+"ROM> "+color.END))
-
-                if romFile == "skip":
-                    slotContainerROM.append("skip")
-                    
-                else:
-                    romFile = romFile.replace("'","")
-                    romFilePath, romFileName = os.path.split(romFile)
-                    romFileName = romFileName.replace("'","")
-                    romFileName = romFileName.replace(" ","")
-                    slotContainerROM.append("./roms/"+romFileName)
-                    clear()
-                    
-                    
-                    os.system("cp "+romFile+" ./roms/"+romFileName)
-                    
-                    clear()
-                    print("Copying ROM to repo directory...")
-                    time.sleep(2)
-                    
-            else:
-                slotContainerROM.append("skip")
-    stage5()
-
-
-
-def stage3():
-    global slotCount
-    global slotContainer
-    global slotContainerPT
-    global slotContainerType
-    global currentVID
-    slotContainerType = []
-    currentEditVal = -1
-    currentVID = ""
-
-    for x in range(slotCount):
-            #global slotContainer
-            xF = str(x)
-            currentEditVal = currentEditVal + 1
-            currentVID = str(slotContainerPT[currentEditVal])
-
-            output_stream = os.popen("lspci -k | grep "+"\""+currentVID+"\"")
-            grepIDSingle = output_stream.read()
-
-            clear()
-            print("\n\n   "+color.BOLD+"What kind of device is "+currentVID+"?"+color.END)
-            print("   Choose a category closest to this device")
-
-            outputStyle = ("\n"+grepIDSingle)
-            outputStyle = outputStyle.replace("\n","\n   ")
-            outputStyle = outputStyle.replace("Audio device: ","")
-            outputStyle = outputStyle.replace("Multimedia controller: ","")
-            outputStyle = outputStyle.replace("VGA compatible controller: ","")
-
-            print(outputStyle)
-            print("   This is so the best-known config can be used.\n   Based on the name, I think this device is in the bold category."+color.END)
-            
-            if "VGA" in grepIDSingle:
-                print(color.BOLD+"\n      1. GPU video device")
-            else:
-                print(color.END+"\n      1. GPU video device")
-
-            if "audio" in grepIDSingle or "Audio" in grepIDSingle:
-                print(color.BOLD+"      2. GPU HDMI/DP audio device")
-            else:
-                print(color.END+"      2. GPU HDMI/DP audio device")  
-
-            if "USB" in grepIDSingle:
-                print(color.BOLD+"      3. USB host controller")
-            else:
-                print(color.END+"      3. USB host controller")
-
-            if "Multimedia" in grepIDSingle:
-                print(color.BOLD+"      4. Multimedia device")
-            else:
-                print(color.END+"      4. Multimedia device")
-
-            if "VGA" in grepIDSingle or "audio" in grepIDSingle or "Audio" in grepIDSingle or "USB" in grepIDSingle or "Multimedia" in grepIDSingle:
-                print(color.END+"      5. Other")
-            else:
-                print(color.BOLD+"      5. Other")
-            print(color.END+"      Q. Exit\n")
-            vfioType = str(input(color.BOLD+"Select>  "+color.END))
-
-            if vfioType == "1":
-                vfioType = "gpu"
-            elif vfioType == "2":
-                vfioType = "gpuAudio"
-            elif vfioType == "3":
-                vfioType = "usbCont"
-            elif vfioType == "4":
-                vfioType = "mmd"
-            elif vfioType == "5":
-                vfioType = "other"
-            elif vfioType == "q" or vfioType == "Q":
-                exit
-
-            slotContainerType.append(vfioType)
-            
-    stage4()
-            # print(slotContainerType)
-
-
-def stage2():
-    clear()
-    print("Detecting devices, please wait...")
-    time.sleep(0.5)
-
-    output_stream = os.popen('lspci -k | grep -B 2 "vfio-pci"')
-    vgaGrep = output_stream.read()
-
-    output_stream1 = os.popen('lspci -k | awk \'/vfio-pci/ {print a} {a=b;b=$0}\'')
-    vgaGrepIDOnly = output_stream1.read()
-
-    vfioCount = vgaGrep.count("vfio-pci")
-    #vfioCount = 0 #<--- uncomment to force-disable detection for error debugging
-    clear()
-    if vfioCount >= 1:
-        print("\n\n   "+color.BOLD+color.GREEN+"VFIO-PCI Devices Detected!"+color.END,"")
-        print("   The following devices are ready for passthrough\n")
-        print("   The devices listed below have been correctly configured to use\n   VFIO-PCI and are ready for full passthrough.\n")
-
-        outputStyle = ("\n   "+vgaGrep)
-        outputStyle = outputStyle.replace("--\n","\n   ")
-        outputStyle = outputStyle.replace("Audio device: ","")
-        outputStyle = outputStyle.replace("Multimedia controller: ","")
-        outputStyle = outputStyle.replace("VGA compatible controller: ","")
-
-        print(outputStyle)
-        print("   You can now choose how many virtual PCI slots you need.\n   Each entry you want to use needs its own slot. Type the\n   number of slots you want below now, or \"-1\" to exit.\n"+color.END)
-        global slotCount
-        slotCount = int(input(color.BOLD+"Value> "+color.END))
-        clear()
-
-        global slotContainer
-        slotContainer = []
-
-        #print(slotContainer)
-
-        for x in range(slotCount):
-            #global slotContainer
-            xF = str(x)
-
-         
-                
-
-            clear()
-            print("\n\n   "+color.BOLD+"Assign Device to Slot #"+xF+color.END,"")
-            print("   Choose a listed device to assign\n")
-            print("   Type the 5-digit ID now. Do NOT include punctuation.\n   Example: 04:00.1 -> 04001")
-
-            outputStyle = ("\n"+vgaGrepIDOnly)
-            outputStyle = outputStyle.replace("\n","\n   ")
-            outputStyle = outputStyle.replace("Audio device: ","")
-            outputStyle = outputStyle.replace("Multimedia controller: ","")
-            outputStyle = outputStyle.replace("VGA compatible controller: ","")
-
-            print(outputStyle)
-            print("   You should only enter one entry consisting of 5 digits.\n"+color.END)
-            thisSlot = str(input(color.BOLD+"Assign ID to Slot>  "+color.END))
-            slotContainer.append(thisSlot)
-
-            #print(slotContainer)
-        
-        clear()
-        print("\n\n   "+color.BOLD+"Slot Configuration Summary",color.END,"")
-        print("   Check your slot allocations\n")
-        print("   The slots listed below will be used with their assigned devices.\n   For each, you'll be asked what kind of device it is.\n")
-        global slotContainerPT
-        slotContainerPT = []
-        currentSlotEdit = -1
-        for i in slotContainer:
-            currentSlotEdit = currentSlotEdit + 1
-            editValue = str(slotContainer[currentSlotEdit])
-            #print(editValue)
-            editValue = editValue.replace(editValue[:2],(editValue[:2]+":"),1)
-            editValue = editValue.replace(editValue[:5],(editValue[:5]+"."),1)
-            #print(editValue)
-
-
-            slotContainerPT.append(editValue)
-            #print("slotContainerPT is now",slotContainerPT)
-
-
-        currentSlotDisplay = -1
-        
-        for y in range(slotCount):
-
-            currentSlotDisplay = currentSlotDisplay + 1
-            print("   ",color.BOLD+"SLOT #"+str(y)+":",color.END+slotContainerPT[currentSlotDisplay])
-        print("\n   Continue when you're ready, or you can change slots and IDs.\n"+color.END)
-
-        print(color.BOLD+"\n      1. Continue")
-        print(color.END+"      2. Reconfigure...")
-        print(color.END+"      Q. Exit\n")
-        detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
-        if detectChoice1 == "1":
-            stage3()
-        elif detectChoice1 == "2":
-            stage2()
-        elif detectChoice1 == "q" or detectChoice1 == "Q":
-            exit
-        
-    
-    
-    
     else:
-        print("\n\n   "+color.BOLD+color.RED+"No VFIO-PCI Devices Found"+color.END,"")
-        print("   There are no devices ready for passthrough\n")
-        print("   No devices have been configured for use with VFIO-PCI. You must \n   consult the guide on how to do this. Until then, this\n   tool can't be used just yet.")
-        #print("\n")
-        #print("   \n   Type the VFIO-ID of the device now. (XX:XX.XX)\n"+color.END)
-        print(color.BOLD+"\n      1. Try again")
-        print(color.END+"      B. Back...")
-        print(color.END+"      Q. Exit\n")
-        detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
-        if detectChoice1 == "1":
-            stage2()
-        elif detectChoice1 == "B" or detectChoice1 == "b":
-            stage1()
-        elif detectChoice1 == "q" or detectChoice1 == "Q":
-            exit
+        clear()
+        manualAPSelect()
 
-
-def stage1():
+def manualAPSelect():
     clear()
-    
-    print("\n\n   "+color.BOLD+"System Requirements"+color.END,"")
-    print("   Check your system meets this list\n")
-    print("   Okay, so you're committed. Fair enough. But first, you need to make\n   sure your system is ready to even begin this nonsense.\n")
-    #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
-    #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    print(color.BOLD+"   1. Modern hardware"+color.END)
-    print("      You must have a fairly modern PC to do this.")
-    print(color.BOLD+"   2. BIOS configured correctly"+color.END)
-    print("      Virtualisation and IOMMU *MUST* be enabled.")
-    print(color.BOLD+"   3. UEFI"+color.END)
-    print("      ...and more UEFI. Everything must be using it.")
-    print(color.BOLD+"   4. vfio-pci kernel driver stubbing"+color.END)
-    print("      The PCI devices in question must be stubbed correctly.")
-    print(color.BOLD+"   5. Unwavering patience"+color.END)
-    print("      You NEED to expect a LOT of trial and error. No I'm serious.")
-    print(color.BOLD+"\n      1. Continue and detect devices")
-    print(color.END+"      B. Back...")
-    print(color.END+"      Q. Exit\n")
-    detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
-    if detectChoice1 == "1":
-        stage2()
-    elif detectChoice1 == "B" or detectChoice1 == "b":
-        startup()
-    elif detectChoice1 == "q" or detectChoice1 == "Q":
-        exit
-
-
-startup()
-
-
-if detectChoice == "1":
+    print("\n\n   "+color.BOLD+"Select AutoPilot Config File"+color.END,"")
+    print("   Input a valid AutoPilot-generated config\n")
+    print("   You must use a valid file generated by AutoPilot.\n   Any existing VFIO-PCI args will be kept.\n   AutoPilot-generated config scripts end in .sh")
+        
+    print(color.BOLD+"\n   Drag the *.sh file onto this window (or type the path) and hit ENTER.\n")
+    apFileSelect = str(input(color.BOLD+"AutoPilot Config File> "+color.END))
     clear()
     time.sleep(1)
-    stage1()
-elif detectChoice == "2":
-    clear()
-    os.system('./scripts/extras/gpu-check.py')
+    if "'" in apFileSelect:
+        apFileSelect = apFileSelect.replace("'","")
+    if " " in apFileSelect:
+        apFileSelect = apFileSelect.replace(" ","")
+    if os.path.exists(apFileSelect):
+        apFile = open(apFileSelect)
+        if "APC-RUN" in apFile.read():
+            print("\n\n   "+color.BOLD+color.GREEN+"✔ VALID AUTOPILOT CONFIG"+color.END,"")
+            print("   Valid AutoPilot config found\n")
+            print("   The file you selected was generated by AutoPilot.\n   It appears to be valid.\n")
+            
+            print(color.BOLD+"   "+apFile.name+color.END)
+            print("\n   Do you want to use this file?\n   It will be copied to the repo folder.\n"+color.END)
+            print(color.BOLD+"      1. Add VFIO-PCI devices to this file")
+            print(color.END+"         Adds the generated arguments to this file\n")
+            print(color.END+"      2. Select another file...")
+            print(color.END+"      Q. Exit\n")
+            apFile.close()
+            detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
 
-elif detectChoice == "B" or detectChoice == "b":
-    os.system('./main.py')
-elif detectChoice == "q" or detectChoice == "Q":
-    exit
+            if detectChoice1 == "1":
+                apFilePath = apFileSelect
+                apFile = open(apFileSelect)
+                apFile = apFile.read()
+                apFileChosen = 1
+                clear()
+                #apFileR = apFile.read()
+                apFileChosen = 1
+                
+                clear()
+                if apFilePath is not None:
+                        
+                    print("\n\n   "+color.BOLD+color.BLUE+"⧖ APPLYING..."+color.END,"")
+                    print("   Please wait\n")
+                    print("   The assistant is now configuring your AutoPilot config file\n   for use with your VFIO-PCI devices.")
+                    print(color.BOLD+"\n   This may take a few moments.\n   Your current config will be backed up.\n")
+                    time.sleep(2)
+                    if apFilePath[0] == "/" and apFilePath[1] == "/":
+                        apFilePath = apFilePath.replace("/","",1)
+                    if apFilePath[0] == "." and len(apFilePath) > 10:
+                        apFilePath = apFilePath.replace(".","",1)
+                    apFilePathNoExt = apFilePath.replace(".sh","")
+                    os.system("cp "+apFilePath+" "+apFilePathNoExt+"-noPT.sh")
+                    with open(apFilePath,"r") as file1:
+                        apFileM = file1.read()
+                        '''
+                        currentDispVal = len(vfio_ids)
+                        for y in range(len(vfio_ids)):
+                            
+                            currentDispVal = currentDispVal - 1
+                            devLineF = str(dev[currentDispVal])
+                            apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+devLineF)
+                            apFileM = apFileM.replace("#-vga qxl","-vga none")
+                            #apFileM = apFileM.replace("-monitor stdio","-monitor none")
+                            apFileM = apFileM.replace("#-display none","-display none")
+                            apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
+                            apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
+                            apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
+                            os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
+                            os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS.fd")
+                        '''    
+                        currentDispVal = len(qemu_flags) - 1
+                        while currentDispVal >= 0:
+                            apFileM = apFileM.replace("#VFIO_DEV_BEGIN","#VFIO_DEV_BEGIN\n"+qemu_flags[currentDispVal])
+                            currentDispVal -= 1
+                        apFileM = apFileM.replace("#-vga qxl","-vga none")
+                        #apFileM = apFileM.replace("-monitor stdio","-monitor none")
+                        apFileM = apFileM.replace("#-display none","-display none")
+                        apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
+                        apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
+                        apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
+                        os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
+                        os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS.fd")
+                        clear()
+                        print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
+                        print("   QEMU arguments have been added\n")
+                        print("   The QEMU argument lines were successfully added to\n   "+color.BOLD+apFilePath+color.END+"\n\n\n\n\n\n\n")
+
+                    file1.close
+
+                    with open(apFilePath,"w") as file:
+                        file.write(apFileM)
+                    
+                    if gpuDetected == 1:
+                            usbOffer()
+                    
+            if detectChoice1 == "2":
+                clear()
+                manualAPSelect()
+    else:
+        print("\n\n   "+color.BOLD+color.RED+"✖ INVALID AUTOPILOT CONFIG"+color.END,"")
+        print("   Your file was not a valid AutoPilot config\n")
+        print("   You must use a valid file generated by AutoPilot.\n   Any existing VFIO-based args will be kept.\n   AutoPilot-generated config scripts end in .sh")
+            
+        print(color.BOLD+"\n   You will be returned to the input screen.\n")
+        time.sleep(8)
+        clear()
+        manualAPSelect()
+
+# Start Script
+preliminary()
