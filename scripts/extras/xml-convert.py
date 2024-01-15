@@ -504,6 +504,7 @@ def convertBrains():
             print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To define the domain, virsh needs superuser to continue.\n"+color.END)
             os.system("sudo virsh define "+apFilePathNoExt+".xml")
             time.sleep(4)
+            os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
             print("   XML domain has been defined\n")
@@ -623,6 +624,7 @@ if detectChoice == "1":
 
                     if detectChoice2 == "1":
                         #apFileR = apFile.read()
+                        os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
                         apFileChosen = 1
                         apFile = open("./"+apFilePath,"r")
                         autodetect = True
