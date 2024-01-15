@@ -164,7 +164,7 @@ def preliminary():
         cpydLog("fatal", "User's machine apparently has no USB devices. How did that happen?")
         pause()
         clear()
-        os.system("python3 ./scripts/extras.py")
+        os.system("./scripts/vfio-menu.py")
         exit()
 
     # If nothing has gone wrong, move on to phase 1.
