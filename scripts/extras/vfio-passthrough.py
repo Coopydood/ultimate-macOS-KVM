@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # pylint: disable=C0301,C0116,C0103,R0903
 
-# Vendor         : Hyperchromatic and Coopydood
+# Vendor         : Hyperchromiac and Coopydood
 # Provisioned by : Coopydood
 
 
@@ -73,7 +73,7 @@ else:
 script = "vfio-passthrough.py"
 scriptName = "VFIO Passthrough Assistant"
 scriptID = "VPTA"
-scriptVendor = "Hyperchromatic, Coopydood"
+scriptVendor = "Hyperchromiac, Coopydood"
 cpydLog("info",("ULTMOS v"+version))
 cpydLog("info",(" "))
 cpydLog("info",("Name       : "+scriptName))
@@ -146,7 +146,7 @@ def usbOffer():
 
     if detectChoice4 == "1":
         clear()
-        os.system('./scripts/hyperchromatic/usb-passthrough.py')
+        os.system('./scripts/hyperchromiac/usb-passthrough.py')
     elif detectChoice4 == "2":
         clear()
         exit
@@ -226,7 +226,7 @@ def phase1():
 
         # Menu Text
         print(f"   {color.PURPLE}\033[1mVFIO-PCI PASSTHROUGH ASSISTANT\033[0m")
-        print("   by \033[1mHyperchromatic\033[0m and \033[1mCoopydood\033[0m")
+        print("   by \033[1mHyperchromiac\033[0m and \033[1mCoopydood\033[0m")
         print("\n   This script simplifies the process of adding your host's\n   stubbed VFIO devices to your boot script in an attempt to \n   simplify the end user experience.")
         print(f"\n   \033[1mDetected a total of {color.GREEN}{str(len(vfio_ids))}\033[0m\033[1m VFIO-PCI devices.\033[0m\n")
         print("   Select an option to continue.\n")

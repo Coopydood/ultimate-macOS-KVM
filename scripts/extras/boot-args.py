@@ -53,7 +53,7 @@ def startup():
     clear()
     if bypassMenus != 1:
         print("\n\n  "+color.BOLD+color.PURPLE,"BOOT ARGUMENT EDITOR"+color.END,"")
-        print("   by",color.BOLD+"Coopydood and Hyperchromatic\n"+color.END)
+        print("   by",color.BOLD+"Coopydood and Hyperchromiac\n"+color.END)
         print("   This script can automatically mount your OpenCore image\n   and modify its boot arguments without booting macOS."+color.END)
         #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
         #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
@@ -73,7 +73,7 @@ def startup():
     else:
         detectChoice = "1"
     clear()
-    os.system("./scripts/hyperchromatic/nbdassistant.py -u -q") # Ensure no stale mounts
+    os.system("./scripts/hyperchromiac/nbdassistant.py -u -q") # Ensure no stale mounts
        
 
 
@@ -84,7 +84,7 @@ startup()
 if detectChoice == "1":
     clear()
     print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To mount the OpenCore image,\n   the script needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
-    os.system("./scripts/hyperchromatic/nbdassistant.py -m -q")
+    os.system("./scripts/hyperchromiac/nbdassistant.py -m -q")
     # NOTE: IMPLEMENT ERROR CATCH HERE
     clear()
     plistFile = open("./boot/mnt/EFI/OC/config.plist","r")
@@ -125,7 +125,7 @@ if detectChoice == "1":
         
             print("   "+color.BOLD+color.RED+"ERROR:"+color.END+color.BOLD,"The selected patch is already applied."+color.END+"\n\n\n\n\n")
             time.sleep(3)
-            os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+            os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
 
 
 
@@ -163,14 +163,14 @@ if detectChoice == "1":
                 print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
                 #print("     "+color.BOLD+"   ▼")
                 print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
                 time.sleep(3)
             
             elif detectChoice2 == "B" or detectChoice2 == "b":
                 os.system("./scripts/extras/boot-args.py")
-                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
             elif detectChoice == "Q" or detectChoice == "q":
-                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
                 exit
     
     if detectChoice1 == "2": # R7 HD Patch
@@ -183,7 +183,7 @@ if detectChoice == "1":
         
             print("   "+color.BOLD+color.RED+"ERROR:"+color.END+color.BOLD,"The selected patch is already applied."+color.END+"\n\n\n\n\n")
             time.sleep(3)
-            os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+            os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
 
 
         else:
@@ -220,14 +220,14 @@ if detectChoice == "1":
                 print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
                 #print("     "+color.BOLD+"   ▼")
                 print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
                 time.sleep(3)
             
             elif detectChoice2 == "B" or detectChoice2 == "b":
                 os.system("./scripts/extras/boot-args.py")
-                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
             elif detectChoice == "Q" or detectChoice == "q":
-                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
                 exit
                 
    
@@ -241,7 +241,7 @@ if detectChoice == "1":
 elif detectChoice == "2":
     clear()
     print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To mount the OpenCore image,\n   the script needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
-    os.system("./scripts/hyperchromatic/nbdassistant.py -m -q")
+    os.system("./scripts/hyperchromiac/nbdassistant.py -m -q")
     # NOTE: IMPLEMENT ERROR CATCH HERE
     clear()
     plistFile = open("./boot/mnt/EFI/OC/config.plist","r")
@@ -309,7 +309,7 @@ elif detectChoice == "2":
                 print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
                 #print("     "+color.BOLD+"   ▼")
                 print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
                 time.sleep(3)
             
             elif detectChoice2 == "2":
@@ -318,9 +318,9 @@ elif detectChoice == "2":
             
             elif detectChoice2 == "B" or detectChoice2 == "b":
                 os.system('./scripts/extras/boot-args.py')
-                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
             elif detectChoice == "Q" or detectChoice == "q":
-                os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+                os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
                 exit
         enterArgs()
     
@@ -333,7 +333,7 @@ elif detectChoice == "2":
 elif detectChoice == "X" or detectChoice == "x":
     clear()
     print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To mount the OpenCore image,\n   the script needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
-    os.system("./scripts/hyperchromatic/nbdassistant.py -m -q")
+    os.system("./scripts/hyperchromiac/nbdassistant.py -m -q")
     # NOTE: IMPLEMENT ERROR CATCH HERE
     clear()
     plistFile = open("./boot/mnt/EFI/OC/config.plist","r")
@@ -375,14 +375,14 @@ elif detectChoice == "X" or detectChoice == "x":
         print("\n   "+color.BOLD+color.GRAY+"    OLD:"+color.END,bootArgs+color.END)
         #print("     "+color.BOLD+"   ▼")
         print("   "+color.BOLD+color.GREEN+"CURRENT:"+color.END+color.BOLD,bootArgsNew+color.END+"\n\n\n\n\n")
-        os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+        os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
         time.sleep(3)
     
     elif detectChoice2 == "B" or detectChoice2 == "b":
         os.system("./scripts/extras/boot-args.py")
-        os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+        os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
     elif detectChoice == "Q" or detectChoice == "q":
-        os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+        os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
         exit
     
     elif detectChoice == "M" or detectChoice == "m":
@@ -390,7 +390,7 @@ elif detectChoice == "X" or detectChoice == "x":
         startup()
 
     elif detectChoice == "Q" or detectChoice == "q":
-        os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+        os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
         exit
 
 elif detectChoice == "?":
@@ -408,7 +408,7 @@ elif detectChoice == "M" or detectChoice == "m":
     os.system("./scripts/extras.py")
 
 elif detectChoice == "Q" or detectChoice == "q":
-    os.system("./scripts/hyperchromatic/nbdassistant.py -u -q")
+    os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
     exit
 
 else:

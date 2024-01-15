@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # pylint: disable=C0301,C0116,C0103,R0903
 
-# Vendor         : Hyperchromatic
+# Vendor         : Hyperchromiac
 # Provisioned by : Coopydood
 
 # Import Required Modules
@@ -69,7 +69,7 @@ else:
 script = "grub-args.py"
 scriptName = "Grub Editor"
 scriptID = "DTGE"
-scriptVendor = "Hyperchromatic"
+scriptVendor = "Hyperchromiac"
 
 cpydLog("info",("ULTMOS v"+version))
 cpydLog("info",(" "))
@@ -189,7 +189,7 @@ def menu():
    grubargs = grubargs[28:(len(grubargs) - 2)]
    clear()
    print("   Welcome to \033[95mGrub Editor\033[0m")
-   print("   Created by \033[1mHyperchromatic\033[0m\n")
+   print("   Created by \033[1mHyperchromiac\033[0m\n")
    print("   CPU Model: \033[37m" + cpu_model + "\033[0m")
    print("\n   Optimal Boot Flags Based on Your System:")
    print("   \033[37m" + cpu_iommu + " " + iommu + " " + video_efifb + " " + vfio_stub + "\033[0m\n")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # pylint: disable=C0301,C0116,C0103,R0903
 
-# Vendor         : Hyperchromatic
+# Vendor         : Hyperchromiac
 # Provisioned by : Coopydood
 
 
@@ -73,7 +73,7 @@ else:
 script = "usb-menu.py"
 scriptName = "USB Assistant"
 scriptID = "UPTA"
-scriptVendor = "Hyperchromatic"
+scriptVendor = "Hyperchromiac"
 cpydLog("info",("ULTMOS v"+version))
 cpydLog("info",(" "))
 cpydLog("info",("Name       : "+scriptName))
@@ -192,7 +192,7 @@ def phase1():
 
         # Menu Text
         print("   \033[95m\033[1mUSB PASSTHROUGH ASSISTANT\033[0m")
-        print("   by \033[1mHyperchromatic\033[0m")
+        print("   by \033[1mHyperchromiac\033[0m")
         print("\n   This script simplifies the process of adding \n   your host's USB devices to your boot script.\n")
         print(f"   \033[1mDetected a total of {color.GREEN}{str(len(usb_ids))}\033[0m\033[1m USB devices.\033[0m\n")
         print("   Select an option to continue.\n")
