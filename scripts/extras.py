@@ -87,7 +87,7 @@ if detectChoice == "1":
 elif detectChoice == "99":
     os.system('./scripts/vfio-menu.py')
 elif detectChoice == "2":
-    os.system('./scripts/hyperchromatic/nbdassistant.py')
+    os.system('./scripts/hyperchromiac/nbdassistant.py')
 #elif detectChoice == "3":
 #    
 #    print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING PROJECT IN DEFAULT BROWSER"+color.END,"")
@@ -100,7 +100,7 @@ elif detectChoice == "2":
 elif detectChoice == "3":
     os.system('./scripts/extras/boot-args.py')
 elif detectChoice == "4":
-    os.system('./scripts/hyperchromatic/grub-args.py')
+    os.system('./scripts/hyperchromiac/grub-args.py')
 
 elif detectChoice == "i" or detectChoice == "I":
     
