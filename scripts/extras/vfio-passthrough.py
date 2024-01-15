@@ -198,7 +198,7 @@ def preliminary():
         cpydLog("fatal", "User's machine does not have any stubbed VFIO-PCI devices.")
         pause()
         clear()
-        os.system("python3 ./scripts/extras.py")
+        os.system("./scripts/vfio-menu.py")
         exit()
 
     # If nothing has gone wrong, move on to phase 1.
