@@ -334,7 +334,7 @@ elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FI
     if discordRPC == 1:
         subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
     if REQUIRES_SUDO == 1:
-        print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical PCI passthrough,\n   and needs superuser priviledges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
+        print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser priviledges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
         if discordRPC == 0:
             os.system("sudo ./"+apFilePath+" -d 0")
         else:

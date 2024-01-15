@@ -488,6 +488,7 @@ def autoAPSelect():
                             apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
                             apFileM = apFileM.replace("/OVMF_VARS.fd","/OVMF_VARS_PT.fd")
                             os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
+                            os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
                             os.system("cp resources/ovmf/OVMF_VARS_PT.fd ovmf/OVMF_VARS_PT.fd")
                             clear()
                             print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
