@@ -358,6 +358,8 @@ def phase3():
         if selected_vfio_ids[i] in gpu_ids:
             if "Navi" in vfio_names[pci_ids.index(selected_vfio_ids[i])]:
                 naviDetected = 1
+            else:
+                naviDetected = 0
             gpuDetected = 1
             clear()
             print(f"   {color.BOLD}{color.BLUE}❖  GPU DETECTED{color.END}")
