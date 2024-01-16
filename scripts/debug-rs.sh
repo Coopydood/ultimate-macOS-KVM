@@ -4,6 +4,7 @@
 rm ./boot.sh > /dev/null 2>&1
 rm ./resources/config.sh > /dev/null 2>&1
 rm ./blobs/*.apb > /dev/null 2>&1
+rm ./blobs/user/*.apb > /dev/null 2>&1
 rm ./HDD.qcow2 > /dev/null 2>&1
 rm ./boot-noPT.sh > /dev/null 2>&1
 rm ./vfio-args.txt > /dev/null 2>&1
