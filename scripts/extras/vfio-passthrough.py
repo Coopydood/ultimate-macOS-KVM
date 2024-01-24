@@ -129,6 +129,7 @@ vfio_names: list = []
 selected_vfio_ids: list = []
 qemu_flags: list = []
 gpuDetected = 0
+naviDetected = 0
 # Symbol for Lists (because Gigantech got us all f*cked up in the first place and now we can't decide on our UI thingy)
 symbol: str = "》"
 
