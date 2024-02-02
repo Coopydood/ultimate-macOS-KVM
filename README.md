@@ -12,6 +12,10 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 
 ***
 
+### ⭐️ **Thank you for 100 stars!**
+
+***
+
 ## 👋》Introduction
 
 Tired of all the restraints and poor performance of macOS VMs in hypervisors like VirtualBox or VMware? Well, the story changes when you run your virtual machines in **kernel space**. Welcome to the world of **K**ernel **V**irtual **M**achines.
