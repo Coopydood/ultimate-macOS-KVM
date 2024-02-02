@@ -12,7 +12,7 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 
 ***
 
-## ⭐️ **Thank you for 100 stars!**
+### ⭐️ **Thank you for 100 stars!**
 
 ***
 
