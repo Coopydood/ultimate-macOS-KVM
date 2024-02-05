@@ -2979,13 +2979,13 @@ def autopilot():
          print(color.BOLD+"\n      1. Import XML...")
          print(color.END+"         Import the",USR_CFG_XML,"file into virsh.\n")
          print("    "+color.END+"  2. Boot")
-         print("    "+color.END+"  3. Main menu")
+         print("    "+color.END+"  M. Main menu")
       else:
          cpydLog("info",("XML generation was not included in AP flow, offering direct boot"))
          print(color.BOLD+"\n      1. Boot")
          print(color.END+"         Run your",USR_CFG,"file now.\n")
          print("    "+color.END+"  2. Open in default editor")
-         print("    "+color.END+"  3. Main menu")
+         print("    "+color.END+"  M. Main menu")
       print("    "+color.END+"  Q. Exit\n")
       cpydLog("wait",("Waiting for user input"))
       stageSelect = str(input(color.BOLD+"Select> "+color.END))
@@ -3011,7 +3011,7 @@ def autopilot():
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.system("./"+USR_CFG)
 
-         elif stageSelect == "3":
+         elif stageSelect == "m" or stageSelect == "M":
             cpydLog("info",("Returning to main menu"))
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
@@ -3040,7 +3040,7 @@ def autopilot():
             os.system("xdg-open ./"+USR_CFG)
             
 
-         elif stageSelect == "3":
+         elif stageSelect == "m" or stageSelect == "M":
             cpydLog("info",("Returning to main menu"))
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
