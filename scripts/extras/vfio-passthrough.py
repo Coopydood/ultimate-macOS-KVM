@@ -431,7 +431,7 @@ def phase3():
             break
         elif (user_choice.lower() == "y"):
             # TODO: implement appending flags
-            cpydLog("info", f"User has opted to follow through with their current USB devices")
+            cpydLog("info", f"User has opted to follow through with their current VFIO-PCI devices")
             autoAPSelect()
             exit()
             break
@@ -486,6 +486,21 @@ def autoAPSelect():
                             apFileM = apFileM.replace("#-display none","-display none")
                             apFileM = apFileM.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
                             apFileM = apFileM.replace("VFIO_PTA=0","VFIO_PTA=1")
+
+                            totalVD = apFileM.split("VFIO_DEVICES=",1)[1]
+                            totalVD = totalVD[0:1]
+
+                            totalVD = int(totalVD)
+
+                            currentAmount = totalVD
+
+                            newAmount = len(selected_vfio_ids)
+
+                            totalVD = int(newAmount) + currentAmount
+
+                            apFileM = apFileM.replace("VFIO_DEVICES="+str(currentAmount),"VFIO_DEVICES="+str(totalVD))
+                            
+
                             apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
                             apFileM = apFileM.replace("/OVMF_VARS.fd","/OVMF_VARS_PT.fd")
                             os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")

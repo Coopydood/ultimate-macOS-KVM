@@ -32,8 +32,11 @@ global apFileSelect
 global autodetect
 global useBlobs
 global domainTitle
+global apFilePath
 
-detectChoice = 1
+
+detectChoice = "1"
+detectChoiceM = ""
 latestOSName = "Ventura"
 latestOSVer = "13"
 runs = 0
@@ -59,7 +62,10 @@ version = version.read()
 parser = argparse.ArgumentParser("xml-convert")
 parser.add_argument("-i", "--import", dest="importfile", help="Import existing XML domain file",metavar="<file>", type=str)
 parser.add_argument("-c", "--convert", dest="convert", help="Convert existing config script to XML", metavar="<file>", type=str)
+parser.add_argument("-q", "--quiet", dest="quiet", help="Silences any UI output, must be used with  --convert", action="store_true")
+parser.add_argument("-ni", "--no-import", dest="noimport", help="Don't offer import when conversion is finished", action="store_true")
 parser.add_argument("--no-blobs", dest="noblobs", help="Blocks the initialisation of arrays using AP blobs", action="store_true")
+parser.add_argument("--mark-ap", dest="markap", help="Internal use only", action="store_true")
 #parser.add_argument("-f", "--force", dest="forceModel", metavar="<model>", help="Override auto-detected GPU with a custom model. Pretty useless, mostly for debugging.", type=str)
 args = parser.parse_args()
 
@@ -74,11 +80,11 @@ def choiceMenu(): # UNUSED FOR NOW
     print(color.END+"      2. Help...")
     print(color.END+"      3. Main menu")
     print(color.END+"      4. Exit\n")
-    detectChoice = int(input(color.BOLD+"Select> "+color.END))
+    detectChoice = str(input(color.BOLD+"Select> "+color.END))
 
 
 def startup():
-    global detectChoice
+    global detectChoiceM
     print("   "+"\n   "+color.BOLD+"XML creation type"+color.END)
     print("   "+"Choose a method to use")
     print("   "+"\n   This tool can use both an existing AutoPilot file, or even\n   assist you in creating a new one. Please read and choose\n   from the options below."+color.END)#print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
@@ -91,9 +97,9 @@ def startup():
     print(color.END+"         Use this option if you already have an XML file.\n         This option lets you import a previously-created XML file\n         into virsh for use with virt-manager.\n")
   
     print(color.END+"      ?. Help...")
-    print(color.END+"      B. Back...")
+    print(color.END+"      M. Back to menu...")
     print(color.END+"      Q. Exit\n")
-    detectChoice = str(input(color.BOLD+"Select> "+color.END))
+    detectChoiceM = str(input(color.BOLD+"Select> "+color.END))
 
        
 
@@ -164,12 +170,14 @@ def importXML():
 def convertBrains():
     global apFile
     global apFilePath
-    clear()
+    
     if apFilePath is not None:
-        print("\n\n   "+color.BOLD+color.BLUE+"⧖ CONVERTING..."+color.END,"")
-        print("   Please wait\n")
-        print("   The assistant is now converting your AutoPilot config file\n   into a valid domain XML file for use with virsh.")
-        print(color.BOLD+"\n   This may take a few moments.\n   Your source config won't be modified.\n")
+        if args.quiet != True:
+            clear()
+            print("\n\n   "+color.BOLD+color.BLUE+"⧖ CONVERTING..."+color.END,"")
+            print("   Please wait\n")
+            print("   The assistant is now converting your AutoPilot config file\n   into a valid domain XML file for use with virsh.")
+            print(color.BOLD+"\n   This may take a few moments.\n   Your source config won't be modified.\n")
         time.sleep(2)
         with open(""+apFilePath,"r") as source:
             global apVars
@@ -465,7 +473,10 @@ def convertBrains():
             else:
                 apFileM = apFileM.replace("$AP_BLOB","No")
 
-            apFileM = apFileM.replace("$AP_FLOW","No")
+            if args.markap == True:
+                apFileM = apFileM.replace("$AP_FLOW","Yes")
+            else:
+                apFileM = apFileM.replace("$AP_FLOW","No")
 
             if "-device vfio-pci" in apFileS:
                 apFileM = apFileM.replace("<!-- VFIO-PCI HEADER -->",('\n    '.join(vfioXML)))
@@ -482,34 +493,36 @@ def convertBrains():
 
     apFile = open(""+apFilePathNoExt+".xml","r")
     if "APC-RUN" in apFile.read():
-        clear()
-        print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
-        print("   AutoPilot config file converted\n")
-        print("   The config file was converted successfully into\n   "+color.BOLD+""+apFilePathNoExt+".xml"+color.END+"\n\n\n\n\n   Please wait...\n\n") 
-        time.sleep(3)
-        clear()
-        print("\n\n   "+color.BOLD+color.BLUE+"❖  IMPORT XML FILE"+color.END,"")
-        print("   For use with virsh / virt-manager\n")
-        print("   You can now import your XML domain file into\n   virt-manager for GUI-based usage.")
-        print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This stage requires superuser permissions.\n   You can also run the following command manually if you wish:\n\n    "+color.BOLD+"$ sudo virsh define "+apFilePathNoExt+".xml\n"+color.END)
-        print(color.BOLD+"      1. Import "+apFilePathNoExt+".xml"+color.YELLOW,"⚠"+color.END)
-        print(color.END+"         Use virsh to define the domain\n")
-        print(color.END+"      2. Select another file...")
-        print(color.END+"      Q. Exit\n")
-        apFile.close()
-        detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
-
-        if detectChoice1 == "1":
-            clear()
-            print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To define the domain, virsh needs superuser to continue.\n"+color.END)
-            os.system("sudo virsh define "+apFilePathNoExt+".xml")
-            time.sleep(4)
-            os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
+        if args.quiet != True:
             clear()
             print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
-            print("   XML domain has been defined\n")
-            print("   The requested XML file has been successfully defined\n   using virsh, and is now available in virt-manager.\n   The name is displayed below.\n\n   "+color.BOLD+domainTitle+" (ULTMOS)"+color.END+"\n\n\n\n\n\n\n") 
-            time.sleep(5)
+            print("   AutoPilot config file converted\n")
+            print("   The config file was converted successfully into\n   "+color.BOLD+""+apFilePathNoExt+".xml"+color.END+"\n\n\n\n\n   Please wait...\n\n") 
+        time.sleep(3)
+        if args.noimport != True:
+            clear()
+            print("\n\n   "+color.BOLD+color.BLUE+"❖  IMPORT XML FILE"+color.END,"")
+            print("   For use with virsh / virt-manager\n")
+            print("   You can now import your XML domain file into\n   virt-manager for GUI-based usage.")
+            print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This stage requires superuser permissions.\n   You can also run the following command manually if you wish:\n\n    "+color.BOLD+"$ sudo virsh define "+apFilePathNoExt+".xml\n"+color.END)
+            print(color.BOLD+"      1. Import "+apFilePathNoExt+".xml"+color.YELLOW,"⚠"+color.END)
+            print(color.END+"         Use virsh to define the domain\n")
+            print(color.END+"      2. Select another file...")
+            print(color.END+"      Q. Exit\n")
+            apFile.close()
+            detectChoice1 = str(input(color.BOLD+"Select> "+color.END))
+
+            if detectChoice1 == "1":
+                clear()
+                print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To define the domain, virsh needs superuser to continue.\n"+color.END)
+                os.system("sudo virsh define "+apFilePathNoExt+".xml")
+                time.sleep(4)
+                os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
+                clear()
+                print("\n\n   "+color.BOLD+color.GREEN+"✔ SUCCESS"+color.END,"")
+                print("   XML domain has been defined\n")
+                print("   The requested XML file has been successfully defined\n   using virsh, and is now available in virt-manager.\n   The name is displayed below.\n\n   "+color.BOLD+domainTitle+" (ULTMOS)"+color.END+"\n\n\n\n\n\n\n") 
+                time.sleep(5)
 def manualAPSelect():
         global apFile
         global apFilePath
@@ -594,13 +607,16 @@ if args.importfile is not None or args.convert is not None:
         importXML()
     elif args.convert is not None:
         apFileSelect = args.convert
+        apFilePath = args.convert
+        autodetect = True
+        cpydPassthrough = 1
+        convertBrains()
 else:
     startup()
 
-if detectChoice == "1":
+if detectChoiceM == "1":
     clear()
     global apFile
-    global apFilePath
     if not os.path.exists("blobs/user/USR_CFG.apb"):
         os.system("cp blobs/*.apb blobs/user/")
     if os.path.exists("./blobs/user/USR_CFG.apb"):
@@ -643,17 +659,17 @@ if detectChoice == "1":
             else:
                 clear()
                 manualAPSelect()
-elif detectChoice == "3":
+elif detectChoiceM == "3":
     os.system('./scripts/dlosx.py')
-elif detectChoice == "2":
+elif detectChoiceM == "2":
     clear()
     importXML()
-elif (len(detectChoice) == 0 or detectChoice.lower() == "b"): # Main Menu
+elif (len(detectChoiceM) == "M" or detectChoiceM.lower() == "m"): # Main Menu
             # Goto Extras and Break
             clear()
             os.system("./scripts/vfio-menu.py")
             
-elif detectChoice == "?":
+elif detectChoiceM == "?":
     clear()
     print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING HELP PAGE IN DEFAULT BROWSER"+color.END,"")
     print("   Continue in your browser\n")

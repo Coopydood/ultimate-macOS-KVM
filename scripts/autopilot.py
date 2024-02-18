@@ -241,7 +241,7 @@ def autopilot():
    global USR_SCREEN_RES
    global USR_TARGET_OS_NAME
    global FEATURE_LEVEL
-
+   global USR_CREATE_XML
    global startTime
 
    USR_CPU_SOCKS = 1
@@ -1951,6 +1951,7 @@ def autopilot():
             os.system("./scripts/autopilot.py")
 
          elif stageSelectE == "q" or stageSelectE == "Q":
+            return
             exit
 
       def refreshStatusGUI():
@@ -1982,14 +1983,6 @@ def autopilot():
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Generating config script"+color.END)
          elif PROC_GENCONFIG == 2:
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Generating config script"+color.END)
-         
-         if USR_CREATE_XML == "True":
-            if PROC_GENXML == 0:
-               print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Converting to domain XML file"+color.END)
-            elif PROC_GENXML == 1:
-               print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Converting to domain XML file"+color.END)
-            elif PROC_GENXML == 2:
-               print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Converting to domain XML file"+color.END)
 
          if PROC_LOCALCOPY == 0 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
@@ -2026,6 +2019,14 @@ def autopilot():
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Applying preferences"+color.END)
          elif PROC_APPLYPREFS == 2:
             print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Applying preferences"+color.END)
+
+         if USR_CREATE_XML == "True":
+            if PROC_GENXML == 0:
+               print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Converting to domain XML file"+color.END)
+            elif PROC_GENXML == 1:
+               print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Converting to domain XML file"+color.END)
+            elif PROC_GENXML == 2:
+               print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Converting to domain XML file"+color.END)
 
          if PROC_FIXPERMS == 0:
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Fixing up permissions"+color.END)
@@ -2426,151 +2427,9 @@ def autopilot():
          
 
 
-         # USE CONVERSION TOOL CODE TO GENERATE XML
+         # XML CONVERTER IS NOW PASSED THROUGH TO STANDALONE MECHANISM
 
-         cpydLog("info",("Checking XML creation preferences"))
-         if USR_CREATE_XML == "True":
-            cpydLog("ok",("XML creation requested, WILL be generating XML"))
-            try: # DISCORD RPC
-               RPC.update(large_image=osIcon,large_text=projectVer,state="Converting to domain XML file...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
-            except:
-               None
-            PROC_GENXML = 1
-            refreshStatusGUI()
-            cpydLog("info",("Pointing XML conversion tool to live script"))
-            apFilePath = "resources/config.sh"
-            with open("./"+apFilePath,"r") as source:
-               apFileS = source.read()
-               apVars = (re.findall(r'"([^"]*)"', apFileS))
-               apFilePathNoExt = apFilePath.replace(".sh","")
-               cpydLog("info",("Preparing live working XML"))
-            os.system("cp ./resources/baseDomain"+" ./"+apFilePathNoExt+".xml")
-            cpydLog("ok",("Base XML ready for live working"))
-            with open("./"+apFilePathNoExt+".xml","r") as file1:
-                  cpydLog("info",("Parsing XML"))
-                  cpydLog("warn",("XML conversion tool APC integration doesn't support blob caching yet"))
-                  apFileM = file1.read()
-                  apFileM = apFileM.replace("baseDomain",str(apFilePathNoExt+".xml"))
-                  apFileM = apFileM.replace("#    THIS DOMAIN FILE SHOULD NOT BE EDITED BY THE USER!    #","    APC-RUN_"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))+"\n \n    THIS FILE WAS GENERATED USING AUTOPILOT.")
-                  apFileM = apFileM.replace("#                                                          #\n","")
-                  apFileM = apFileM.replace("	#    It is intended to be used by the XML import wizard.   #\n","")
-                  apFileM = apFileM.replace("#    To use the wizard, run the included \"main.py\" file;   #\n","")
-                  apFileM = apFileM.replace("#                                                          #"," ")
-                  apFileM = apFileM.replace("#                       $ ./main.py                        #"," \n     To be used with virsh / virt-manager.")
-                  apFileM = apFileM.replace("#    ./main.py","")
-                  apFileM = apFileM.replace("############################################################."," ")
-
-                  #apVars[19] = "macOS "+apVars[19]
-
-                  apVars[2] = apVars[2].replace("macOS ","")
-                  apVars[2] = apVars[2].replace("Mac OS X ","")
-
-                  macOSVer = int(apVars[2].replace(".",""))
-
-
-                  if int(macOSVer) <= 110 and int(macOSVer) > 99:
-                     apFileM = apFileM.replace("$USR_NAME","Mac OS X "+apVars[19]+"")
-                  else:
-                     apFileM = apFileM.replace("$USR_NAME","macOS "+apVars[19]+"")
-
-                  cpydLog("info",("Converting to XML format"))
-                  apFileM = apFileM.replace("$USR_NAME",apVars[19]+"")
-                  apFileM = apFileM.replace("$USR_UUID",str(uuid.uuid4()))
-
-                  # CONVERT MEMORY TO VIRSH FORMAT
-                  apMemCvt = apVars[5].replace("G","")
-                  apMemCvt = int(apMemCvt)
-                  apMemCvt = apMemCvt * 1048576
-
-                  # GET WD
-                  workdir = os.getcwd()
-
-                  # CONVERT THREADS TO VIRSH FORMAT
-                  apThreadsCvt = apVars[8]
-                  apThreadsCvt = int(apThreadsCvt)
-                  #apThreadsCvt = round(apThreadsCvt / 2)
-
-                  # CONVERT VCPUS TO VIRSH FORMAT
-                  apTotalCvt = apVars[7]
-                  apTotalCvt = int(apTotalCvt)
-                  apTotalCvt = round(apTotalCvt * apThreadsCvt)
-
-                  # CONVERT OS VERSION TO VIRSH FORMAT
-                  apOSCvt = apVars[2]
-                  apOSCvt = apOSCvt.replace("macOS ","")
-                  apOSCvt = apOSCvt.replace("Mac OS X ","")
-                  apOSCvt = apOSCvt.replace(".","")
-
-
-                  if USR_HDD_ISPHYSICAL == True:
-                     cpydLog("warn",("Physical disk detected, changing type to RAW"))
-                     apFileM = apFileM.replace("    <disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"qcow2\"/>\n      <source file=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->","    <disk type=\"block\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"raw\"/>\n      <source dev=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->")
-
-
-                  if USR_HDD_TYPE == "HDD":
-                     cpydLog("ok",("Virtual disk type is HDD, leaving rotation rate as default"))
-                  elif USR_HDD_TYPE == "SSD":
-                     cpydLog("warn",("Virtual disk type is SSD, modifying rotation rate"))
-                     apFileM = apFileM.replace("rotation_rate=\"7200\"","rotation_rate=\"1\"")
-                     cpydLog("ok",("Rotation rate updated"))
-                  elif USR_HDD_TYPE == "NVMe":
-                     cpydLog("warn",("Virtual disk type is NVMe, modifying device"))
-                     apFileM = apFileM.replace("<!-- NVME HEADER -->","<qemu:arg value=\"-drive\"/>\n    <qemu:arg value=\"file=$USR_HDD_PATH,format=qcow2,if=none,id=HDD\"/>\n    <qemu:arg value=\"-device\"/>\n    <qemu:arg value=\"nvme,drive=HDD,serial=ULTMOS,bus=pcie.0,addr=10\"/>")
-                     cpydLog("ok",("Disk device updated"))
-                     cpydLog("warn",("Disabling hard drive in XML"))
-                     apFileM = apFileM.replace("<disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->","<!-- <disk type=\"file\" device=\"disk\">")
-                     apFileM = apFileM.replace("</disk> <!-- HDD FOOTER -->","</disk> -->")
-                  else:
-                     cpydLog("warn",("Virtual disk type is UNKNOWN, won't change anything"))
-
-
-                  apFileM = apFileM.replace("$USR_MEMORY",str(apMemCvt))
-                  apFileM = apFileM.replace("$USR_CPU_CORES",apVars[7])
-                  apFileM = apFileM.replace("$USR_CPU_TOTAL",str(apTotalCvt))
-                  apFileM = apFileM.replace("$USR_CPU_THREADS",str(apThreadsCvt))
-                  apFileM = apFileM.replace("$USR_CPU_MODEL",apVars[9])
-                  apFileM = apFileM.replace("$OVMF_DIR","ovmf")
-                  apFileM = apFileM.replace("$USR_CPU_ARGS",apVars[10])
-                  apFileM = apFileM.replace("$USR_CPU_CORES",apVars[7])
-                  apFileM = apFileM.replace("$USR_NETWORK_ADAPTER",apVars[17])
-                  apFileM = apFileM.replace("$USR_MAC_ADDRESS",apVars[18])
-                  apFileM = apFileM.replace("$USR_HDD_PATH",apVars[20])
-                  apFileM = apFileM.replace("$USR_OS_VERSION",apOSCvt)
-                  apFileM = apFileM.replace("$USR_OS_NAME",apVars[19])
-                  apFileM = apFileM.replace("$USR_HEADER","Converted from "+str(apVars[3]))
-                  apFileM = apFileM.replace("$REPO_VERSION",version)
-                  apFileM = apFileM.replace("$REPO_PATH",workdir)
-                  apFileM = apFileM.replace("$XML_FILE",apVars[3].replace(".sh",".xml"))
-                  apFileM = apFileM.replace("$AP_FILE",apVars[3])
-                  apFileM = apFileM.replace("$AP_RUNTIME",str(datetime.today().strftime('%H:%M:%S %d/%m/%Y')))
-                  apFileM = apFileM.replace("$AP_FLOW","Yes")
-                  apFileM = apFileM.replace("$AP_AUTO","N/A")
-                  apFileM = apFileM.replace("$AP_BLOB","N/A")
-                  
-                  if USR_BOOT_FILE == "-2":
-                     cpydLog("warn",("BaseSystem is detached, disabling in domain"))
-                     apFileM = apFileM.replace("<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############-->","<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############")
-                     apFileM = apFileM.replace("<!--#######################################################################-->","    #######################################################################-->")
-                     apFileM = apFileM.replace("<!-- BASESYSTEM HEADER -->","")
-                     apFileM = apFileM.replace("<!-- BASESYSTEM FOOTER -->","")
-
-
-                  cpydLog("ok",("Converted to XML structure"))
-            # apFileM = apFileM.replace("$USR_",apVars[])
-            
-            file1.close
-            cpydLog("info",("Writing changes"))
-            with open("./"+apFilePathNoExt+".xml","w") as file:
-                  file.write(apFileM)
-                  cpydLog("ok",("Changes written to file"))
-            time.sleep(2)
-            cpydLog("ok",("Updated stage status, handing off to next stage"))
-            PROC_GENXML = 2
-            refreshStatusGUI()
-            time.sleep(3)
-         else:
-            cpydLog("ok",("XML creation skipped by user, ignoring"))
-            cpydLog("ok",("Updated stage status, handing off to next stage"))
+         
 
 
       def apcFetchDL():  # FETCH RECOVERY ONLINE
@@ -2827,13 +2686,13 @@ def autopilot():
          os.system("mv resources/config.sh ./"+USR_CFG)
          
 
-         if USR_CREATE_XML == "True":
-            os.system("mv resources/config.xml ./"+USR_CFG_XML)
-            if os.path.exists("./"+USR_CFG_XML):
-               integrityImg = 1
-            else:
-               integrityImg = 0
-               throwError()
+         #if USR_CREATE_XML == "True":
+         #   os.system("mv resources/config.xml ./"+USR_CFG_XML)
+         #   if os.path.exists("./"+USR_CFG_XML):
+         #      integrityImg = 1
+         #   else:
+         #      integrityImg = 0
+         #      throwError()
          
          if os.path.exists("./"+USR_CFG):
             cpydLog("ok",("Moved working file into "+USR_CFG+" successfully"))
@@ -2847,6 +2706,39 @@ def autopilot():
          cpydLog("ok",("Updated stage status, handing off to next stage"))
          refreshStatusGUI()
          time.sleep(2)
+      
+      def apcGenXML():
+         cpydLog("info",("Checking XML creation preferences"))
+         if USR_CREATE_XML == "True":
+            global PROC_GENXML
+            global USR_CFG
+            global USR_CFG_XML
+            cpydLog("ok",("XML creation requested, WILL be generating XML"))
+            try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Converting to domain XML file...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+            except:
+               None
+            PROC_GENXML = 1
+            refreshStatusGUI()
+            cpydLog("info",("Copying current session blobs into user backdir"))
+            os.system("cp blobs/*.apb blobs/user/")
+            time.sleep(1)
+            cpydLog("ok",("Handing off to XMLC and waiting for result"))
+            os.system("./scripts/extras/xml-convert.py --no-import --quiet --mark-ap --convert ./"+USR_CFG)
+            cpydLog("info",("Got exit signal from XMLC, checking integrity"))
+            global errorMessage
+            errorMessage = "Failed to convert script to XML."
+            if os.path.exists("./"+USR_CFG_XML):
+               cpydLog("ok",("XML file was successfully generated at "+USR_CFG_XML))
+               PROC_GENXML = 2
+               refreshStatusGUI()
+               time.sleep(2)
+            else:
+               cpydLog("error",("XMLC failed to create the XML file"))
+               throwError()
+         else:
+            cpydLog("ok",("XML creation skipped by user, ignoring"))
+            cpydLog("ok",("Updated stage status, handing off to next stage"))
       
       def apcFixPerms():  # FIX PERMISSIONS
          global PROC_FIXPERMS
@@ -2915,6 +2807,8 @@ def autopilot():
       
       
       apcApplyPrefs()
+      if USR_CREATE_XML == "True":
+         apcGenXML()
       apcFixPerms()
       if enableClean == True:
          apcCleanUp()
@@ -2943,7 +2837,6 @@ def autopilot():
       global USR_TARGET_OS_F
       global USR_CPU_TOTAL_F
       global USR_CFG_XML
-      global USR_CREATE_XML
       global customValue
       exTime = round(stopTime - startTime)
       finishedText = ("Finished ("+str(exTime)+"s)")
