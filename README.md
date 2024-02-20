@@ -79,7 +79,7 @@ Here's a table with my best judgment on minimum, recommended, and best system re
 
 |                 |                   **Minimum**                  |                           **Recommended**                          |                                 **Optimal**                                 |                                   My Setup                                   |
 |-----------------|:----------------------------------------------:|:------------------------------------------------------------------:|:---------------------------------------------------------------------------:|:----------------------------------------------------------------------------:|
-| **OS**          |                    linux-5.x                   |                             Linux Mint                             |                                  Arch Linux                                 |                                  Arch Linux                                  |
+| **OS**          |                    linux-5.x (!)                 |                             Linux Mint                             |                                  Arch Linux                                 |                                  Arch Linux                                  |
 | **Motherboard** |             Virtualisation<br>UEFI             |        Virtualisation<br>UEFI<br>IOMMU<br>Intel VT-d / AMD-V       | Virtualisation<br>UEFI<br>IOMMU<br>Intel VT-d / AMD-V<br>Isolated PCI Lanes | ROG STRIX Z490-E GAMING<br>UEFI<br>IOMMU<br>Intel VT-d<br>Isolated PCI lanes |
 | **CPU**         | ~2014 Intel / AMD<br>Virtualisation<br>2 cores | Intel i5 / Ryzen 5<br>Virtualisation<br>4-8 cores<br>Hyperthreaded |     Intel i9 / Ryzen 9<br>Virtualisation<br>8-16 cores<br>Hyperthreaded     |               Intel Core i9-10900K<br>10 cores<br>Hyperthreaded              |
 | **Memory**      |                      4 GB                      |                                16 GB                               |                                    32 GB+                                   |                               64 GB                              |
@@ -90,6 +90,9 @@ Here's a table with my best judgment on minimum, recommended, and best system re
 
 > [!NOTE]
 > The recommended and optimal specifications are for reference only.
+
+> [!WARNING]
+> (!) While KVM is supported on every linux-5.x and up kernel, some distros (like RHEL) might have fully rewritten codebases and crash on various points. This project is tested and working without issues on Debian (Ubuntu, Mint...) and Arch-flavoured distros, but we're accepting issues for any distribution if necessary!
 
 ***
 
