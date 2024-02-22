@@ -500,6 +500,9 @@ def autoAPSelect():
 
                             apFileM = apFileM.replace("VFIO_DEVICES="+str(currentAmount),"VFIO_DEVICES="+str(totalVD))
                             
+                            blob = open("./blobs/USR_VFIO_DEVICES.apb","w")
+                            blob.write(totalVD)
+                            blob.close()
 
                             apFileM = apFileM.replace("-device qxl-vga,vgamem_mb=128,vram_size_mb=128    ","#-device qxl-vga,vgamem_mb=128,vram_size_mb=128   # DISABLED BY VFIO-PCI PASSTHROUGH ASSISTANT")
                             apFileM = apFileM.replace("/OVMF_VARS.fd","/OVMF_VARS_PT.fd")

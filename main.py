@@ -337,7 +337,12 @@ elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FI
             os.system("cp ./resources/ovmf/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
 
     if discordRPC == 1:
-        subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
+        if os.path.exists("./blobs/user/USR_VFIO_DEVICES.apb"):
+            vfioDevs = open("./blobs/user/USR_VFIO_DEVICES.apb")
+            vfioDevs = vfioDevs.read()
+            subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer,"--pt",vfioDevs])
+        else:
+            subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
     if REQUIRES_SUDO == 1:
         print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser priviledges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
         if discordRPC == 0:
