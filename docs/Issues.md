@@ -124,7 +124,7 @@ CPU_MODEL="Penryn"
 ```
 and change it to
 ```sh
-CPU_MODEL="Skylake-Client"
+CPU_MODEL="Haswell-noTSX"
 ```
 
 ***
@@ -169,19 +169,42 @@ Then, simply quit Disk Utility and return to the macOS installer. On the disk se
 
 These are issues related to the macOS after it has been fully installed.
 
-<details><summary><h5>Black screen or reset after install when using AMD RX 5xxx / 6xxx (Navi) GPUs</h5></summary>
+<details><summary><h5>Very long boot time on macOS Ventura and later  (<code>"PCIEnumerationWaitTime is 900"</code> etc.)</h5></summary>
 
-See **Black screen or reset on AMD RX 5xxx / 6xxx (Navi) GPUs**
+There may be a bug present in the macOS verbose system that temporarily hangs the boot process for a very long time - sometimes upwards of 10 minutes in some cases.
+
+This can almost be classed as a red-herring - as most users would assume their system has crashed at this point - when in actual fact letting it sit will eventually get it to boot.
+
+**However, you can fix this boot time by removing the ``-v`` boot argument.** After disabling verbose boot (``-v``), boot times in my case went from >5 minutes to under 30 seconds. Wow!
+
 
 </details>
 
-<details><summary><h5>Kernel: Couldn't alloc class "AppleKeyStoreTest"</h5></summary>
+<details><summary><h5>Black screen or reset after install when using AMD RX 5xxx / 6xxx (Navi) GPUs</h5></summary>
+
+This is likely due to a missing boot argument required for display out on RX 5000 and RX 6000 series cards.
+
+You need to add the following boot argument to the OpenCore image:
+```
+agdpmod=pikera
+```
+
+
+As of [**v0.11.0**](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-11-0.md) and later, the OpenCore image can be patched automatically using the **AutoPatch** functionality included in the **macOS Boot Argument Editor** tool - located in ``Extras > macOS Boot Argument Editor``.
+
+Alternatively, such as on older versions, this can be done from within macOS using **OpenCore Configurator**. If you used the **VFIO-PCI Passthrough Assistant** to configure passthrough, you can use the generated ``<name>-noPT.sh`` file to temporarily boot macOS without passthrough enabled - allowing you to make the necessary changes.
+
+</details>
+
+<details><summary><h5>Kernel: <code>Couldn't alloc class "AppleKeyStoreTest"</code></h5></summary>
 
 Being stuck here after passing through a GPU on macOS Ventura and later may actually be deceptive. 
 
 Either the system has in fact panicked, or **it may still be booting in the background**. No, really!
 
 If you're "stuck" at ``Couldn't alloc class "AppleKeyStoreTest"``, wait up to 5 minutes. There may be a bug present in the macOS verbose system that prevents any more output after a certain stage.
+
+**You can fix this boot time by removing the ``-v`` boot argument.**
 
 Found by @DomTrues.
 
@@ -240,11 +263,11 @@ This is likely due to a missing boot argument required for display out on RX 500
 
 You need to add the following boot argument to the OpenCore image:
 ```
-adgpmod=pikera
+agdpmod=pikera
 ```
 
 
-As of [**v0.10.0**](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-10-0.md) and later, the OpenCore image can be mounted using @DomTrues' **OpenCore Modification Assistant**, found in the project's **Extras** menu. This tool mounts the OpenCore image as a *network block device*, allowing you to access it as a regular folder in ``<repo>/boot/mnt``. You can then add the boot argument by editing the ``config.plist`` file directly.
+As of [**v0.11.0**](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v0-11-0.md) and later, the OpenCore image can be patched automatically using the **AutoPatch** functionality included in the **macOS Boot Argument Editor** tool - located in ``Extras > macOS Boot Argument Editor``.
 
 Alternatively, such as on older versions, this can be done from within macOS using **OpenCore Configurator**. If you used the **VFIO-PCI Passthrough Assistant** to configure passthrough, you can use the generated ``<name>-noPT.sh`` file to temporarily boot macOS without passthrough enabled - allowing you to make the necessary changes.
 
