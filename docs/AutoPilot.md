@@ -9,7 +9,8 @@ The generated script file is **immediately valid** and can be run instantly afte
 
 With the intro out of the way, I'll now go into more detail about each AutoPilot stage, including acceptable values and how to enter them.
 ***
-NOTE: Any "Accepted" values with a **bold** suffix indicate that you must include it when inputting your custom value into AutoPilot, such as file extensions.
+> [!IMPORTANT]
+> Any "Accepted" values with a **bold** suffix indicate that you must include it when inputting your custom value into AutoPilot, such as file extensions.
 
 ***
 ## 1. Name your config file
@@ -21,21 +22,25 @@ This really is as simple as it sounds. You can choose what you want the file nam
 
 ***
 ## 2. Set target OS
-This setting only really has one definitive use right now - virtual network adapter model auto selection. Other than that, it is purely cosmetic at this time. It's still recommended to set this value properly in case future functionality and features depend on it.
+As warned in an older version of this document, modern versions of ULTMOS now **do** rely on this setting quite a bit. It is responsible for the following:
 
-If defining a custom value, only a **4-digit value for macOS 10.XX releases**, or a **2-digit value for macOS 11 or later** is accepted. 
-Do NOT include any subversions (i.e. 10.13.6, 10.15.7, etc.).
+- Naming
+- Main menu shortcut
+- CPU model selection
+- Network adapter selection
+- OpenCore image selection
+- macOS Recovery download
+- Discord rich presence
 
-In project versions v0.8.6 and later, this value is also now used to add a boot entry to the main menu for easy access. Again, this is purely cosmetic but something to consider.
+You no longer need to type the target OS version. As of [v0.9.6](https://github.com/Coopydood/ultimate-macOS-KVM/releases/tag/v0.9.6), this stage presents a list of macOS versions to choose from, ranging from **macOS High Sierra** (10.13) to **macOS Sonoma** (14).
 
-| **Default** |      Accepted     |  _Examples_  |
-|:-----------:|:-----------------:|:------------:|
-|     1015    | 10XX<br>_(10.XX)_ | 1013<br>1014 |
-|             |   XX<br>_(>=11)_  |   11<br>12   |
+You can even select legacy versions of OS X if you wish, ranging from **Mac OS X Lion** (10.7) to **macOS Sierra** (10.12).
 
 ***
 ## 3. Set number of CPU cores
-Like any other virtual machine, the guest needs virtual cores to work with. As a general rule, use no more than **80%** of your _host's_ total cores. For example, if your host has _10 cores_, you shouldn't use any more than __8 virtual cores__. That's all I can recommend here - use your own judgment and scale to your hardware appropriately.
+Like any other virtual machine, the guest needs virtual cores to work with. 
+
+As a general rule, use no more than **80%** of your _host's_ total cores. For example, if your host has _10 cores_, you shouldn't use any more than __8 virtual cores__. That's all I can recommend here - use your own judgment and scale to your hardware appropriately.
 
 | **Default** | Accepted |  _Examples_ |
 |:-----------:|:--------:|:-----------:|
@@ -57,17 +62,17 @@ If this confuses you - and I don't blame you, I've confused myself - then leave 
 
 ***
 ## 5. Set CPU model
-This sets the model of the virtual CPU, and subsequently what the guest OS recognizes it as.
+This sets the model of the virtual CPU, and subsequently what the guest OS recognizes it as. The default is now determined partly by your *target OS*.
 
 > [!WARNING]
 > **THIS SHOULD NOT BE CHANGED UNLESS YOU KNOW WHAT IT MEANS!** Refer to the [official QEMU documentation on CPU models](https://qemu-project.gitlab.io/qemu/system/qemu-cpu-models.html) for a comprehensive list of acceptable values.
 
 If you _**know**_ your **host** CPU model is supported natively by macOS (i.e. Intel Core i3, i5, i7, i9) or at least a **similar variant of a supported model** (such as the i9-10900K being similar to Apple's i9-10910), you can expose the real model to the guest using the `host` value. It might do something. Use at your own risk.
 
-| **Default** |   Accepted  |      _Examples_      |
-|:-----------:|:-----------:|:--------------------:|
-|    Penryn   | [cpu_model] | Broadwell<br>IvyLake |
-|             |     host    |                      |
+| **Default**        |   Accepted  |      _Examples_      |
+|:------------------:|:-----------:|:--------------------:|
+|    Haswell-noTSX   | [cpu_model] | Broadwell<br>IvyLake |
+|                    |     host    |                      |
 
 ***
 ## 6. Set CPU feature arguments
@@ -95,10 +100,13 @@ Example: If your host has 16GB total RAM, your host uses 4GB of RAM when idle, d
 |      4G     | [number]**G** | 2G<br>8G<br>16G |
 
 ***
-## 8. Create virtual disk
+## 8. Create or add virtual disk
 You should think carefully about this one as it might be hard to change later. This is the capacity of your primary virtual hard drive that will be used for your macOS installation. Keep in mind **macOS uses upwards of 40GB for the system**, so you should base your total on how much you think you'll need. 
 
 If you're just testing the project, you can leave it as is. If you plan on using the virtual machine long-term, perhaps make it a bit bigger to give yourself room.
+
+> [!NOTE]
+> As of **v0.11.0**, you can now switch to using a physical disk on your host. See *stage 8.1*.
 
 > [!NOTE]
 > As of **v0.10.4**, you can now select an existing virtual qcow2 disk file without making a new one.
@@ -109,6 +117,22 @@ If you're just testing the project, you can leave it as is. If you plan on using
 | **Default** |    Accepted   |      _Examples_     |
 |:-----------:|:-------------:|:-------------------:|
 |     80G     | [number]**G** | 60G<br>120G<br>256G |
+
+### 8.1 Use a physical disk (advanced)
+
+Instead of a virtual disk, you can use a physical disk attached to your host. Before using a physical disk, you should understand the following:
+
+- The entire disk and its contents are exposed to the guest
+- The guest will have full write access to the disk
+- For NVMe drives, you should use PCI passthrough instead
+
+>[!TIP] 
+> To list available disk IDs, run
+> ``$ ls /dev/disk/by-id/`` in a new terminal.
+
+You must enter a valid disk ID. **Do NOT include the path**.
+e.g. "ata-SATA_SSD_55BD071B194500305381"
+
 
 ***
 ## 9. Virtual disk type
@@ -154,9 +178,11 @@ In this case, you should use your own custom one, or you can even have the scrip
 ## 12. macOS Recovery image file
 To install macOS, you'll need an image of the macOS Recovery. 
 
-The script can automatically download a recovery image of a macOS version of your choosing, or you can use one you already have. If you are using a custom image, it should be in the ***.img** format. You can drag a file onto the terminal window, or place a file called `BaseSystem.img` in the root of the project directory to have it be detected automatically. If it is in the ***.dmg** format - this is okay - the script will automatically detect this and convert it for you during the configuration process.
+The script can automatically download a recovery image of a macOS version of your choosing, or you can use one you already have. If you are using a custom image, it should be in the ``.img`` format. You can drag a file onto the terminal window, or place a file called `BaseSystem.img` in the root of the project directory to have it be detected automatically.
 
-You can also choose to skip this step, but this is not recommended.
+If it is in the ``.dmg`` format - this is okay - the script will automatically detect this and convert it for you during the configuration process. This becomes handy when using full offline installer ``InstallESD.dmg`` images.
+
+You can also choose to skip this step, such as if you are simply re-generating the AutoPilot config for an existing install.
 
 |   **Default**  |     Accepted    |              _Examples_             |
 |:--------------:|:---------------:|:-----------------------------------:|

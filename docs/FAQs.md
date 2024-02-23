@@ -168,7 +168,7 @@ The files in the aptly-named ``scripts`` folder are, well, the scripts themselve
 
 Files in the ``boot`` folder are generated after running AutoPilot. They consist of the OpenCore boot image and its unpackaged files. You can't really edit these even if you wanted to, except from the OpenCore image, which **you should do** from within macOS. A guide on this can be found [here](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/OpenCore).
 
-The ``blobs`` folder contains nothing until AutoPilot is run. This is where AutoPilot stores your choices, instead of using variables. This way, if the process is interrupted for some reason, it can be resumed using the existing files. The contents of these files may also be dictated by an *AutoPilot preset* that you loaded. It is **safe** to delete these files **after** AutoPilot has finished, or if you want to do a clean run of AutoPilot. If AutoPilot blobs exist the next time it is run, these blobs are automatically archived to a ``stale`` folder inside the ``blobs`` folder. The blobs in the ``stale`` folder are unused and are stored simply in case the user wants to back them up, but can be safely deleted at any time.
+The ``blobs`` folder contains nothing until AutoPilot is run. This is where AutoPilot stores your choices, instead of using variables. This way, if the process is interrupted for some reason, it can be resumed using the existing files. The contents of these files may also be dictated by an *AutoPilot preset* that you loaded. Do NOT delete the blobs in the ``user`` folder, as these are accessed by other areas of the project. The blobs in the ``stale`` folder are unused and are stored simply in case the user wants to back them up, but can be safely deleted at any time.
 
 The ``roms`` folder contains one example GPU VBIOS (AMD Radeon RX 550 Sapphire Pulse), and any other you've used or dumped with the project. If you supply a ROM file in the VFIO-PCI passthrough assistant for example, it will be copied from its original location to this folder for use with QEMU. The original ROM file is not touched. If you use the built-in VBIOS dump tool, the output file is also placed in this folder automatically. You may need to patch a GPU's VBIOS, and this can be done to any ROM file in this folder directly if you wish. The files in this folder can be safely deleted as long as they are no longer used by a script you've made with AutoPilot. If you don't use passthrough, this folder isn't relevant to you.
 
@@ -239,3 +239,10 @@ You can then connect to the virtual machine's display using a VNC client, at ``1
 
 ***
 I hope you liked reading this document and found it somewhat useful (and maybe even funny). Eversiege watched me write it and liked it, so it's obviously good.
+
+***
+
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ef278407-a14f-4ae7-bc23-3f635687db65" width="25%"> 
+
+<sub>Written and maintained by **Coopydood**. </sub>
+<br><sub>You can [contribute](https://github.com/Coopydood/ultimate-macOS-KVM/new/dev/docs) to documentation, too!</sub>

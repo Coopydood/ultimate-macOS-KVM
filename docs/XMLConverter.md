@@ -102,3 +102,10 @@ You'll be asked to select a valid `.xml` file. This must be in the correct **vir
 
 > [!NOTE]
 > You will not be asked to select an XML file if you have just used the conversion function. The newly-converted file will be used automatically.
+
+***
+
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ef278407-a14f-4ae7-bc23-3f635687db65" width="25%"> 
+
+<sub>Written and maintained by **Coopydood**. </sub>
+<br><sub>You can [contribute](https://github.com/Coopydood/ultimate-macOS-KVM/new/dev/docs) to documentation, too!</sub>

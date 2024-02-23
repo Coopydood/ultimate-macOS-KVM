@@ -1,7 +1,8 @@
-## main.py
+## Main Menu 
+### main.py
 This file acts as the project's main menu and should be used for all of your endeavors. 
 
-![Main menu of ultimate-macOS-KVM v0.9.0](https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/7ebc2d8d-98a8-4d29-918c-efaa3e2ec06e)
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/de4d5eb5-d7fd-45cc-9631-f12c75a1f42c" width="70%"></img>
 
 This section will highlight each option and briefly explain what it does without going into detail.
 
@@ -18,7 +19,7 @@ AutoPilot lets you configure the following:
 * CPU model
 * CPU feature args 
 * Allocated RAM
-* Virtual hard disk capacity
+* Hard disk
 * Network adapter model
 * MAC address
 * Bootable macOS recovery image
@@ -37,28 +38,32 @@ It's also worth noting that the file downloaded is **not** the full installer im
 
 ***
 
-## 3. System compatibility checks...
+## 3. Compatibility checks...
 
 This menu contains a few scripts designed to automatically test your system configuration and check it for any issues that may prevent you from using features such as KVM itself or VFIO-PCI passthrough. Your installed GPU(s) can also be checked for compatibility with macOS from this menu too.
 
 ***
 
-## 4. VFIO-PCI passthrough tools...
+## 4. Passthrough tools...
 
 Another menu that presents a list of useful tools that can assist in the preparation and configuration of VFIO-PCI passthrough of physical PCI devices, such as GPUs or audio cards. This menu also lets you start the **VFIO-PCI passthrough assistant** - an easy, guided way to get your system set up for successful passthrough.
 
-> [!NOTE]
-> This toolset can also be accessed from the Extras menu, as this main menu shortcut may be removed in a later version.
 
 ***
 
 ## E. Extras...
 
-What it says on the tin, really. This menu contains loads of other goodies, such as the AutoPilot extension script - **VFIO-PCI Passthrough Assistant** - which aims to make passing through devices a more seamless experience by walking you through each step and making the relevant changes to your config file for you. 
+What it says on the tin, really. This menu contains loads of other goodies, such as the **XML Converter** - which lets you convert and import your AutoPilot scripts into XMLs for use with Virtual Machine Manager! 
 
 You can also do other things here such as **resetting your OpenCore image**, or resetting **the entire repo** for those oopsie-whoopsie moments.
 
 For more information on Exras, see [this page](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Extras).
+
+***
+
+## W. What's new?
+
+This option simply opens your current version's release changelog in your default browser.
 
 ***
 
@@ -71,3 +76,10 @@ As you use it to generate your personal files, having to re-clone the entire rep
 Therefore, there's an automated updater script built right-in that you can use to safely update in-place to newer versions of this project, without affecting any of your personal config files, virtual hard drives, or anything else not part of the project files. And, if an update dramatically changes directory structures from your current version, the updater automatically disables its in-place update mechanism to prevent data loss.
 
 Of course, if you're just testing the project, then a "clean install" is probably still preferable.
+
+***
+
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ef278407-a14f-4ae7-bc23-3f635687db65" width="25%"> 
+
+<sub>Written and maintained by **Coopydood**. </sub>
+<br><sub>You can [contribute](https://github.com/Coopydood/ultimate-macOS-KVM/new/dev/docs) to documentation, too!</sub>

@@ -1,4 +1,4 @@
-## 🌐》Useful Links
+## Useful Links
 
 Here are some external links to other resources that you might find useful.
 
@@ -10,3 +10,10 @@ Here are some external links to other resources that you might find useful.
 
 > [!WARNING]
 > These links and their contents are not authored, monitored, or maintained by Coopydood, and are not affiliated as such. They are provided for convenience purposes only.
+
+***
+
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ef278407-a14f-4ae7-bc23-3f635687db65" width="25%"> 
+
+<sub>Written and maintained by **Coopydood**. </sub>
+<br><sub>You can [contribute](https://github.com/Coopydood/ultimate-macOS-KVM/new/dev/docs) to documentation, too!</sub>

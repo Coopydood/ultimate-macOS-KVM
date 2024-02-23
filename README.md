@@ -1,6 +1,6 @@
 <a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/492731ef1d95d2da534c660b001550f4d76a6c68/resources/images/bannerAlphaBasic.png?raw=true" alt="ultimate-macOS-KVM" width="500"/></a>
 
-### v0.11.0
+### v0.11.1
 
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
@@ -9,10 +9,6 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 <br>
 
 [![ULTMOS VERSION](https://img.shields.io/github/v/release/Coopydood/ultimate-macOS-KVM?style=for-the-badge&color=1793D1&logo=github&logoColor=white&label=)](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest) [![GitHub](https://img.shields.io/github/license/Coopydood/ultimate-macOS-KVM?label=Licence&logo=unlicense&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/LICENSE) [![GitHub repo size](https://img.shields.io/github/repo-size/Coopydood/ultimate-macOS-KVM?color=07b55b&label=Size&logo=envoy-proxy&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM) [![Discord](https://img.shields.io/discord/574943603466436628?color=7d86ff&label=Discord&logo=discord&logoColor=white&style=for-the-badge)](https://sl.coopydood.com/discord)
-
-***
-
-### ⭐️ **Thank you for 100 stars!**
 
 ***
 
@@ -98,11 +94,14 @@ The project requires several other packages to function properly, while others c
 
 All of the dependencies, both required and optional, are listed below.
 
+> [!IMPORTANT]
+> The package names listed below are examples on an Arch-based system. Your distro may be different!
+
 <b>Required</b>
 <ul>
 <li><b>Git</b> 》 <code>git</code></li>
 <li><b>Wget</b> 》 <code>wget</code></li>
-<li><b>QEMU</b> 》 <code>qemu-base</code> / <code>qemu-full</code></li>
+<li><b>QEMU</b> 》 <code>qemu-full</code></li>
 <li><b>Libvirt</b> 》 <code>libvirt</code></li>
 <li><b>DNSmasq</b> 》 <code>dnsmasq</code></li>
 <li><b>Python</b> 》 <code>python</code></li>
@@ -129,7 +128,10 @@ All of the dependencies, both required and optional, are listed below.
 
 Shocker; KVM is a module built into the *Linux kernel*, not **Windows Subsystem for Linux** or some UNIX-like terminal. You need a <ins>full install</ins> of at least base Linux **on your host**. Don't try any of that VM inception shenanigans.
 
-The easiest way to do this is by grabbing some mainstream Linux distro, like **Ubuntu, Linux Mint, Manjaro, endeavourOS** - among many, many others. You can pick any one you like. If it's Linux - you can use this project. *I use Arch BTW.*
+The easiest way to do this is by grabbing some mainstream Linux distro, like **Ubuntu, Linux Mint, Manjaro, endeavourOS** - among many, many others. You can theoretically pick any one you like. *I use Arch BTW.*
+
+> [!NOTE]
+> Testing of ULTMOS on different distrobutions is underway - but please note that is has been primarily developed and tested on **Arch** and **Debian**-based systems.
 
 ***
 
@@ -192,7 +194,7 @@ Oh, and speaking of...
 
 More detailed write-ups on the project and the scripts included, as well as some tutorials can be found on this [repo's wiki](https://github.com/Coopydood/ultimate-macOS-KVM/wiki).
 
-This is continually updated and made better as the project develops. Feel free to help out and [write your own!](https://github.com/Coopydood/ultimate-macOS-KVM/new/main/docs)
+This is continually updated and made better as the project develops. Feel free to help out and [write your own!](https://github.com/Coopydood/ultimate-macOS-KVM/new/dev/docs)
 
 Changelogs can be found on the [releases](https://github.com/Coopydood/ultimate-macOS-KVM/releases) page.
 
@@ -293,6 +295,7 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[Hyperchromiac](https://github.com/hyperchromiac)** 》 My personal constitution-munching American. Legend has it that I live in his attic, although even I'm not sure. Love this guy either way.
 - **[Kaz](https://github.com/Eaz11)** 》 Other than his brilliant English accent's pronunciations (including "macOS Syria"), he's done extensive testing. Say hi to your nephew for me.
 - **[GigantTech](https://twitter.com/TechGigant)** 》 Moderately annoying German guy that I convinced to install Linux subsequently letting him test my project. It's free real estate!
+- **[Hummenix](https://github.com/Hummenix)** 》Testing of ULTMOS across different Linux distros. 
 
 ***
 

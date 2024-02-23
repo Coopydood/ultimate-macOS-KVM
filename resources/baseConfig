@@ -117,10 +117,9 @@ if [ $VERBOSE = 1 ]
 then
 echo
 echo \ \ \──────────────────────────────────────────────
-echo \ \ \ \ \ $NAME
+echo \ \ \ \ \ $FILE
 echo \ \ \ \ \ macOS $OS_ID
 echo
-echo \ \ \ \ \ $FILE
 echo \ \ \ \ \ Built with ULTMOS v$ULTMOS
 echo \ \ \ \ \ Using $CPU_MODEL CPU model
 if [ $REQUIRES_SUDO = 1 ]

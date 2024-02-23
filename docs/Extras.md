@@ -1,11 +1,12 @@
-## extras.py
-**THIS PAGE NEEDS UPDATING!**
+## Extras
+### extras.py
 
-**⚠ THIS SCRIPT SHOULD NOT BE RUN DIRECTLY BY THE USER!** 
+> [!WARNING]
+> This script should not be run on its own. 
+> 
+> It should be run through the `main.py` file instead. Use the **E** option at the main menu.
 
-It should be run through the `main.py` file instead. Use the **E** option at the main menu.
-
-![image](https://user-images.githubusercontent.com/39441479/215358442-ea028ed6-9611-46c7-b04b-3c48507343e7.png)
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/3b68543b-553a-49f0-bc74-55fc6982fc11" width="70%"></img>
 
 This page will go over some of the features in the Extras menu, without too much detail.
 
@@ -16,41 +17,47 @@ This option allows you to automatically convert a QEMU config script previously 
 
 After conversion, you'll have the option to automatically import the XML file into virt-manager.
 
-***
-## 2. VFIO-PCI passthrough assistant
-If AutoPilot wasn't tiring enough for me to make, this takes the cake. It's an extension to AutoPilot itself - providing you with an easy(ier) way to correctly set up your config file with VFIO-PCI devices.
-
-After completing AutoPilot, you're left with a bare-bones / no-frills macOS virtual machine that has been customised to your liking. This itself is probably enough for most people. But, if you demand more and are categorically not "most people" - this is for you. 
-
-Providing you have [a compatible GPU](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Main-Menu#3-check-gpu-compatibility), you can
-use this assistant to utilise GPU passthrough and enable 3D acceleration in macOS.
+To learn more about the XML Converter, visit [this page](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/XML-Converter).
 
 ***
-## 3. Create a backup of config files
-**✖ THIS IS NOT YET IMPLEMENTED!**
 
-A cute 'lil script made to save you from yourself when you inevitably do something really, really stupid. 
+## 2. OpenCore Configuration Assistant
 
-***
-## 4. Dump VBIOS to ROM file
-**✖ THIS IS NOT YET IMPLEMENTED!**
-
-Utilising the Linux filesystem's sexy device management, this script lets you easily dump your GPU's VBIOS to a ROM file for use with VFIO-PCI passthrough. *This isn't always required*, but depends on your specific GPU.
+This tool allows you to mount your virtual OpenCore image as a disk on your host system, allowing you to edit the contents without ever booting your VM.
 
 ***
-## R. Reset OpenCore image and vNVRAM
-**☢ THIS IS INTENTIONALLY DESTRUCTIVE!**
 
-This project is set up to try and make your oopsie-whoopsies as painless as possible, by providing you with plenty of opportunities to back up your personal config files and images. 
+## 3. macOS Boot Argument Editor
 
-Aside from backups, the project also keeps fresh copies of its main components stashed in its resources folder, for safe keeping *from you*. 
+This tool allows you to seamlessly edit your macOS OpenCore boot arguments - letting you apply patches for things like GPU output.
 
-Basically, this means that if you somehow corrupt your OpenCore boot image, or something in the virtual NVRAM, you can overwrite it with a fresh working copy from the repo's secret stash. This option is like a "soft-reset", and doesn't affect your config files or virtual hard disk files - just the virtual bootloader and NVRAM.
+It even includes a feature called **AutoPatch**, containing a list of known boot argument patches. You can select one, and the tool will instantly apply the relevant boot patch for your system. For example, you can apply the **Navi RX 5000 / 6000 black screen** patch automatically!
+
+For more on this, and available patches, visit [this page](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/macOS-Boot-Argument-Editor).
 
 ***
-## X. Download and restore all 
-**☢ THIS IS INTENTIONALLY DESTRUCTIVE!**
 
-Now you've done it. The biggest oopsie-whoopsie f*cky-wucky of them all - and my repo has been tainted with your mess. Somehow, if you have to use this option, you've messed up **so badly** that you feel like you have to reset the repo itself. 
+## 4. GRUB Argument Editor
 
-While this *shouldn't* be destructive for *your* personal files (i.e. configs and vHDDs) it carries some risk as it will clear and reset all of the projects files with online copies. The latest version of the repo's files will be downloaded regardless of your current version - so unlike the built-in updater script there are no safety measures to account for any dramatic discrepancies between local and remote versions. 
+For users who use GRUB to boot their host's Linux install, setting the right kernel parameters can sometimes be a daunting mess. With this tool, most of this stress is taken care of automatically, through the auto-configuration of parameters **based on your specific system!**
+
+Created by @Hyperchromiac.
+
+***
+## R. Restore tools...
+
+This opens a seperate menu providing options to restore various parts of the repository to defaults.
+
+Great for troubleshooting common issues and covering up your mess.
+
+***
+## I. Report an issue...
+
+Opens a new issue page on the GitHub repo in your default browser.
+
+***
+
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ef278407-a14f-4ae7-bc23-3f635687db65" width="25%"> 
+
+<sub>Written and maintained by **Coopydood**. </sub>
+<br><sub>You can [contribute](https://github.com/Coopydood/ultimate-macOS-KVM/new/dev/docs) to documentation, too!</sub>
