@@ -45,3 +45,10 @@ Now, down the side of the main window, click **PlatformInfo**, then along the ta
 The many fields on the page should now be populated with values, including the *serial number* at the top. Under the box, there should be a **Generate** button. Click that and make sure the new serial number is unique. When you've done this, go ahead and go to **File > Save**, and reboot the VM.
 
 Upon reboot, check the serial number again from the **About this Mac** window. If it has been changed - **congratulations**! You now have a unique serial number. This means you can safely log into your Apple ID, with the assurance no one else will use that serial number. 
+
+***
+
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ef278407-a14f-4ae7-bc23-3f635687db65" width="25%"> 
+
+<sub>Written and maintained by **Coopydood**. </sub>
+<br><sub>You can [contribute](https://github.com/Coopydood/ultimate-macOS-KVM/new/dev/docs) to documentation, too!</sub>

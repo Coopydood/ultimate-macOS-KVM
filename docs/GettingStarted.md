@@ -38,3 +38,10 @@ When using the script, make sure you are cd'd into the `ultimate-macOS-KVM` repo
 > [!IMPORTANT]
 > Do *not* use `sudo`. If you're in the habit of running everything with superuser permissions - break that habit before it breaks you.
 > None of my scripts require `sudo` or root permissions. The only exception to this would be when running a config script *with a physical PCI device passed through using VFIO-PCI*, as this may require superuser permissions as you're dealing with physical devices.
+
+***
+
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ef278407-a14f-4ae7-bc23-3f635687db65" width="25%"> 
+
+<sub>Written and maintained by **Coopydood**. </sub>
+<br><sub>You can [contribute](https://github.com/Coopydood/ultimate-macOS-KVM/new/dev/docs) to documentation, too!</sub>

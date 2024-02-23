@@ -55,7 +55,7 @@ def startup():
         print(color.BOLD+"      1. Convert and import XML file")
         print(color.END+"         Auto generate an XML file from your boot script and\n         import it into virsh / virt-manager\n")
         #print(color.END+"      2. Passthrough tools...")
-        print(color.END+"      2. OpenCore configuration assistant...")
+        print(color.END+"      2. OpenCore Configuration Assistant...")
         print(color.END+"      3. macOS Boot Argument Editor...")
         print(color.END+"      4. GRUB Argument Editor...\n")
         print(color.RED+"      R. Restore tools...")
