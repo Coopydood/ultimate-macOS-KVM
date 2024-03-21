@@ -22,7 +22,7 @@ There have been widespread reports of USB issues surrounding the latest **macOS 
 
 Due to this issue, installing macOS Sonoma without passthrough appears to be impossible as the macOS Sonoma recovery image is now based on 14.4. 
 
-As a workaround, you can manually [download the 14.2.1 recovery image](https://file.io/1zV8og9g0EoU), and use that to install macOS. <br>
+As a workaround, you can manually [download the 14.2.1 recovery image](https://filetransfer.io/data-package/wG8Tg1Wq#link), and use that to install macOS. <br>
 
 ***
 
