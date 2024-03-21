@@ -12,7 +12,7 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 
 ***
 <img align="left" width="100" height="100" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/823f6dc7-d656-4c34-86d8-3d5b56b75bb9">
-<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=280 width=2 />
+<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=300 width=2 />
 
 <h3>macOS Sonoma 14.4 Update<br><sub>Important Information</sub></h3>
 
@@ -22,8 +22,7 @@ There have been widespread reports of USB issues surrounding the latest **macOS 
 
 Due to this issue, installing macOS Sonoma without passthrough appears to be impossible as the macOS Sonoma recovery image is now based on 14.4. 
 
-As a workaround, you can manually [download the 14.2.1 recovery image](), and use that to install macOS. 
-
+As a workaround, you can manually [download the 14.2.1 recovery image](), and use that to install macOS. <br>
 
 ***
 
