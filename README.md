@@ -11,6 +11,21 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 [![ULTMOS VERSION](https://img.shields.io/github/v/release/Coopydood/ultimate-macOS-KVM?style=for-the-badge&color=1793D1&logo=github&logoColor=white&label=)](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest) [![GitHub](https://img.shields.io/github/license/Coopydood/ultimate-macOS-KVM?label=Licence&logo=unlicense&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/LICENSE) [![GitHub repo size](https://img.shields.io/github/repo-size/Coopydood/ultimate-macOS-KVM?color=07b55b&label=Size&logo=envoy-proxy&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM) [![Discord](https://img.shields.io/discord/574943603466436628?color=7d86ff&label=Discord&logo=discord&logoColor=white&style=for-the-badge)](https://sl.coopydood.com/discord)
 
 ***
+<img align="left" width="100" height="100" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/823f6dc7-d656-4c34-86d8-3d5b56b75bb9">
+<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=250 width=2 />
+
+<h3>macOS Sonoma 14.4 Update<br><sub>Important Information</sub></h3>
+
+There have been widespread reports of USB issues surrounding the latest **macOS 14.4 Update**, including on Apple's own hardware, that [appear to be preventing QEMU's virtual mouse and keyboard from working](https://github.com/Coopydood/ultimate-macOS-KVM/issues/78).
+
+**If you are on 14.3.X or earlier, do NOT update to 14.4.**
+
+Due to this issue, installing macOS Sonoma without passthrough appears to be impossible as the macOS Sonoma recovery image is now based on 14.4. 
+
+As a workaround, you can manually [download the 14.2.1 recovery image](), and use that to install macOS. 
+
+
+***
 
 ## 👋》Introduction
 
