@@ -51,15 +51,16 @@ if enableLog == True: # LOG SUPPORT
       #if logStatus == "fatal":   logStatus = "[ ☠ ]"
       #if logStatus == "wait":    logStatus = "[ ➜ ]"
       
-      if logStatus == "ok":      logStatus = "[    OK ]"
-      if logStatus == "info":    logStatus = "[  INFO ]"
-      if logStatus == "warn":    logStatus = "[  WARN ]"
-      if logStatus == "error":   logStatus = "[ ERROR ]"
-      if logStatus == "fatal":   logStatus = "[ FATAL ]"
-      if logStatus == "wait":    logStatus = "[  WAIT ]"
+      if logStatus == "ok":      logStatus = "[  OK  ]: "
+      if logStatus == "info":    logStatus = "[ INFO ]: "
+      if logStatus == "warn":    logStatus = "[ WARN ]: "
+      if logStatus == "error":   logStatus = "[ ERROR ]:"
+      if logStatus == "fatal":   logStatus = "[ FATAL ]:"
+      if logStatus == "wait":    logStatus = "[ WAIT ]: "
+      if logStatus == "debug":   logStatus = "[ DEBUG ]:"
       entryTime = str(datetime.today().strftime('%H:%M:%S.%f'))
       entryTime = entryTime[:-3]
-      entryLine = ("["+entryTime+"]"+str(logStatus)+":  "+str(logMsg)+"\n")
+      entryLine = ("["+entryTime+"]"+str(logStatus)+" "+str(logMsg)+"\n")
       logFile.write(entryLine)
       logFile.close()
 else:

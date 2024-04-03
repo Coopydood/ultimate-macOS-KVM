@@ -50,21 +50,23 @@ if enableLog == True: # LOG SUPPORT
     os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/VPTA_RUN_"+logTime+".log")
     def cpydLog(logStatus,logMsg,*args):
         logFile = open("./logs/VPTA_RUN_"+logTime+".log","a")
-        #if logStatus == "ok":      logStatus = "[ ✔ ]"
+            #if logStatus == "ok":      logStatus = "[ ✔ ]"
         #if logStatus == "info":    logStatus = "[ ✦ ]"
         #if logStatus == "warn":    logStatus = "[ ⚠ ]"
         #if logStatus == "error":   logStatus = "[ ✖ ]"
         #if logStatus == "fatal":   logStatus = "[ ☠ ]"
         #if logStatus == "wait":    logStatus = "[ ➜ ]"
-        if logStatus == "ok":      logStatus = "[    OK ]"
-        if logStatus == "info":    logStatus = "[  INFO ]"
-        if logStatus == "warn":    logStatus = "[  WARN ]"
-        if logStatus == "error":   logStatus = "[ ERROR ]"
-        if logStatus == "fatal":   logStatus = "[ FATAL ]"
-        if logStatus == "wait":    logStatus = "[  WAIT ]"
+        
+        if logStatus == "ok":      logStatus = "[  OK  ]: "
+        if logStatus == "info":    logStatus = "[ INFO ]: "
+        if logStatus == "warn":    logStatus = "[ WARN ]: "
+        if logStatus == "error":   logStatus = "[ ERROR ]:"
+        if logStatus == "fatal":   logStatus = "[ FATAL ]:"
+        if logStatus == "wait":    logStatus = "[ WAIT ]: "
+        if logStatus == "debug":   logStatus = "[ DEBUG ]:"
         entryTime = str(datetime.today().strftime('%H:%M:%S.%f'))
         entryTime = entryTime[:-3]
-        entryLine = ("["+entryTime+"]"+str(logStatus)+":  "+str(logMsg)+"\n")
+        entryLine = ("["+entryTime+"]"+str(logStatus)+" "+str(logMsg)+"\n")
         logFile.write(entryLine)
         logFile.close()
 else:
@@ -193,7 +195,7 @@ def preliminary():
     if (len(vfio_ids) == 0 or len(vfio_names) == 0 or len(pci_ids) == 0):
         # TODO: LOGGING SHIT GOING SOUTH
         clear()
-        print(f"   \033[91m\033[1m✖ NO VFIO-PCI DEVICES FOUND\033[0m\n")
+        print(f"   \033[91m\033[1m✖  NO VFIO-PCI DEVICES FOUND\033[0m\n")
         print(f"   The script couldn't find any stubbed PCI devices")
         print(f"   to use with VFIO. Check your boot arguments!!!\n")
         cpydLog("fatal", "User's machine does not have any stubbed VFIO-PCI devices.")

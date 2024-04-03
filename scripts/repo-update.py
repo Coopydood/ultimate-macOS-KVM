@@ -110,6 +110,7 @@ targetBranch = "main"
 if args.switchBranch is not None:
    targetBranch = args.switchBranch
 
+
 #print("wget -q --output-document=./resources/.webversion --no-cache --no-cookies https://raw.githubusercontent.com/Coopydood/ultimate-macOS-KVM/"+str(targetBranch)+"/.version")
 
 if integrity == 1:
@@ -230,18 +231,19 @@ if integrity == 1:
          print(color.BOLD+"         Target Version\n   "+color.BOLD+"          v"+webVersion,"\n"+color.END)
          print("   The update you requested is being downloaded and installed.\n   Do NOT terminate this script or close the window.\n\n")
          time.sleep(2)
-         if args.version is not None and args.targetBranch is None:
+         if args.version is not None and targetBranch == "main":
             targetVersion = args.version
             os.system("git reset --hard tags/v"+targetVersion)
-         elif args.targetBranch is not None:
+         elif targetBranch != "main":
             os.system("git switch "+str(targetBranch)+" > /dev/null 2>&1")
-            os.system("git pull -f -q > /dev/null 2>&1")
-            os.system("git merge --autostash origin/main > /dev/null 2>&1")
+            os.system("git fetch --all -q > /dev/null 2>&1")
+            os.system("git merge --autostash origin/"+str(targetBranch)+" > /dev/null 2>&1")
          else:
             #os.system("git reset --hard HEAD")
             #os.system("git clean -xffd > /dev/null 2>&1")
-            os.system("git pull -f -q > /dev/null 2>&1")
-            os.system("git merge --autostash origin/main > /dev/null 2>&1")
+            os.system("git fetch --all -q > /dev/null 2>&1")
+            os.system("git branch -q backup-main > /dev/null 2>&1")
+            os.system("git reset --hard -q origin/main > /dev/null 2>&1")
          clear()
          clear()
          print("\n\n   "+color.BOLD+color.BLUE+"⧖  UPDATING..."+color.END,"")

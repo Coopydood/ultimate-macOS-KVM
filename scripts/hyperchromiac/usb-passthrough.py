@@ -56,15 +56,16 @@ if enableLog == True: # LOG SUPPORT
         #if logStatus == "error":   logStatus = "[ ✖ ]"
         #if logStatus == "fatal":   logStatus = "[ ☠ ]"
         #if logStatus == "wait":    logStatus = "[ ➜ ]"
-        if logStatus == "ok":      logStatus = "[    OK ]"
-        if logStatus == "info":    logStatus = "[  INFO ]"
-        if logStatus == "warn":    logStatus = "[  WARN ]"
-        if logStatus == "error":   logStatus = "[ ERROR ]"
-        if logStatus == "fatal":   logStatus = "[ FATAL ]"
-        if logStatus == "wait":    logStatus = "[  WAIT ]"
+        if logStatus == "ok":      logStatus = "[  OK  ]: "
+        if logStatus == "info":    logStatus = "[ INFO ]: "
+        if logStatus == "warn":    logStatus = "[ WARN ]: "
+        if logStatus == "error":   logStatus = "[ ERROR ]:"
+        if logStatus == "fatal":   logStatus = "[ FATAL ]:"
+        if logStatus == "wait":    logStatus = "[ WAIT ]: "
+        if logStatus == "debug":   logStatus = "[ DEBUG ]:"
         entryTime = str(datetime.today().strftime('%H:%M:%S.%f'))
         entryTime = entryTime[:-3]
-        entryLine = ("["+entryTime+"]"+str(logStatus)+":  "+str(logMsg)+"\n")
+        entryLine = ("["+entryTime+"]"+str(logStatus)+" "+str(logMsg)+"\n")
         logFile.write(entryLine)
         logFile.close()
 else:
@@ -158,7 +159,7 @@ def preliminary():
     if (len(usb_ids) == 0 or len(usb_names) == 0):
         # TODO: LOGGING SHIT GOING SOUTH
         clear()
-        print(f"   \033[91m\033[1m✖ NO USB DEVICES FOUND\033[0m\n")
+        print(f"   \033[91m\033[1m✖  NO USB DEVICES FOUND\033[0m\n")
         print(f"   There were no USB devices detected on your computer.")
         print(f"   How did you even manage that?\n")
         cpydLog("fatal", "User's machine apparently has no USB devices. How did that happen?")
