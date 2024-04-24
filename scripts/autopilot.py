@@ -702,7 +702,12 @@ def autopilot():
 
       elif stageSelect == "b" or stageSelect == "B":
          currentStage = 1
-         stage13()
+         if USR_TARGET_OS >= 14 and USR_TARGET_OS <= 14: 
+            stage12()
+         elif USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012: 
+            stage12()
+         else:
+            stage13()
          
       elif stageSelect == "?":
          clear()
@@ -763,6 +768,17 @@ def autopilot():
          None
       if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012: 
          cpydLog("warn",str("Custom resolution unsupported on legacy OS, using default value of "+str(defaultValue)))
+         USR_SCREEN_RES = "1280x720"
+         blob = open("./blobs/USR_SCREEN_RES.apb","w")
+         blob.write(USR_SCREEN_RES)
+         blob.close()
+         blob = open("./blobs/.cdn_control","w")
+         blob.write("fresh_cdn")
+         blob.close()
+         currentStage = currentStage + 1
+         stage14()
+      if USR_TARGET_OS >= 14 and USR_TARGET_OS <= 14: 
+         cpydLog("warn",str("Custom resolution unsupported with Sonoma patching, using default value of "+str(defaultValue)))
          USR_SCREEN_RES = "1280x720"
          blob = open("./blobs/USR_SCREEN_RES.apb","w")
          blob.write(USR_SCREEN_RES)
@@ -3108,6 +3124,7 @@ def autopilot():
 
          if USR_TARGET_OS_ID == "sonoma": # APPLY 14.4 FIX
             configData = configData.replace("-device usb-ehci,id=ehci","#-device usb-ehci,id=ehci")
+            os.system("cp resources/ovmf/OVMF_VARS_SonomaPatch.fd ovmf/OVMF_VARS.fd")
 
          if USR_HDD_TYPE == "HDD":
             cpydLog("ok",("Disk type is HDD, leaving rotation rate as default"))
