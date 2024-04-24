@@ -189,7 +189,7 @@ def save_image(url, sess, filename='', directory=''):
         #else:
             #print("Note: The total download size is %0.2f MB" % total_size)
         size = 0
-        print("   ──────────────────────────────────────────────────────────────")
+        #print("   ──────────────────────────────────────────────────────────────")
         while True:
             #print("   ──────────────────────────────────────────────────────────────")
             chunk = response.read(2 ** 20)

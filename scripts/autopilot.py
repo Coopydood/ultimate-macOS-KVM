@@ -22,6 +22,7 @@ import re
 import json
 import sys
 import argparse
+import datetime
 from datetime import datetime
 import timeit
 import random
@@ -428,10 +429,50 @@ def autopilot():
 
    global activeNotice
 
+   global progress
+   global progressGUI
+
    activeNotice = {}
 
    cpydLog("info",("FEATURE LEVEL "+str(FEATURE_LEVEL)))
    
+
+   def progressUpdate(progressVal,*args):
+      global progress
+      global progressGUI
+      progress = progressVal #(round(float(100 * progressVal / (2 ** 20))/100))
+      if progress <= 9:
+            progressGUI = (color.GREEN+""+color.GRAY+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉")
+      elif progress >= 9 and progress <= 20:
+            progressGUI = (color.GREEN+"▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉")
+      elif progress >= 19 and progress <= 30:
+            progressGUI = (color.GREEN+"▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉")
+      elif progress >= 29 and progress <= 40:
+            progressGUI = (color.GREEN+"▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉")
+      elif progress >= 39 and progress <= 50:
+            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉▉▉▉▉")
+      elif progress >= 49 and progress <= 60:
+            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉▉▉")
+      elif progress >= 59 and progress <= 70:
+            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉")
+      elif progress >= 69 and progress <= 80:
+            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉")
+      elif progress >= 79 and progress <= 90:
+            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉")
+      elif progress >= 89 and progress <= 99:
+            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉")
+      elif progress >= 99:
+            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"")
+      if progress >= 0:
+         print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('')), end='')
+         sys.stdout.flush()
+      else:
+         print('   \r                       '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ────────────────────────────────────────────────────────────── ')), end='')
+      #print('   \r      ──────────────────────────────────────────────────────────────')
+
+
+
+
    def stage15():
       global USR_CPU_SOCKS
       global USR_CPU_CORES
@@ -2653,7 +2694,7 @@ def autopilot():
       global PROC_LOCALCOPY_CVTN 
       global PROC_GENXML
       global startTime
-
+      progressUpdate(0)
       startTime = 0
 
       PROC_PREPARE = 0
@@ -2807,8 +2848,11 @@ def autopilot():
                print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Cleaning up"+color.END)
 
          print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
-         if PROC_FETCHDL != 1:
-            print("\n\n\n")
+         progressUpdate(-1)
+         #print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ────────────────────────────────────────────────────────────── ')), end='')
+         #print("\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+         #if PROC_FETCHDL != 1:
+            #print("\n\n\n")
 
       refreshStatusGUI()
       time.sleep(3)
@@ -2819,7 +2863,7 @@ def autopilot():
          global USR_SCREEN_RES
          PROC_PREPARE = 1
          cpydLog("info",("STARTING PREPARE PHASE"))
-
+         progressUpdate(0)
          try: # DISCORD RPC
             RPC.update(large_image=osIcon,large_text=projectVer,details="AutoPilot",small_image="doodrestart",small_text="Running...",state="Preparing files...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
          except:
@@ -2830,6 +2874,7 @@ def autopilot():
          refreshStatusGUI()
          cpydLog("info",("Setting up environment"))
          os.system("cp resources/baseConfig resources/config.sh")
+         progressUpdate(12)
          cpydLog("ok",("Copied baseConfig into live working file"))
          time.sleep(1)
          cpydLog("info",("Setting up OpenCore image"))
@@ -2839,6 +2884,7 @@ def autopilot():
             backupOCPath = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
             os.system("mkdir boot/"+backupOCPath)
             os.system("mv boot/*.qcow2 boot/"+backupOCPath+"/")
+            progressUpdate(32)
             #os.system("mv boot/*.plist boot/"+backupOCPath+"/")
             #os.system("mv boot/EFI boot/"+backupOCPath+"/EFI")
             cpydLog("ok",("Existing image backed up to ./boot/"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))))
@@ -2849,6 +2895,7 @@ def autopilot():
             cpydLog("ok",("Selected OLD OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
+            progressUpdate(32)
             #os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
             #os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
             cpydLog("ok",("OpenCore image copied"))
@@ -2856,11 +2903,13 @@ def autopilot():
             cpydLog("ok",("Selected NEW LEGACY OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/legacy_new/OpenCore.qcow2 boot/OpenCore.qcow2")
+            progressUpdate(32)
             cpydLog("ok",("OpenCore image copied"))
          elif USR_TARGET_OS <= 1012 and USR_TARGET_OS <= 107 and USR_TARGET_OS >= 100:
             cpydLog("ok",("Selected OLD LEGACY OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/legacy_new/OpenCore.qcow2 boot/OpenCore.qcow2")
+            progressUpdate(32)
             cpydLog("ok",("OpenCore image copied"))
          #elif USR_TARGET_OS >= 1400:
          #   cpydLog("ok",("Selected EXPERIMENTAL OpenCore image"))
@@ -2871,6 +2920,7 @@ def autopilot():
             cpydLog("ok",("Selected NEW OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
             os.system("cp resources/oc_store/compat_new/OpenCore.qcow2 boot/OpenCore.qcow2")
+            progressUpdate(32)
             #os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
             #os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
             cpydLog("ok",("OpenCore image copied"))
@@ -2878,13 +2928,16 @@ def autopilot():
          cpydLog("info",("Copying OVMF code into place"))
          os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
          os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
+         progressUpdate(40)
          cpydLog("info",("Copying OVMF vars for resolution "+str(USR_SCREEN_RES)))
          os.system("cp resources/ovmf/OVMF_VARS_"+USR_SCREEN_RES+".fd ovmf/OVMF_VARS.fd")
+         progressUpdate(46)
          cpydLog("ok",("OVMF files copied"))
 
          # NOW COPY A DUPLICATE TO LOCAL STORE FOR RESTORATION WITH SETTINGS PRESERVATION
          cpydLog("info",("Creating local OVMF variable store"))
          os.system("cp resources/ovmf/OVMF_VARS_"+USR_SCREEN_RES+".fd ovmf/user_store/OVMF_VARS.fd")
+         progressUpdate(62)
          
          cpydLog("info",("Performing integrity check"))
          integrityConfig = 1
@@ -2894,14 +2947,15 @@ def autopilot():
             integrityConfig = integrityConfig - 1
             cpydLog("error",("Integrity check FAILED for config file"))
             throwError()
-
+         time.sleep(0.5)
+         progressUpdate(74)
          if os.path.exists("boot/OpenCore.qcow2"):
             integrityConfig = integrityConfig + 0
          else:
             integrityConfig = integrityConfig - 1
             cpydLog("error",("Integrity check FAILED for OpenCore image"))
             throwError()
-         
+         progressUpdate(91)
          if os.path.exists("ovmf/OVMF_CODE.fd"):
             integrityConfig = integrityConfig + 0
          else:
@@ -2909,14 +2963,18 @@ def autopilot():
             cpydLog("error",("Integrity check FAILED for OVMF"))
             throwError()
          cpydLog("ok",("Integrity check PASSED"))
+         progressUpdate(97)
 
          PROC_PREPARE = 2
          cpydLog("ok",("Updated stage status, handing off to next stage"))
+         progressUpdate(100)
+         time.sleep(1)
          refreshStatusGUI()
 
       def apcBlobCheck():  # CHECK BLOBS
          global PROC_CHECKBLOBS
          PROC_CHECKBLOBS = 1
+         progressUpdate(0)
          cpydLog("info",("STARTING INTEGRITY PHASE"))
          try: # DISCORD RPC
             RPC.update(large_image=osIcon,large_text=projectVer,state="Checking preferences...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
@@ -2926,6 +2984,7 @@ def autopilot():
          errorMessage = "The integrity of the wizard preference files\n           could not be verified."
          integrity = 1
          refreshStatusGUI()
+         progressUpdate(16)
          time.sleep(4)
          if os.path.exists("blobs/USR_ALLOCATED_RAM.apb"):
             integrity = integrity + 0
@@ -2993,12 +3052,14 @@ def autopilot():
          else:
             integrity = integrity - 1
             cpydLog("error",("USR_CREATE_XML blob integrity failure"))
-
+         progressUpdate(98)
          if integrity == 1:
             cpydLog("ok",("Integrity check PASSED"))
             
             PROC_CHECKBLOBS = 2
             cpydLog("ok",("Updated stage status, handing off to next stage"))
+            progressUpdate(100)
+            time.sleep(1)
             refreshStatusGUI()
          else:
             cpydLog("fatal",("Integrity of work is damaged, killing flow"))
@@ -3007,6 +3068,7 @@ def autopilot():
       def apcGenConfig():  # GENERATE CONFIG
          global PROC_GENCONFIG
          PROC_GENCONFIG = 1
+         progressUpdate(0)
          cpydLog("info",("STARTING GENERATION PHASE"))
          global PROC_GENXML
          global USR_CFG
@@ -3080,15 +3142,18 @@ def autopilot():
                   exit
 
          workdir = os.getcwd()
+         progressUpdate(5)
          cpydLog("info",("Working directory was captured as "+str(workdir)))
 
          refreshStatusGUI()
          cpydLog("info",("Scanning for file conflict"))
-         time.sleep(4)
+         progressUpdate(23)
+         time.sleep(3)
          if os.path.exists("./"+USR_CFG) or os.path.exists("./"+USR_CFG_XML):
             customInput = 0
             customValue = 0
             existingWarning()
+         progressUpdate(31)
 
          cpydLog("info",("Beginning variable injection"))
          with open("resources/config.sh","r") as file:
@@ -3101,12 +3166,14 @@ def autopilot():
          configData = configData.replace("$USR_ALLOCATED_RAM",str(USR_ALLOCATED_RAM))
          configData = configData.replace("$USR_REPO_PATH",workdir)
          configData = configData.replace("$USR_NETWORK_DEVICE",str(USR_NETWORK_DEVICE))
+         progressUpdate(37)
          if USR_TARGET_OS >= 1013 or USR_TARGET_OS <= 99:
             configData = configData.replace("$USR_NAME","macOS "+str(USR_TARGET_OS_F))
             configData = configData.replace("$USR_ID","macOS")
          else:
             configData = configData.replace("$USR_NAME","Mac OS X "+str(USR_TARGET_OS_F))
             configData = configData.replace("$USR_ID","Mac OS X")
+         progressUpdate(58)
          configData = configData.replace("baseConfig",str(USR_CFG))
          configData = configData.replace("$USR_CFG",str(USR_CFG))
          configData = configData.replace("$USR_MAC_ADDRESS",str(USR_MAC_ADDRESS))
@@ -3121,7 +3188,7 @@ def autopilot():
             cpydLog("warn",("Physical disk requested, changing type to RAW"))
             configData = configData.replace("file=\"$HDD_PATH\",format=qcow2","file=\"$HDD_PATH\",format=raw")
             configData = configData.replace("REQUIRES_SUDO=0","REQUIRES_SUDO=1")
-
+         progressUpdate(64)
          if USR_TARGET_OS_ID == "sonoma": # APPLY 14.4 FIX
             configData = configData.replace("-device usb-ehci,id=ehci","#-device usb-ehci,id=ehci")
             os.system("cp resources/ovmf/OVMF_VARS_SonomaPatch.fd ovmf/OVMF_VARS.fd")
@@ -3139,6 +3206,8 @@ def autopilot():
          else:
             cpydLog("warn",("Disk type is UNKNOWN, won't change anything"))
          
+         progressUpdate(72)
+         
 
 
          cpydLog("ok",("Variable injection complete"))
@@ -3146,11 +3215,11 @@ def autopilot():
          cpydLog("info",("Stamping with ULTMOS version"))
          configData = configData.replace("ULTMOS=0.0.0","ULTMOS="+str(version))
          cpydLog("ok",("Marked working script as using ULTMOS v"+str(version)))
-
+         progressUpdate(80)
          cpydLog("info",("Stamping with feature level"))
          configData = configData.replace("FEATURE_LEVEL=0","FEATURE_LEVEL="+str(FEATURE_LEVEL))
          cpydLog("ok",("Marked working script as feature level "+str(FEATURE_LEVEL)))
-
+         progressUpdate(82)
          cpydLog("info",("Checking if Discord rich presence is available"))
          output_stream1 = os.popen("pip show pypresence")
          vfcPresence = output_stream1.read()
@@ -3162,10 +3231,10 @@ def autopilot():
             vfcPresence = 0
             cpydLog("warn",("Discord rich presence appears unavailable, will NOT enable in script"))
             configData = configData.replace("DISCORD_RPC=1","DISCORD_RPC=0")
-
+         progressUpdate(89)
          cpydLog("info",("Adding OS ID marker"))
          configData = configData.replace("$USR_OS_NAME",str(USR_TARGET_OS_NAME))
-
+         progressUpdate(90)
 
          cpydLog("info",("Setting up BaseSystem image attachment"))
          if USR_BOOT_FILE == "-2":
@@ -3176,7 +3245,7 @@ def autopilot():
             cpydLog("info",("Writing changes"))
             file.write(configData)
             cpydLog("ok",("Changes written to file"))
-
+         progressUpdate(96)
          cpydLog("info",("Performing integrity check"))
          with open("resources/config.sh","r") as file:
             configDataTest = file.read()
@@ -3186,7 +3255,11 @@ def autopilot():
             cpydLog("error",("Integrity check FAILED"))
             integrityCfg3 - 19
          cpydLog("ok",("Integrity check PASSED"))
+         progressUpdate(98)
+         time.sleep(0.5)
          cpydLog("ok",("Updated stage status, handing off to next stage"))
+         progressUpdate(100)
+         time.sleep(0.2)
          refreshStatusGUI()
          PROC_GENCONFIG = 2
          time.sleep(1)
@@ -3216,7 +3289,7 @@ def autopilot():
          refreshStatusGUI()
          time.sleep(2)
          cpydLog("info",("Setting target OS to "+str(USR_TARGET_OS)))
-         print(color.BOLD+"   Downloading macOS",str(USR_TARGET_OS_F)+"...")
+         #print(color.BOLD+"   Downloading macOS",str(USR_TARGET_OS_F)+"...")
          if len(USR_TARGET_OS_ID) > 1 and customDownload == False:
             cpydLog("ok",("OS ID is valid, sending to dlosx script"))
             os.system("./scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID)
@@ -3244,6 +3317,7 @@ def autopilot():
          global PROC_LOCALCOPY_CVTN
          PROC_LOCALCOPY = 1
          PROC_LOCALCOPY_CVTN = 0
+         progressUpdate(0)
          cpydLog("info",("STARTING LOCAL RECOVERY PHASE"))
          try: # DISCORD RPC
                RPC.update(large_image=osIcon,large_text=projectVer,state="Copying recovery image into place...",details="AutoPilot",small_image="doodremount",small_text="Copying Files...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
@@ -3253,13 +3327,15 @@ def autopilot():
          errorMessage = "The local recovery image could not be found,\n           or it cannot be accessed."
          integrityImg = 1
          refreshStatusGUI()
+         progressUpdate(12)
          time.sleep(2)
          cpydLog("info",("Copying "+str(USR_BOOT_FILE)+" to repository directory"))
          os.system("cp "+USR_BOOT_FILE+" ./")
+         progressUpdate(88)
          cpydLog("info",("Setting up file name"))
          os.system("mv ./*.dmg BaseSystem.dmg")
          os.system("mv ./*.img BaseSystem.img")
-
+         progressUpdate(92)
          if os.path.exists("./BaseSystem.dmg"):
             cpydLog("warn",("BaseSystem image is still in the DMG format, will convert now"))
             try: # DISCORD RPC
@@ -3277,7 +3353,7 @@ def autopilot():
             PROC_LOCALCOPY_CVTN = 0
             refreshStatusGUI()
             time.sleep(1)
-
+         progressUpdate(99)
          cpydLog("info",("Performing integrity check"))
          if os.path.exists("./BaseSystem.img"):
             integrityImg = 1
@@ -3288,8 +3364,10 @@ def autopilot():
             throwError()
          cpydLog("ok",("Updated stage status, handing off to next stage"))
          PROC_LOCALCOPY = 2
+         progressUpdate(100)
+         time.sleep(1)
          refreshStatusGUI()
-         time.sleep(3)
+         time.sleep(2)
 
 
 
@@ -3299,6 +3377,7 @@ def autopilot():
          global PROC_GENHDD
          global USR_HDD_SIZE
          global USR_HDD_SIZE_B
+         progressUpdate(0)
          PROC_GENHDD = 1
          cpydLog("info",("STARTING HARDDISK PHASE"))
          try: # DISCORD RPC
@@ -3310,6 +3389,7 @@ def autopilot():
          integrityImg = 1
          refreshStatusGUI()
          time.sleep(2)
+         progressUpdate(3)
          cpydLog("info",("Scanning for file conflict"))
          def existingWarning1():
             clear()
@@ -3364,16 +3444,16 @@ def autopilot():
             elif stageSelect == "q" or stageSelect == "Q":
                cpydLog("fatal",("User quit"))
                exit
-
+         progressUpdate(24)
          if USR_TARGET_OS >= 1013:
             USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 209756160
          elif USR_TARGET_OS >= 13 and USR_TARGET_OS <= 99:
             USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 209756160
          else:
             USR_HDD_SIZE_B = int(USR_HDD_SIZE.replace("G","")) * 1000000000 + 343973888
-
+         progressUpdate(27)
          
-
+         
          if os.path.exists("./HDD.qcow2"):
             existingWarning1()
          else:
@@ -3381,7 +3461,7 @@ def autopilot():
             os.system("qemu-img create -f qcow2 HDD.qcow2 "+str(USR_HDD_SIZE_B)+"B > /dev/null 2>&1")
             time.sleep(3)
             PROC_GENHDD = 2
-
+         progressUpdate(39)
          # Hard disk creation error catcher - thanks Cyber!
          if not os.path.exists("./HDD.qcow2"):
             cpydLog("error",("Hard disk image file generation failed"))
@@ -3390,8 +3470,9 @@ def autopilot():
          else:
             cpydLog("ok",("Hard disk image file generation verified"))
             PROC_GENHDD = 2
-         
+         progressUpdate(100)
          cpydLog("ok",("Updated stage status, handing off to next stage"))
+         time.sleep(0.4)
          refreshStatusGUI()
          time.sleep(2)
 
@@ -3399,6 +3480,7 @@ def autopilot():
          global PROC_APPLYPREFS
          global USR_CFG
          PROC_APPLYPREFS = 1
+         progressUpdate(0)
          cpydLog("info",("STARTING APPLY PHASE"))
          try: # DISCORD RPC
                RPC.update(large_image=osIcon,large_text=projectVer,state="Applying preferences...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
@@ -3418,10 +3500,11 @@ def autopilot():
             integrityImg = 0
             throwError()
          
-
+         progressUpdate(2)
          with open("resources/config.sh","r") as file:
             cpydLog("info",("Dumping contents of baseConfig to memory"))
             configData = file.read()
+         progressUpdate(8)
          cpydLog("info",("Stripping warning headers"))
          configData = configData.replace("baseConfig",str(USR_NAME))
          configData = configData.replace("#    THIS CONFIG FILE SHOULD NOT BE EDITED BY THE USER!    #","#   APC-RUN_"+str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))+"\n#\n#   THIS FILE WAS GENERATED USING AUTOPILOT.")
@@ -3438,7 +3521,7 @@ def autopilot():
          with open ("resources/config.sh","w") as file:
             cpydLog("info",("Writing to file"))
             file.write(configData)
-
+         progressUpdate(12)
          with open("resources/config.sh","r") as file:
             configDataTest = file.read()
          if "#   THIS FILE WAS GENERATED USING AUTOPILOT." in configDataTest:
@@ -3448,11 +3531,11 @@ def autopilot():
             integrityImg - 1
             cpydLog("error",("Header verification failed"))
             throwError()
-
+         progressUpdate(77)
          cpydLog("info",("Moving working file into place"))
          os.system("mv resources/config.sh ./"+USR_CFG)
          
-
+         progressUpdate(91)
          #if USR_CREATE_XML == "True":
          #   os.system("mv resources/config.xml ./"+USR_CFG_XML)
          #   if os.path.exists("./"+USR_CFG_XML):
@@ -3468,15 +3551,18 @@ def autopilot():
             cpydLog("error",("Could not move working file into "+USR_CFG))
             integrityImg = 0
             throwError()
-         
+         progressUpdate(100)
+         time.sleep(0.6)
          PROC_APPLYPREFS = 2
          cpydLog("ok",("Updated stage status, handing off to next stage"))
          refreshStatusGUI()
          time.sleep(2)
       
       def apcGenXML():
+         progressUpdate(-1)
          cpydLog("info",("Checking XML creation preferences"))
          if USR_CREATE_XML == "True":
+            progressUpdate(0)
             global PROC_GENXML
             global USR_CFG
             global USR_CFG_XML
@@ -3489,15 +3575,19 @@ def autopilot():
             refreshStatusGUI()
             cpydLog("info",("Copying current session blobs into user backdir"))
             os.system("cp blobs/*.apb blobs/user/")
+            progressUpdate(38)
             time.sleep(1)
             cpydLog("ok",("Handing off to XMLC and waiting for result"))
             os.system("./scripts/extras/xml-convert.py --no-import --quiet --mark-ap --convert ./"+USR_CFG)
             cpydLog("info",("Got exit signal from XMLC, checking integrity"))
+            progressUpdate(94)
             global errorMessage
             errorMessage = "Failed to convert script to XML."
             if os.path.exists("./"+USR_CFG_XML):
                cpydLog("ok",("XML file was successfully generated at "+USR_CFG_XML))
                PROC_GENXML = 2
+               progressUpdate(100)
+               time.sleep(0.4)
                refreshStatusGUI()
                time.sleep(2)
             else:
@@ -3511,6 +3601,7 @@ def autopilot():
          global PROC_FIXPERMS
          global USR_CFG
          PROC_FIXPERMS = 1
+         progressUpdate(0)
          cpydLog("info",("STARTING PERMISSIONS PHASE"))
          try: # DISCORD RPC
                RPC.update(large_image=osIcon,large_text=projectVer,state="Fixing up permissions...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
@@ -3520,14 +3611,19 @@ def autopilot():
          errorMessage = "Could not set permissions on generated files.\n           You can attempt to do this manually."
          integrityImg = 1
          refreshStatusGUI()
+         progressUpdate(50)
          time.sleep(2)
          cpydLog("info",("Setting execute permissions"))
          os.system("chmod +x ./"+USR_CFG)
+         progressUpdate(63)
          cpydLog("info",("Setting readwrite permissions"))
          os.system("chmod +rw ./BaseSystem.img")
+         progressUpdate(91)
          cpydLog("ok",("Permissons set for new user files"))
          cpydLog("ok",("Updated stage status, handing off to next stage"))
+         progressUpdate(100)
          PROC_FIXPERMS = 2
+         time.sleep(0.3)
          refreshStatusGUI()
          time.sleep(2)
          
@@ -3535,6 +3631,7 @@ def autopilot():
          global PROC_CLEANUP
          global USR_CFG
          global errorMessage
+         progressUpdate(0)
          try: # DISCORD RPC
                RPC.update(large_image=osIcon,large_text=projectVer,state="Cleaning up...",details="AutoPilot",small_image="doodrestart",small_text="Running...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
          except:
@@ -3542,15 +3639,20 @@ def autopilot():
          PROC_CLEANUP = 1
          refreshStatusGUI()
          cpydLog("info",("STARTING CLEANUP PHASE"))
+         progressUpdate(14)
          time.sleep(1)
 
          cpydLog("info",("Copying current session blobs into user backdir"))
          os.system("cp blobs/*.apb blobs/user/")
+         progressUpdate(29)
          cpydLog("info",("Marking blobs as stale"))
          cpydLog("info",("Moving blobs into stale folder"))
          os.system("mv blobs/*.apb blobs/stale/")
+         progressUpdate(78)
          cpydLog("ok",("Blob cleanup complete"))
          cpydLog("ok",("Updated stage status, handing off to next stage"))
+         progressUpdate(100)
+         time.sleep(0.2)
          PROC_CLEANUP = 2
          refreshStatusGUI()
          time.sleep(1)
@@ -3669,6 +3771,21 @@ def autopilot():
             cpydLog("info",("Handing off to QEMU; booting "+USR_CFG))
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
+            clear()
+            print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
+            print("   Thanks for using ULTMOS!"+color.END)
+            print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+            hr = datetime.now().time().hour
+            if hr > 3 and hr < 12:
+               print("   Have a nice day! :]\n\n\n")
+            elif hr >= 12 and hr < 17:
+               print("   Have a nice rest of your afternoon! :]\n\n\n")
+            elif hr >= 17 and hr < 21:
+               print("   Have a nice evening! :]\n\n\n")
+            else:
+               print("   Have a nice night - "+color.CYAN+"and remember to sleep!"+color.END+" :]\n\n\n")
+            time.sleep(3)
+            clear()
             os.system("./"+USR_CFG)
 
          elif stageSelect == "m" or stageSelect == "M":
@@ -3681,7 +3798,23 @@ def autopilot():
             cpydLog("fatal",("User quit"))
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
+            clear()
+            print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
+            print("   Thanks for using ULTMOS!"+color.END)
+            print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+            hr = datetime.now().time().hour
+            if hr > 3 and hr < 12:
+               print("   Have a nice day! :]\n\n\n")
+            elif hr >= 12 and hr < 17:
+               print("   Have a nice rest of your afternoon! :]\n\n\n")
+            elif hr >= 17 and hr < 21:
+               print("   Have a nice evening! :]\n\n\n")
+            else:
+               print("   Have a nice night - "+color.CYAN+"and remember to sleep!"+color.END+" :]\n\n\n")
+            time.sleep(3)
+            clear()
             exit
+            
 
       else:
          if stageSelect == "1":
@@ -3690,6 +3823,21 @@ def autopilot():
             cpydLog("info",("Handing off to QEMU; booting "+USR_CFG))
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
+            clear()
+            print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
+            print("   Thanks for using ULTMOS!"+color.END)
+            print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+            hr = datetime.now().time().hour
+            if hr > 3 and hr < 12:
+               print("   Have a nice day! :]\n\n\n")
+            elif hr >= 12 and hr < 17:
+               print("   Have a nice rest of your afternoon! :]\n\n\n")
+            elif hr >= 17 and hr < 21:
+               print("   Have a nice evening! :]\n\n\n")
+            else:
+               print("   Have a nice night - "+color.CYAN+"and remember to sleep!"+color.END+" :]\n\n\n")
+            time.sleep(3)
+            clear()
             os.system("./"+USR_CFG)
            
          
@@ -3697,6 +3845,21 @@ def autopilot():
             cpydLog("info",("Attempting to open "+USR_CFG+"; contacting xdg-open"))
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
+            clear()
+            print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
+            print("   Thanks for using ULTMOS!"+color.END)
+            print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+            hr = datetime.now().time().hour
+            if hr > 3 and hr < 12:
+               print("   Have a nice day! :]\n\n\n")
+            elif hr >= 12 and hr < 17:
+               print("   Have a nice rest of your afternoon! :]\n\n\n")
+            elif hr >= 17 and hr < 21:
+               print("   Have a nice evening! :]\n\n\n")
+            else:
+               print("   Have a nice night - "+color.CYAN+"and remember to sleep!"+color.END+" :]\n\n\n")
+            time.sleep(3)
+            clear()
             os.system("xdg-open ./"+USR_CFG)
             
 
@@ -3710,7 +3873,21 @@ def autopilot():
             cpydLog("fatal",("User quit"))
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
-            exit
+            clear()
+            print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
+            print("   Thanks for using ULTMOS!"+color.END)
+            print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+            hr = datetime.now().time().hour
+            if hr > 3 and hr < 12:
+               print("   Have a nice day! :]\n\n\n")
+            elif hr >= 12 and hr < 17:
+               print("   Have a nice rest of your afternoon! :]\n\n\n")
+            elif hr >= 17 and hr < 21:
+               print("   Have a nice evening! :]\n\n\n")
+            else:
+               print("   Have a nice night - "+color.CYAN+"and remember to sleep!"+color.END+" :]\n\n\n")
+            exit(0)
+         
 
             
 
@@ -3737,6 +3914,20 @@ elif detectChoice == "2":
 
 elif detectChoice == "q" or detectChoice == "Q":
     cpydLog("fatal",("User quit"))
+    clear()
+    print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
+    print("   Thanks for using ULTMOS!"+color.END)
+    print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+    hr = datetime.now().time().hour
+    if hr > 3 and hr < 12:
+        print("   Have a nice day! :]\n\n\n")
+    elif hr >= 12 and hr < 17:
+        print("   Have a nice rest of your afternoon! :]\n\n\n")
+    elif hr >= 17 and hr < 21:
+        print("   Have a nice evening! :]\n\n\n")
+    else:
+        print("   Have a nice night - "+color.CYAN+"and remember to sleep!"+color.END+" :]\n\n\n")
+    exit(0)
     exit
 else:
    cpydLog("warn",("Nothing caught, using default startup"))
