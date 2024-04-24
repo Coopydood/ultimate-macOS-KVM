@@ -530,7 +530,7 @@ elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VAL
                 os.system("./"+apFilePathNoUSB)
     
     elif detectChoice3 == "b" or detectChoice3 == "B":
-        os.system('./main.py')
+        os.system('./main.py --skip-vm-check')
         
     elif detectChoice3 == "q" or detectChoice3 == "Q":
         exit
