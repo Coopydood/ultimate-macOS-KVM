@@ -44,6 +44,7 @@ parser = argparse.ArgumentParser("autopilot")
 parser.add_argument("--disable-logging", dest="disableLog", help="Disables the logfile",action="store_true")
 parser.add_argument("--disable-rpc", dest="disableRPC", help="Disables Discord rich presence",action="store_true")
 parser.add_argument("--disable-blob-check", dest="disableBlobCheck", help="Bypasses checking of blob integrity",action="store_true")
+parser.add_argument("--disable-progress", dest="disableProgress", help="Disable progress bar UI displays",action="store_true")
 parser.add_argument("--skip-summary", dest="skipSummary", help="Starts the AutoPilot flow immediately after questioning",action="store_true")
 parser.add_argument("--skip-notices", dest="skipNotices", help="Don't download and load notices",action="store_true")
 parser.add_argument("--no-auto-download", dest="customDownload", help="Asks the user what to download during run",action="store_true")
@@ -67,6 +68,7 @@ enableLog = True
 enableRPC = True
 enableClean = True
 enableBlobCheck = True
+enableProgress = True
 customDownload = False
 showSummary = True
 
@@ -97,6 +99,11 @@ if args.useLocalNotices == True:
    localNotices = True
 else:
    localNotices = False
+
+if args.disableProgress == True:
+   enableProgress = False
+else:
+   enableProgress = True
 
 version = open("./.version")
 version = version.read()
@@ -440,55 +447,56 @@ def autopilot():
    def progressUpdate(progressVal,*args):
       global progress
       global progressGUI
-      progress = progressVal #(round(float(100 * progressVal / (2 ** 20))/100))
-      if progress <= 5:
-            progressGUI = (color.BOLD+""+color.GRAY+"━━━━━━━━━━━━━━━━━━━━")
-      elif progress > 5 and progress <= 10:
-            progressGUI = (color.BOLD+"━"+color.GRAY+"━━━━━━━━━━━━━━━━━━━")
-      elif progress > 10 and progress <= 20:
-            progressGUI = (color.BOLD+"━━"+color.GRAY+"━━━━━━━━━━━━━━━━━━")
-      elif progress > 20 and progress <= 25:
-            progressGUI = (color.BOLD+"━━━"+color.GRAY+"━━━━━━━━━━━━━━━━━")
-      elif progress > 25 and progress <= 30:
-            progressGUI = (color.BOLD+"━━━━"+color.GRAY+"━━━━━━━━━━━━━━━━")
-      elif progress > 30 and progress <= 35:
-            progressGUI = (color.BOLD+"━━━━━"+color.GRAY+"━━━━━━━━━━━━━━━")
-      elif progress > 35 and progress <= 40:
-            progressGUI = (color.BOLD+"━━━━━━"+color.GRAY+"━━━━━━━━━━━━━━")
-      elif progress > 40 and progress <= 45:
-            progressGUI = (color.BOLD+"━━━━━━━"+color.GRAY+"━━━━━━━━━━━━━")
-      elif progress > 45 and progress <= 50:
-            progressGUI = (color.BOLD+"━━━━━━━━"+color.GRAY+"━━━━━━━━━━━━")
-      elif progress > 50 and progress <= 55:
-            progressGUI = (color.BOLD+"━━━━━━━━━"+color.GRAY+"━━━━━━━━━━━")
-      elif progress > 55 and progress <= 60:
-            progressGUI = (color.BOLD+"━━━━━━━━━━"+color.GRAY+"━━━━━━━━━━")
-      elif progress > 60 and progress <= 65:
-            progressGUI = (color.BOLD+"━━━━━━━━━━━"+color.GRAY+"━━━━━━━━━")
-      elif progress > 65 and progress <= 70:
-            progressGUI = (color.BOLD+"━━━━━━━━━━━━"+color.GRAY+"━━━━━━━━")
-      elif progress > 70 and progress <= 75:
-            progressGUI = (color.BOLD+"━━━━━━━━━━━━━"+color.GRAY+"━━━━━━━")
-      elif progress > 75 and progress <= 80:
-            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━"+color.GRAY+"━━━━━━")
-      elif progress > 80 and progress <= 85:
-            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━"+color.GRAY+"━━━━━")
-      elif progress > 85 and progress <= 90:
-            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━"+color.GRAY+"━━━━")
-      elif progress > 90 and progress <= 95:
-            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━"+color.GRAY+"━━━")
-      elif progress > 95 and progress <= 98:
-            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━"+color.GRAY+"━")
-      elif progress > 98 and progress <= 99:
-            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
-      elif progress >= 100:
-            progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
-      if progress >= 0:
-         print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('')), end='')
-         sys.stdout.flush()
-      else:
-         print('   \r                       '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ────────────────────────────────────────────────────────────── ')), end='')
-      #print('   \r      ──────────────────────────────────────────────────────────────')
+      if enableProgress == True:
+         progress = progressVal #(round(float(100 * progressVal / (2 ** 20))/100))
+         if progress <= 5:
+               progressGUI = (color.BOLD+""+color.GRAY+"━━━━━━━━━━━━━━━━━━━━")
+         elif progress > 5 and progress <= 10:
+               progressGUI = (color.BOLD+"━"+color.GRAY+"━━━━━━━━━━━━━━━━━━━")
+         elif progress > 10 and progress <= 20:
+               progressGUI = (color.BOLD+"━━"+color.GRAY+"━━━━━━━━━━━━━━━━━━")
+         elif progress > 20 and progress <= 25:
+               progressGUI = (color.BOLD+"━━━"+color.GRAY+"━━━━━━━━━━━━━━━━━")
+         elif progress > 25 and progress <= 30:
+               progressGUI = (color.BOLD+"━━━━"+color.GRAY+"━━━━━━━━━━━━━━━━")
+         elif progress > 30 and progress <= 35:
+               progressGUI = (color.BOLD+"━━━━━"+color.GRAY+"━━━━━━━━━━━━━━━")
+         elif progress > 35 and progress <= 40:
+               progressGUI = (color.BOLD+"━━━━━━"+color.GRAY+"━━━━━━━━━━━━━━")
+         elif progress > 40 and progress <= 45:
+               progressGUI = (color.BOLD+"━━━━━━━"+color.GRAY+"━━━━━━━━━━━━━")
+         elif progress > 45 and progress <= 50:
+               progressGUI = (color.BOLD+"━━━━━━━━"+color.GRAY+"━━━━━━━━━━━━")
+         elif progress > 50 and progress <= 55:
+               progressGUI = (color.BOLD+"━━━━━━━━━"+color.GRAY+"━━━━━━━━━━━")
+         elif progress > 55 and progress <= 60:
+               progressGUI = (color.BOLD+"━━━━━━━━━━"+color.GRAY+"━━━━━━━━━━")
+         elif progress > 60 and progress <= 65:
+               progressGUI = (color.BOLD+"━━━━━━━━━━━"+color.GRAY+"━━━━━━━━━")
+         elif progress > 65 and progress <= 70:
+               progressGUI = (color.BOLD+"━━━━━━━━━━━━"+color.GRAY+"━━━━━━━━")
+         elif progress > 70 and progress <= 75:
+               progressGUI = (color.BOLD+"━━━━━━━━━━━━━"+color.GRAY+"━━━━━━━")
+         elif progress > 75 and progress <= 80:
+               progressGUI = (color.BOLD+"━━━━━━━━━━━━━━"+color.GRAY+"━━━━━━")
+         elif progress > 80 and progress <= 85:
+               progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━"+color.GRAY+"━━━━━")
+         elif progress > 85 and progress <= 90:
+               progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━"+color.GRAY+"━━━━")
+         elif progress > 90 and progress <= 95:
+               progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━"+color.GRAY+"━━━")
+         elif progress > 95 and progress <= 98:
+               progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━"+color.GRAY+"━")
+         elif progress > 98 and progress <= 99:
+               progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+         elif progress >= 100:
+               progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+         if progress >= 0:
+            print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('')), end='')
+            sys.stdout.flush()
+         else:
+            print('   \r                       '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ────────────────────────────────────────────────────────────── ')), end='')
+         #print('   \r      ──────────────────────────────────────────────────────────────')
 
 
 
