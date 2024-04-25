@@ -2,7 +2,7 @@
 # pylint: disable=C0301,C0116,C0103,R0903
 
 # AUTOPILOT BY COOPYDOOD
-# (c) Copyright Coopydood 2022-2023
+# (c) Copyright Coopydood 2022-2024
 
 """
 This script was created by Coopydood as part of the ultimate-macOS-KVM project.
