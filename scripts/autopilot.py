@@ -441,28 +441,48 @@ def autopilot():
       global progress
       global progressGUI
       progress = progressVal #(round(float(100 * progressVal / (2 ** 20))/100))
-      if progress <= 9:
-            progressGUI = (color.GREEN+""+color.GRAY+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉")
-      elif progress >= 9 and progress <= 20:
-            progressGUI = (color.GREEN+"▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉")
-      elif progress >= 19 and progress <= 30:
-            progressGUI = (color.GREEN+"▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉")
-      elif progress >= 29 and progress <= 40:
-            progressGUI = (color.GREEN+"▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉")
-      elif progress >= 39 and progress <= 50:
-            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉▉▉▉▉")
-      elif progress >= 49 and progress <= 60:
-            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉▉▉")
-      elif progress >= 59 and progress <= 70:
-            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉▉▉")
-      elif progress >= 69 and progress <= 80:
-            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉▉▉")
-      elif progress >= 79 and progress <= 90:
-            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉▉▉")
-      elif progress >= 89 and progress <= 99:
-            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"▉▉")
-      elif progress >= 99:
-            progressGUI = (color.GREEN+"▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉"+color.GRAY+"")
+      if progress <= 5:
+            progressGUI = (color.BOLD+""+color.GRAY+"━━━━━━━━━━━━━━━━━━━━")
+      elif progress > 5 and progress <= 10:
+            progressGUI = (color.BOLD+"━"+color.GRAY+"━━━━━━━━━━━━━━━━━━━")
+      elif progress > 10 and progress <= 20:
+            progressGUI = (color.BOLD+"━━"+color.GRAY+"━━━━━━━━━━━━━━━━━━")
+      elif progress > 20 and progress <= 25:
+            progressGUI = (color.BOLD+"━━━"+color.GRAY+"━━━━━━━━━━━━━━━━━")
+      elif progress > 25 and progress <= 30:
+            progressGUI = (color.BOLD+"━━━━"+color.GRAY+"━━━━━━━━━━━━━━━━")
+      elif progress > 30 and progress <= 35:
+            progressGUI = (color.BOLD+"━━━━━"+color.GRAY+"━━━━━━━━━━━━━━━")
+      elif progress > 35 and progress <= 40:
+            progressGUI = (color.BOLD+"━━━━━━"+color.GRAY+"━━━━━━━━━━━━━━")
+      elif progress > 40 and progress <= 45:
+            progressGUI = (color.BOLD+"━━━━━━━"+color.GRAY+"━━━━━━━━━━━━━")
+      elif progress > 45 and progress <= 50:
+            progressGUI = (color.BOLD+"━━━━━━━━"+color.GRAY+"━━━━━━━━━━━━")
+      elif progress > 50 and progress <= 55:
+            progressGUI = (color.BOLD+"━━━━━━━━━"+color.GRAY+"━━━━━━━━━━━")
+      elif progress > 55 and progress <= 60:
+            progressGUI = (color.BOLD+"━━━━━━━━━━"+color.GRAY+"━━━━━━━━━━")
+      elif progress > 60 and progress <= 65:
+            progressGUI = (color.BOLD+"━━━━━━━━━━━"+color.GRAY+"━━━━━━━━━")
+      elif progress > 65 and progress <= 70:
+            progressGUI = (color.BOLD+"━━━━━━━━━━━━"+color.GRAY+"━━━━━━━━")
+      elif progress > 70 and progress <= 75:
+            progressGUI = (color.BOLD+"━━━━━━━━━━━━━"+color.GRAY+"━━━━━━━")
+      elif progress > 75 and progress <= 80:
+            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━"+color.GRAY+"━━━━━━")
+      elif progress > 80 and progress <= 85:
+            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━"+color.GRAY+"━━━━━")
+      elif progress > 85 and progress <= 90:
+            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━"+color.GRAY+"━━━━")
+      elif progress > 90 and progress <= 95:
+            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━"+color.GRAY+"━━━")
+      elif progress > 95 and progress <= 98:
+            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━"+color.GRAY+"━")
+      elif progress > 98 and progress <= 99:
+            progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+      elif progress >= 100:
+            progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
       if progress >= 0:
          print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('')), end='')
          sys.stdout.flush()
