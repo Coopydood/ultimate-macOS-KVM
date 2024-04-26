@@ -15,6 +15,7 @@ import json
 import random
 import argparse
 import time
+import math
 
 class color:
    PURPLE = '\033[95m'
@@ -256,7 +257,10 @@ def save_image(url, sess, filename='', directory=''):
                 if (int(time.time()) - lastTime) >= 0.1:
                     timeTaken = int(time.time()) - lastTime
                     speed = (((((size / 1048576) - (lastSize)) / (timeTaken))))
-                    speed = round(speed,1)
+                    if speed >= 99:
+                        speed = math.trunc(speed)
+                    else:
+                        speed = round(speed,1)
                     #print("speed is: ",speed,"MB/s")
                     timeTaken = 0
                     lastSize = (size / 2 ** 20) # in MBs
