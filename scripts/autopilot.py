@@ -40,11 +40,12 @@ scriptID = "APC"
 scriptVendor = "Coopydood"
 client_id = "1149434759152422922"
 
-parser = argparse.ArgumentParser("autopilot")
+parser = argparse.ArgumentParser("Automatically generate a customised macOS QEMU boot script")
 parser.add_argument("--disable-logging", dest="disableLog", help="Disables the logfile",action="store_true")
 parser.add_argument("--disable-rpc", dest="disableRPC", help="Disables Discord rich presence",action="store_true")
 parser.add_argument("--disable-blob-check", dest="disableBlobCheck", help="Bypasses checking of blob integrity",action="store_true")
 parser.add_argument("--disable-progress", dest="disableProgress", help="Disable progress bar UI displays",action="store_true")
+parser.add_argument("--disable-percentage", dest="disablePercentage", help="Disable progress bar percentages and data labels",action="store_true")
 parser.add_argument("--skip-summary", dest="skipSummary", help="Starts the AutoPilot flow immediately after questioning",action="store_true")
 parser.add_argument("--skip-notices", dest="skipNotices", help="Don't download and load notices",action="store_true")
 parser.add_argument("--no-auto-download", dest="customDownload", help="Asks the user what to download during run",action="store_true")
@@ -104,6 +105,11 @@ if args.disableProgress == True:
    enableProgress = False
 else:
    enableProgress = True
+
+if args.disablePercentage == True:
+   enablePercentage = False
+else:
+   enablePercentage = True
 
 version = open("./.version")
 version = version.read()
@@ -492,7 +498,10 @@ def autopilot():
          elif progress >= 100:
                progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
          if progress >= 0:
-            print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('')), end='')
+            if enablePercentage == True:
+               print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('')), end='')
+            else:
+               print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+color.END)), end='')
             sys.stdout.flush()
          else:
             print('   \r                       '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='')
@@ -3320,7 +3329,13 @@ def autopilot():
          #print(color.BOLD+"   Downloading macOS",str(USR_TARGET_OS_F)+"...")
          if len(USR_TARGET_OS_ID) > 1 and customDownload == False:
             cpydLog("ok",("OS ID is valid, sending to dlosx script"))
-            os.system("./scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID)
+            if enableProgress == True:
+               if enablePercentage == True:
+                  os.system("./scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID)
+               else:
+                  os.system("./scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --disable-percentage")
+            else:
+               os.system("./scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --disable-progress")
          else:
             cpydLog("warn",("OS ID is NOT valid, running dlosx without passthrough"))
             os.system("./scripts/dlosx.py")
