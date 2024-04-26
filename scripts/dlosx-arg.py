@@ -27,7 +27,7 @@ class color:
    BOLD = '\033[1m'
    UNDERLINE = '\033[4m'
    END = '\033[0m'
-   GRAY = '\u001b[38;5;245m'
+   GRAY = '\u001b[38;5;240m'
 
 try:
     from urllib.request import Request, urlopen
@@ -189,16 +189,22 @@ def save_image(url, sess, filename='', directory=''):
         #else:
             #print("Note: The total download size is %0.2f MB" % total_size)
         size = 0
-        #print("   ──────────────────────────────────────────────────────────────")
+        tmEnd = 0
+        tmStart = 0
+        smStart = 0
+        smEnd = 0
+        lastTime = 0
+        lastSize = 0
+        #print("   ───────────────────────────────────────────────────────────────────")
         while True:
-            #print("   ──────────────────────────────────────────────────────────────")
-            chunk = response.read(2 ** 20)
+            #print("   ───────────────────────────────────────────────────────────────────")
+            chunk = response.read(1000000)
             if not chunk:
                 break
             fhandle.write(chunk)
             size += len(chunk)
             
-            progress = (round(float(100 * size / (2 ** 20))/float(total_size)))
+            progress = (round(float(100 * size / (1048576))/float(total_size)))
 
             if progress <= 5:
                 progressGUI = (color.BOLD+""+color.GRAY+"━━━━━━━━━━━━━━━━━━━━")
@@ -243,21 +249,47 @@ def save_image(url, sess, filename='', directory=''):
             elif progress >= 100:
                 progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
 
+            if (int(time.time()) - lastTime) >= 0.1:
+                timeTaken = int(time.time()) - lastTime
+                speed = (((((size / 1048576) - (lastSize)) / (timeTaken))))
+                speed = round(speed,1)
+                #print("speed is: ",speed,"MB/s")
+                timeTaken = 0
+                lastSize = (size / 2 ** 20) # in MBs
+                lastTime = int(time.time())
 
-            print('   \r      {2}       {0:0.1f} MB / {1:0.1f} MB          '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ────────────────────────────────────────────────────────────── ')), end='')
+            
+            #lastSize = size / (2 ** 20)
+            #
+
+            #timeTaken = tmEnd - tmStart
+            #loadedSize = smEnd - smStart
+
+            #speed = round((timeTaken * loadedSize)/ 60 * )
+
+            #print("speed is: ",speed,"MB/s")
+
+
+
+
+            print('   \r      {2}    {0:0.1f} MB / {1:0.1f} MB    {3}         '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),((str(speed))+" MB/s")), end='')
             sys.stdout.flush()
-        #print('   \r    ✓  {2}      {0:0.1f} MB / {1:0.1f} MB          '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ────────────────────────────────────────────────────────────── ')), end='')
-        print('   \r      {2}       Download Complete              '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='')
+        #print('   \r    ✓  {2}      {0:0.1f} MB / {1:0.1f} MB          '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='')
+        print('   \r      {2}       Download Complete                     '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='')
         time.sleep(3)
         
 
         progressGUI = (color.GRAY+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
-        print('   \r      {2}           Converting...                '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"⊚ "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='')
+        print('   \r      {2}           Converting...                '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"⊚ "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='')
 
         passon()
         progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
-        print('   \r      {2}       Conversion Complete              '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"100% "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='')
-
+        print('   \r      {2}       Conversion Complete              '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"100% "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='')
+        time.sleep(2)
+            #print('\r{} MBs downloaded...'.format(size / (2 ** 20)), end='')
+           
+        #print('\rDownload complete!' + ' ' * 32)
+       
 
 
 def action_download(args):

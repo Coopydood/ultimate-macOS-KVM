@@ -119,7 +119,7 @@ class color:
    BOLD = '\033[1m'
    UNDERLINE = '\033[4m'
    END = '\033[0m'
-   GRAY = '\u001b[38;5;245m'
+   GRAY = '\u001b[38;5;240m'
 
 
 global logTime
@@ -131,7 +131,7 @@ if enableLog == True: # LOG SUPPORT
 
    
    os.system("echo ULTMOS AUTOPILOT LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/APC_RUN_"+logTime+".log")
-   os.system("echo ──────────────────────────────────────────────────────────────"+" >> ./logs/APC_RUN_"+logTime+".log")
+   os.system("echo ───────────────────────────────────────────────────────────────────"+" >> ./logs/APC_RUN_"+logTime+".log")
 
    def cpydLog(logStatus,logMsg,*args):
       logFile = open("./logs/APC_RUN_"+logTime+".log","a")
@@ -268,10 +268,10 @@ def startup():
    #print(color.BOLD+"\n"+"   Profile:"+color.END,"https://github.com/Coopydood")
    #print(color.BOLD+"      Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM") # no shameless plugs anymore :[
    if enableLog == False:
-      print("\n   "+"  "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+      print("\n   "+"  "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
       print("   "+color.BOLD+color.YELLOW+"   ⚠ "+color.END+color.BOLD+" LOGGING DISABLED"+color.END)
       print("   "+color.END+"      The logfile has been disabled. \n         No diagnostic information will be recorded."+color.END)
-      print("   "+"  "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+      print("   "+"  "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
 
       #print(color.YELLOW+"\n   ⚠"+color.END+color.BOLD+" WARNING"+color.END)
       #print("   Logging has been disabled")
@@ -495,8 +495,8 @@ def autopilot():
             print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('')), end='')
             sys.stdout.flush()
          else:
-            print('   \r                       '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ────────────────────────────────────────────────────────────── ')), end='')
-         #print('   \r      ──────────────────────────────────────────────────────────────')
+            print('   \r                       '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='')
+         #print('   \r      ───────────────────────────────────────────────────────────────────')
 
 
 
@@ -592,7 +592,7 @@ def autopilot():
             print("   "+"\n   "+color.BOLD+"Ready to generate config file"+color.END)
          #print("   "+"Review your preferences")
          print("   "+"Review your preferences below and continue when ready."+color.END)
-         print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+         print("   "+"\n   "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
 
          if USR_CREATE_XML == "True":
             print("   "+color.BOLD+color.PURPLE+"FILES   ",color.END+color.END+USR_CFG+", "+USR_CFG_XML)
@@ -632,7 +632,7 @@ def autopilot():
             print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+"")
 
 
-         print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+         print("   "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
          #if USR_BOOT_FILE == "-1":
          print(color.BOLD+"\n      1. Start...")
          print(color.END+"         Begin the AutoPilot run using the above setup\n")
@@ -1004,10 +1004,10 @@ def autopilot():
       print("\n   Choose a bootable image file the virtual machine should boot to. \n   You need a macOS Recovery image (BaseSystem). You can either\n   select an existing one or the wizard can download one for you.\n   It must be in the *.img or *.dmg file format."+color.END)
       print("\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"This stage is optional. You can skip it if\n         you intend on using an existing HDD file."+color.END)
       if customDownload == True:
-       print("\n   "+"  "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+       print("\n   "+"  "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
        print("   "+color.BOLD+color.YELLOW+"   ⚠ "+color.END+color.BOLD+" AUTO DOWNLOAD DISABLED"+color.END)
        print("   "+color.END+"      Automatic version download has been disabled. You will be\n         asked to choose a download during the AutoPilot process."+color.END)
-       print("   "+"  "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+       print("   "+"  "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
       
       if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
          print(color.YELLOW+"\n     ⚠"+color.END+color.BOLD+"   Download flow disabled for legacy versions.\n         You must download an image manually."+color.END)
@@ -2792,7 +2792,7 @@ def autopilot():
          print("   "+"\n   "+color.BOLD+"Status"+color.END)
          print("   "+"AutoPilot is performing the requested actions.")
          print("   "+"\n   This may take a few moments."+color.END)
-         print("   "+"\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+         print("   "+"\n   "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
 
          if PROC_PREPARE == 0:
             print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Preparing files"+color.END)
@@ -2875,10 +2875,10 @@ def autopilot():
             elif PROC_CLEANUP == 2:
                print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Cleaning up"+color.END)
 
-         print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+         print("   "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
          progressUpdate(-1)
-         #print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ────────────────────────────────────────────────────────────── ')), end='')
-         #print("\n   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
+         #print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='')
+         #print("\n   "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
          #if PROC_FETCHDL != 1:
             #print("\n\n\n")
 
@@ -3326,8 +3326,9 @@ def autopilot():
             os.system("./scripts/dlosx.py")
          #subprocess.Popen(cmd).wait()
          #print(os.path.getsize("./BaseSystem.img"))
-         cpydLog("info",("Checking BaseSystem with a size of "+str(os.path.getsize("./BaseSystem.img"))))
-         if os.path.exists("./BaseSystem.img") and os.path.getsize("./BaseSystem.img") > 2401920:
+         if os.path.exists("./BaseSystem.img"):
+            cpydLog("info",("Checking BaseSystem with a size of "+str(os.path.getsize("./BaseSystem.img"))))
+         if os.path.exists("./BaseSystem.img") and os.path.getsize("./BaseSystem.img") > 314572800:
             integrityImg = 1
             cpydLog("ok",("Integrity check PASSED"))
          else:

@@ -36,7 +36,7 @@ class color:
    BOLD = '\033[1m'
    UNDERLINE = '\033[4m'
    END = '\033[0m'
-   GRAY = '\u001b[38;5;245m'
+   GRAY = '\u001b[38;5;240m'
    ORANGE = '\u001b[38;5;202m'
    GREENLIGHT = '\u001b[38;5;46m'
 
@@ -229,27 +229,27 @@ elif vfcConfig <= 0:
 print("   "+color.BOLD+"──────────────────────────────────────────────────────────────",color.END)
 
 if vfcScore <= 0:
-    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚"+color.GRAY+"❚❚❚❚❚❚❚❚❚"+color.END+" 0%")
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"━"+color.GRAY+"━━━━━━━━━"+color.END+" 0%")
 elif vfcScore == 1:
-    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚"+color.GRAY+"❚❚❚❚❚❚❚❚❚"+color.END+" 10%")
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"━"+color.GRAY+"━━━━━━━━━"+color.END+" 10%")
 elif vfcScore == 2:
-    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚❚"+color.GRAY+"❚❚❚❚❚❚❚❚"+color.END+" 20%")
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"━━"+color.GRAY+"━━━━━━━━"+color.END+" 20%")
 elif vfcScore == 3:
-    print("   "+color.BOLD+"   NOT READY   "+color.RED+"❚❚❚"+color.GRAY+"❚❚❚❚❚❚❚"+color.END+" 30%")
+    print("   "+color.BOLD+"   NOT READY   "+color.RED+"━━━"+color.GRAY+"━━━━━━━"+color.END+" 30%")
 elif vfcScore == 4:
-    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚"+color.GRAY+"❚❚❚❚❚❚"+color.END+" 40%")
+    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"━━━━"+color.GRAY+"━━━━━━"+color.END+" 40%")
 elif vfcScore == 5:
-    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"❚❚❚❚❚"+color.GRAY+"❚❚❚❚❚"+color.END+" 50%")
+    print("   "+color.BOLD+"   NOT READY   "+color.ORANGE+"━━━━━"+color.GRAY+"━━━━━"+color.END+" 50%")
 elif vfcScore == 6:
-    print("   "+color.BOLD+"   NOT READY   "+color.YELLOW+"❚❚❚❚❚❚"+color.GRAY+"❚❚❚❚"+color.END+" 60%")
+    print("   "+color.BOLD+"   NOT READY   "+color.YELLOW+"━━━━━━"+color.GRAY+"━━━━"+color.END+" 60%")
 elif vfcScore == 7:
-    print("   "+color.BOLD+"   PARTLY READY   "+color.YELLOW+"❚❚❚❚❚❚❚"+color.GRAY+"❚❚❚"+color.END+" 70%")
+    print("   "+color.BOLD+"   PARTLY READY   "+color.YELLOW+"━━━━━━━"+color.GRAY+"━━━"+color.END+" 70%")
 elif vfcScore == 8:
-    print("   "+color.BOLD+"   PARTLY READY   "+color.YELLOW+"❚❚❚❚❚❚❚❚"+color.GRAY+"❚❚"+color.END+" 80%")
+    print("   "+color.BOLD+"   PARTLY READY   "+color.YELLOW+"━━━━━━━━"+color.GRAY+"━━"+color.END+" 80%")
 elif vfcScore == 9:
-    print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚"+color.GRAY+"❚"+color.END+" 90%")
+    print("   "+color.BOLD+"   READY   "+color.GREEN+"━━━━━━━━━"+color.GRAY+"━"+color.END+" 90%")
 elif vfcScore >= 10:
-    print("   "+color.BOLD+"   READY   "+color.GREEN+"❚❚❚❚❚❚❚❚❚❚"+color.GRAY+""+color.END+" 100%")
+    print("   "+color.BOLD+"   READY   "+color.GREEN+"━━━━━━━━━━"+color.GRAY+""+color.END+" 100%")
 
 
 print("   "+color.BOLD+"──────────────────────────────────────────────────────────────\n",color.END)

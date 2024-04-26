@@ -552,6 +552,6 @@ elif detectChoice == "q" or detectChoice == "Q":
         print("   Have a nice night - "+color.CYAN+"and remember to sleep!"+color.END+" :]\n\n\n")
     exit(0)
 
-else:
+elif detected != 2:
     clear()
     os.system('./main.py')
