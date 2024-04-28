@@ -3818,7 +3818,7 @@ def autopilot():
             clear()
             print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
             print("   Thanks for using ULTMOS!"+color.END)
-            print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+            print("\n   This project was created with "+color.RED+color.BOLD+"❤"+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
             hr = datetime.now().time().hour
             if hr > 3 and hr < 12:
                print("   Have a nice day! :]\n\n\n")
@@ -3845,7 +3845,7 @@ def autopilot():
             clear()
             print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
             print("   Thanks for using ULTMOS!"+color.END)
-            print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+            print("\n   This project was created with "+color.RED+color.BOLD+"❤"+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
             hr = datetime.now().time().hour
             if hr > 3 and hr < 12:
                print("   Have a nice day! :]\n\n\n")
@@ -3870,7 +3870,7 @@ def autopilot():
             clear()
             print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
             print("   Thanks for using ULTMOS!"+color.END)
-            print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+            print("\n   This project was created with "+color.RED+color.BOLD+"❤"+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
             hr = datetime.now().time().hour
             if hr > 3 and hr < 12:
                print("   Have a nice day! :]\n\n\n")
@@ -3892,7 +3892,7 @@ def autopilot():
             clear()
             print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
             print("   Thanks for using ULTMOS!"+color.END)
-            print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+            print("\n   This project was created with "+color.RED+color.BOLD+"❤"+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
             hr = datetime.now().time().hour
             if hr > 3 and hr < 12:
                print("   Have a nice day! :]\n\n\n")
@@ -3920,7 +3920,7 @@ def autopilot():
             clear()
             print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
             print("   Thanks for using ULTMOS!"+color.END)
-            print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+            print("\n   This project was created with "+color.RED+color.BOLD+"❤"+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
             hr = datetime.now().time().hour
             if hr > 3 and hr < 12:
                print("   Have a nice day! :]\n\n\n")
@@ -3961,7 +3961,7 @@ elif detectChoice == "q" or detectChoice == "Q":
     clear()
     print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
     print("   Thanks for using ULTMOS!"+color.END)
-    print("\n   This project was created with "+color.RED+color.BOLD+"❤ "+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+    print("\n   This project was created with "+color.RED+color.BOLD+"❤"+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
     hr = datetime.now().time().hour
     if hr > 3 and hr < 12:
         print("   Have a nice day! :]\n\n\n")
