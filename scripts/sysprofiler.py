@@ -22,7 +22,7 @@ import datetime
 import cpuinfo
 import psutil
 import sys
-sys.path.append('./resources')
+sys.path.append('./resources/python')
 import distro
 from datetime import datetime
 
