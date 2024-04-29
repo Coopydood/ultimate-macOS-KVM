@@ -14,6 +14,7 @@ import sys
 import json
 import random
 import argparse
+import time
 
 class color:
    PURPLE = '\033[95m'
@@ -26,6 +27,7 @@ class color:
    BOLD = '\033[1m'
    UNDERLINE = '\033[4m'
    END = '\033[0m'
+   GRAY = '\u001b[38;5;240m'
 
 try:
     from urllib.request import Request, urlopen
@@ -156,7 +158,7 @@ def get_image_info(session, bid, mlb=MLB_ZERO, diag=False, os_type='default', ci
     return info
 
 def passon():
-    os.system('./scripts/cvtosx.sh')
+    os.system('./scripts/cvtosx.sh > /dev/null 2>&1')
 
 def save_image(url, sess, filename='', directory=''):
     purl = urlparse(url)
@@ -172,7 +174,7 @@ def save_image(url, sess, filename='', directory=''):
     if filename.find('/') >= 0 or filename == '':
         raise RuntimeError('Invalid save path ' + filename)
 
-    print('Saving ' + url + ' to ' + filename + '...')
+    #print('Saving ' + url + ' to ' + filename + '...')
     
 
     with open(os.path.join(directory, filename), 'wb') as fhandle:
@@ -182,20 +184,113 @@ def save_image(url, sess, filename='', directory=''):
         # print(total_size)
         if total_size < 1:
             total_size = response.headers['content-length']
-            print("Note: The total download size is %s bytes" % total_size)
-        else:
-            print("Note: The total download size is %0.2f MB" % total_size)
+            #print("Note: The total download size is %s bytes" % total_size)
+        #else:
+            #print("Note: The total download size is %0.2f MB" % total_size)
         size = 0
+        print("   ──────────────────────────────────────────────────────────────")
+        size = 0
+        tmEnd = 0
+        tmStart = 0
+        smStart = 0
+        smEnd = 0
+        lastTime = 0
+        lastSize = 0
+        #print("   ──────────────────────────────────────────────────────────────")
         while True:
-            chunk = response.read(2 ** 20)
+            #print("   ──────────────────────────────────────────────────────────────")
+            chunk = response.read(1000000)
             if not chunk:
                 break
             fhandle.write(chunk)
             size += len(chunk)
-            print('\r{} MBs downloaded...'.format(size / (2 ** 20)), end='')
+            
+            progress = (round(float(100 * size / (1048576))/float(total_size)))
+
+            if progress <= 5:
+                progressGUI = (color.BOLD+""+color.GRAY+"━━━━━━━━━━━━━━━━━━━━")
+            elif progress > 5 and progress <= 10:
+                progressGUI = (color.BOLD+"━"+color.GRAY+"━━━━━━━━━━━━━━━━━━━")
+            elif progress > 10 and progress <= 20:
+                progressGUI = (color.BOLD+"━━"+color.GRAY+"━━━━━━━━━━━━━━━━━━")
+            elif progress > 20 and progress <= 25:
+                progressGUI = (color.BOLD+"━━━"+color.GRAY+"━━━━━━━━━━━━━━━━━")
+            elif progress > 25 and progress <= 30:
+                progressGUI = (color.BOLD+"━━━━"+color.GRAY+"━━━━━━━━━━━━━━━━")
+            elif progress > 30 and progress <= 35:
+                progressGUI = (color.BOLD+"━━━━━"+color.GRAY+"━━━━━━━━━━━━━━━")
+            elif progress > 35 and progress <= 40:
+                progressGUI = (color.BOLD+"━━━━━━"+color.GRAY+"━━━━━━━━━━━━━━")
+            elif progress > 40 and progress <= 45:
+                progressGUI = (color.BOLD+"━━━━━━━"+color.GRAY+"━━━━━━━━━━━━━")
+            elif progress > 45 and progress <= 50:
+                progressGUI = (color.BOLD+"━━━━━━━━"+color.GRAY+"━━━━━━━━━━━━")
+            elif progress > 50 and progress <= 55:
+                progressGUI = (color.BOLD+"━━━━━━━━━"+color.GRAY+"━━━━━━━━━━━")
+            elif progress > 55 and progress <= 60:
+                progressGUI = (color.BOLD+"━━━━━━━━━━"+color.GRAY+"━━━━━━━━━━")
+            elif progress > 60 and progress <= 65:
+                progressGUI = (color.BOLD+"━━━━━━━━━━━"+color.GRAY+"━━━━━━━━━")
+            elif progress > 65 and progress <= 70:
+                progressGUI = (color.BOLD+"━━━━━━━━━━━━"+color.GRAY+"━━━━━━━━")
+            elif progress > 70 and progress <= 75:
+                progressGUI = (color.BOLD+"━━━━━━━━━━━━━"+color.GRAY+"━━━━━━━")
+            elif progress > 75 and progress <= 80:
+                progressGUI = (color.BOLD+"━━━━━━━━━━━━━━"+color.GRAY+"━━━━━━")
+            elif progress > 80 and progress <= 85:
+                progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━"+color.GRAY+"━━━━━")
+            elif progress > 85 and progress <= 90:
+                progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━"+color.GRAY+"━━━━")
+            elif progress > 90 and progress <= 95:
+                progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━"+color.GRAY+"━━━")
+            elif progress > 95 and progress <= 98:
+                progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━"+color.GRAY+"━")
+            elif progress > 98 and progress <= 99:
+                progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+            elif progress >= 100:
+                progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+
+            if (int(time.time()) - lastTime) >= 0.1:
+                timeTaken = int(time.time()) - lastTime
+                speed = (((((size / 1048576) - (lastSize)) / (timeTaken))))
+                speed = round(speed,1)
+                #print("speed is: ",speed,"MB/s")
+                timeTaken = 0
+                lastSize = (size / 2 ** 20) # in MBs
+                lastTime = int(time.time())
+
+            
+            #lastSize = size / (2 ** 20)
+            #
+
+            #timeTaken = tmEnd - tmStart
+            #loadedSize = smEnd - smStart
+
+            #speed = round((timeTaken * loadedSize)/ 60 * )
+
+            #print("speed is: ",speed,"MB/s")
+
+
+
+
+            print('   \r      {2}    {0:0.1f} MB / {1:0.1f} MB    {3}         '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),((str(speed))+" MB/s")), end='')
             sys.stdout.flush()
-        print('\rDownload complete!' + ' ' * 32)
+        #print('   \r    ✓  {2}      {0:0.1f} MB / {1:0.1f} MB          '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ────────────────────────────────────────────────────────────── ')), end='')
+        print('   \r      {2}       Download Complete                     '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='')
+        time.sleep(3)
+        
+
+        progressGUI = (color.GRAY+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+        print('   \r      {2}           Converting...                '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"⊚ "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='')
+
         passon()
+        progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+        print('   \r      {2}       Conversion Complete              '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"100% "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='')
+
+            #print('\r{} MBs downloaded...'.format(size / (2 ** 20)), end='')
+           
+        #print('\rDownload complete!' + ' ' * 32)
+       
         
 
 

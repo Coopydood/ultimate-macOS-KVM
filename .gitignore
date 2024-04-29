@@ -44,3 +44,4 @@ BaseSystem.dmg
 boot.xml
 ovmf/OVMF_VARS_PT.fd
 resources/.notices
+boot-noUSB.sh

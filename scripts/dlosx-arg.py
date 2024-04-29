@@ -15,6 +15,7 @@ import json
 import random
 import argparse
 import time
+import math
 
 class color:
    PURPLE = '\033[95m'
@@ -27,6 +28,7 @@ class color:
    BOLD = '\033[1m'
    UNDERLINE = '\033[4m'
    END = '\033[0m'
+   GRAY = '\u001b[38;5;240m'
 
 try:
     from urllib.request import Request, urlopen
@@ -56,6 +58,10 @@ INFO_SIGN_SESS = 'CT'
 INFO_REQURED = [INFO_PRODUCT, INFO_IMAGE_LINK, INFO_IMAGE_HASH, INFO_IMAGE_SESS,
                 INFO_SIGN_LINK, INFO_SIGN_HASH, INFO_SIGN_SESS]
 
+global enableProgress
+global enablePercentage
+enableProgress = True
+enablePercentage = True
 
 def run_query(url, headers, post=None, raw=False):
     if post is not None:
@@ -158,6 +164,7 @@ def get_image_info(session, bid, mlb=MLB_ZERO, diag=False, os_type='default', ci
 
 def passon():
     os.system('./scripts/cvtosx.sh > /dev/null 2>&1')
+    
 
 def save_image(url, sess, filename='', directory=''):
     purl = urlparse(url)
@@ -187,22 +194,123 @@ def save_image(url, sess, filename='', directory=''):
         #else:
             #print("Note: The total download size is %0.2f MB" % total_size)
         size = 0
-        print("   ──────────────────────────────────────────────────────────────")
+        tmEnd = 0
+        tmStart = 0
+        smStart = 0
+        smEnd = 0
+        lastTime = 0
+        lastSize = 0
+        #print("   ───────────────────────────────────────────────────────────────────")
         while True:
-            #print("   ──────────────────────────────────────────────────────────────")
-            chunk = response.read(2 ** 20)
+            #print("   ───────────────────────────────────────────────────────────────────")
+            chunk = response.read(1000000)
             if not chunk:
                 break
             fhandle.write(chunk)
             size += len(chunk)
-            print('   \r   ▼  {} MBs downloaded...'.format(size / (2 ** 20)), end='')
-            sys.stdout.flush()
-        print('\r   Download complete!                                   ' + '\n   ────────────────────────────────────────────────────────────── ')
-        time.sleep(3)
-        print('\r   Converting...                                   ' + '\n   ────────────────────────────────────────────────────────────── ')
+            if enableProgress == True:
+                progress = (round(float(100 * size / (1048576))/float(total_size)))
 
-        passon()
+                if progress <= 5:
+                    progressGUI = (color.BOLD+""+color.GRAY+"━━━━━━━━━━━━━━━━━━━━")
+                elif progress > 5 and progress <= 10:
+                    progressGUI = (color.BOLD+"━"+color.GRAY+"━━━━━━━━━━━━━━━━━━━")
+                elif progress > 10 and progress <= 20:
+                    progressGUI = (color.BOLD+"━━"+color.GRAY+"━━━━━━━━━━━━━━━━━━")
+                elif progress > 20 and progress <= 25:
+                    progressGUI = (color.BOLD+"━━━"+color.GRAY+"━━━━━━━━━━━━━━━━━")
+                elif progress > 25 and progress <= 30:
+                    progressGUI = (color.BOLD+"━━━━"+color.GRAY+"━━━━━━━━━━━━━━━━")
+                elif progress > 30 and progress <= 35:
+                    progressGUI = (color.BOLD+"━━━━━"+color.GRAY+"━━━━━━━━━━━━━━━")
+                elif progress > 35 and progress <= 40:
+                    progressGUI = (color.BOLD+"━━━━━━"+color.GRAY+"━━━━━━━━━━━━━━")
+                elif progress > 40 and progress <= 45:
+                    progressGUI = (color.BOLD+"━━━━━━━"+color.GRAY+"━━━━━━━━━━━━━")
+                elif progress > 45 and progress <= 50:
+                    progressGUI = (color.BOLD+"━━━━━━━━"+color.GRAY+"━━━━━━━━━━━━")
+                elif progress > 50 and progress <= 55:
+                    progressGUI = (color.BOLD+"━━━━━━━━━"+color.GRAY+"━━━━━━━━━━━")
+                elif progress > 55 and progress <= 60:
+                    progressGUI = (color.BOLD+"━━━━━━━━━━"+color.GRAY+"━━━━━━━━━━")
+                elif progress > 60 and progress <= 65:
+                    progressGUI = (color.BOLD+"━━━━━━━━━━━"+color.GRAY+"━━━━━━━━━")
+                elif progress > 65 and progress <= 70:
+                    progressGUI = (color.BOLD+"━━━━━━━━━━━━"+color.GRAY+"━━━━━━━━")
+                elif progress > 70 and progress <= 75:
+                    progressGUI = (color.BOLD+"━━━━━━━━━━━━━"+color.GRAY+"━━━━━━━")
+                elif progress > 75 and progress <= 80:
+                    progressGUI = (color.BOLD+"━━━━━━━━━━━━━━"+color.GRAY+"━━━━━━")
+                elif progress > 80 and progress <= 85:
+                    progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━"+color.GRAY+"━━━━━")
+                elif progress > 85 and progress <= 90:
+                    progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━"+color.GRAY+"━━━━")
+                elif progress > 90 and progress <= 95:
+                    progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━"+color.GRAY+"━━━")
+                elif progress > 95 and progress <= 98:
+                    progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━"+color.GRAY+"━")
+                elif progress > 98 and progress <= 99:
+                    progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+                elif progress >= 100:
+                    progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+
+                if (int(time.time()) - lastTime) >= 0.1:
+                    timeTaken = int(time.time()) - lastTime
+                    speed = (((((size / 1048576) - (lastSize)) / (timeTaken))))
+                    if speed >= 99:
+                        speed = math.trunc(speed)
+                    else:
+                        speed = round(speed,1)
+                    #print("speed is: ",speed,"MB/s")
+                    timeTaken = 0
+                    lastSize = (size / 2 ** 20) # in MBs
+                    lastTime = int(time.time())
+
+                
+                #lastSize = size / (2 ** 20)
+                #
+
+                #timeTaken = tmEnd - tmStart
+                #loadedSize = smEnd - smStart
+
+                #speed = round((timeTaken * loadedSize)/ 60 * )
+
+                #print("speed is: ",speed,"MB/s")
+
+
+
+                if enablePercentage == True:
+                    print('   \r      {2}    {0:0.1f} MB / {1:0.1f} MB    {3}         '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),((str(speed))+" MB/s")), end='')
+                else:
+                    print('   \r      {2}                                             '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+color.END)), end='')
+                
+                sys.stdout.flush()
         
+        #print('   \r    ✓  {2}      {0:0.1f} MB / {1:0.1f} MB          '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='')
+        if enableProgress == True:
+            if enablePercentage == True:
+                print('   \r      {2}       Download Complete                     '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='')
+            else:
+                print('   \r      {2}                                             '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+color.END)), end='')
+            time.sleep(3)
+            
+
+            progressGUI = (color.GRAY+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+            if enablePercentage == True:
+                print('   \r      {2}           Converting...                '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"⊚ "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='')
+            else:
+                print('   \r      {2}                                             '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+color.END)), end='')
+            passon()
+            progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+            if enablePercentage == True:
+                print('   \r      {2}       Conversion Complete              '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"100% "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='')
+            else:
+                print('   \r      {2}                                             '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+color.END)), end='')
+            time.sleep(2)
+                #print('\r{} MBs downloaded...'.format(size / (2 ** 20)), end='')
+           
+        #print('\rDownload complete!' + ' ' * 32)
+       
 
 
 def action_download(args):
@@ -430,6 +538,8 @@ class gdata:
 
 
 def main():
+    global enableProgress
+    global enablePercentage
     parser = argparse.ArgumentParser(description='Gather recovery information for Macs')
     parser.add_argument('--action', choices=['download', 'selfcheck', 'verify', 'guess'], default='',
                         help='Action to perform: "download" - performs recovery downloading,'
@@ -453,8 +563,20 @@ def main():
     parser.add_argument('-v', '--verbose', action='store_true', help='print debug information')
     parser.add_argument('-db', '--board-db', type=str, default=os.path.join(SELF_DIR, 'boards.json'),
                         help='use custom board list for checking, defaults to boards.json')
+    parser.add_argument("--disable-progress", dest="disableProgress", help="Disable progress bar UI displays",action="store_true")
+    parser.add_argument("--disable-percentage", dest="disablePercentage", help="Disable progress bar percentages and data labels",action="store_true")
 
     args = parser.parse_args()
+
+    if args.disableProgress == True:
+         enableProgress = False
+    else:
+        enableProgress = True
+
+    if args.disablePercentage == True:
+         enablePercentage = False
+    else:
+          enablePercentage = True
 
     if args.code != '':
         args.mlb = mlb_from_eeee(args.code)

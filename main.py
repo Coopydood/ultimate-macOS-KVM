@@ -27,6 +27,7 @@ import json
 import sys
 import argparse
 import platform
+import datetime
 try:
     import pypresence
 except:
@@ -59,14 +60,6 @@ version = version.read()
 
 versionDash = version.replace(".","-")
 
-
-# Discord rich presence routine
-client_id = "1149434759152422922"
-try:
-    RPC = Presence(client_id)
-except:
-    None
-
 if args.rpcDisable == True:
     discordRPC = 0
 else:
@@ -97,6 +90,7 @@ class color:
 def startup():
     global detectChoice
     
+    detectChoice = None
 
     if not os.path.exists("resources/script_store/main.py"): # BACKUP ORIGINAL FILES TO STORE
         os.system("cp -R ./scripts/* ./resources/script_store/")
@@ -126,6 +120,8 @@ def startup():
 
     if os.path.exists("./blobs/user/USR_CFG.apb"):
             global apFilePath
+            global apFilePathNoPT
+            global apFilePathNoUSB
             global macOSVer
             global mOSString
             apFilePath = open("./blobs/user/USR_CFG.apb")
@@ -147,7 +143,13 @@ def startup():
             if os.path.exists("./"+apFilePath):
                 global REQUIRES_SUDO
                 global VALID_FILE
-                
+                global VALID_FILE_NOPT
+                global VALID_FILE_NOUSB
+
+                VALID_FILE = 0
+                VALID_FILE_NOPT = 0
+                VALID_FILE_NOUSB = 0
+
                 apFile = open("./"+apFilePath,"r")
 
                 
@@ -160,6 +162,9 @@ def startup():
                 apFile.close()
 
                 apFile = open("./"+apFilePath,"r")
+
+                apFilePathNoPT = apFilePath.replace(".sh","-noPT.sh")
+                apFilePathNoUSB = apFilePath.replace(".sh","-noUSB.sh")
                 
                 if "APC-RUN" in apFile.read():
                     VALID_FILE = 1
@@ -172,7 +177,18 @@ def startup():
                     else:
                         print(color.BOLD+"\n      B. Boot",mOSString,macOSVer+"")
                         print(color.END+"         Start",mOSString,"using the detected\n         "+apFilePath+" script file.")
-                    print(color.END+"\n      1. AutoPilot")
+                    
+                    if os.path.exists("./"+apFilePathNoPT):
+                        VALID_FILE_NOPT = 1
+                    
+                    if os.path.exists("./"+apFilePathNoUSB):
+                        VALID_FILE_NOUSB = 1
+                        
+                    if VALID_FILE_NOPT == 1 or VALID_FILE_NOUSB == 1:
+                        print(color.BOLD+"\n      O. Other boot options...") 
+
+
+                    print(color.END+"\n      1. AutoPilot")      
 
                 else:
                     print(color.BOLD+"\n      1. AutoPilot")
@@ -290,15 +306,6 @@ else:
     clear()
     startup()
 
-
-
-
-
-
-
-
-
-
 if detectChoice == "1":
     os.system('./scripts/autopilot.py')
 elif detectChoice == "2":
@@ -325,8 +332,6 @@ elif detectChoice == "w" or detectChoice == "W":
 elif detectChoice == "u" or detectChoice == "U":
     clear()
     os.system('./scripts/repo-update.py --menuFlow')
-elif detectChoice == "q" or detectChoice == "Q":
-    exit
 elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FILE == 1:
     clear()
 
@@ -337,6 +342,14 @@ elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FI
             os.system("cp ./resources/ovmf/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
 
     if discordRPC == 1:
+
+        # Discord rich presence routine
+        client_id = "1149434759152422922"
+        try:
+            RPC = Presence(client_id)
+        except:
+            None
+
         if os.path.exists("./blobs/user/USR_VFIO_DEVICES.apb"):
             vfioDevs = open("./blobs/user/USR_VFIO_DEVICES.apb")
             vfioDevs = vfioDevs.read()
@@ -354,5 +367,191 @@ elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FI
             os.system("./"+apFilePath+" -d 0")
         else:
             os.system("./"+apFilePath)
-else:
-    startup()
+elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VALID_FILE_NOUSB == 1 or detectChoice == "O" and VALID_FILE_NOPT == 1 or detectChoice == "O" and VALID_FILE_NOUSB == 1:
+    # Spawn boot options menu
+    clear()
+    print(color.BOLD+color.BLUE+"\n\n   BOOT OPTIONS FOR",mOSString.upper(),macOSVer.upper()+""+color.END)
+    print("   The following boot options are available:")
+
+    if REQUIRES_SUDO == 1:
+        print(color.BOLD+"\n      1. Boot",mOSString,macOSVer+color.YELLOW,"⚠"+color.END)
+        print(color.END+"         Start",mOSString,"using the detected\n         "+apFilePath+" script file."+color.YELLOW,"Requires superuser."+color.END)
+    else:
+        print(color.BOLD+"\n      1. Boot",mOSString,macOSVer+"")
+        print(color.END+"         Start",mOSString,"using the detected\n         "+apFilePath+" script file.")
+                    
+    
+
+    if VALID_FILE_NOPT == 1:
+        
+        apFile = open("./"+apFilePathNoPT,"r")
+
+        if "REQUIRES_SUDO=1" in apFile.read():
+            REQUIRES_SUDO = 1
+        else:
+            REQUIRES_SUDO = 0
+
+        if REQUIRES_SUDO == 1:
+            print(color.BOLD+"\n      2. Boot",mOSString,macOSVer+" without PCI passthrough"+color.YELLOW+" ⚠"+color.END)
+            print(color.END+"         Start",mOSString,"using "+apFilePathNoPT+", with\n         no passthrough devices enabled."+color.YELLOW,"Requires superuser."+color.END)
+        else:
+            print(color.BOLD+"\n      2. Boot",mOSString,macOSVer+" without PCI passthrough")
+            print(color.END+"         Start",mOSString,"using "+apFilePathNoPT+", with\n         no passthrough devices enabled.")
+
+    
+    if VALID_FILE_NOUSB == 1:
+        
+        apFile = open("./"+apFilePathNoUSB,"r")
+
+        if "REQUIRES_SUDO=1" in apFile.read():
+            REQUIRES_SUDO = 1
+        else:
+            REQUIRES_SUDO = 0
+
+        if REQUIRES_SUDO == 1:
+            print(color.BOLD+"\n      3. Boot",mOSString,macOSVer+" without host USB devices"+color.YELLOW+" ⚠"+color.END)
+            print(color.END+"         Start",mOSString,"using "+apFilePathNoUSB+", with\n         no host USB devices."+color.YELLOW,"Requires superuser."+color.END)
+        else:
+            print(color.BOLD+"\n      3. Boot",mOSString,macOSVer+" without host USB devices")
+            print(color.END+"         Start",mOSString,"using "+apFilePathNoUSB+", with\n         no host USB devices.")
+
+    print(color.END+"\n      B. Back...")
+    print(color.END+"      Q. Exit\n")
+    detectChoice3 = str(input(color.BOLD+"Select> "+color.END))
+
+    if detectChoice3 == "1" and VALID_FILE == 1:  # REGULAR BOOT
+        clear()
+
+        if not os.path.exists("./ovmf/OVMF_VARS.df"):   # AUTO REPAIR OVMF
+            if os.path.exists("./ovmf/user_store/OVMF_VARS.fd"):
+                os.system("cp ./ovmf/user_store/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+            else:
+                os.system("cp ./resources/ovmf/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+
+        if discordRPC == 1:
+            # Discord rich presence routine
+            client_id = "1149434759152422922"
+            try:
+                RPC = Presence(client_id)
+            except:
+                None
+            if os.path.exists("./blobs/user/USR_VFIO_DEVICES.apb"):
+                vfioDevs = open("./blobs/user/USR_VFIO_DEVICES.apb")
+                vfioDevs = vfioDevs.read()
+                subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer,"--pt",vfioDevs])
+            else:
+                subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
+        if REQUIRES_SUDO == 1:
+            print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser privileges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
+            if discordRPC == 0:
+                os.system("sudo ./"+apFilePath+" -d 0")
+            else:
+                os.system("sudo ./"+apFilePath)
+        else:
+            if discordRPC == 0:
+                os.system("./"+apFilePath+" -d 0")
+            else:
+                os.system("./"+apFilePath)
+    
+    if detectChoice3 == "2" and VALID_FILE_NOPT == 1:  # NO PASSTHROUGH BOOT
+        clear()
+
+        apFile = open("./"+apFilePathNoPT,"r")
+
+                
+
+        if "REQUIRES_SUDO=1" in apFile.read():
+            REQUIRES_SUDO = 1
+        else:
+            REQUIRES_SUDO = 0
+
+        if not os.path.exists("./ovmf/OVMF_VARS.df"):   # AUTO REPAIR OVMF
+            if os.path.exists("./ovmf/user_store/OVMF_VARS.fd"):
+                os.system("cp ./ovmf/user_store/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+            else:
+                os.system("cp ./resources/ovmf/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+
+        if discordRPC == 1:
+            # Discord rich presence routine
+            client_id = "1149434759152422922"
+            try:
+                RPC = Presence(client_id)
+            except:
+                None
+            subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
+        if REQUIRES_SUDO == 1:
+            print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser privileges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
+            if discordRPC == 0:
+                os.system("sudo ./"+apFilePathNoPT+" -d 0")
+            else:
+                os.system("sudo ./"+apFilePathNoPT)
+        else:
+            if discordRPC == 0:
+                os.system("./"+apFilePathNoPT+" -d 0")
+            else:
+                os.system("./"+apFilePathNoPT)
+    
+    if detectChoice3 == "3" and VALID_FILE_NOUSB == 1:  # NO USB BOOT
+        clear()
+
+        apFile = open("./"+apFilePathNoUSB,"r")
+
+                
+
+        if "REQUIRES_SUDO=1" in apFile.read():
+            REQUIRES_SUDO = 1
+        else:
+            REQUIRES_SUDO = 0
+
+        if not os.path.exists("./ovmf/OVMF_VARS.df"):   # AUTO REPAIR OVMF
+            if os.path.exists("./ovmf/user_store/OVMF_VARS.fd"):
+                os.system("cp ./ovmf/user_store/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+            else:
+                os.system("cp ./resources/ovmf/OVMF_VARS.fd ./ovmf/OVMF_VARS.fd")
+
+        if discordRPC == 1:
+            # Discord rich presence routine
+            client_id = "1149434759152422922"
+            try:
+                RPC = Presence(client_id)
+            except:
+                None
+            subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
+        if REQUIRES_SUDO == 1:
+            print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser privileges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
+            if discordRPC == 0:
+                os.system("sudo ./"+apFilePathNoUSB+" -d 0")
+            else:
+                os.system("sudo ./"+apFilePathNoUSB)
+        else:
+            if discordRPC == 0:
+                os.system("./"+apFilePathNoUSB+" -d 0")
+            else:
+                os.system("./"+apFilePathNoUSB)
+    
+    elif detectChoice3 == "b" or detectChoice3 == "B":
+        os.system('./main.py --skip-vm-check')
+        
+    elif detectChoice3 == "q" or detectChoice3 == "Q":
+        exit
+    else:
+        startup()
+elif detectChoice == "q" or detectChoice == "Q":
+    clear()
+    print(color.BOLD+"\n\n   "+color.PURPLE+"GOODBYE!"+color.END)
+    print("   Thanks for using ULTMOS!"+color.END)
+    print("\n   This project was created with "+color.RED+color.BOLD+"❤"+color.END+" by Coopydood\n   and a growing list of awesome contributors.\n\n   Have feedback, issues, or want to contribute?\n   I'd love to hear from you!\n\n   "+color.BOLD+"https://github.com/Coopydood/ultimate-macOS-KVM\n   https://discord.gg/WzWkSsT\n"+color.END)
+    hr = datetime.datetime.now().time().hour
+    if hr > 3 and hr < 12:
+        print("   Have a nice day! :]\n\n\n")
+    elif hr >= 12 and hr < 17:
+        print("   Have a nice rest of your afternoon! :]\n\n\n")
+    elif hr >= 17 and hr < 21:
+        print("   Have a nice evening! :]\n\n\n")
+    else:
+        print("   Have a nice night - "+color.CYAN+"and remember to sleep!"+color.END+" :]\n\n\n")
+    exit(0)
+
+elif detected != 2:
+    clear()
+    os.system('./main.py')
