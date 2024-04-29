@@ -453,6 +453,8 @@ def autopilot():
    def progressUpdate(progressVal,*args):
       global progress
       global progressGUI
+      #print('   ─────────────────────────────────────────────────────────────────── \n')
+      
       if enableProgress == True:
          progress = progressVal #(round(float(100 * progressVal / (2 ** 20))/100))
          if progress <= 5:
@@ -496,17 +498,18 @@ def autopilot():
          elif progress > 98 and progress <= 99:
                progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
          elif progress >= 100:
-               progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+               progressGUI = (color.BOLD+color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
          if progress >= 0:
+            sys.stdout.write('\033[F\033[2K\033[1G')
             if enablePercentage == True:
-               print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('')), end='')
+               print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='\n')
             else:
-               print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+color.END)), end='')
+               print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='\n')
             sys.stdout.flush()
          else:
-            print('   \r                       '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='')
+            print('   \r                       '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='\n')
          #print('   \r      ───────────────────────────────────────────────────────────────────')
-
+         
 
 
 

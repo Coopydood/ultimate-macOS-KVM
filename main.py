@@ -296,7 +296,7 @@ elif detected == 2:
         print("   "+platform.system()+" detected")
         print("\n   I've determined that you're using "+platform.system()+". \n   Put simply, this project won't work on here.\n   To save you further disappointment, I'm instead\n   throwing you this error.\n\n   Sorry :/"+color.END)
         
-        print("\n   "+color.BOLD+color.RED+"PROBLEM:",color.END+"well... not Linux... ¯\_(ツ)_/¯"+color.END)
+        print("\n   "+color.BOLD+color.RED+"PROBLEM:",color.END+"well... not Linux... ¯\\_(ツ)_/¯"+color.END)
         print("\n\n\n")
         time.sleep(5)
         sys.exit

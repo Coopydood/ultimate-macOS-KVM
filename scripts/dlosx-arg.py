@@ -278,32 +278,34 @@ def save_image(url, sess, filename='', directory=''):
                 #print("speed is: ",speed,"MB/s")
 
 
-
+                sys.stdout.write('\033[F\033[2K\033[1G')
                 if enablePercentage == True:
-                    print('   \r      {2}    {0:0.1f} MB / {1:0.1f} MB    {3}         '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),((str(speed))+" MB/s")), end='')
+                    print('   \r      {2}    {0:0.1f} MB / {1:0.1f} MB    {3}         '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),((str(speed))+" MB/s")), end='\n')
                 else:
-                    print('   \r      {2}                                             '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+color.END)), end='')
+                    print('   \r      {2}                                             '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+color.END)), end='\n')
                 
                 sys.stdout.flush()
         
         #print('   \r    ✓  {2}      {0:0.1f} MB / {1:0.1f} MB          '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='')
         if enableProgress == True:
+            sys.stdout.write('\033[F\033[2K\033[1G')
             if enablePercentage == True:
-                print('   \r      {2}       Download Complete                     '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='')
+                print('   \r      {2}       Download Complete                     '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='\n')
             else:
                 print('   \r      {2}                                             '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+color.END)), end='')
             time.sleep(3)
             
-
+            sys.stdout.write('\033[F\033[2K\033[1G')
             progressGUI = (color.GRAY+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
             if enablePercentage == True:
-                print('   \r      {2}           Converting...                '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"⊚ "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='')
+                print('   \r      {2}           Converting...                '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"⊚ "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='\n')
             else:
                 print('   \r      {2}                                             '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+color.END)), end='')
             passon()
+            sys.stdout.write('\033[F\033[2K\033[1G')
             progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
             if enablePercentage == True:
-                print('   \r      {2}       Conversion Complete              '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"100% "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='')
+                print('   \r      {2}       Conversion Complete              '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"100% "+color.END),('\n   ─────────────────────────────────────────────────────────────────── ')), end='\n')
             else:
                 print('   \r      {2}                                             '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+color.END)), end='')
             time.sleep(2)
