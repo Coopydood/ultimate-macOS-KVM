@@ -28,6 +28,8 @@ import timeit
 import random
 import uuid
 import platform
+sys.path.append('./resources/python')
+from cpydColours import color
 try:
     from pypresence import Presence
 except:
@@ -113,19 +115,6 @@ else:
 
 version = open("./.version")
 version = version.read()
-
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
-   GRAY = '\u001b[38;5;240m'
 
 
 global logTime

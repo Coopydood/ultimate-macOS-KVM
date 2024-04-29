@@ -24,24 +24,12 @@ import psutil
 import sys
 sys.path.append('./resources/python')
 import distro
+from cpydColours import color
 from datetime import datetime
 
 detectChoice = 1
 latestOSName = "Sonoma"
 latestOSVer = "14"
-
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
-   GRAY = '\u001b[38;5;245m'
 
 scriptName = "System Profile Tool"
 script = "sysprofiler.py"
