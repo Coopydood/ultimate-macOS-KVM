@@ -21,6 +21,7 @@ import platform
 import datetime
 import cpuinfo
 import psutil
+import hashlib
 import sys
 sys.path.append('./resources/python')
 import distro
@@ -117,6 +118,7 @@ def get_size(bytes, suffix="B"):
 
 global logTime
 global logFile
+global warningCount
 logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
 
 if not os.path.exists("./logs"):
@@ -133,12 +135,19 @@ os.system("echo This information may help project developers"+" >> ./logs/SPT_"+
 os.system("echo in assisting you in any issues you might have."+" >> ./logs/SPT_"+logTime+".log")
 
 
-
+warn = False
+warningCount = 0
+warnings = []
 
 logFile = open("./logs/SPT_"+logTime+".log", "a")
-
-def cpydProfile(logMsg):
-    entryLine = ("   "+str(logMsg)+"\n")
+progressUpdate(2)
+def cpydProfile(logMsg,warn=None):
+    global warningCount
+    if warn == True:
+        entryLine = ("⚠ "+str(logMsg)+"\n")
+        warningCount = warningCount + 1
+    else:
+        entryLine = ("   "+str(logMsg)+"\n")
     logFile.write(entryLine)
 
 output_stream = os.popen("git branch --show-current")
@@ -159,8 +168,89 @@ time.sleep(2)
 cpydProfile("ULTMOS")
 cpydProfile("────────────────────────────────────────────────────────")
 cpydProfile(("Version    : "+version))
-cpydProfile(("Branch     : "+branch))
+if branch != "main":
+    cpydProfile(("Branch     : "+branch),True)
+    warnings.append(("This version of ULTMOS is from the "+branch+" branch, which"))
+    warnings.append("is not considered stable and bugs are likely\n")
+else:
+    cpydProfile(("Branch     : "+branch))
 cpydProfile((" \n"))
+cpydProfile("AUTOPILOT")
+cpydProfile("────────────────────────────────────────────────────────")
+cpydProfile(("FeatureLvl : "+"7"))
+
+userBlobList = os.listdir("./blobs/user")
+if ".user_control" in userBlobList: userBlobList.remove(".user_control")
+
+staleBlobList = os.listdir("./blobs/stale")
+if ".stale_control" in staleBlobList: staleBlobList.remove(".stale_control")
+
+liveBlobList = [f for f in os.listdir("./blobs/") if os.path.isfile(f)]
+if ".cdn_control" in liveBlobList: liveBlobList.remove(".cdn_control")
+
+if len(userBlobList) > 0:
+    cpydProfile(("UserBlobs  : Yes ("+str(len(userBlobList))+" total)"))
+    #cpydProfile("             ⌈ ")
+else:
+    cpydProfile(("UserBlobs  : No"),True)
+    warnings.append("No user blobs were found\n")
+
+
+for x in userBlobList[0:(len(userBlobList)-1)]:
+    cpydProfile("             ├ "+x)
+cpydProfile("             └ "+userBlobList[-1])
+
+if len(userBlobList) > 0: cpydProfile(" ")
+
+if len(staleBlobList) > 0:
+    cpydProfile(("StaleBlobs : Yes ("+str(len(staleBlobList))+" total)"))
+else:
+    cpydProfile(("StaleBlobs : No"))
+
+if len(liveBlobList) > 0:
+    cpydProfile(("LiveBlobs  : Yes ("+str(len(liveBlobList))+" total)"))
+else:
+    cpydProfile(("LiveBlobs  : No"))
+cpydProfile((" "))
+if os.path.exists("./boot/OpenCore.qcow2"):
+    ocInPlace = "Yes"
+    ocHash = hashlib.md5(open('./boot/OpenCore.qcow2','rb').read()).hexdigest()
+    
+    ocStockHashes = []
+    ocStockHashes.append(hashlib.md5(open('./resources/oc_store/compat_new/OpenCore.qcow2','rb').read()).hexdigest())
+    ocStockHashes.append(hashlib.md5(open('./resources/oc_store/compat_old/OpenCore.qcow2','rb').read()).hexdigest())
+    ocStockHashes.append(hashlib.md5(open('./resources/oc_store/legacy_new/OpenCore.qcow2','rb').read()).hexdigest())
+    ocModded = "Unknown"
+    if ocHash not in ocStockHashes:
+        ocModded = "Yes"
+    else:
+        ocModded = "No"
+    ocSize = get_size(os.path.getsize("./boot/OpenCore.qcow2"))
+else:
+    ocHash = "N/A"
+    ocInPlace = "No"
+cpydProfile(("OCInPlace  : "+ocInPlace))
+if ocModded == "Yes":
+    cpydProfile(("OCModded   : "+ocModded),True)
+    warnings.append("OpenCore image is very likely to have been modified")
+    warnings.append("by the user, integrity can't be verified\n")
+
+else:
+    cpydProfile(("OCModded   : "+ocModded))
+if os.path.getsize("./boot/OpenCore.qcow2") < 18000000: 
+    cpydProfile(("OCSize     : "+ocSize),True)
+    warnings.append(("OpenCore image file is only "+ocSize+" in size,"))
+    warnings.append("which is much smaller than expected\n")
+else: cpydProfile(("OCSize     : "+ocSize))
+if ocModded == "Yes":
+    cpydProfile(("OCHashMD5  : "+ocHash),True)
+    warnings.append("OpenCore image MD5 hash does not match any stock")
+    warnings.append("OC images supplied with the project\n")
+
+else:
+    cpydProfile(("OCHashMD5  : "+ocHash))
+cpydProfile((" \n"))
+
 cpydProfile("OPERATING SYSTEM")
 cpydProfile("────────────────────────────────────────────────────────")
 
@@ -183,9 +273,18 @@ cpydProfile("Model      : "+f"{cpuinfo.get_cpu_info()['brand_raw']}")
 progressUpdate(35)
 cpydProfile("Pysical    : "+str(psutil.cpu_count(logical=False)))
 progressUpdate(38)
-cpydProfile("Logical    : "+str(psutil.cpu_count(logical=True)))
+logCPUCores = psutil.cpu_count(logical=True)
+if logCPUCores <= 2:
+    cpydProfile(("Logical    : "+str(logCPUCores)),True)
+    warnings.append("System processor appears as having only "+str(logCPUCores)+" logical cores")
+    warnings.append("which is at or below the project's minimum requirements\n")
+else:
+    cpydProfile("Logical    : "+str(logCPUCores))
 progressUpdate(41)
-cpydProfile("Arch       : "+platform.machine())
+if platform.machine() != "x86_64":
+    cpydProfile("Arch       : "+platform.machine(),True)
+else:
+    cpydProfile("Arch       : "+platform.machine())
 progressUpdate(46)
 cpydProfile(" \n")
 time.sleep(1)
@@ -200,4 +299,13 @@ progressUpdate(51)
 cpydProfile("Free       : "+f"{get_size(svmem.free)}")
 progressUpdate(53)
 time.sleep(1)
+progressUpdate(97)
+cpydProfile(" \n")
+time.sleep(1)
+if warningCount > 0:
+    cpydProfile("WARNINGS ("+str(warningCount)+")")
+    cpydProfile("────────────────────────────────────────────────────────")
+    for x in warnings:
+        cpydProfile(x)
 logFile.close()
+progressUpdate(100)
