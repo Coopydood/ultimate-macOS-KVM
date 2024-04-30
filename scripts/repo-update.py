@@ -107,6 +107,13 @@ elif integrity == 1 and args.version is not None:
 
 targetBranch = "main"
 
+output_stream = os.popen("git branch --show-current")
+currentBranch = output_stream.read()
+currentBranch = currentBranch.replace("\n","")
+
+if currentBranch != targetBranch:
+   targetBranch = currentBranch
+
 if args.switchBranch is not None:
    targetBranch = args.switchBranch
 
@@ -387,7 +394,8 @@ if integrity == 1:
       print("\n\n   "+color.BOLD+color.GREEN+"✔  NO UPDATES AVAILABLE"+color.END,"")
       print("   You're on the latest version\n")
       print(color.BOLD+"   Current Version\n   "+color.END+"v"+version,"\n")
-      
+      if currentBranch != "main":
+         print(color.BOLD+"   Branch\n   "+color.END+""+currentBranch,"\n")
       print("   Check back periodically to ensure you're always using\n   the latest version of the project."+"\n")
       versionDash = webVersion.replace(".","-")
       if menuFlow == 1:

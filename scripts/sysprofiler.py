@@ -36,7 +36,7 @@ script = "sysprofiler.py"
 scriptID = "SPT"
 scriptVendor = "Coopydood"
 scriptVer = 1.0
-branch = "dev"
+branch = "Unknown"
 
 version = open("./.version")
 version = version.read()
@@ -140,6 +140,10 @@ logFile = open("./logs/SPT_"+logTime+".log", "a")
 def cpydProfile(logMsg):
     entryLine = ("   "+str(logMsg)+"\n")
     logFile.write(entryLine)
+
+output_stream = os.popen("git branch --show-current")
+branch = output_stream.read()
+branch = branch.replace("\n","")
 cpydProfile(" ")
 cpydProfile(("Name       : "+scriptName))
 cpydProfile(("File       : "+script))
