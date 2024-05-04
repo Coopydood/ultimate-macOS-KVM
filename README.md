@@ -99,6 +99,7 @@ All of the dependencies, both required and optional, are listed below.
 
 <b>Required</b>
 <ul>
+<li><b>Sudo</b> 》 <code>sudo</code></li>
 <li><b>Git</b> 》 <code>git</code></li>
 <li><b>Wget</b> 》 <code>wget</code></li>
 <li><b>QEMU</b> 》 <code>qemu-full</code></li>
