@@ -53,7 +53,7 @@ clear()
 for x in range(1,1):
     print("\nThis script will check your system to ensure it is ready for basic KVM. \nChecks will begin in",cS,"seconds. \nPress CTRL+C to cancel.")
     cS = cS - 1
-    time.sleep(1)
+    # time.sleep(1)
     clear()
 
 clear()
@@ -138,7 +138,6 @@ os.system("echo in assisting you in any issues you might have."+" >> ./logs/SPT_
 warn = False
 warningCount = 0
 warnings = []
-
 logFile = open("./logs/SPT_"+logTime+".log", "a")
 progressUpdate(2)
 def cpydProfile(logMsg,warn=None):
@@ -150,9 +149,69 @@ def cpydProfile(logMsg,warn=None):
         entryLine = ("   "+str(logMsg)+"\n")
     logFile.write(entryLine)
 
+######################### BRAINS #######################
+
 output_stream = os.popen("git branch --show-current")
 branch = output_stream.read()
 branch = branch.replace("\n","")
+
+if os.path.exists("./blobs/user/USR_CFG.apb"):
+    global apFilePath
+    global apFilePathNoPT
+    global apFilePathNoUSB
+    global macOSVer
+    global mOSString
+
+    apFile = None
+
+    apFilePath = open("./blobs/user/USR_CFG.apb")
+    apFilePath = apFilePath.read()
+    if os.path.exists("./blobs/user/USR_TARGET_OS_NAME.apb"):
+        macOSVer = open("./blobs/user/USR_TARGET_OS_NAME.apb")
+        macOSVer = macOSVer.read()
+
+    macOSVer = open("./blobs/user/USR_TARGET_OS.apb")
+    macOSVer = macOSVer.read()
+    if int(macOSVer) <= 999 and int(macOSVer) > 99:
+        macOSVer = str(int(macOSVer) / 100)
+        mOSString = "Mac OS X"
+    else:
+        mOSString = "macOS"
+    if os.path.exists("./blobs/user/USR_TARGET_OS_NAME.apb"):
+        macOSVer = open("./blobs/user/USR_TARGET_OS_NAME.apb")
+        macOSVer = macOSVer.read()
+    if os.path.exists("./"+apFilePath):
+        global REQUIRES_SUDO
+        global VALID_FILE
+        global VALID_FILE_NOPT
+        global VALID_FILE_NOUSB
+
+        VALID_FILE = 0
+        VALID_FILE_NOPT = 0
+        VALID_FILE_NOUSB = 0
+
+        apFile = open("./"+apFilePath,"r")
+
+        
+
+        if "REQUIRES_SUDO=1" in apFile.read():
+            REQUIRES_SUDO = 1
+        else:
+            REQUIRES_SUDO = 0
+
+        apFile.close()
+
+        apFile = open("./"+apFilePath,"r")
+
+        apFilePathNoPT = apFilePath.replace(".sh","-noPT.sh")
+        apFilePathNoUSB = apFilePath.replace(".sh","-noUSB.sh")
+        
+        if "APC-RUN" in apFile.read():
+            VALID_FILE = 1
+    
+
+########################################################
+
 cpydProfile(" ")
 cpydProfile(("Name       : "+scriptName))
 cpydProfile(("File       : "+script))
@@ -164,7 +223,7 @@ cpydProfile("Date       : "+str(datetime.today().strftime('%d/%m/%Y')))
 cpydProfile("Time       : "+str(datetime.today().strftime('%H:%M:%S')))
 cpydProfile(" \n")
 progressUpdate(7)
-time.sleep(2)
+# time.sleep(2)
 cpydProfile("ULTMOS")
 cpydProfile("────────────────────────────────────────────────────────")
 cpydProfile(("Version    : "+version))
@@ -185,7 +244,10 @@ if ".user_control" in userBlobList: userBlobList.remove(".user_control")
 staleBlobList = os.listdir("./blobs/stale")
 if ".stale_control" in staleBlobList: staleBlobList.remove(".stale_control")
 
-liveBlobList = [f for f in os.listdir("./blobs/") if os.path.isfile(f)]
+liveBlobList = []
+for x in os.listdir("./blobs/"):
+    if ".apb" in x:
+        liveBlobList.append(x)
 if ".cdn_control" in liveBlobList: liveBlobList.remove(".cdn_control")
 
 if len(userBlobList) > 0:
@@ -208,7 +270,13 @@ else:
     cpydProfile(("StaleBlobs : No"))
 
 if len(liveBlobList) > 0:
-    cpydProfile(("LiveBlobs  : Yes ("+str(len(liveBlobList))+" total)"))
+    cpydProfile(("LiveBlobs  : Yes ("+str(len(liveBlobList))+" total)"),True)
+    warnings.append("Live AutoPilot blobs were found, did AutoPilot finish")
+    warnings.append("running, or did it suffer fatality?\n")
+    
+    for f in liveBlobList[0:(len(liveBlobList)-1)]:
+        cpydProfile("             ├ "+f)
+    cpydProfile("             └ "+liveBlobList[-1])
 else:
     cpydProfile(("LiveBlobs  : No"))
 cpydProfile((" "))
@@ -249,14 +317,86 @@ if ocModded == "Yes":
 
 else:
     cpydProfile(("OCHashMD5  : "+ocHash))
+cpydProfile((" "))
+
+if apFilePath is not None:
+    cpydProfile(("APFileName : "+apFilePath))
+    if apFile is not None:
+        cpydProfile(("APFilePath : "+str(os.path.realpath(apFile.name))))
+    else:
+        cpydProfile(("APFilePath : Unknown"),True)
+        warnings.append("AutoPilot blobs reference a boot script that does not")
+        warnings.append("actually seem to exist - may cause quirky issues\n")
+else:
+    cpydProfile(("APFileName : N/A"))
+    cpydProfile(("APFilePath : N/A"))
+
+cpydProfile((" \n"))
+
+if apFilePath is not None:
+    cpydProfile("GENERATED DATA ("+apFilePath.upper()+")")
+    cpydProfile("────────────────────────────────────────────────────────")
+    cpydProfile(("Name       : "+apFilePath))
+    if apFile is not None:
+        cpydProfile(("Path       : "+str(os.path.realpath(apFile.name))))
+    else:
+        cpydProfile(("Path       : Unknown"))
+    cpydProfile(" ")
+    targetOSName = open("./blobs/user/USR_TARGET_OS_NAME.apb")
+    targetOSName = targetOSName.read()
+    targetOS = open("./blobs/user/USR_TARGET_OS.apb")
+    targetOS = targetOS.read()
+    targetHDDPath = open("./blobs/user/USR_HDD_PATH.apb")
+    targetHDDPath = targetHDDPath.read()
+    targetHDDPath = targetHDDPath.replace("$REPO_PATH",os.path.realpath(os.path.curdir))
+    targetHDDSize = open("./blobs/user/USR_HDD_SIZE.apb")
+    targetHDDSize = targetHDDSize.read()
+    targetHDDSize = targetHDDSize.replace("G"," GB")
+    targetHDDType = open("./blobs/user/USR_HDD_TYPE.apb")
+    targetHDDType = targetHDDType.read()
+    targetHDDPhysical = open("./blobs/user/USR_HDD_ISPHYSICAL.apb")
+    targetHDDPhysical = targetHDDPhysical.read()
+    if os.path.exists(targetHDDPath):
+        if targetHDDPhysical != "True": targetHDDSizeReal = get_size(os.path.getsize(targetHDDPath))
+        else: targetHDDSizeReal = "N/A"
+    else:
+        targetHDDSizeReal = "Unknown"
+    cpydProfile(("OS         : macOS "+str(targetOSName)))
+    cpydProfile(("Version    : "+str(targetOS)))
+    cpydProfile(" ")
+    if os.path.exists(targetHDDPath):
+        cpydProfile(("DiskPath   : "+str(targetHDDPath)))
+        cpydProfile(("DiskSize   : "+str(targetHDDSizeReal)))
+    else:
+        cpydProfile(("DiskPath   : "+str(targetHDDPath)),True)
+        cpydProfile(("DiskSize   : "+str(targetHDDSizeReal)),True)
+        warnings.append("AutoPilot blobs reference a disk file that does not")
+        warnings.append("actually seem to exist - boot will likely fail\n")
+
+        warnings.append("Current virtual hard disk size cannot be determined")
+        warnings.append("because the file does not appear to exist\n")
+    
+    
+    cpydProfile(("DiskMax    : "+str(targetHDDSize)))
+    cpydProfile(("DiskType   : "+str(targetHDDType)))
+    if targetHDDPhysical == "True":
+        cpydProfile(("DiskIsReal : "+"Yes"))
+    else:
+        cpydProfile(("DiskIsReal : "+"No"))
+
 cpydProfile((" \n"))
 
 cpydProfile("OPERATING SYSTEM")
 cpydProfile("────────────────────────────────────────────────────────")
 
 progressUpdate(16)
-time.sleep(1)
-cpydProfile("OS         : "+platform.system())
+# time.sleep(1)
+if platform.system() != "Linux":
+    cpydProfile("OS         : "+platform.system(),True)
+    warnings.append("The system is running "+str(platform.system())+" which is an unsupported")
+    warnings.append("operating system. Use with caution. Linux is required\n")
+else:
+    cpydProfile("OS         : "+platform.system())
 progressUpdate(18)
 cpydProfile("Distro     : "+distro.name())
 progressUpdate(24)
@@ -265,7 +405,7 @@ progressUpdate(27)
 cpydProfile("Kernel     : "+platform.release())
 progressUpdate(29)
 cpydProfile(" \n")
-time.sleep(1)
+# time.sleep(1)
 progressUpdate(33)
 cpydProfile("PROCESSOR")
 cpydProfile("────────────────────────────────────────────────────────")
@@ -283,25 +423,38 @@ else:
 progressUpdate(41)
 if platform.machine() != "x86_64":
     cpydProfile("Arch       : "+platform.machine(),True)
+    warnings.append("System processor architecture detected as "+str(platform.machine())+", which")
+    warnings.append("is unsupported. An x86_64 processor is required\n")
 else:
     cpydProfile("Arch       : "+platform.machine())
 progressUpdate(46)
 cpydProfile(" \n")
-time.sleep(1)
+# time.sleep(1)
 cpydProfile("MEMORY")
 cpydProfile("────────────────────────────────────────────────────────")
 svmem = psutil.virtual_memory()
 progressUpdate(48)
-cpydProfile("Total      : "+f"{get_size(svmem.total)}")
+if svmem.total >= 4004255385:
+    cpydProfile("Total      : "+f"{get_size(svmem.total)}")
+else:
+    cpydProfile("Total      : "+f"{get_size(svmem.total)}",True)
+    warnings.append("The system only has a total of "+str(get_size(svmem.total))+" of RAM, which is")
+    warnings.append("at or below the project's minimum requirements\n")
+
 progressUpdate(49)
 cpydProfile("Used       : "+f"{get_size(svmem.used)}")
 progressUpdate(51)
-cpydProfile("Free       : "+f"{get_size(svmem.free)}")
+if svmem.free >= 4004255385:
+    cpydProfile("Free       : "+f"{get_size(svmem.free)}")
+else:
+    cpydProfile("Free       : "+f"{get_size(svmem.free)}",True)
+    warnings.append("The system only has "+str(get_size(svmem.free))+" of RAM free, which may")
+    warnings.append("severely degrade performance of virtual machines\n")
 progressUpdate(53)
-time.sleep(1)
+# time.sleep(1)
 progressUpdate(97)
 cpydProfile(" \n")
-time.sleep(1)
+# time.sleep(1)
 if warningCount > 0:
     cpydProfile("WARNINGS ("+str(warningCount)+")")
     cpydProfile("────────────────────────────────────────────────────────")
