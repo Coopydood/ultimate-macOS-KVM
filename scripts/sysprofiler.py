@@ -440,6 +440,7 @@ if apFilePath is not None:
                 cpydProfile(("RecImgSize : "+str(recoveryImageSize)))
             cpydProfile(("RecImgHash : "+str(recoveryImageHash)))
         else: recoveryImageSize = "Unknown"
+        cpydProfile(("RecImgFrom : Local file"))
         
     else:
         if os.path.exists("./BaseSystem.img"):
@@ -447,7 +448,7 @@ if apFilePath is not None:
             if os.path.exists(recoveryImagePath): recoveryImageSize = get_size(os.path.getsize(recoveryImagePath))
             else: recoveryImageSize = "Unknown"
             recoveryImageHash = hashlib.md5(open(recoveryImagePath,'rb').read()).hexdigest()
-
+            
             cpydProfile(("RecImgPath : "+str(recoveryImagePath)))
             if os.path.getsize(recoveryImagePath) < 2004255385:
                 cpydProfile(("RecImgSize : "+str(recoveryImageSize)),True)
@@ -456,10 +457,12 @@ if apFilePath is not None:
             else:
                 cpydProfile(("RecImgSize : "+str(recoveryImageSize)))
             cpydProfile(("RecImgHash : "+str(recoveryImageHash)))
+            cpydProfile(("RecImgFrom : Downloaded with APC"))
         else:
             cpydProfile(("RecImgPath : Unknown"))
             cpydProfile(("RecImgSize : Unknown"))
             cpydProfile(("RecImgHash : Unknown"))
+            cpydProfile(("RecImgFrom : Unknown"))
 
     cpydProfile((" \n"))
 
