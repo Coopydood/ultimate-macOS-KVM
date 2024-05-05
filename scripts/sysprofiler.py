@@ -134,6 +134,14 @@ os.system("echo "+" >> ./logs/SPT_"+logTime+".log")
 os.system("echo This information may help project developers"+" >> ./logs/SPT_"+logTime+".log")
 os.system("echo in assisting you in any issues you might have."+" >> ./logs/SPT_"+logTime+".log")
 
+global apFilePath
+global apFilePathNoPT
+global apFilePathNoUSB
+
+apFile = None
+apFilePath = None
+apFilePathNoPT = None
+apFilePathNoUSB = None
 
 warn = False
 warningCount = 0
@@ -156,13 +164,9 @@ branch = output_stream.read()
 branch = branch.replace("\n","")
 
 if os.path.exists("./blobs/user/USR_CFG.apb"):
-    global apFilePath
-    global apFilePathNoPT
-    global apFilePathNoUSB
+    
     global macOSVer
     global mOSString
-
-    apFile = None
 
     apFilePath = open("./blobs/user/USR_CFG.apb")
     apFilePath = apFilePath.read()
@@ -260,7 +264,7 @@ else:
 
 for x in userBlobList[0:(len(userBlobList)-1)]:
     cpydProfile("             ├ "+x)
-cpydProfile("             └ "+userBlobList[-1])
+if len(userBlobList) > 0: cpydProfile("             └ "+userBlobList[-1])
 
 if len(userBlobList) > 0: cpydProfile(" ")
 
@@ -296,6 +300,7 @@ if os.path.exists("./boot/OpenCore.qcow2"):
     ocSize = get_size(os.path.getsize("./boot/OpenCore.qcow2"))
 else:
     ocHash = "N/A"
+    ocModded = "N/A"
     ocInPlace = "No"
 cpydProfile(("OCInPlace  : "+ocInPlace))
 if ocModded == "Yes":
@@ -305,18 +310,23 @@ if ocModded == "Yes":
 
 else:
     cpydProfile(("OCModded   : "+ocModded))
-if os.path.getsize("./boot/OpenCore.qcow2") < 18000000: 
-    cpydProfile(("OCSize     : "+ocSize),True)
-    warnings.append(("OpenCore image file is only "+ocSize+" in size,"))
-    warnings.append("which is much smaller than expected\n")
-else: cpydProfile(("OCSize     : "+ocSize))
-if ocModded == "Yes":
-    cpydProfile(("OCHashMD5  : "+ocHash),True)
-    warnings.append("OpenCore image MD5 hash does not match any stock")
-    warnings.append("OC images supplied with the project\n")
 
+if os.path.exists("./boot/OpenCore.qcow2"):
+    if os.path.getsize("./boot/OpenCore.qcow2") < 18000000: 
+        cpydProfile(("OCSize     : "+ocSize),True)
+        warnings.append(("OpenCore image file is only "+ocSize+" in size,"))
+        warnings.append("which is much smaller than expected\n")
+    else: cpydProfile(("OCSize     : "+ocSize))
+    if ocModded == "Yes":
+        cpydProfile(("OCHashMD5  : "+ocHash),True)
+        warnings.append("OpenCore image MD5 hash does not match any stock")
+        warnings.append("OC images supplied with the project\n")
+
+    else:
+        cpydProfile(("OCHashMD5  : "+ocHash))
 else:
-    cpydProfile(("OCHashMD5  : "+ocHash))
+     cpydProfile(("OCSize     : N/A"))   
+     cpydProfile(("OCHashMD5  : N/A"))   
 cpydProfile((" "))
 
 if apFilePath is not None:
@@ -342,25 +352,50 @@ if apFilePath is not None:
     else:
         cpydProfile(("Path       : Unknown"))
     cpydProfile(" ")
-    targetOSName = open("./blobs/user/USR_TARGET_OS_NAME.apb")
-    targetOSName = targetOSName.read()
-    targetOS = open("./blobs/user/USR_TARGET_OS.apb")
-    targetOS = targetOS.read()
-    targetHDDPath = open("./blobs/user/USR_HDD_PATH.apb")
-    targetHDDPath = targetHDDPath.read()
-    targetHDDPath = targetHDDPath.replace("$REPO_PATH",os.path.realpath(os.path.curdir))
-    targetHDDSize = open("./blobs/user/USR_HDD_SIZE.apb")
-    targetHDDSize = targetHDDSize.read()
-    targetHDDSize = targetHDDSize.replace("G"," GB")
-    targetHDDType = open("./blobs/user/USR_HDD_TYPE.apb")
-    targetHDDType = targetHDDType.read()
-    targetHDDPhysical = open("./blobs/user/USR_HDD_ISPHYSICAL.apb")
-    targetHDDPhysical = targetHDDPhysical.read()
+    if os.path.exists("./blobs/user/USR_TARGET_OS_NAME.apb"): 
+        targetOSName = open("./blobs/user/USR_TARGET_OS_NAME.apb")
+        targetOSName = targetOSName.read()
+    else: 
+        targetOSName = "Unknown"
+    
+    if os.path.exists("./blobs/user/USR_TARGET_OS.apb"):
+        targetOS = open("./blobs/user/USR_TARGET_OS.apb")
+        targetOS = targetOS.read()
+    else:
+        targetOS = "Unknown"
+
+    if os.path.exists("./blobs/user/USR_HDD_PATH.apb"):
+        targetHDDPath = open("./blobs/user/USR_HDD_PATH.apb")
+        targetHDDPath = targetHDDPath.read()
+        targetHDDPath = targetHDDPath.replace("$REPO_PATH",os.path.realpath(os.path.curdir))
+    else:
+        targetHDDPath = "Unknown"
+    
+    if os.path.exists("./blobs/user/USR_HDD_SIZE.apb"):
+        targetHDDSize = open("./blobs/user/USR_HDD_SIZE.apb")
+        targetHDDSize = targetHDDSize.read()
+        targetHDDSize = targetHDDSize.replace("G"," GB")
+    else:
+        targetHDDSize = "Unknown"
+
+    if os.path.exists("./blobs/user/USR_HDD_TYPE.apb"):
+        targetHDDType = open("./blobs/user/USR_HDD_TYPE.apb")
+        targetHDDType = targetHDDType.read()
+    else:
+        targetHDDType = "Unknown"
+    
+    if os.path.exists("./blobs/user/USR_HDD_ISPHYSICAL.apb"):
+        targetHDDPhysical = open("./blobs/user/USR_HDD_ISPHYSICAL.apb")
+        targetHDDPhysical = targetHDDPhysical.read()
+    else:
+        targetHDDPhysical = "Unknown"
+
     if os.path.exists(targetHDDPath):
         if targetHDDPhysical != "True": targetHDDSizeReal = get_size(os.path.getsize(targetHDDPath))
         else: targetHDDSizeReal = "N/A"
     else:
         targetHDDSizeReal = "Unknown"
+
     cpydProfile(("OS         : macOS "+str(targetOSName)))
     cpydProfile(("Version    : "+str(targetOS)))
     cpydProfile(" ")
@@ -384,7 +419,7 @@ if apFilePath is not None:
     else:
         cpydProfile(("DiskIsReal : "+"No"))
 
-cpydProfile((" \n"))
+    cpydProfile((" \n"))
 
 cpydProfile("OPERATING SYSTEM")
 cpydProfile("────────────────────────────────────────────────────────")
