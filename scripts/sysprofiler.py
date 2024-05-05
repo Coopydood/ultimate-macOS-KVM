@@ -491,7 +491,7 @@ cpydProfile("PROCESSOR")
 cpydProfile("────────────────────────────────────────────────────────")
 cpydProfile("Model      : "+f"{cpuinfo.get_cpu_info()['brand_raw']}")
 progressUpdate(35)
-cpydProfile("Pysical    : "+str(psutil.cpu_count(logical=False)))
+cpydProfile("Physical   : "+str(psutil.cpu_count(logical=False)))
 progressUpdate(38)
 logCPUCores = psutil.cpu_count(logical=True)
 if logCPUCores <= 2:
