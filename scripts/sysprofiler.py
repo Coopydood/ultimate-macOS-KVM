@@ -19,12 +19,12 @@ import json
 import argparse
 import platform
 import datetime
-import cpuinfo
-import psutil
 import hashlib
 import sys
 sys.path.append('./resources/python')
 import distro
+import cpuinfo
+import psutil
 from cpydColours import color
 from datetime import datetime
 
