@@ -396,6 +396,12 @@ if apFilePath is not None:
     else:
         targetHDDSizeReal = "Unknown"
 
+    if os.path.exists("./blobs/user/USR_BOOT_FILE.apb"):
+        recoveryImagePath = open("./blobs/user/USR_BOOT_FILE.apb")
+        recoveryImagePath = recoveryImagePath.read()
+    else:
+        recoveryImagePath = "Unknown"
+
     cpydProfile(("OS         : macOS "+str(targetOSName)))
     cpydProfile(("Version    : "+str(targetOS)))
     cpydProfile(" ")
@@ -418,6 +424,42 @@ if apFilePath is not None:
         cpydProfile(("DiskIsReal : "+"Yes"))
     else:
         cpydProfile(("DiskIsReal : "+"No"))
+    
+    cpydProfile(" ")
+
+    if recoveryImagePath != "-1" and recoveryImagePath != "-2":
+        cpydProfile(("RecImgPath : "+str(recoveryImagePath)))
+        if os.path.exists(recoveryImagePath): 
+            recoveryImageSize = get_size(os.path.getsize(recoveryImagePath))
+            recoveryImageHash = hashlib.md5(open(recoveryImagePath,'rb').read()).hexdigest()
+            if os.path.getsize(recoveryImagePath) < 2004255385:
+                cpydProfile(("RecImgSize : "+str(recoveryImageSize)),True)
+                warnings.append(("macOS Recovery image file is only "+str(recoveryImageSize)+" in size,"))
+                warnings.append("which is much smaller than expected (did conversion fail?)\n")
+            else:
+                cpydProfile(("RecImgSize : "+str(recoveryImageSize)))
+            cpydProfile(("RecImgHash : "+str(recoveryImageHash)))
+        else: recoveryImageSize = "Unknown"
+        
+    else:
+        if os.path.exists("./BaseSystem.img"):
+            recoveryImagePath = os.path.realpath("./BaseSystem.img")
+            if os.path.exists(recoveryImagePath): recoveryImageSize = get_size(os.path.getsize(recoveryImagePath))
+            else: recoveryImageSize = "Unknown"
+            recoveryImageHash = hashlib.md5(open(recoveryImagePath,'rb').read()).hexdigest()
+
+            cpydProfile(("RecImgPath : "+str(recoveryImagePath)))
+            if os.path.getsize(recoveryImagePath) < 2004255385:
+                cpydProfile(("RecImgSize : "+str(recoveryImageSize)),True)
+                warnings.append(("macOS Recovery image file is only "+str(recoveryImageSize)+" in size,"))
+                warnings.append("which is much smaller than expected (did conversion fail?)\n")
+            else:
+                cpydProfile(("RecImgSize : "+str(recoveryImageSize)))
+            cpydProfile(("RecImgHash : "+str(recoveryImageHash)))
+        else:
+            cpydProfile(("RecImgPath : Unknown"))
+            cpydProfile(("RecImgSize : Unknown"))
+            cpydProfile(("RecImgHash : Unknown"))
 
     cpydProfile((" \n"))
 

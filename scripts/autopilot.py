@@ -3850,6 +3850,7 @@ def autopilot():
             time.sleep(3)
             clear()
             exit
+            exit
             
 
       else:
