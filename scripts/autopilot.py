@@ -2247,8 +2247,18 @@ def autopilot():
          USR_TARGET_OS_ID = "mojave"
       elif USR_TARGET_OS == 1013:
          USR_TARGET_OS_ID = "high-sierra"
+      elif USR_TARGET_OS == 1012:
+         USR_TARGET_OS_ID = "sierra"
+      elif USR_TARGET_OS == 1011:
+         USR_TARGET_OS_ID = "el-capitan" 
+      elif USR_TARGET_OS == 1010:
+         USR_TARGET_OS_ID = "yosemite" 
       elif USR_TARGET_OS == 109:
          USR_TARGET_OS_ID = "mavericks"
+      elif USR_TARGET_OS == 108:
+         USR_TARGET_OS_ID = "mountain-lion"
+      elif USR_TARGET_OS == 107:
+         USR_TARGET_OS_ID = "lion"
 
       clear()
       print("\n   "+color.BOLD+"Set number of CPU cores"+color.END)
