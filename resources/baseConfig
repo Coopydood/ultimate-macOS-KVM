@@ -69,8 +69,8 @@ args=(
 -global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=off
 -enable-kvm -m "$ALLOCATED_RAM" -cpu "$CPU_MODEL",kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,"$CPU_FEATURE_ARGS"
 -machine q35
--device usb-ehci,id=ehci
--device qemu-xhci,id=xhci
+#-device usb-ehci,id=ehci
+#-device qemu-xhci,id=xhci
 -usb -device usb-kbd -device usb-tablet 
 #USB_DEV_BEGIN
 #USB_DEV_END
