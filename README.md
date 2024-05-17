@@ -297,7 +297,7 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 
 - **[Dortania](https://github.com/Dortania)** 》 Extensive documentation and Hackintosh development.
 - **[Kholia](https://github.com/kholia)** 》 Development of scripts and documentation. ultimate-macOS-KVM is intended as an extension to [OSX-KVM](https://github.com/kholia/OSX-KVM).
-- **[thenickdude](https://github.com/thenickdude)** 》 Personal support throughout my KVM misadventures and countless community contribs. Cheers.
+- **[thenickdude](https://github.com/thenickdude)** 》 Personal support throughout my KVM misadventures and countless community contribs.
 - **[vit9696](https://github.com/vit9696)** 》 Author of many macOS hacks including kexts, and other source material used in this project. Probably knows the macOS boot process better than Apple.
 - **[vu1tur](to@vu1tur.eu.org)** 》 Open source dmg to img conversion tool; used and bundled in this project.
 - **[Eversiege](https://github.com/eversiege)** 》 Support and testing, та мій улюблений українець. Also made the project's main [website](https://coopydood.github.io/ultimate-macOS-KVM).
