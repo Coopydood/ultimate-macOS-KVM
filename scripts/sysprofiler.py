@@ -255,7 +255,12 @@ for x in os.listdir("./blobs/"):
 if ".cdn_control" in liveBlobList: liveBlobList.remove(".cdn_control")
 
 if len(userBlobList) > 0:
-    cpydProfile(("UserBlobs  : Yes ("+str(len(userBlobList))+" total)"))
+    if len(userBlobList) < 17:
+        cpydProfile(("UserBlobs  : Yes ("+str(len(userBlobList))+" total)"),True)
+        warnings.append("Only "+str(len(userBlobList))+" user blobs are present while more are expected,")
+        warnings.append("might be from an old repo version or integrity damage\n")
+    else:
+        cpydProfile(("UserBlobs  : Yes ("+str(len(userBlobList))+" total)"))
     #cpydProfile("             ⌈ ")
 else:
     cpydProfile(("UserBlobs  : No"),True)
@@ -276,7 +281,7 @@ else:
 if len(liveBlobList) > 0:
     cpydProfile(("LiveBlobs  : Yes ("+str(len(liveBlobList))+" total)"),True)
     warnings.append("Live AutoPilot blobs were found, did AutoPilot finish")
-    warnings.append("running, or did it suffer fatality?\n")
+    warnings.append("running, or did it suffer a fatality?\n")
     
     for f in liveBlobList[0:(len(liveBlobList)-1)]:
         cpydProfile("             ├ "+f)
