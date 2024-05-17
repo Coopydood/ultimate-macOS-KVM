@@ -3270,6 +3270,7 @@ def autopilot():
             vfcPresence = 0
             cpydLog("warn",("Discord rich presence appears unavailable, will NOT enable in script"))
             configData = configData.replace("DISCORD_RPC=1","DISCORD_RPC=0")
+         refreshStatusGUI()
          progressUpdate(89)
          cpydLog("info",("Adding OS ID marker"))
          configData = configData.replace("$USR_OS_NAME",str(USR_TARGET_OS_NAME))
@@ -3663,7 +3664,7 @@ def autopilot():
          os.system("chmod +x ./"+USR_CFG)
          progressUpdate(63)
          cpydLog("info",("Setting readwrite permissions"))
-         os.system("chmod +rw ./BaseSystem.img")
+         os.system("chmod +rw ./BaseSystem.img > /dev/null 2>&1")
          progressUpdate(91)
          cpydLog("ok",("Permissons set for new user files"))
          cpydLog("ok",("Updated stage status, handing off to next stage"))
