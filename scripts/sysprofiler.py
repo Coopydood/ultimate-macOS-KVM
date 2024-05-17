@@ -547,3 +547,4 @@ if warningCount > 0:
         cpydProfile(x)
 logFile.close()
 progressUpdate(100)
+os.system("xdg-open ./logs/SPT_"+logTime+".log")
