@@ -10,10 +10,12 @@ import time
 from datetime import datetime
 import subprocess
 import re 
+import sys
 # import json
 # import sys
 import argparse
 import platform
+sys.path.append('./resources/python')
 
 version = open("./.version")
 version = version.read()
