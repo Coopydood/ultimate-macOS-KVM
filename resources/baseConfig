@@ -69,6 +69,7 @@ args=(
 -global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=off
 -enable-kvm -m "$ALLOCATED_RAM" -cpu "$CPU_MODEL",kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,"$CPU_FEATURE_ARGS"
 -machine q35
+-boot menu=on,splash-time=5
 #-device usb-ehci,id=ehci
 #-device qemu-xhci,id=xhci
 -usb -device usb-kbd -device usb-tablet 
@@ -86,7 +87,7 @@ args=(
 -device ich9-ahci,id=sata
 -drive id=OpenCore,if=none,format=qcow2,file="$REPO_PATH/boot/OpenCore.qcow2"
 -drive id=HDD,if=none,file="$HDD_PATH",format=qcow2
--device ide-hd,bus=sata.2,drive=OpenCore
+-device ide-hd,bus=sata.2,drive=OpenCore,bootindex=1
 -device ide-hd,bus=sata.3,drive=HDD,rotation_rate=7200
 
 ############## REMOVE THESE LINES AFTER MACOS INSTALLATION ###############
