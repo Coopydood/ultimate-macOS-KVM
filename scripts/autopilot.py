@@ -64,7 +64,7 @@ latestOSVer = "14"
 runs = 0
 
 ###############################
-FEATURE_LEVEL = 7                   # DO NOT CHANGE - WILL BREAK THINGS!
+FEATURE_LEVEL = 8                   # DO NOT CHANGE - WILL BREAK THINGS!
 ###############################
 
 enableLog = True

@@ -240,7 +240,7 @@ else:
 cpydProfile((" \n"))
 cpydProfile("AUTOPILOT")
 cpydProfile("────────────────────────────────────────────────────────")
-cpydProfile(("FeatureLvl : "+"7"))
+cpydProfile(("FeatureLvl : "+"8"))
 
 userBlobList = os.listdir("./blobs/user")
 if ".user_control" in userBlobList: userBlobList.remove(".user_control")

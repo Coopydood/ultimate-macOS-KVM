@@ -52,8 +52,8 @@ class color:
 
 def startup():
     global detectChoice
-    print("\n\n   Welcome to"+color.BOLD+color.YELLOW,"GPU Compatibility Checker"+color.END,"")
-    print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+    print("\n\n  "+color.BOLD+color.YELLOW,"GPU COMPATIBILITY CHECKER"+color.END,"")
+    print("   by",color.BOLD+"Coopydood\n"+color.END)
     print("\n   The purpose of this script is to prepare you for GPU passthrough by \n   checking your exact system's GPU model against a macOS compatibility \n   list created and provided by"+color.BOLD,"Dortania.\n"+color.END)
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")

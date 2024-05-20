@@ -286,7 +286,7 @@ These awesome people were generous enough to donate financially to help fuel the
 
 <h3>Powered by OpenCore<br><sub>Version 0.9.7</sub></h3>
 
-This project would not be possible without the incredible work of the OpenCore development team. Thank you to everyone involved! ❤️
+This project would not be possible without the incredible work of the [OpenCore development team](https://github.com/Acidanthera). Thank you to everyone involved! ❤️
 
 
 ***
@@ -307,6 +307,8 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[Kaz](https://github.com/Eaz11)** 》 Other than his brilliant English accent's pronunciations (including "macOS Syria"), he's done extensive testing. Say hi to your nephew for me.
 - **[GigantTech](https://twitter.com/TechGigant)** 》 Moderately annoying German guy that I convinced to install Linux subsequently letting him test my project. It's free real estate!
 - **[Hummenix](https://github.com/Hummenix)** 》Testing of ULTMOS across different Linux distros. 
+- **[CorpNewt](https://github.com/CorpNewt)** 》Creator of GenSMBIOS and many other Hackintosh essentials.
+- **[Acidanthera](https://github.com/Acidanthera)** 》The group behind OpenCore, Lilu, WhateverGreen, and MUCH more.
 
 ***
 
