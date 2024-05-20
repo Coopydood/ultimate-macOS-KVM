@@ -48,7 +48,7 @@ clear()
 print("\n\n   "+color.BOLD+color.RED+"↺  RESET OPENCORE AND vNVRAM"+color.END,"")
 print("   Please wait\n")
 print(color.END+"\n\n\n   Checking integrity...\n\n\n\n\n")
-if os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2") and os.path.exists("./resources/oc_store/compat_old/OpenCore.qcow2") and os.path.exists("./resources/ovmf/OVMF_CODE.fd") and os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS_1280x720.fd") and os.path.exists("./resources/oc_store/compat_new/config.plist"):
+if os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2") and os.path.exists("./resources/oc_store/compat_old/OpenCore.qcow2") and os.path.exists("./resources/ovmf/OVMF_CODE.fd") and os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS_1280x720.fd"):
     integrity = 1
 else:
     integrity = 0
@@ -140,10 +140,7 @@ if detectChoice2 == "X" or detectChoice2 == "x":
 
     if os.path.exists("boot/OpenCore.qcow2"):
         if os.path.exists("boot/config.plist"):
-            if os.path.exists("boot/EFI/"):
-                success()
-            else:
-                throwError()
+            success()
         else:
             throwError()
     else:

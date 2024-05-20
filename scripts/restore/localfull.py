@@ -48,7 +48,7 @@ clear()
 print("\n\n   "+color.BOLD+color.RED+"↺  RESET ALL COMPONENTS LOCALLY"+color.END,"")
 print("   Please wait\n")
 print(color.END+"\n\n\n   Checking integrity...\n\n\n\n\n")
-if os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2") and os.path.exists("./resources/oc_store/compat_old/OpenCore.qcow2") and os.path.exists("./resources/ovmf/OVMF_CODE.fd") and os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS_1280x720.fd") and os.path.exists("./resources/oc_store/compat_new/config.plist") and os.path.exists("./resources/script_store/extras.py") and os.path.exists("./resources/script_store/main.py"):
+if os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2") and os.path.exists("./resources/oc_store/compat_old/OpenCore.qcow2") and os.path.exists("./resources/ovmf/OVMF_CODE.fd") and os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS_1280x720.fd") and os.path.exists("./resources/script_store/extras.py") and os.path.exists("./resources/script_store/main.py"):
     integrity = 1
 else:
     integrity = 0

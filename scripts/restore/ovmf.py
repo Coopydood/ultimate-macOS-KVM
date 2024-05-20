@@ -48,7 +48,7 @@ clear()
 print("\n\n   "+color.BOLD+color.RED+"↺  RESET OVMF CODE"+color.END,"")
 print("   Please wait\n")
 print(color.END+"\n\n\n   Checking integrity...\n\n\n\n\n")
-if os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS_1280x720.fd"):
+if os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_CODE.fd"):
     integrity = 1
 else:
     integrity = 0
@@ -109,9 +109,9 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     print("\n\n   "+color.BOLD+color.RED+"↺  RESET OVMF CODE"+color.END,"")
     print("   Restoring...\n\n\n")
     print("   Please wait while the restore process is in progress.\n   This may take a few moments.\n\n   DO NOT INTERRUPT THIS OPERATION.\n\n\n")
-    time.sleep(5)
+    time.sleep(1)
     os.system("rm ./ovmf/OVMF_CODE.fd > /dev/null 2>&1")
-    time.sleep(2)
+    time.sleep(1)
     os.system("cp ./resources/ovmf/OVMF_CODE.fd ./ovmf/OVMF_CODE.fd")
 
     

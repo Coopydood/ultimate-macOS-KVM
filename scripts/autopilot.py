@@ -3262,7 +3262,7 @@ def autopilot():
          cpydLog("info",("Checking if Discord rich presence is available"))
          output_stream1 = os.popen("pip show pypresence")
          vfcPresence = output_stream1.read()
-         if "Name: pypresence\n" in vfcPresence:
+         if "Name: pypresence" in vfcPresence:
             vfcPresence = 1
             cpydLog("ok",("Discord rich presence is available, will enable in script"))
             configData = configData.replace("DISCORD_RPC=1","DISCORD_RPC=1")

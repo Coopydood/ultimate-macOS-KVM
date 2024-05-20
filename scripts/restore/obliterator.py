@@ -195,11 +195,11 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     if USR_TARGET_OS <= 1015:
         os.system("cp resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
         os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
-        os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
+        #os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
     else:
         os.system("cp resources/oc_store/compat_new/OpenCore.qcow2 boot/OpenCore.qcow2")
         os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
-        os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
+        #os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
 
 
 
@@ -211,10 +211,7 @@ if detectChoice2 == "X" or detectChoice2 == "x":
 
     if os.path.exists("boot/OpenCore.qcow2"):
         if os.path.exists("ovmf/OVMF_CODE.fd"):
-            if os.path.exists("boot/EFI/"):
-                success()
-            else:
-                throwError()
+            success()
         else:
             throwError()
     else:

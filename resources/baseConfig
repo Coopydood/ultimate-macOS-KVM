@@ -35,6 +35,7 @@ GEN_EPOCH=000000000
 FEATURE_LEVEL=0
 VERBOSE=1
 DISCORD_RPC=1
+DISCORD_RPC_IMG="default"
 
 SCREEN_RES="$USR_SCREEN_RES"
 
@@ -145,7 +146,7 @@ fi
 
 if [ $DISCORD_RPC = 1 ]
 then
-"$REPO_PATH/scripts/drpc.py" --os "$OS_ID" --pt $VFIO_DEVICES --wd "$REPO_PATH" &
+"$REPO_PATH/scripts/drpc.py" --os "$OS_ID" --pt $VFIO_DEVICES --wd "$REPO_PATH" --show "$DISCORD_RPC_IMG" &
 fi
 
 qemu-system-x86_64 "${args[@]}"
