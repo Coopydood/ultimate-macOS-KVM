@@ -54,10 +54,10 @@ try:
 except:
     None
 
-try:
+if args.show != None:
     show = args.show
-except:
-    None
+else:
+    show = "default"
 
 
 client_id = "1149434759152422922"
@@ -91,6 +91,11 @@ if osOpt != "macos-highsierra" and osOpt != "macos-mojave" and osOpt != "macos-c
 if show != "default":
     smolImage = osOpt
     osOpt = show
+    hold = projectVer
+    projectVer = osName
+    osName = hold
+else:
+    smolImage = "ultmoslite"
 
 
 # print("DEBUG:",osVer,osName,osOpt)    #  mmmmm it works, sexy
