@@ -41,6 +41,9 @@ Allows you to select any of your host's attached USB devices for use with the ma
 <li><b>OpenCore Configuration Assistant</b></li>
 Automatically mount and edit your OpenCore image from your host, using Network Block Devices.
 
+<li><b>GenSMBIOS Integration</b></li>
+Auto-generate a new SMBIOS and serial number directly onto the virtual OpenCore image with full GenSMBIOS + ULTMOS integration.
+
 <li><b>Boot Argument Assistant + AutoPatch</b></li>
 Easily edit the macOS boot arguments of your OpenCore image, and even automatically apply relevant patches for your setup (e.g. AMD RX 5000 series black screen patch).
 
