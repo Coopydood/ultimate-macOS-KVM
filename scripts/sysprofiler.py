@@ -526,7 +526,7 @@ if vfcIommu == 1:
     cpydProfile(("IOMMU      : "+"Available"))
 if vfcIommu == 0:
     cpydProfile(("IOMMU      : "+"Unavailable"),True)
-    warnings.append("NO IOMMU groups are accessible on the system,")
+    warnings.append("No IOMMU groups are accessible on the system,")
     warnings.append("kernel parameters or UEFI settings may be wrong\n")
 time.sleep(0.1)
 progressUpdate(57)
@@ -536,7 +536,7 @@ if vfcLibvirtd == 2:
     cpydProfile(("Libvirtd   : "+"Enabled and running"))
 if vfcLibvirtd == 0:
     cpydProfile(("Libvirtd   : "+"Disabled"),True)
-    warnings.append("The libvirt daemon does not appear to be enabled")
+    warnings.append("The libvirt daemon does not appear to be enabled\n")
 cpydProfile(" ")
 
 if depQemu == 0:
@@ -681,7 +681,7 @@ if len(userBlobList) > 0:
     #cpydProfile("             ⌈ ")
 else:
     cpydProfile(("UserBlobs  : NO"),True)
-    warnings.append("NO user blobs were found\n")
+    warnings.append("No user blobs were found\n")
 
 time.sleep(0.1)
 progressUpdate(70)
