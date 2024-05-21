@@ -368,6 +368,32 @@ if os.path.exists("./resources/script_store/main.py"):
 else:
     vfcScrStr = 0
 
+if os.path.exists("./resources/baseConfig") and os.path.exists("./resources/baseDomain"):
+    vfcBase = 1
+else:
+    vfcBase = 0
+
+if os.path.exists("./resources/dmg2img"):
+    vfcBin = 1
+else:
+    vfcBin = 0
+
+ovmfStore = []
+
+for x in os.listdir("./resources/ovmf/"):
+    if ".fd" in x:
+        ovmfStore.append(x)
+
+if len(ovmfStore) > 9:
+    vfcOvmf = 1
+else:
+    vfcOvmf = 0
+
+if os.path.exists("./.git/index") and os.path.exists("./resources/.upgrade"):
+    vfcGit = 1
+else:
+    vfcGit = 0
+
 ##############################################################################
 
 cpydProfile(" ")
@@ -574,7 +600,7 @@ cpydProfile("──────────────────────�
 if vfcIntegrity == 1:
     cpydProfile(("Core       : "+"PASS"))
 if vfcIntegrity == 0:
-    cpydProfile(("COre       : "+"FAIL"),True)
+    cpydProfile(("Core       : "+"FAIL"),True)
     criticals.append("Core repository integrity check failed, the")
     criticals.append("current repo instance is damaged and should")
     criticals.append("be replaced or restored\n")
@@ -587,6 +613,39 @@ if vfcScrStr == 0:
     cpydProfile(("ScriptStr  : "+"FAIL"),True)
     warnings.append("User script store backup is damaged, restore")
     warnings.append("tools using local files likely won't work\n")
+
+if vfcOvmf == 1:
+    cpydProfile(("OVMFStr    : "+"PASS"))
+if vfcOvmf == 0:
+    cpydProfile(("OVMFStr    : "+"FAIL"),True)
+    criticals.append("OVMF store integrity check failed, one or")
+    criticals.append("more files are missing or damaged\n")
+    warningCount = warningCount - 1
+    criticalCount = criticalCount + 1
+
+if vfcBase == 1:
+    cpydProfile(("BaseFiles  : "+"PASS"))
+if vfcBase == 0:
+    cpydProfile(("BaseFiles  : "+"FAIL"),True)
+    criticals.append("Base config files used to generate user files")
+    criticals.append("required by AutoPilot are missing or damaged\n")
+    warningCount = warningCount - 1
+    criticalCount = criticalCount + 1
+
+if vfcBin == 1:
+    cpydProfile(("InclBin    : "+"PASS"))
+if vfcBin == 0:
+    cpydProfile(("InclBin    : "+"FAIL"),True)
+    warnings.append("Bundled binary file(s) are missing or")
+    warnings.append("damaged, features may break at random\n")
+
+
+if vfcGit == 1:
+    cpydProfile(("DeltaData  : "+"PASS"))
+if vfcGit == 0:
+    cpydProfile(("DeltaData  : "+"FAIL"),True)
+    warnings.append("Metadata required for delta updates is missing")
+    warnings.append("or damaged, updating via UDU will be restricted\n")
 
 
 time.sleep(0.1)
