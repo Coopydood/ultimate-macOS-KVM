@@ -55,8 +55,8 @@ cS = 5
 
 clear()
 
-for x in range(1,1):
-    print("\nThis script will check your system to ensure it is ready for basic KVM. \nChecks will begin in",cS,"seconds. \nPress CTRL+C to cancel.")
+for x in range(0,5):
+    print("\nThis script will gather basic information about your \nsystem configuration, and the ULTMOS environment.\n\n"+color.BOLD+"Starting in",cS,"seconds."+color.END+" \nPress CTRL+C to cancel.")
     cS = cS - 1
     time.sleep(1)
     clear()
