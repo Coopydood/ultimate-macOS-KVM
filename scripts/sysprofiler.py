@@ -27,6 +27,11 @@ import cpuinfo
 import psutil
 from cpydColours import color
 from datetime import datetime
+try:
+    from pypresence import Presence
+    depRPC = 1
+except:
+     depRPC = 0
 
 detectChoice = 1
 latestOSName = "Sonoma"
@@ -53,7 +58,7 @@ clear()
 for x in range(1,1):
     print("\nThis script will check your system to ensure it is ready for basic KVM. \nChecks will begin in",cS,"seconds. \nPress CTRL+C to cancel.")
     cS = cS - 1
-    # time.sleep(1)
+    time.sleep(1)
     clear()
 
 clear()
@@ -135,18 +140,21 @@ os.system("echo This information may help project developers"+" >> ./logs/SPT_"+
 os.system("echo in assisting you in any issues you might have."+" >> ./logs/SPT_"+logTime+".log")
 
 global apFilePath
-global apFilePathNoPT
-global apFilePathNoUSB
+global apFilePathNOPT
+global apFilePathNOUSB
 
 apFile = None
 apFilePath = None
-apFilePathNoPT = None
-apFilePathNoUSB = None
+apFilePathNOPT = None
+apFilePathNOUSB = None
 
 warn = False
 warningCount = 0
+criticalCount = 0
 warnings = []
+criticals = []
 logFile = open("./logs/SPT_"+logTime+".log", "a")
+time.sleep(0.1)
 progressUpdate(2)
 def cpydProfile(logMsg,warn=None):
     global warningCount
@@ -162,6 +170,9 @@ def cpydProfile(logMsg,warn=None):
 output_stream = os.popen("git branch --show-current")
 branch = output_stream.read()
 branch = branch.replace("\n","")
+
+time.sleep(0.1)
+progressUpdate(4)
 
 if os.path.exists("./blobs/user/USR_CFG.apb"):
     
@@ -207,14 +218,157 @@ if os.path.exists("./blobs/user/USR_CFG.apb"):
 
         apFile = open("./"+apFilePath,"r")
 
-        apFilePathNoPT = apFilePath.replace(".sh","-noPT.sh")
-        apFilePathNoUSB = apFilePath.replace(".sh","-noUSB.sh")
+        apFilePathNOPT = apFilePath.replace(".sh","-noPT.sh")
+        apFilePathNOUSB = apFilePath.replace(".sh","-noUSB.sh")
         
         if "APC-RUN" in apFile.read():
             VALID_FILE = 1
-    
 
-########################################################
+time.sleep(0.1)
+progressUpdate(8)
+output_stream = os.popen("lsmod | grep \"vfio_pci\"")
+checkStream = output_stream.read()
+if "vfio_pci" in checkStream and "vfio_pci_core" in checkStream and "vfio_iommu_type1" in checkStream:
+    vfcKernel = 1
+else:
+    vfcKernel = 0
+
+if os.path.exists("/sys/firmware/efi"):
+    vfcUefi = 1
+else:
+    vfcUefi = 0
+
+output_stream = os.popen("./scripts/iommu.sh")
+checkStream = output_stream.read()
+if "Group 0" in checkStream:
+    vfcIommu = 1
+else:
+    vfcIommu = 0
+
+output_stream = os.popen("lspci -k | grep -B2 \"vfio-pci\"")
+checkStream = output_stream.read()
+if "Kernel driver in use: vfio-pci" in checkStream:
+    vfcStubbing = 1
+else:
+    vfcStubbing = 0
+
+output_stream = os.popen("systemctl status libvirtd")
+checkStream = output_stream.read()
+if "active (running)" in checkStream:
+    vfcLibvirtd = 2
+elif "enabled" in checkStream:
+    vfcLibvirtd = 1
+else:
+    vfcLibvirtd = 0
+
+if os.path.exists("./scripts/autopilot.py") and os.path.exists("./scripts/vfio-ids.py") and os.path.exists("./scripts/vfio-pci.py") and os.path.exists("./resources/baseConfig") and os.path.exists("./resources/ovmf/OVMF_CODE.fd") and os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2"):
+    vfcIntegrity = 1
+else:
+    vfcIntegrity = 0
+
+
+output_stream = os.popen("whereis libvirt")
+vfcLibvirtChk = output_stream.read()
+if "libvirt:\n" == vfcLibvirtChk: # or "virsh:\n" == vfcLibvirtChk1
+    depLibvirt = 0
+else:
+    depLibvirt = 1
+
+vfcQemuChk = output_stream.read()
+
+output_stream = os.popen("whereis qemu-x86_64")
+vfcQemuChk1 = output_stream.read()
+
+output_stream = os.popen("whereis qemu-img")
+vfcQemuChk2 = output_stream.read()
+
+output_stream = os.popen("whereis qemu-img")
+vfcQemuChk2 = output_stream.read()
+
+if "qemu-system-x86_64:\n" == vfcQemuChk or "qemu-x64:\n" == vfcQemuChk1 or "qemu-img:\n" == vfcQemuChk2:
+    depQemu = 0
+else:
+    depQemu = 1
+
+output_stream = os.popen("whereis nbd")
+vfcChk = output_stream.read()
+if "nbd:\n" == vfcChk:
+    depNbd = 0
+else:
+    depVirtman = 1
+
+
+output_stream = os.popen("whereis virt-manager")
+vfcVirtmanChk = output_stream.read()
+if "virt-manager:\n" == vfcVirtmanChk:
+    depVirtman = 0
+else:
+    depVirtman = 1
+
+output_stream = os.popen("whereis qemu-nbd")
+vfcChk = output_stream.read()
+if "nbd:\n" == vfcChk:
+    depNbd = 0
+else:
+    depNbd = 1
+
+output_stream = os.popen("whereis virsh")
+vfcChk = output_stream.read()
+if "virsh:\n" == vfcChk:
+    depVirsh = 0
+else:
+    depVirsh = 1
+
+output_stream = os.popen('lspci')
+vmc1 = output_stream.read()
+
+detected = 0
+
+global isVM
+
+isVM = False
+
+if "VMware" in vmc1:
+   detected = 1
+
+if "VirtualBox" in vmc1 or "Oracle" in vmc1:
+   detected = 1
+
+if "Redhat" in vmc1 or "RedHat" in vmc1 or "QEMU" in vmc1:
+   detected = 1
+
+if "Bochs" in vmc1 or "Sea BIOS" in vmc1 or "SeaBIOS" in vmc1:
+   detected = 1
+
+if detected == 1:
+    isVM == True
+
+
+vfio_ids = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | grep -oP \"[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}\" | sort -u | tr '\n' ' '").read().split(" ")
+# Remove the empty thingy
+vfio_ids.pop(-1)
+
+# Get PCI IDs
+pci_ids = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | awk '{print $1}' | sort -u | tr '\n' ' '").read().split(" ")
+# Remove the empty thingy
+pci_ids.pop(-1)
+
+# Get GPU IDs
+gpu_ids = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep \"VGA compatible controller\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\.[0-9A-Fa-f]\" | awk '{print $1}' | sort -u | tr '\n' ' '").read().split(" ")
+# Remove the empty thingy
+gpu_ids.pop(-1)
+
+# Get PCI Names
+vfio_names = os.popen("lspci -nnk | grep -B2 \"vfio-pci\" | grep -P \"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\\.[0-9A-Fa-f]\" | sort -u | sed -E 's/[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}\.[0-9A-Fa-f] ((\w|-)+( )?)* \[[0-9A-Fa-f]*\]: //' | sed -E 's/\[[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}\]( \(.*\))?//' | sed 's/Advanced Micro Devices, Inc. \[AMD\/ATI\] //g' | tr '\n' '@'").read().split("@")
+# Remove the empty thingy
+vfio_names.pop(-1)
+
+if os.path.exists("./resources/script_store/main.py"):
+    vfcScrStr = 1
+else:
+    vfcScrStr = 0
+
+##############################################################################
 
 cpydProfile(" ")
 cpydProfile(("Name       : "+scriptName))
@@ -226,8 +380,8 @@ cpydProfile(" ")
 cpydProfile("Date       : "+str(datetime.today().strftime('%d/%m/%Y')))
 cpydProfile("Time       : "+str(datetime.today().strftime('%H:%M:%S')))
 cpydProfile(" \n")
-progressUpdate(7)
-# time.sleep(2)
+time.sleep(0.1)
+progressUpdate(11)
 cpydProfile("ULTMOS")
 cpydProfile("────────────────────────────────────────────────────────")
 cpydProfile(("Version    : "+version))
@@ -238,48 +392,255 @@ if branch != "main":
 else:
     cpydProfile(("Branch     : "+branch))
 cpydProfile((" \n"))
+cpydProfile("OPERATING SYSTEM")
+cpydProfile("────────────────────────────────────────────────────────")
+
+time.sleep(0.1)
+progressUpdate(16)
+if platform.system() != "Linux":
+    cpydProfile("OS         : "+platform.system(),True)
+    criticals.append("The system is running "+str(platform.system())+" which is an unsupported")
+    criticals.append("operating system. Use with caution. Linux is required\n")
+    warningCount = warningCount - 1
+    criticalCount = criticalCount + 1
+else:
+    cpydProfile("OS         : "+platform.system())
+time.sleep(0.1)
+progressUpdate(18)
+cpydProfile("Distro     : "+distro.name())
+
+cpydProfile("Release    : "+distro.version())
+
+cpydProfile("Kernel     : "+platform.release())
+if isVM == False:
+    cpydProfile("VM         : NO")
+else:
+    cpydProfile("VM         : YES",True)
+    warnings.append(("Virtual machine as host detected, this is likely"))
+    warnings.append("some sort of mad inception shenanigans\n")
+time.sleep(0.1)
+progressUpdate(20)
+cpydProfile(" \n")
+time.sleep(0.1)
+progressUpdate(22)
+cpydProfile("PROCESSOR")
+cpydProfile("────────────────────────────────────────────────────────")
+cpydProfile("Model      : "+f"{cpuinfo.get_cpu_info()['brand_raw']}")
+time.sleep(0.1)
+progressUpdate(26)
+cpydProfile("Physical   : "+str(psutil.cpu_count(logical=False)))
+time.sleep(0.1)
+progressUpdate(28)
+logCPUCores = psutil.cpu_count(logical=True)
+if logCPUCores <= 2:
+    cpydProfile(("Logical    : "+str(logCPUCores)),True)
+    warnings.append("System processor appears as having only "+str(logCPUCores)+" logical cores")
+    warnings.append("which is at or below the project's minimum requirements\n")
+else:
+    cpydProfile("Logical    : "+str(logCPUCores))
+time.sleep(0.1)
+progressUpdate(33)
+if platform.machine() != "x86_64":
+    cpydProfile("Arch       : "+platform.machine(),True)
+    criticals.append("System processor architecture detected as "+str(platform.machine())+", which")
+    criticals.append("is unsupported. An x86_64 processor is required\n")
+    warningCount = warningCount - 1
+    criticalCount = criticalCount + 1
+else:
+    cpydProfile("Arch       : "+platform.machine())
+time.sleep(0.1)
+progressUpdate(36)
+cpydProfile(" \n")
+cpydProfile("MEMORY")
+cpydProfile("────────────────────────────────────────────────────────")
+svmem = psutil.virtual_memory()
+time.sleep(0.1)
+progressUpdate(37)
+if svmem.total >= 4004255385:
+    cpydProfile("Total      : "+f"{get_size(svmem.total)}")
+else:
+    cpydProfile("Total      : "+f"{get_size(svmem.total)}",True)
+    warnings.append("The system only has a total of "+str(get_size(svmem.total))+" of RAM, which is")
+    warnings.append("at or below the project's minimum requirements\n")
+
+time.sleep(0.1)
+progressUpdate(39)
+cpydProfile("Used       : "+f"{get_size(svmem.used)}")
+time.sleep(0.1)
+progressUpdate(42)
+if svmem.available >= 4004255385:
+    cpydProfile("Available  : "+f"{get_size(svmem.available)}")
+else:
+    cpydProfile("Available  : "+f"{get_size(svmem.available)}",True)
+    warnings.append("The system only has "+str(get_size(svmem.available))+" of RAM available, which")
+    warnings.append("may severely degrade performance of virtual machines\n")
+
+cpydProfile("Free       : "+f"{get_size(svmem.free)}")
+time.sleep(0.1)
+progressUpdate(50)
+time.sleep(0.1)
+progressUpdate(52)
+
+cpydProfile(" \n")
+cpydProfile("CONFIGURATION")
+cpydProfile("────────────────────────────────────────────────────────")
+if vfcUefi == 1:
+    cpydProfile(("BootMode   : "+"UEFI"))
+if vfcUefi == 0:
+    cpydProfile(("BootMode   : "+"BIOS / Legacy"),True)
+    criticals.append("Host UEFI firmware was not detected, OS likely")
+    criticals.append("booted in legacy BIOS mode, this is unsupported\n")
+    warningCount = warningCount - 1
+    criticalCount = criticalCount + 1
+time.sleep(0.1)
+progressUpdate(54)
+time.sleep(0.1)
+progressUpdate(55)
+if vfcIommu == 1:
+    cpydProfile(("IOMMU      : "+"Available"))
+if vfcIommu == 0:
+    cpydProfile(("IOMMU      : "+"Unavailable"),True)
+    warnings.append("NO IOMMU groups are accessible on the system,")
+    warnings.append("kernel parameters or UEFI settings may be wrong\n")
+time.sleep(0.1)
+progressUpdate(57)
+if vfcLibvirtd == 1:
+    cpydProfile(("Libvirtd   : "+"Enabled"))
+if vfcLibvirtd == 2:
+    cpydProfile(("Libvirtd   : "+"Enabled and running"))
+if vfcLibvirtd == 0:
+    cpydProfile(("Libvirtd   : "+"Disabled"),True)
+    warnings.append("The libvirt daemon does not appear to be enabled")
+cpydProfile(" ")
+
+if depQemu == 0:
+    cpydProfile(("QEMU       : "+"Not installed"),True)
+    criticals.append("Missing required dependency: QEMU\n")
+    warningCount = warningCount - 1
+    criticalCount = criticalCount + 1
+if depQemu == 1:
+    cpydProfile(("QEMU       : "+"Installed"))
+
+if depLibvirt == 0:
+    cpydProfile(("Libvirt    : "+"Not installed"),True)
+    criticals.append("Missing required dependency: Libvirt\n")
+    warningCount = warningCount - 1
+    criticalCount = criticalCount + 1
+if depLibvirt == 1:
+    cpydProfile(("Libvirt    : "+"Installed"))
+
+if depVirsh == 0:
+    cpydProfile(("Virsh      : "+"Not installed"),True)
+    warnings.append("Missing core dependency: Virsh\n")
+if depVirsh == 1:
+    cpydProfile(("Virsh      : "+"Installed"))
+
+if depVirtman == 0:
+    cpydProfile(("VirtMan    : "+"Not installed"))
+if depVirtman == 1:
+    cpydProfile(("VirtMan    : "+"Installed"))
+
+if depRPC == 0:
+    cpydProfile(("Pypresence : "+"Not installed"))
+if depRPC == 1:
+    cpydProfile(("Pypresence : "+"Installed"))
+
+if depNbd == 0:
+    cpydProfile(("NBD        : "+"Not installed"))
+if depNbd == 1:
+    cpydProfile(("NBD        : "+"Installed"))
+
+cpydProfile(" \n")
+cpydProfile("VFIO-PCI")
+cpydProfile("────────────────────────────────────────────────────────")
+if vfcKernel == 1:
+    cpydProfile(("Kernel     : "+"Configured"))
+if vfcKernel == 0:
+    cpydProfile(("Kernel     : "+"Misconfigured"),True)
+    warnings.append("The kernel does not appear to be set up correctly,")
+    warnings.append("expected drivers are not available / running\n")
+cpydProfile(("Stubbed    : "+str(len(pci_ids))))
+if len(pci_ids) > 0:
+    for i in range(len(pci_ids)): # thanks dom <3
+        if (i < 10):
+            if (pci_ids[i]):
+                cpydProfile(f"Device{i}    : {pci_ids[i]} {vfio_names[i]}")
+
+time.sleep(0.1)
+progressUpdate(59)
+cpydProfile(" \n")
+cpydProfile("INTEGRITY")
+cpydProfile("────────────────────────────────────────────────────────")
+if vfcIntegrity == 1:
+    cpydProfile(("Core       : "+"PASS"))
+if vfcIntegrity == 0:
+    cpydProfile(("COre       : "+"FAIL"),True)
+    criticals.append("Core repository integrity check failed, the")
+    criticals.append("current repo instance is damaged and should")
+    criticals.append("be replaced or restored\n")
+    warningCount = warningCount - 1
+    criticalCount = criticalCount + 1
+
+if vfcScrStr == 1:
+    cpydProfile(("ScriptStr  : "+"PASS"))
+if vfcScrStr == 0:
+    cpydProfile(("ScriptStr  : "+"FAIL"),True)
+    warnings.append("User script store backup is damaged, restore")
+    warnings.append("tools using local files likely won't work\n")
+
+
+time.sleep(0.1)
+progressUpdate(62)
+cpydProfile(" \n")
+
 cpydProfile("AUTOPILOT")
 cpydProfile("────────────────────────────────────────────────────────")
 cpydProfile(("FeatureLvl : "+"8"))
-
+time.sleep(0.1)
+progressUpdate(63)
 userBlobList = os.listdir("./blobs/user")
 if ".user_control" in userBlobList: userBlobList.remove(".user_control")
 
 staleBlobList = os.listdir("./blobs/stale")
 if ".stale_control" in staleBlobList: staleBlobList.remove(".stale_control")
-
+time.sleep(0.1)
+progressUpdate(64)
 liveBlobList = []
 for x in os.listdir("./blobs/"):
     if ".apb" in x:
         liveBlobList.append(x)
 if ".cdn_control" in liveBlobList: liveBlobList.remove(".cdn_control")
-
+time.sleep(0.1)
+progressUpdate(65)
 if len(userBlobList) > 0:
     if len(userBlobList) < 17:
-        cpydProfile(("UserBlobs  : Yes ("+str(len(userBlobList))+" total)"),True)
+        cpydProfile(("UserBlobs  : YES ("+str(len(userBlobList))+" total)"),True)
         warnings.append("Only "+str(len(userBlobList))+" user blobs are present while more are expected,")
         warnings.append("might be from an old repo version or integrity damage\n")
     else:
-        cpydProfile(("UserBlobs  : Yes ("+str(len(userBlobList))+" total)"))
+        cpydProfile(("UserBlobs  : YES ("+str(len(userBlobList))+" total)"))
     #cpydProfile("             ⌈ ")
 else:
-    cpydProfile(("UserBlobs  : No"),True)
-    warnings.append("No user blobs were found\n")
+    cpydProfile(("UserBlobs  : NO"),True)
+    warnings.append("NO user blobs were found\n")
 
-
+time.sleep(0.1)
+progressUpdate(70)
 for x in userBlobList[0:(len(userBlobList)-1)]:
     cpydProfile("             ├ "+x)
 if len(userBlobList) > 0: cpydProfile("             └ "+userBlobList[-1])
 
 if len(userBlobList) > 0: cpydProfile(" ")
-
+time.sleep(0.1)
+progressUpdate(72)
 if len(staleBlobList) > 0:
-    cpydProfile(("StaleBlobs : Yes ("+str(len(staleBlobList))+" total)"))
+    cpydProfile(("StaleBlobs : YES ("+str(len(staleBlobList))+" total)"))
 else:
-    cpydProfile(("StaleBlobs : No"))
-
+    cpydProfile(("StaleBlobs : NO"))
+time.sleep(0.1)
+progressUpdate(73)
 if len(liveBlobList) > 0:
-    cpydProfile(("LiveBlobs  : Yes ("+str(len(liveBlobList))+" total)"),True)
+    cpydProfile(("LiveBlobs  : YES ("+str(len(liveBlobList))+" total)"),True)
     warnings.append("Live AutoPilot blobs were found, did AutoPilot finish")
     warnings.append("running, or did it suffer a fatality?\n")
     
@@ -287,10 +648,12 @@ if len(liveBlobList) > 0:
         cpydProfile("             ├ "+f)
     cpydProfile("             └ "+liveBlobList[-1])
 else:
-    cpydProfile(("LiveBlobs  : No"))
+    cpydProfile(("LiveBlobs  : NO"))
 cpydProfile((" "))
+time.sleep(0.1)
+progressUpdate(77)
 if os.path.exists("./boot/OpenCore.qcow2"):
-    ocInPlace = "Yes"
+    ocInPlace = "YES"
     ocHash = hashlib.md5(open('./boot/OpenCore.qcow2','rb').read()).hexdigest()
     
     ocStockHashes = []
@@ -299,30 +662,33 @@ if os.path.exists("./boot/OpenCore.qcow2"):
     ocStockHashes.append(hashlib.md5(open('./resources/oc_store/legacy_new/OpenCore.qcow2','rb').read()).hexdigest())
     ocModded = "Unknown"
     if ocHash not in ocStockHashes:
-        ocModded = "Yes"
+        ocModded = "YES"
     else:
-        ocModded = "No"
+        ocModded = "NO"
     ocSize = get_size(os.path.getsize("./boot/OpenCore.qcow2"))
 else:
     ocHash = "N/A"
     ocModded = "N/A"
-    ocInPlace = "No"
+    ocInPlace = "NO"
+time.sleep(0.1)
+progressUpdate(78)
 cpydProfile(("OCInPlace  : "+ocInPlace))
-if ocModded == "Yes":
+if ocModded == "YES":
     cpydProfile(("OCModded   : "+ocModded),True)
     warnings.append("OpenCore image is very likely to have been modified")
     warnings.append("by the user, integrity can't be verified\n")
 
 else:
     cpydProfile(("OCModded   : "+ocModded))
-
+time.sleep(0.1)
+progressUpdate(82)
 if os.path.exists("./boot/OpenCore.qcow2"):
     if os.path.getsize("./boot/OpenCore.qcow2") < 18000000: 
         cpydProfile(("OCSize     : "+ocSize),True)
         warnings.append(("OpenCore image file is only "+ocSize+" in size,"))
         warnings.append("which is much smaller than expected\n")
     else: cpydProfile(("OCSize     : "+ocSize))
-    if ocModded == "Yes":
+    if ocModded == "YES":
         cpydProfile(("OCHashMD5  : "+ocHash),True)
         warnings.append("OpenCore image MD5 hash does not match any stock")
         warnings.append("OC images supplied with the project\n")
@@ -333,6 +699,8 @@ else:
      cpydProfile(("OCSize     : N/A"))   
      cpydProfile(("OCHashMD5  : N/A"))   
 cpydProfile((" "))
+time.sleep(0.1)
+progressUpdate(83)
 
 if apFilePath is not None:
     cpydProfile(("APFileName : "+apFilePath))
@@ -345,11 +713,12 @@ if apFilePath is not None:
 else:
     cpydProfile(("APFileName : N/A"))
     cpydProfile(("APFilePath : N/A"))
-
+time.sleep(0.1)
+progressUpdate(84)
 cpydProfile((" \n"))
 
 if apFilePath is not None:
-    cpydProfile("GENERATED DATA ("+apFilePath.upper()+")")
+    cpydProfile("GENERATED DATA / "+apFilePath.upper()+"")
     cpydProfile("────────────────────────────────────────────────────────")
     cpydProfile(("Name       : "+apFilePath))
     if apFile is not None:
@@ -426,9 +795,9 @@ if apFilePath is not None:
     cpydProfile(("DiskMax    : "+str(targetHDDSize)))
     cpydProfile(("DiskType   : "+str(targetHDDType)))
     if targetHDDPhysical == "True":
-        cpydProfile(("DiskIsReal : "+"Yes"))
+        cpydProfile(("DiskIsReal : "+"YES"))
     else:
-        cpydProfile(("DiskIsReal : "+"No"))
+        cpydProfile(("DiskIsReal : "+"NO"))
     
     cpydProfile(" ")
 
@@ -470,81 +839,23 @@ if apFilePath is not None:
             cpydProfile(("RecImgFrom : Unknown"))
 
     cpydProfile((" \n"))
+time.sleep(0.1)
+progressUpdate(86)
+time.sleep(1)
+if criticalCount > 0:
+    cpydProfile((" \n"))
+    cpydProfile("CRITICAL ("+str(criticalCount)+")")
+    cpydProfile("────────────────────────────────────────────────────────")
+    for x in criticals:
+        cpydProfile(x)
 
-cpydProfile("OPERATING SYSTEM")
-cpydProfile("────────────────────────────────────────────────────────")
-
-progressUpdate(16)
-# time.sleep(1)
-if platform.system() != "Linux":
-    cpydProfile("OS         : "+platform.system(),True)
-    warnings.append("The system is running "+str(platform.system())+" which is an unsupported")
-    warnings.append("operating system. Use with caution. Linux is required\n")
-else:
-    cpydProfile("OS         : "+platform.system())
-progressUpdate(18)
-cpydProfile("Distro     : "+distro.name())
-progressUpdate(24)
-cpydProfile("Release    : "+distro.version())
-progressUpdate(27)
-cpydProfile("Kernel     : "+platform.release())
-progressUpdate(29)
-cpydProfile(" \n")
-# time.sleep(1)
-progressUpdate(33)
-cpydProfile("PROCESSOR")
-cpydProfile("────────────────────────────────────────────────────────")
-cpydProfile("Model      : "+f"{cpuinfo.get_cpu_info()['brand_raw']}")
-progressUpdate(35)
-cpydProfile("Physical   : "+str(psutil.cpu_count(logical=False)))
-progressUpdate(38)
-logCPUCores = psutil.cpu_count(logical=True)
-if logCPUCores <= 2:
-    cpydProfile(("Logical    : "+str(logCPUCores)),True)
-    warnings.append("System processor appears as having only "+str(logCPUCores)+" logical cores")
-    warnings.append("which is at or below the project's minimum requirements\n")
-else:
-    cpydProfile("Logical    : "+str(logCPUCores))
-progressUpdate(41)
-if platform.machine() != "x86_64":
-    cpydProfile("Arch       : "+platform.machine(),True)
-    warnings.append("System processor architecture detected as "+str(platform.machine())+", which")
-    warnings.append("is unsupported. An x86_64 processor is required\n")
-else:
-    cpydProfile("Arch       : "+platform.machine())
-progressUpdate(46)
-cpydProfile(" \n")
-# time.sleep(1)
-cpydProfile("MEMORY")
-cpydProfile("────────────────────────────────────────────────────────")
-svmem = psutil.virtual_memory()
-progressUpdate(48)
-if svmem.total >= 4004255385:
-    cpydProfile("Total      : "+f"{get_size(svmem.total)}")
-else:
-    cpydProfile("Total      : "+f"{get_size(svmem.total)}",True)
-    warnings.append("The system only has a total of "+str(get_size(svmem.total))+" of RAM, which is")
-    warnings.append("at or below the project's minimum requirements\n")
-
-progressUpdate(49)
-cpydProfile("Used       : "+f"{get_size(svmem.used)}")
-progressUpdate(51)
-if svmem.free >= 4004255385:
-    cpydProfile("Free       : "+f"{get_size(svmem.free)}")
-else:
-    cpydProfile("Free       : "+f"{get_size(svmem.free)}",True)
-    warnings.append("The system only has "+str(get_size(svmem.free))+" of RAM free, which may")
-    warnings.append("severely degrade performance of virtual machines\n")
-progressUpdate(53)
-# time.sleep(1)
-progressUpdate(97)
-cpydProfile(" \n")
-# time.sleep(1)
 if warningCount > 0:
+    cpydProfile((" \n"))
     cpydProfile("WARNINGS ("+str(warningCount)+")")
     cpydProfile("────────────────────────────────────────────────────────")
     for x in warnings:
         cpydProfile(x)
 logFile.close()
+time.sleep(0.1)
 progressUpdate(100)
 os.system("xdg-open ./logs/SPT_"+logTime+".log")

@@ -88,14 +88,16 @@ osOpt = os+"-"+osVer.lower()
 if osOpt != "macos-highsierra" and osOpt != "macos-mojave" and osOpt != "macos-catalina" and osOpt != "macos-bigsur" and osOpt != "macos-monterey" and osOpt != "macos-ventura" and osOpt != "macos-sonoma" and osOpt != "macos-sierra" and osOpt != "macos-elcapitan" and osOpt != "macos-yosemite" and osOpt != "macos-mavericks" and osOpt != "macos-mountainlion" and osOpt != "macos-lion" and osOpt != "macos-snowleopard" and osOpt != "macos-leopard":
      osOpt = "macos-unknown" # arm large image to use the unknown asset if valid macOS version can't be detected
 
+osName1 = osName
+
 if show != "default":
     smolImage = osOpt
     osOpt = show
-    hold = projectVer
+    hold = osName
+    osName1 = projectVer
     projectVer = osName
     osName = hold
-else:
-    smolImage = "ultmoslite"
+    
 
 
 # print("DEBUG:",osVer,osName,osOpt)    #  mmmmm it works, sexy
@@ -109,14 +111,14 @@ time.sleep(2)
 
 if ptCount == 1:
     try:
-        RPC.update(small_image=smolImage,large_image=osOpt,large_text=osName,small_text=projectVer,details=osName,state="Passthrough with "+str(ptCount)+" device",start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+        RPC.update(small_image=smolImage,large_image=osOpt,large_text=osName1,small_text=projectVer,details=osName,state="Passthrough with "+str(ptCount)+" device",start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
         while True:  
             time.sleep(15) 
     except:
         exit
 elif ptCount > 1:
     try:
-        RPC.update(small_image=smolImage,large_image=osOpt,large_text=osName,small_text=projectVer,details=osName,state="Passthrough with "+str(ptCount)+" devices",start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+        RPC.update(small_image=smolImage,large_image=osOpt,large_text=osName1,small_text=projectVer,details=osName,state="Passthrough with "+str(ptCount)+" devices",start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
         #RPC.update(small_image=osOpt,large_image="ultmos",large_text=osName,small_text=projectVer,details=osName,start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}]))
         while True:  
             time.sleep(15) 
@@ -124,7 +126,7 @@ elif ptCount > 1:
         exit
 else:
     try:
-        RPC.update(small_image=smolImage,large_image=osOpt,large_text=osName,small_text=projectVer,details=osName,start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+        RPC.update(small_image=smolImage,large_image=osOpt,large_text=osName1,small_text=projectVer,details=osName,start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
         while True:  
             time.sleep(15) 
     except:
