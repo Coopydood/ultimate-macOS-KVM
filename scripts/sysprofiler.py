@@ -922,6 +922,7 @@ logFile.close()
 
 time.sleep(0.1)
 progressUpdate(100)
+time.sleep(3)
 clear()
 print("\n\n   "+color.BOLD+color.GREEN+"PROFILING COMPLETE"+color.END,"")
 print("   Finished gathering information")
