@@ -850,7 +850,7 @@ if apFilePath is not None:
         warnings.append("Current virtual hard disk size cannot be determined")
         warnings.append("because the file does not appear to exist\n")
     
-    
+    progressUpdate(89)
     cpydProfile(("DiskMax    : "+str(targetHDDSize)))
     cpydProfile(("DiskType   : "+str(targetHDDType)))
     if targetHDDPhysical == "True":
@@ -899,7 +899,7 @@ if apFilePath is not None:
 
     cpydProfile((" \n"))
 time.sleep(0.1)
-progressUpdate(86)
+progressUpdate(92)
 time.sleep(1)
 if criticalCount > 0:
     cpydProfile((" \n"))
@@ -907,14 +907,19 @@ if criticalCount > 0:
     cpydProfile("────────────────────────────────────────────────────────")
     for x in criticals:
         cpydProfile(x)
-
+time.sleep(0.1)
+progressUpdate(97)
 if warningCount > 0:
     cpydProfile((" \n"))
     cpydProfile("WARNINGS ("+str(warningCount)+")")
     cpydProfile("────────────────────────────────────────────────────────")
     for x in warnings:
         cpydProfile(x)
+        
+time.sleep(0.1)
+progressUpdate(99)
 logFile.close()
+
 time.sleep(0.1)
 progressUpdate(100)
 os.system("xdg-open ./logs/SPT_"+logTime+".log")
