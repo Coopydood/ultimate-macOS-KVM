@@ -191,8 +191,8 @@ def menu():
    grubargs = os.popen('grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub').read()
    grubargs = grubargs[28:(len(grubargs) - 2)]
    clear()
-   print("   Welcome to \033[95mGrub Editor\033[0m")
-   print("   Created by \033[1mHyperchromiac\033[0m\n")
+   print("   \033[1m\033[95mGRUB EDITOR\033[0m")
+   print("   by \033[1mHyperchromiac\033[0m\n")
    print("   CPU Model: \033[37m" + cpu_model + "\033[0m")
    print("\n   Optimal Boot Flags Based on Your System:")
    print("   \033[37m" + cpu_iommu + " " + iommu + " " + video_efifb + " " + vfio_stub + "\033[0m\n")
