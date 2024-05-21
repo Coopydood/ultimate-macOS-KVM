@@ -926,5 +926,5 @@ clear()
 print("\n\n   "+color.BOLD+color.GREEN+"PROFILING COMPLETE"+color.END,"")
 print("   Finished gathering information")
 print("\n   The system profiler has gathered \n   information about your system. \n\n   The log is now available at:\n   "+color.BOLD+"./logs/SPT_"+logTime+".log"+color.END+"\n\n\n\n\n   ")
-progressUpdate(100)
+
 os.system("xdg-open ./logs/SPT_"+logTime+".log")
