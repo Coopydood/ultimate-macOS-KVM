@@ -915,6 +915,10 @@ if criticalCount > 0:
     for x in criticals:
         cpydProfile(x)
 time.sleep(0.1)
+progressUpdate(94)
+time.sleep(0.1)
+progressUpdate(95)
+time.sleep(0.1)
 progressUpdate(97)
 if warningCount > 0:
     cpydProfile((" \n"))
