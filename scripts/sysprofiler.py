@@ -319,6 +319,9 @@ if "virsh:\n" == vfcChk:
 else:
     depVirsh = 1
 
+output_stream = os.popen("cat /proc/cmdline")
+bootCmd = output_stream.read()
+
 output_stream = os.popen('lspci')
 vmc1 = output_stream.read()
 
@@ -438,6 +441,10 @@ cpydProfile("Distro     : "+distro.name())
 cpydProfile("Release    : "+distro.version())
 
 cpydProfile("Kernel     : "+platform.release())
+bootCmd = bootCmd.replace("\n","")
+bootCmd = bootCmd.replace("BOOT_IMAGE=","")
+
+cpydProfile("BootCMD    : "+str(bootCmd))
 if isVM == False:
     cpydProfile("VM         : NO")
 else:
