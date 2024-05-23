@@ -434,6 +434,7 @@ class Smbios:
                 oldDir = os.curdir
                 os.chdir(repoDir)
                 os.system("./scripts/hyperchromiac/nbdassistant.py -m -q")
+                time.sleep(2)
                 os.chdir(oldDir)
                 self._get_plist()
             else:

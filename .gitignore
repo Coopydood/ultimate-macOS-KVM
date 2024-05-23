@@ -46,3 +46,4 @@ ovmf/OVMF_VARS_PT.fd
 resources/.notices
 boot-noUSB.sh
 resources/python/__pycache__/
+resources/python/smbios/Scripts/__pycache__
