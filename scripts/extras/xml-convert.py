@@ -84,6 +84,7 @@ def choiceMenu(): # UNUSED FOR NOW
 
 
 def startup():
+    clear()
     global detectChoiceM
     print("\n\n  "+color.PURPLE+color.BOLD,"XML CONVERSION TOOL"+color.END,"")
     print("   by",color.BOLD+"Coopydood"+color.END)
