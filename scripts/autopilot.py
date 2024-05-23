@@ -2070,7 +2070,7 @@ def autopilot():
       print("\n   "+color.BOLD+"Set number of CPU threads"+color.END)
       print("   Step 4")
       print("\n   Set the desired number of virtual CPU threads. \n   Like cores, more threads can dramatically improve guest performance if\n   your host can handle it."+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:"+color.END+color.BOLD,defaultValue,color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
          print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
@@ -2264,7 +2264,7 @@ def autopilot():
       print("\n   "+color.BOLD+"Set number of CPU cores"+color.END)
       print("   Step 3")
       print("\n   Set the desired number of virtual CPU cores. \n   More cores can dramatically improve guest performance if\n   your host can handle it."+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:"+color.END+color.BOLD,defaultValue,color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
          print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
@@ -2376,7 +2376,7 @@ def autopilot():
       print("\n   "+color.BOLD+"Set target OS"+color.END)
       print("   Step 2")
       print("\n   This configures networking and image download version. \n   The most suitable network adapter will be automatically\n   selected for you based on this later."+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,"Monterey (12)",color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+"Monterey (12)",color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
          print(color.END+"\n      1. Sonoma (14)")
