@@ -38,7 +38,7 @@ def startup():
     global detectChoice
     if detected == 0:
         print("\n\n  "+color.BOLD+color.BLUE,"EXTRAS"+color.END,"")
-        print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+        print("   by",color.BOLD+"Coopydood\n"+color.END)
         print("   These tools can assist you in post-install processes,\n   such as"+color.BOLD,"importing your VM into virt-manager, backing up\n   your data, "+color.END+"and"+color.BOLD,"restore options for troubleshooting.\n"+color.END)
         #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
         #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")

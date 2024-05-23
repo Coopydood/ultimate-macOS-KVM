@@ -785,7 +785,7 @@ progressUpdate(84)
 cpydProfile((" \n"))
 
 if apFilePath is not None:
-    cpydProfile("GENERATED DATA / "+apFilePath.upper()+"")
+    cpydProfile("GENERATED DATA // "+apFilePath.upper()+"")
     cpydProfile("────────────────────────────────────────────────────────")
     cpydProfile(("Name       : "+apFilePath))
     if apFile is not None:
