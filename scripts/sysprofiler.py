@@ -21,6 +21,7 @@ import platform
 import datetime
 import hashlib
 import sys
+import shutil
 sys.path.append('./resources/python')
 from cpydColours import color
 import distro
@@ -31,7 +32,7 @@ try:
     from pypresence import Presence
     depRPC = 1
 except:
-     depRPC = 0
+    depRPC = 0
 
 detectChoice = 1
 latestOSName = "Sonoma"
@@ -576,7 +577,7 @@ if depVirtman == 1:
 if depRPC == 0:
     cpydProfile(("Pypresence : "+"Not installed"))
 if depRPC == 1:
-    cpydProfile(("Pypresence : "+"Installed"))
+    cpydProfile(("Pypresence : "+"Included"))
 
 if depNbd == 0:
     cpydProfile(("NBD        : "+"Not installed"))
@@ -830,11 +831,7 @@ if apFilePath is not None:
     else:
         targetHDDPhysical = "Unknown"
 
-    if os.path.exists(targetHDDPath):
-        if targetHDDPhysical != "True": targetHDDSizeReal = get_size(os.path.getsize(targetHDDPath))
-        else: targetHDDSizeReal = "N/A"
-    else:
-        targetHDDSizeReal = "Unknown"
+    
 
     if os.path.exists("./blobs/user/USR_BOOT_FILE.apb"):
         recoveryImagePath = open("./blobs/user/USR_BOOT_FILE.apb")
@@ -842,23 +839,43 @@ if apFilePath is not None:
     else:
         recoveryImagePath = "Unknown"
 
+    if targetHDDPhysical == "True":
+        disk = psutil.disk_usage(targetHDDPath)
+        diskTotal = disk.total // (2**30)
+        diskTotal = str(diskTotal) + " GB"
+        targetHDDSizeReal = diskTotal
+        targetHDDSize = "N/A"
+    else:
+        if os.path.exists(targetHDDPath):
+            if targetHDDPhysical != "True": targetHDDSizeReal = get_size(os.path.getsize(targetHDDPath))
+            else: targetHDDSizeReal = "N/A"
+        else:
+            targetHDDSizeReal = "Unknown"
+
     cpydProfile(("OS         : macOS "+str(targetOSName)))
     cpydProfile(("Version    : "+str(targetOS)))
     cpydProfile(" ")
-    if os.path.exists(targetHDDPath):
+    if targetHDDPhysical == "True":
         cpydProfile(("DiskPath   : "+str(targetHDDPath)))
-        cpydProfile(("DiskSize   : "+str(targetHDDSizeReal)))
+        cpydProfile(("DiskUsed   : "+str(targetHDDSizeReal)))
+        
     else:
-        cpydProfile(("DiskPath   : "+str(targetHDDPath)),True)
-        cpydProfile(("DiskSize   : "+str(targetHDDSizeReal)),True)
-        warnings.append("AutoPilot blobs reference a disk file that does not")
-        warnings.append("actually seem to exist - boot will likely fail\n")
+        if os.path.exists(targetHDDPath):
+            cpydProfile(("DiskPath   : "+str(targetHDDPath)))
+            cpydProfile(("DiskUsed   : "+str(targetHDDSizeReal)))
+        else:
+            cpydProfile(("DiskPath   : "+str(targetHDDPath)),True)
+            cpydProfile(("DiskUsed   : "+str(targetHDDSizeReal)),True)
+            warnings.append("AutoPilot blobs reference a disk file that does not")
+            warnings.append("actually seem to exist - boot will likely fail\n")
 
-        warnings.append("Current virtual hard disk size cannot be determined")
-        warnings.append("because the file does not appear to exist\n")
+            warnings.append("Current virtual hard disk size cannot be determined")
+            warnings.append("because the file does not appear to exist\n")
     
     progressUpdate(89)
-    cpydProfile(("DiskMax    : "+str(targetHDDSize)))
+        
+    
+    cpydProfile(("DiskSize   : "+str(targetHDDSize)))
     cpydProfile(("DiskType   : "+str(targetHDDType)))
     if targetHDDPhysical == "True":
         cpydProfile(("DiskIsReal : "+"YES"))
