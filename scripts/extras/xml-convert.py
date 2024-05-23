@@ -85,8 +85,8 @@ def choiceMenu(): # UNUSED FOR NOW
 
 def startup():
     global detectChoiceM
-    print("   "+"\n   "+color.BOLD+"XML creation type"+color.END)
-    print("   "+"Choose a method to use")
+    print("\n\n  "+color.PURPLE+color.BOLD,"XML CONVERSION TOOL"+color.END,"")
+    print("   by",color.BOLD+"Coopydood"+color.END)
     print("   "+"\n   This tool can use both an existing AutoPilot file, or even\n   assist you in creating a new one. Please read and choose\n   from the options below."+color.END)#print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print(color.BOLD+"\n      1. Convert AutoPilot config to XML... (recommended)")
