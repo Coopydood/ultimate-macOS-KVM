@@ -3752,6 +3752,7 @@ def autopilot():
       global USR_CPU_TOTAL_F
       global USR_CFG_XML
       global customValue
+      global currentStage
       exTime = round(stopTime - startTime)
       finishedText = ("Finished ("+str(exTime)+"s)")
 
@@ -3773,7 +3774,7 @@ def autopilot():
       else: print("   "+color.BOLD+color.PURPLE+"FILE     ",color.END+color.END+USR_CFG+color.END)
       print("   "+color.BOLD+color.RED+"COMMAND  ",color.END+color.END+"$ ./"+USR_CFG,color.END)
       print("   "+color.BOLD+color.CYAN+"TIME    ",color.END+color.END,str(exTime),"seconds",color.END+"")
-
+      currentStage = -3
       if enableLog == True:
          print("   "+color.BOLD+color.GREEN+"LOG     ",color.END+color.END,"APC_RUN_"+logTime+".log",color.END+"")
       
