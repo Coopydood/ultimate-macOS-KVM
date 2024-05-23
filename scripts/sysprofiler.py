@@ -22,10 +22,10 @@ import datetime
 import hashlib
 import sys
 sys.path.append('./resources/python')
+from cpydColours import color
 import distro
 import cpuinfo
 import psutil
-from cpydColours import color
 from datetime import datetime
 try:
     from pypresence import Presence

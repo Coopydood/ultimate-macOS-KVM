@@ -3260,10 +3260,8 @@ def autopilot():
          cpydLog("ok",("Marked working script as feature level "+str(FEATURE_LEVEL)))
          progressUpdate(82)
          cpydLog("info",("Checking if Discord rich presence is available"))
-         output_stream1 = os.popen("pip show pypresence")
-         vfcPresence = output_stream1.read()
-         if "Name: pypresence" in vfcPresence:
-            vfcPresence = 1
+         
+         if os.path.exists("./resources/python/pypresence/presence.py"): # Now uses built in script
             cpydLog("ok",("Discord rich presence is available, will enable in script"))
             configData = configData.replace("DISCORD_RPC=1","DISCORD_RPC=1")
          else:

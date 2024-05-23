@@ -19,6 +19,7 @@ import re
 import json
 import sys
 import argparse
+sys.path.append('./resources/python')
 try:
     from pypresence import Presence
 except:
