@@ -168,6 +168,10 @@ def cpydProfile(logMsg,warn=None):
 
 ######################### BRAINS #######################
 
+ultmosGenVer = "Unknown"
+genEpoch = "Unknown"
+featureLvl = "Unknown"
+
 output_stream = os.popen("git branch --show-current")
 branch = output_stream.read()
 branch = branch.replace("\n","")
@@ -214,6 +218,16 @@ if os.path.exists("./blobs/user/USR_CFG.apb"):
             REQUIRES_SUDO = 1
         else:
             REQUIRES_SUDO = 0
+        
+        with open(("./"+apFilePath),"r") as file:
+            apFileRead = file.read()
+            ultmosGenVer = apFileRead.partition("ULTMOS=")[2]
+            ultmosGenVer = ultmosGenVer.partition("\n")[0]
+
+        with open(("./"+apFilePath),"r") as file:
+            apFileRead = file.read()
+            genEpoch = apFileRead.partition("GEN_EPOCH=")[2]
+            genEpoch = genEpoch.partition("\n")[0]
 
         apFile.close()
 
@@ -224,6 +238,12 @@ if os.path.exists("./blobs/user/USR_CFG.apb"):
         
         if "APC-RUN" in apFile.read():
             VALID_FILE = 1
+
+
+with open(("./scripts/autopilot.py"),"r") as file1:
+    apScript = file1.read()
+    featureLvl = apScript.partition("FEATURE_LEVEL = ")[2]
+    featureLvl = featureLvl.partition(" ")[0]
 
 time.sleep(0.1)
 progressUpdate(8)
@@ -662,7 +682,12 @@ cpydProfile(" \n")
 
 cpydProfile("AUTOPILOT")
 cpydProfile("────────────────────────────────────────────────────────")
-cpydProfile(("FeatureLvl : "+"8"))
+if int(featureLvl) > 5:
+    cpydProfile(("FeatureLvl : "+str(featureLvl)))
+else:
+    cpydProfile(("FeatureLvl : "+str(featureLvl)),True)
+    warnings.append("The feature level of the installed AutoPilot script")
+    warnings.append("is invalid, integrity can't be verified\n")
 time.sleep(0.1)
 progressUpdate(63)
 userBlobList = os.listdir("./blobs/user")
@@ -792,6 +817,9 @@ if apFilePath is not None:
         cpydProfile(("Path       : "+str(os.path.realpath(apFile.name))))
     else:
         cpydProfile(("Path       : Unknown"))
+    cpydProfile(" ")
+    cpydProfile(("ULTMOS     : "+str(ultmosGenVer)))
+    cpydProfile(("GenTime    : "+str(genEpoch)))
     cpydProfile(" ")
     if os.path.exists("./blobs/user/USR_TARGET_OS_NAME.apb"): 
         targetOSName = open("./blobs/user/USR_TARGET_OS_NAME.apb")
