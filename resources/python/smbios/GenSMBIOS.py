@@ -475,6 +475,7 @@ class Smbios:
             oldDir = os.curdir
             os.chdir(repoDir)
             os.system("./scripts/hyperchromiac/nbdassistant.py -u -q")
+            time.sleep(2)
             clear()
             os.system("./scripts/extras.py")
         elif menu == "1":
