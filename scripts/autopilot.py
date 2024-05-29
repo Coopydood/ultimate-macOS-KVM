@@ -735,7 +735,7 @@ def autopilot():
       clear()
       print("\n   "+color.BOLD+"Generate XML file"+color.END)
       print("   Step 14")
-      print("\n   You can now generate an XML file during AutoPilot. \n   This will be created alongside your boot script file,\n   and can be imported into virt-manager. This will allow\n   you to use the VM through the GUI, for easy access.\n\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"You can convert boot scripts to XML files at\n         any time using the built-in converter tool."+color.END)
+      print("\n   You can now generate an XML file during AutoPilot. \n   This will be created alongside your boot script file,\n   and can be imported into virt-manager. This will allow\n   you to use the VM through the GUI, for easy access.\n\n   "+color.BOLD+color.GREEN+"TIP:",color.END+color.BOLD+"You can convert boot scripts to XML files at\n        any time using the built-in converter tool."+color.END)
       
       print(color.BOLD+"\n      1. Generate and import XML")
       print(color.END+"      2. Skip")
