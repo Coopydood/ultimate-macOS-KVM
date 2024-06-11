@@ -20,6 +20,8 @@ import re
 import json
 import sys
 import argparse
+sys.path.append('./resources/python')
+from cpydColours import color
 
 sys.path.insert(0, 'scripts')
 
@@ -31,17 +33,6 @@ runs = 0
 version = open("./.version")
 version = version.read()
 
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
 
 def startup():
     global detectChoice
@@ -55,6 +46,7 @@ def startup():
     print(color.END+"         Checks that your system is ready for running\n         any virtual machines using KVM.\n")
     print(color.END+"      2. VFIO-PCI passthrough readiness check")
     print(color.END+"      3. GPU compatibility check...")
+    print(color.END+"      4. System profiler...\n")
     print(color.END+"      B. Back...")
     print(color.END+"      Q. Exit\n")
     detectChoice = str(input(color.BOLD+"Select> "+color.END))
@@ -99,7 +91,8 @@ elif detectChoice == "2":
     os.system('./scripts/extras/vfio-check.py')
 elif detectChoice == "3":
     os.system('./scripts/extras/gpu-check.py')
-
+elif detectChoice == "4":
+    os.system('./scripts/sysprofiler.py')
 elif detectChoice == "b" or detectChoice == "B":
     os.system('./main.py')
 elif detectChoice == "q" or detectChoice == "Q":

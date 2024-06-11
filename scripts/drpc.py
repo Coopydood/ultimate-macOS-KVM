@@ -19,19 +19,21 @@ import re
 import json
 import sys
 import argparse
+sys.path.append('./resources/python')
 try:
     from pypresence import Presence
 except:
      None
 osVer = "Unknown"
 ptCount = 0
-
-
+show = "default"
+smolImage = "ultmoslite"
 
 parser = argparse.ArgumentParser("main")
 parser.add_argument("--os", dest="osVer",action="store")
 parser.add_argument("--pt", dest="pt",action="store")
 parser.add_argument("--wd", dest="wd",action="store")
+parser.add_argument("--show", dest="show",action="store")
 
 args = parser.parse_args()
 
@@ -52,6 +54,11 @@ try:
     ptCount = int(args.pt)
 except:
     None
+
+if args.show != None:
+    show = args.show
+else:
+    show = "default"
 
 
 client_id = "1149434759152422922"
@@ -82,6 +89,18 @@ osOpt = os+"-"+osVer.lower()
 if osOpt != "macos-highsierra" and osOpt != "macos-mojave" and osOpt != "macos-catalina" and osOpt != "macos-bigsur" and osOpt != "macos-monterey" and osOpt != "macos-ventura" and osOpt != "macos-sonoma" and osOpt != "macos-sierra" and osOpt != "macos-elcapitan" and osOpt != "macos-yosemite" and osOpt != "macos-mavericks" and osOpt != "macos-mountainlion" and osOpt != "macos-lion" and osOpt != "macos-snowleopard" and osOpt != "macos-leopard":
      osOpt = "macos-unknown" # arm large image to use the unknown asset if valid macOS version can't be detected
 
+osName1 = osName
+
+if show != "default":
+    smolImage = osOpt
+    osOpt = show
+    hold = osName
+    osName1 = projectVer
+    projectVer = osName
+    osName = hold
+    
+
+
 # print("DEBUG:",osVer,osName,osOpt)    #  mmmmm it works, sexy
 
 try:
@@ -93,14 +112,14 @@ time.sleep(2)
 
 if ptCount == 1:
     try:
-        RPC.update(small_image="ultmoslite",large_image=osOpt,large_text=osName,small_text=projectVer,details=osName,state="Passthrough with "+str(ptCount)+" device",start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+        RPC.update(small_image=smolImage,large_image=osOpt,large_text=osName1,small_text=projectVer,details=osName,state="Passthrough with "+str(ptCount)+" device",start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
         while True:  
             time.sleep(15) 
     except:
         exit
 elif ptCount > 1:
     try:
-        RPC.update(small_image="ultmoslite",large_image=osOpt,large_text=osName,small_text=projectVer,details=osName,state="Passthrough with "+str(ptCount)+" devices",start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+        RPC.update(small_image=smolImage,large_image=osOpt,large_text=osName1,small_text=projectVer,details=osName,state="Passthrough with "+str(ptCount)+" devices",start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
         #RPC.update(small_image=osOpt,large_image="ultmos",large_text=osName,small_text=projectVer,details=osName,start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}]))
         while True:  
             time.sleep(15) 
@@ -108,7 +127,7 @@ elif ptCount > 1:
         exit
 else:
     try:
-        RPC.update(small_image="ultmoslite",large_image=osOpt,large_text=osName,small_text=projectVer,details=osName,start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+        RPC.update(small_image=smolImage,large_image=osOpt,large_text=osName1,small_text=projectVer,details=osName,start=startTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
         while True:  
             time.sleep(15) 
     except:

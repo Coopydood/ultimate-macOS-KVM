@@ -16,18 +16,8 @@ import random
 import argparse
 import time
 
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
-   GRAY = '\u001b[38;5;240m'
+sys.path.append('./resources/python')
+from cpydColours import color
 
 try:
     from urllib.request import Request, urlopen
@@ -188,7 +178,7 @@ def save_image(url, sess, filename='', directory=''):
         #else:
             #print("Note: The total download size is %0.2f MB" % total_size)
         size = 0
-        print("   ──────────────────────────────────────────────────────────────")
+        print("\n   ──────────────────────────────────────────────────────────────")
         size = 0
         tmEnd = 0
         tmStart = 0
@@ -248,7 +238,7 @@ def save_image(url, sess, filename='', directory=''):
             elif progress > 98 and progress <= 99:
                 progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
             elif progress >= 100:
-                progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+                progressGUI = (color.BOLD+color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
 
             if (int(time.time()) - lastTime) >= 0.1:
                 timeTaken = int(time.time()) - lastTime
@@ -272,20 +262,21 @@ def save_image(url, sess, filename='', directory=''):
 
 
 
-
-            print('   \r      {2}    {0:0.1f} MB / {1:0.1f} MB    {3}         '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),((str(speed))+" MB/s")), end='')
+            sys.stdout.write('\033[F\033[2K\033[1G')
+            print('   \r      {2}    {0:0.1f} MB / {1:0.1f} MB    {3}         '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),((str(speed))+" MB/s")), end='\n')
             sys.stdout.flush()
+        sys.stdout.write('\033[F\033[2K\033[1G')
         #print('   \r    ✓  {2}      {0:0.1f} MB / {1:0.1f} MB          '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ────────────────────────────────────────────────────────────── ')), end='')
-        print('   \r      {2}       Download Complete                     '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='')
+        print('   \r      {2}       Download Complete                     '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='\n')
         time.sleep(3)
         
-
+        sys.stdout.write('\033[F\033[2K\033[1G')
         progressGUI = (color.GRAY+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
-        print('   \r      {2}           Converting...                '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"⊚ "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='')
-
+        print('   \r      {2}           Converting...                '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"⊚ "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='\n')
+        sys.stdout.write('\033[F\033[2K\033[1G')
         passon()
         progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
-        print('   \r      {2}       Conversion Complete              '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"100% "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='')
+        print('   \r      {2}       Conversion Complete              '.format((size / (2 ** 20)),(total_size),(progressGUI+"  "+color.END+color.BOLD+"100% "+color.END),('\n   ────────────────────────────────────────────────────────────── ')), end='\n')
 
             #print('\r{} MBs downloaded...'.format(size / (2 ** 20)), end='')
            

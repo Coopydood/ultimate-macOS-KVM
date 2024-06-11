@@ -28,6 +28,8 @@ import timeit
 import random
 import uuid
 import platform
+sys.path.append('./resources/python')
+from cpydColours import color
 try:
     from pypresence import Presence
 except:
@@ -62,7 +64,7 @@ latestOSVer = "14"
 runs = 0
 
 ###############################
-FEATURE_LEVEL = 7                   # DO NOT CHANGE - WILL BREAK THINGS!
+FEATURE_LEVEL = 8                   # DO NOT CHANGE - WILL BREAK THINGS!
 ###############################
 
 enableLog = True
@@ -113,19 +115,6 @@ else:
 
 version = open("./.version")
 version = version.read()
-
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
-   GRAY = '\u001b[38;5;240m'
 
 
 global logTime
@@ -453,6 +442,8 @@ def autopilot():
    def progressUpdate(progressVal,*args):
       global progress
       global progressGUI
+      #print('   ─────────────────────────────────────────────────────────────────── \n')
+      
       if enableProgress == True:
          progress = progressVal #(round(float(100 * progressVal / (2 ** 20))/100))
          if progress <= 5:
@@ -496,17 +487,18 @@ def autopilot():
          elif progress > 98 and progress <= 99:
                progressGUI = (color.BOLD+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
          elif progress >= 100:
-               progressGUI = (color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
+               progressGUI = (color.BOLD+color.GREEN+"━━━━━━━━━━━━━━━━━━━━"+color.GRAY+"")
          if progress >= 0:
+            sys.stdout.write('\033[F\033[2K\033[1G')
             if enablePercentage == True:
-               print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('')), end='')
+               print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='\n')
             else:
-               print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+color.END)), end='')
+               print('   \r      {0}                 '.format((progressGUI+"  "+color.END+color.BOLD+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='\n')
             sys.stdout.flush()
          else:
-            print('   \r                       '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='')
+            print('   \r                       '.format((progressGUI+"  "+color.END+color.BOLD+str(progress)+"% "+color.END),('   ─────────────────────────────────────────────────────────────────── ')), end='\n')
          #print('   \r      ───────────────────────────────────────────────────────────────────')
-
+         
 
 
 
@@ -743,7 +735,7 @@ def autopilot():
       clear()
       print("\n   "+color.BOLD+"Generate XML file"+color.END)
       print("   Step 14")
-      print("\n   You can now generate an XML file during AutoPilot. \n   This will be created alongside your boot script file,\n   and can be imported into virt-manager. This will allow\n   you to use the VM through the GUI, for easy access.\n\n   "+color.BOLD+color.CYAN+"NOTE:",color.END+color.BOLD+"You can convert boot scripts to XML files at\n         any time using the built-in converter tool."+color.END)
+      print("\n   You can now generate an XML file during AutoPilot. \n   This will be created alongside your boot script file,\n   and can be imported into virt-manager. This will allow\n   you to use the VM through the GUI, for easy access.\n\n   "+color.BOLD+color.GREEN+"TIP:",color.END+color.BOLD+"You can convert boot scripts to XML files at\n        any time using the built-in converter tool."+color.END)
       
       print(color.BOLD+"\n      1. Generate and import XML")
       print(color.END+"      2. Skip")
@@ -2078,7 +2070,7 @@ def autopilot():
       print("\n   "+color.BOLD+"Set number of CPU threads"+color.END)
       print("   Step 4")
       print("\n   Set the desired number of virtual CPU threads. \n   Like cores, more threads can dramatically improve guest performance if\n   your host can handle it."+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:"+color.END+color.BOLD,defaultValue,color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
          print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
@@ -2255,14 +2247,24 @@ def autopilot():
          USR_TARGET_OS_ID = "mojave"
       elif USR_TARGET_OS == 1013:
          USR_TARGET_OS_ID = "high-sierra"
+      elif USR_TARGET_OS == 1012:
+         USR_TARGET_OS_ID = "sierra"
+      elif USR_TARGET_OS == 1011:
+         USR_TARGET_OS_ID = "el-capitan" 
+      elif USR_TARGET_OS == 1010:
+         USR_TARGET_OS_ID = "yosemite" 
       elif USR_TARGET_OS == 109:
          USR_TARGET_OS_ID = "mavericks"
+      elif USR_TARGET_OS == 108:
+         USR_TARGET_OS_ID = "mountain-lion"
+      elif USR_TARGET_OS == 107:
+         USR_TARGET_OS_ID = "lion"
 
       clear()
       print("\n   "+color.BOLD+"Set number of CPU cores"+color.END)
       print("   Step 3")
       print("\n   Set the desired number of virtual CPU cores. \n   More cores can dramatically improve guest performance if\n   your host can handle it."+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,defaultValue,color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:"+color.END+color.BOLD,defaultValue,color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
          print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<number>"+color.YELLOW+""+color.END+"\n   Enter a custom value.\n   \n   ")
@@ -2374,7 +2376,7 @@ def autopilot():
       print("\n   "+color.BOLD+"Set target OS"+color.END)
       print("   Step 2")
       print("\n   This configures networking and image download version. \n   The most suitable network adapter will be automatically\n   selected for you based on this later."+color.END)
-      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD,"Monterey (12)",color.END)
+      print("\n   "+color.BOLD+color.CYAN+"DEFAULT:",color.END+color.BOLD+"Monterey (12)",color.END)
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
          print(color.END+"\n      1. Sonoma (14)")
@@ -3258,16 +3260,15 @@ def autopilot():
          cpydLog("ok",("Marked working script as feature level "+str(FEATURE_LEVEL)))
          progressUpdate(82)
          cpydLog("info",("Checking if Discord rich presence is available"))
-         output_stream1 = os.popen("pip show pypresence")
-         vfcPresence = output_stream1.read()
-         if "Name: pypresence\n" in vfcPresence:
-            vfcPresence = 1
+         
+         if os.path.exists("./resources/python/pypresence/presence.py"): # Now uses built in script
             cpydLog("ok",("Discord rich presence is available, will enable in script"))
             configData = configData.replace("DISCORD_RPC=1","DISCORD_RPC=1")
          else:
             vfcPresence = 0
             cpydLog("warn",("Discord rich presence appears unavailable, will NOT enable in script"))
             configData = configData.replace("DISCORD_RPC=1","DISCORD_RPC=0")
+         refreshStatusGUI()
          progressUpdate(89)
          cpydLog("info",("Adding OS ID marker"))
          configData = configData.replace("$USR_OS_NAME",str(USR_TARGET_OS_NAME))
@@ -3661,7 +3662,7 @@ def autopilot():
          os.system("chmod +x ./"+USR_CFG)
          progressUpdate(63)
          cpydLog("info",("Setting readwrite permissions"))
-         os.system("chmod +rw ./BaseSystem.img")
+         os.system("chmod +rw ./BaseSystem.img > /dev/null 2>&1")
          progressUpdate(91)
          cpydLog("ok",("Permissons set for new user files"))
          cpydLog("ok",("Updated stage status, handing off to next stage"))
@@ -3751,6 +3752,7 @@ def autopilot():
       global USR_CPU_TOTAL_F
       global USR_CFG_XML
       global customValue
+      global currentStage
       exTime = round(stopTime - startTime)
       finishedText = ("Finished ("+str(exTime)+"s)")
 
@@ -3772,7 +3774,7 @@ def autopilot():
       else: print("   "+color.BOLD+color.PURPLE+"FILE     ",color.END+color.END+USR_CFG+color.END)
       print("   "+color.BOLD+color.RED+"COMMAND  ",color.END+color.END+"$ ./"+USR_CFG,color.END)
       print("   "+color.BOLD+color.CYAN+"TIME    ",color.END+color.END,str(exTime),"seconds",color.END+"")
-
+      currentStage = -3
       if enableLog == True:
          print("   "+color.BOLD+color.GREEN+"LOG     ",color.END+color.END,"APC_RUN_"+logTime+".log",color.END+"")
       
@@ -3857,6 +3859,7 @@ def autopilot():
                print("   Have a nice night - "+color.CYAN+"and remember to sleep!"+color.END+" :]\n\n\n")
             time.sleep(3)
             clear()
+            exit
             exit
             
 

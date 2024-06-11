@@ -20,6 +20,8 @@ import re
 import json
 import sys
 import argparse
+sys.path.append('./resources/python')
+from cpydColours import color
 
 sys.path.insert(0, 'scripts')
 
@@ -31,23 +33,12 @@ runs = 0
 version = open("./.version")
 version = version.read()
 
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
 
 def startup():
     global detectChoice
     if detected == 0:
         print("\n\n  "+color.BOLD+color.BLUE,"EXTRAS"+color.END,"")
-        print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+        print("   by",color.BOLD+"Coopydood\n"+color.END)
         print("   These tools can assist you in post-install processes,\n   such as"+color.BOLD,"importing your VM into virt-manager, backing up\n   your data, "+color.END+"and"+color.BOLD,"restore options for troubleshooting.\n"+color.END)
         #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
         #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
@@ -57,7 +48,8 @@ def startup():
         #print(color.END+"      2. Passthrough tools...")
         print(color.END+"      2. OpenCore Configuration Assistant...")
         print(color.END+"      3. macOS Boot Argument Editor...")
-        print(color.END+"      4. GRUB Argument Editor...\n")
+        print(color.END+"      4. GRUB Argument Editor...")
+        print(color.END+"      5. Generate SMBIOS / Serial Number...\n")
         print(color.RED+"      R. Restore tools...")
         print(color.END+"      I. Report an issue...")
         print(color.END+"      B. Back...")
@@ -101,7 +93,8 @@ elif detectChoice == "3":
     os.system('./scripts/extras/boot-args.py')
 elif detectChoice == "4":
     os.system('./scripts/hyperchromiac/grub-args.py')
-
+elif detectChoice == "5":
+    os.system('./resources/python/smbios/GenSMBIOS.py')
 elif detectChoice == "i" or detectChoice == "I":
     
     print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING ISSUE CREATOR IN DEFAULT BROWSER"+color.END,"")

@@ -19,7 +19,8 @@ import json
 import sys
 import argparse
 from datetime import datetime
-
+sys.path.append('./resources/python')
+from cpydColours import color
 
 detectChoice = 1
 latestOSName = "Sonoma"
@@ -27,18 +28,6 @@ latestOSVer = "14"
 runs = 0
 bypassMenus = 0
 
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
-   GRAY = '\u001b[38;5;245m'
 
 parser = argparse.ArgumentParser("boot-args")
 parser.add_argument("--autopatch", dest="autoPatch", help="Immediately apply the specified patch",action="store")

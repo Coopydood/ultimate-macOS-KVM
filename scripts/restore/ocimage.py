@@ -18,6 +18,8 @@ import subprocess
 import re 
 import json
 import sys
+sys.path.append('./resources/python')
+from cpydColours import color
 
 detectChoice = 1
 latestOSName = "Ventura"
@@ -30,25 +32,12 @@ version = version.read()
 
 def clear(): print("\n" * 150)
 
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
-   GRAY = '\u001b[38;5;245m'
-
 
 clear()
 print("\n\n   "+color.BOLD+color.RED+"↺  RESET OPENCORE AND vNVRAM"+color.END,"")
 print("   Please wait\n")
 print(color.END+"\n\n\n   Checking integrity...\n\n\n\n\n")
-if os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2") and os.path.exists("./resources/oc_store/compat_old/OpenCore.qcow2") and os.path.exists("./resources/ovmf/OVMF_CODE.fd") and os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS_1280x720.fd") and os.path.exists("./resources/oc_store/compat_new/config.plist"):
+if os.path.exists("./resources/oc_store/compat_new/OpenCore.qcow2") and os.path.exists("./resources/oc_store/compat_old/OpenCore.qcow2") and os.path.exists("./resources/ovmf/OVMF_CODE.fd") and os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS_1280x720.fd"):
     integrity = 1
 else:
     integrity = 0
@@ -140,10 +129,7 @@ if detectChoice2 == "X" or detectChoice2 == "x":
 
     if os.path.exists("boot/OpenCore.qcow2"):
         if os.path.exists("boot/config.plist"):
-            if os.path.exists("boot/EFI/"):
-                success()
-            else:
-                throwError()
+            success()
         else:
             throwError()
     else:

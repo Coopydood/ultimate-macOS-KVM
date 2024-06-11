@@ -25,6 +25,8 @@ import re
 import json
 import sys
 import argparse
+sys.path.append('./resources/python')
+from cpydColours import color
 
 parser = argparse.ArgumentParser("gpu-check")
 parser.add_argument("-a", "--auto", dest="auto", help="Detect GPU(s) automatically",action="store_true")
@@ -38,22 +40,11 @@ latestOSName = "Sonoma"
 latestOSVer = "14"
 runs = 0
 
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
 
 def startup():
     global detectChoice
-    print("\n\n   Welcome to"+color.BOLD+color.YELLOW,"GPU Compatibility Checker"+color.END,"")
-    print("   Created by",color.BOLD+"Coopydood\n"+color.END)
+    print("\n\n  "+color.BOLD+color.YELLOW,"GPU COMPATIBILITY CHECKER"+color.END,"")
+    print("   by",color.BOLD+"Coopydood\n"+color.END)
     print("\n   The purpose of this script is to prepare you for GPU passthrough by \n   checking your exact system's GPU model against a macOS compatibility \n   list created and provided by"+color.BOLD,"Dortania.\n"+color.END)
     #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")

@@ -18,6 +18,8 @@ import subprocess
 import re 
 import json
 import sys
+sys.path.append('./resources/python')
+from cpydColours import color
 
 detectChoice = 1
 latestOSName = "Ventura"
@@ -30,25 +32,12 @@ version = version.read()
 
 def clear(): print("\n" * 150)
 
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
-   GRAY = '\u001b[38;5;245m'
-
 
 clear()
 print("\n\n   "+color.BOLD+color.RED+"↺  RESET OVMF CODE"+color.END,"")
 print("   Please wait\n")
 print(color.END+"\n\n\n   Checking integrity...\n\n\n\n\n")
-if os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_VARS_1280x720.fd"):
+if os.path.exists("./resources/ovmf/OVMF_VARS.fd") and os.path.exists("./resources/ovmf/OVMF_CODE.fd"):
     integrity = 1
 else:
     integrity = 0
@@ -109,9 +98,9 @@ if detectChoice2 == "X" or detectChoice2 == "x":
     print("\n\n   "+color.BOLD+color.RED+"↺  RESET OVMF CODE"+color.END,"")
     print("   Restoring...\n\n\n")
     print("   Please wait while the restore process is in progress.\n   This may take a few moments.\n\n   DO NOT INTERRUPT THIS OPERATION.\n\n\n")
-    time.sleep(5)
+    time.sleep(1)
     os.system("rm ./ovmf/OVMF_CODE.fd > /dev/null 2>&1")
-    time.sleep(2)
+    time.sleep(1)
     os.system("cp ./resources/ovmf/OVMF_CODE.fd ./ovmf/OVMF_CODE.fd")
 
     

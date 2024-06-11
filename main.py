@@ -28,8 +28,10 @@ import sys
 import argparse
 import platform
 import datetime
+sys.path.append('./resources/python')
+from cpydColours import color
 try:
-    import pypresence
+    from pypresence import Presence
 except:
     None
 
@@ -71,21 +73,6 @@ projectVer = "Powered by ULTMOS v"+version
 if os.path.exists("./UPGRADEPATH"): os.system("rm ./UPGRADEPATH")
 if os.path.exists("./VERSION"): os.system("rm ./VERSION") 
 if os.path.exists("./resources/WEBVERSION"): os.system("rm ./resources/WEBVERSION")
-
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
-   GRAY = '\u001b[38;5;245m'
-
-
 
 def startup():
     global detectChoice
@@ -296,7 +283,7 @@ elif detected == 2:
         print("   "+platform.system()+" detected")
         print("\n   I've determined that you're using "+platform.system()+". \n   Put simply, this project won't work on here.\n   To save you further disappointment, I'm instead\n   throwing you this error.\n\n   Sorry :/"+color.END)
         
-        print("\n   "+color.BOLD+color.RED+"PROBLEM:",color.END+"well... not Linux... ¯\_(ツ)_/¯"+color.END)
+        print("\n   "+color.BOLD+color.RED+"PROBLEM:",color.END+"well... not Linux... ¯\\_(ツ)_/¯"+color.END)
         print("\n\n\n")
         time.sleep(5)
         sys.exit
@@ -353,9 +340,9 @@ elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FI
         if os.path.exists("./blobs/user/USR_VFIO_DEVICES.apb"):
             vfioDevs = open("./blobs/user/USR_VFIO_DEVICES.apb")
             vfioDevs = vfioDevs.read()
-            subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer,"--pt",vfioDevs])
+            subprocess.Popen(["python3","./scripts/drpc.py","--os",macOSVer,"--pt",vfioDevs])
         else:
-            subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
+            subprocess.Popen(["python3","./scripts/drpc.py","--os",macOSVer])
     if REQUIRES_SUDO == 1:
         print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser privileges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
         if discordRPC == 0:
@@ -438,9 +425,9 @@ elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VAL
             if os.path.exists("./blobs/user/USR_VFIO_DEVICES.apb"):
                 vfioDevs = open("./blobs/user/USR_VFIO_DEVICES.apb")
                 vfioDevs = vfioDevs.read()
-                subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer,"--pt",vfioDevs])
+                subprocess.Popen(["python3","./scripts/drpc.py","--os",macOSVer,"--pt",vfioDevs])
             else:
-                subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
+                subprocess.Popen(["python3","./scripts/drpc.py","--os",macOSVer])
         if REQUIRES_SUDO == 1:
             print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser privileges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
             if discordRPC == 0:
@@ -478,7 +465,7 @@ elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VAL
                 RPC = Presence(client_id)
             except:
                 None
-            subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
+            subprocess.Popen(["python3","./scripts/drpc.py","--os",macOSVer])
         if REQUIRES_SUDO == 1:
             print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser privileges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
             if discordRPC == 0:
@@ -516,7 +503,7 @@ elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VAL
                 RPC = Presence(client_id)
             except:
                 None
-            subprocess.Popen(["python","./scripts/drpc.py","--os",macOSVer])
+            subprocess.Popen(["python3","./scripts/drpc.py","--os",macOSVer])
         if REQUIRES_SUDO == 1:
             print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser privileges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
             if discordRPC == 0:

@@ -27,6 +27,8 @@ import uuid
 import random
 import io
 import pathlib
+sys.path.append('./resources/python')
+from cpydColours import color
 
 global apFileSelect
 global autodetect
@@ -43,18 +45,6 @@ runs = 0
 
 global cpydPassthrough
 cpydPassthrough = 0
-
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
 
 version = open("./.version")
 version = version.read()
@@ -84,9 +74,10 @@ def choiceMenu(): # UNUSED FOR NOW
 
 
 def startup():
+    clear()
     global detectChoiceM
-    print("   "+"\n   "+color.BOLD+"XML creation type"+color.END)
-    print("   "+"Choose a method to use")
+    print("\n\n  "+color.PURPLE+color.BOLD,"XML CONVERSION TOOL"+color.END,"")
+    print("   by",color.BOLD+"Coopydood"+color.END)
     print("   "+"\n   This tool can use both an existing AutoPilot file, or even\n   assist you in creating a new one. Please read and choose\n   from the options below."+color.END)#print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     print(color.BOLD+"\n      1. Convert AutoPilot config to XML... (recommended)")

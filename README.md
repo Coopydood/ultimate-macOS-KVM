@@ -1,6 +1,6 @@
 <a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/492731ef1d95d2da534c660b001550f4d76a6c68/resources/images/bannerAlphaBasic.png?raw=true" alt="ultimate-macOS-KVM" width="500"/></a>
 
-### v0.11.3
+### v0.12.0
 
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
@@ -40,6 +40,9 @@ Allows you to select any of your host's attached USB devices for use with the ma
 
 <li><b>OpenCore Configuration Assistant</b></li>
 Automatically mount and edit your OpenCore image from your host, using Network Block Devices.
+
+<li><b>GenSMBIOS Integration</b></li>
+Auto-generate a new SMBIOS and serial number directly onto the virtual OpenCore image with full GenSMBIOS + ULTMOS integration.
 
 <li><b>Boot Argument Assistant + AutoPatch</b></li>
 Easily edit the macOS boot arguments of your OpenCore image, and even automatically apply relevant patches for your setup (e.g. AMD RX 5000 series black screen patch).
@@ -99,6 +102,7 @@ All of the dependencies, both required and optional, are listed below.
 
 <b>Required</b>
 <ul>
+<li><b>Sudo</b> 》 <code>sudo</code></li>
 <li><b>Git</b> 》 <code>git</code></li>
 <li><b>Wget</b> 》 <code>wget</code></li>
 <li><b>QEMU</b> 》 <code>qemu-full</code></li>
@@ -230,7 +234,7 @@ Of course, if you're just testing the project, then a "clean install" is probabl
 
 Here's a few screenshots showing **ultimate-macOS-KVM** in action!
 
-<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/d93d92e1-5923-436f-a00d-d311c75c1680" width="90%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a9dfb145-d557-46f3-89f4-f891ffff27e0" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/593e8388-8b2d-4b12-99b4-1dbd7802dea8" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/232f3bae-b31b-4e18-bee9-8c03a472d5a0" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ac766b58-5e66-4b70-9742-8e318f065fc2" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1fd0add5-c0c8-46a1-8897-3b80c37f98a1" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8380632b-dceb-41e7-acb0-b2bd15cbf575" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b32c2701-a934-42ce-ab69-06b1ae350f1b" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ee451491-35fa-436e-957b-888d2f7d488e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/c4e394c3-a666-4aab-9aa7-b40b1e84d977" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/feb19dce-7a9a-4527-884c-8b2f2d445e2f" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4a8b5249-3029-49d3-8539-229b3c179816" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4e7678f3-5ee4-4e69-93a7-d9ba9881cea7" width="45%"></img>
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/d93d92e1-5923-436f-a00d-d311c75c1680" width="90%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/aedd04b6-3334-482d-adbe-d3809238a652" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/593e8388-8b2d-4b12-99b4-1dbd7802dea8" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a7a60115-865a-4939-ab8f-e726a3d488a6" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1802c1d2-7d35-4e70-9ab2-13820ef7e3a9" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1fd0add5-c0c8-46a1-8897-3b80c37f98a1" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8380632b-dceb-41e7-acb0-b2bd15cbf575" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b32c2701-a934-42ce-ab69-06b1ae350f1b" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ee451491-35fa-436e-957b-888d2f7d488e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/c4e394c3-a666-4aab-9aa7-b40b1e84d977" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/feb19dce-7a9a-4527-884c-8b2f2d445e2f" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4a8b5249-3029-49d3-8539-229b3c179816" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4e7678f3-5ee4-4e69-93a7-d9ba9881cea7" width="45%"></img>
 <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/dd012a63-415a-4b87-b096-feabdd3f8a5e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/32d2992d-a39a-4b34-976b-5e7ee5d5c926" width="45%"></img> 
 
 > [!TIP]
@@ -274,7 +278,7 @@ Apple has attempted to classify the OSK as a trade secret but has ultimately fai
 
 These awesome people were generous enough to donate financially to help fuel the 3AM misadventures this project is made from. Thank you so much!
 
-<!-- sponsors --><a href="https://github.com/WaveringAna"><img src="https://images.weserv.nl/?url=https://github.com/WaveringAna.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="WaveringAna"></a><!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/WaveringAna"><img src="https://images.weserv.nl/?url=https://github.com/WaveringAna.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="WaveringAna"></a><a href="https://github.com/SaRoKu"><img src="https://images.weserv.nl/?url=https://github.com/SaRoKu.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="SaRoKu"></a><!-- sponsors -->
 
 <br><br>
 <sup>If you find this project helpful, and want to support development, you can <a href="https://github.com/sponsors/Coopydood">sponsor it</a>! Any and all donations are incredibly appreciated and never expected or required! </sup>
@@ -285,7 +289,7 @@ These awesome people were generous enough to donate financially to help fuel the
 
 <h3>Powered by OpenCore<br><sub>Version 0.9.7</sub></h3>
 
-This project would not be possible without the incredible work of the OpenCore development team. Thank you to everyone involved! ❤️
+This project would not be possible without the incredible work of the [OpenCore development team](https://github.com/Acidanthera). Thank you to everyone involved! ❤️
 
 
 ***
@@ -296,7 +300,7 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 
 - **[Dortania](https://github.com/Dortania)** 》 Extensive documentation and Hackintosh development.
 - **[Kholia](https://github.com/kholia)** 》 Development of scripts and documentation. ultimate-macOS-KVM is intended as an extension to [OSX-KVM](https://github.com/kholia/OSX-KVM).
-- **[thenickdude](https://github.com/thenickdude)** 》 Personal support throughout my KVM misadventures and countless community contribs. Cheers.
+- **[thenickdude](https://github.com/thenickdude)** 》 Personal support throughout my KVM misadventures and countless community contribs.
 - **[vit9696](https://github.com/vit9696)** 》 Author of many macOS hacks including kexts, and other source material used in this project. Probably knows the macOS boot process better than Apple.
 - **[vu1tur](to@vu1tur.eu.org)** 》 Open source dmg to img conversion tool; used and bundled in this project.
 - **[Eversiege](https://github.com/eversiege)** 》 Support and testing, та мій улюблений українець. Also made the project's main [website](https://coopydood.github.io/ultimate-macOS-KVM).
@@ -306,6 +310,8 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[Kaz](https://github.com/Eaz11)** 》 Other than his brilliant English accent's pronunciations (including "macOS Syria"), he's done extensive testing. Say hi to your nephew for me.
 - **[GigantTech](https://twitter.com/TechGigant)** 》 Moderately annoying German guy that I convinced to install Linux subsequently letting him test my project. It's free real estate!
 - **[Hummenix](https://github.com/Hummenix)** 》Testing of ULTMOS across different Linux distros. 
+- **[CorpNewt](https://github.com/CorpNewt)** 》Creator of GenSMBIOS and many other Hackintosh essentials.
+- **[Acidanthera](https://github.com/Acidanthera)** 》The group behind OpenCore, Lilu, WhateverGreen, and MUCH more.
 
 ***
 

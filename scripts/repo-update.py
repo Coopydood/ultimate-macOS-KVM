@@ -24,6 +24,8 @@ import sys
 import argparse
 import http.client as httplib
 global noDelta
+sys.path.append('./resources/python')
+from cpydColours import color
 
 detectChoice = 1
 latestOSName = "Sonoma"
@@ -49,19 +51,6 @@ global webVersion
 global versionDash
 
 def clear(): print("\n" * 150)
-
-class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
-   GRAY = '\u001b[38;5;245m'
 
 parser = argparse.ArgumentParser("repo-update")
 parser.add_argument("-a", "--auto", dest="install", help="Automatically download and install available updates without asking",action="store_true")
@@ -106,6 +95,13 @@ elif integrity == 1 and args.version is not None:
    print("Searching for update...")
 
 targetBranch = "main"
+
+output_stream = os.popen("git branch --show-current")
+currentBranch = output_stream.read()
+currentBranch = currentBranch.replace("\n","")
+
+if currentBranch != targetBranch:
+   targetBranch = currentBranch
 
 if args.switchBranch is not None:
    targetBranch = args.switchBranch
@@ -387,7 +383,8 @@ if integrity == 1:
       print("\n\n   "+color.BOLD+color.GREEN+"✔  NO UPDATES AVAILABLE"+color.END,"")
       print("   You're on the latest version\n")
       print(color.BOLD+"   Current Version\n   "+color.END+"v"+version,"\n")
-      
+      if currentBranch != "main":
+         print(color.BOLD+"   Branch\n   "+color.END+""+currentBranch,"\n")
       print("   Check back periodically to ensure you're always using\n   the latest version of the project."+"\n")
       versionDash = webVersion.replace(".","-")
       if menuFlow == 1:
