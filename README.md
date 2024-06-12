@@ -121,7 +121,8 @@ All of the dependencies, both required and optional, are listed below.
 > [!WARNING]
 > You **must** have all of the required dependencies installed before using this project.
 
-> [!Debian/Ubuntu forks]
+> [!IMPORTANT]
+> For Debian/Ubuntu based distributions, you can add all the dependencies from the terminal with the following:
 
 ```sh
 sudo apt-get install qemu uml-utilities virt-manager git \
