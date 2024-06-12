@@ -118,9 +118,6 @@ All of the dependencies, both required and optional, are listed below.
 <li><b>Network Block Device (NBD)</b> 》 <code>nbd</code> required for mounting the OpenCore image for editing on host system
 </ul>
 
-> [!WARNING]
-> You **must** have all of the required dependencies installed before using this project.
-
 > [!IMPORTANT]
 > For Debian/Ubuntu based distributions, you can add all the dependencies from the terminal with the following:
 
@@ -129,6 +126,8 @@ sudo apt-get install qemu uml-utilities virt-manager git \
     wget libguestfs-tools p7zip-full make dmg2img tesseract-ocr \
     tesseract-ocr-eng genisoimage vim net-tools screen -y
 ```
+> [!WARNING]
+> You **must** have all of the required dependencies installed before using this project.
 
 > [!tip]
 > Optional dependencies can enhance your experience, such as using your VM in a GUI, or showing what macOS version you're currently running on your Discord profile.
