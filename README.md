@@ -119,7 +119,15 @@ All of the dependencies, both required and optional, are listed below.
 </ul>
 
 > [!WARNING]
-> You **must** have all of the required dependencies installed before using this project. 
+> You **must** have all of the required dependencies installed before using this project.
+
+> [!Debian/Ubuntu forks]
+
+```sh
+sudo apt-get install qemu uml-utilities virt-manager git \
+    wget libguestfs-tools p7zip-full make dmg2img tesseract-ocr \
+    tesseract-ocr-eng genisoimage vim net-tools screen -y
+```
 
 > [!tip]
 > Optional dependencies can enhance your experience, such as using your VM in a GUI, or showing what macOS version you're currently running on your Discord profile.
