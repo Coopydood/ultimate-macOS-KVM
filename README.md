@@ -121,17 +121,18 @@ All of the dependencies, both required and optional, are listed below.
 <details open>
 <summary>Arch</summary>
 <br>
-<code>pacman -Syu git wget qemu-full libvirt dnsmasq python virt-manager nbd yay fakeroot
+<pre><code>pacman -Syu git wget qemu-full libvirt dnsmasq python virt-manager nbd yay fakeroot
 yay -Syu virsh
-</code>
+</pre></code> 
 </details>
 
  <details open>
 <summary>Ubuntu / Debian</summary>
  <br>
-<code>sudo apt-get install qemu uml-utilities virt-manager git \
+ <pre><code>sudo apt-get install qemu uml-utilities virt-manager git \
     wget libguestfs-tools p7zip-full make dmg2img tesseract-ocr \
-    tesseract-ocr-eng genisoimage vim net-tools screen -y</code>
+    tesseract-ocr-eng genisoimage vim net-tools screen -y
+</pre></code>
 </details>
   
 > [!WARNING]
