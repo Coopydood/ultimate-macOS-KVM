@@ -121,7 +121,9 @@ All of the dependencies, both required and optional, are listed below.
 <details open>
 <summary>Arch</summary>
 <br>
-<code>yay -Syu git wget qemu-full libvirt dnsmasq python virt-manager virsh nbd</code>
+<code>pacman -Syu git wget qemu-full libvirt dnsmasq python virt-manager nbd yay fakeroot
+yay -Syu virsh
+</code>
 </details>
 
  <details open>
