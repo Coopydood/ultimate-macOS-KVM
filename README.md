@@ -131,7 +131,7 @@ yay -Syu virsh
  <br>
 <code>sudo apt-get install qemu uml-utilities virt-manager git \
     wget libguestfs-tools p7zip-full make dmg2img tesseract-ocr \
-    tesseract-ocr-eng genisoimage vim net-tools screen -yWell, you asked for it!</code>
+    tesseract-ocr-eng genisoimage vim net-tools screen -y</code>
 </details>
   
 > [!WARNING]
