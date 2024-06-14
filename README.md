@@ -118,12 +118,16 @@ All of the dependencies, both required and optional, are listed below.
 <li><b>Network Block Device (NBD)</b> 》 <code>nbd</code> required for mounting the OpenCore image for editing on host system
 </ul>
 
+> [!tip]
+> In case PACMAN can't find virsh, use ```yay``` and ```fakeroot``` to install it:
+> 
+> ``` yay -S virsh ```
+
 <details open>
 <summary>Arch</summary>
 <br>
-<pre><code>pacman -Syu git wget qemu-full libvirt dnsmasq python virt-manager nbd yay fakeroot
-yay -Syu virsh
-</pre></code> 
+<pre><code>pacman -Syu git wget qemu-full libvirt dnsmasq python virt-manager virsh
+</pre></code>
 </details>
 
  <details open>
