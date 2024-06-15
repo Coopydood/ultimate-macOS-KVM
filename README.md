@@ -13,18 +13,17 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 ***
 
 <img align="left" width="100" height="100" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/299ca6ef-83f9-4b2c-9d03-86d600e65d66">
-<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=300 width=2 />
+<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=282 width=2 />
 
-<h3>macOS Sequoia Support<br><sub>15.0 Developer Beta</sub></h3>
+<h3>macOS Sequoia Support<br><sub>Coming Soon</sub></h3>
 
-macOS Sequoia has not yet been tested extensively with ULTMOS, but it has been confirmed to work with the current ULTMOS version on the latest macOS developer beta.
+macOS Sequoia has not yet been tested extensively, but it has been **confirmed to install and boot with the current version of ULTMOS** on the latest macOS developer beta.
 
-Please feel free to try out the macOS Sequoia developer beta with ULTMOS and leave feedback on how it went.
+Please feel free to try out the macOS Sequoia developer beta with ULTMOS and leave feedback on how it went! 
 
-Preliminary support for this version will be added shortly.
+However, you should **NOT** use macOS Sequoia as your main virtual setup - and should be used for test purposes only. You have been warned!
 
-<br>
-
+Preliminary built-in support for this version will be added to the project shortly.
 
 ***
 
