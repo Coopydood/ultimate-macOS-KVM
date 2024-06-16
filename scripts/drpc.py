@@ -86,7 +86,7 @@ osOpt = os+"-"+osVer.lower()
 
 #print(osOpt)
 
-if osOpt != "macos-highsierra" and osOpt != "macos-mojave" and osOpt != "macos-catalina" and osOpt != "macos-bigsur" and osOpt != "macos-monterey" and osOpt != "macos-ventura" and osOpt != "macos-sonoma" and osOpt != "macos-sierra" and osOpt != "macos-elcapitan" and osOpt != "macos-yosemite" and osOpt != "macos-mavericks" and osOpt != "macos-mountainlion" and osOpt != "macos-lion" and osOpt != "macos-snowleopard" and osOpt != "macos-leopard":
+if osOpt != "macos-highsierra" and osOpt != "macos-mojave" and osOpt != "macos-catalina" and osOpt != "macos-bigsur" and osOpt != "macos-monterey" and osOpt != "macos-ventura" and osOpt != "macos-sonoma" and osOpt != "macos-sequoia" and osOpt != "macos-sierra" and osOpt != "macos-elcapitan" and osOpt != "macos-yosemite" and osOpt != "macos-mavericks" and osOpt != "macos-mountainlion" and osOpt != "macos-lion" and osOpt != "macos-snowleopard" and osOpt != "macos-leopard":
      osOpt = "macos-unknown" # arm large image to use the unknown asset if valid macOS version can't be detected
 
 osName1 = osName
