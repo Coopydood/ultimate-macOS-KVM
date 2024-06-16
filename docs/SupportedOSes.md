@@ -4,7 +4,7 @@
 
 <img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=1520 width=2 />
 
-<h3>macOS Sonoma<br><sub>14.4</sub></h3>
+<h3>macOS Sonoma<br><sub>14.5</sub></h3>
 
 This project currently supports the latest version of macOS Sonoma, as well as every prior version down to macOS High Sierra. 
 
@@ -24,6 +24,11 @@ The option to use legacy versions is available, but no support will be provided 
 <h5>macOS Mojave</h5>
 <img align="left" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/bd4a791d-1ac2-4a9a-8ee0-22e4d5f88cd3"> 
 <h5>macOS High Sierra</h5><br>
+
+#### Pre-Release
+
+<img align="left" width="35" height="35" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/299ca6ef-83f9-4b2c-9d03-86d600e65d66"> 
+<h5>macOS Sequoia Beta</h5><br>
 
 
 #### Legacy
