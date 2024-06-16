@@ -2219,11 +2219,12 @@ def autopilot():
       elif USR_TARGET_OS == 14:
          USR_TARGET_OS_NAME = "Sonoma"
       elif USR_TARGET_OS == 15:
-         USR_TARGET_OS_NAME = "Sequoia"
+         USR_TARGET_OS_NAME = "Sequoia Beta"
 
       global osIcon
 
       osIcon = "ap-"+USR_TARGET_OS_NAME.lower().replace(" ","")
+      osIcon = "ap-"+USR_TARGET_OS_NAME.lower().replace(" beta","")
          
       if int(USR_TARGET_OS) < 1013 and int(USR_TARGET_OS) >= 100:
          osIcon = "ap-legacy"
@@ -2396,7 +2397,7 @@ def autopilot():
          print(color.END+"      7. High Sierra (10.13)\n")
          
          print(color.END+"      8. Legacy versions...\n")
-         print(color.END+"      9. Sequoia (15 dev beta)\n")
+         print(color.END+"      9. Sequoia Beta (15)\n")
          customInput = str(input(color.BOLD+"Select> "+color.END))
          
          if customInput == "1":

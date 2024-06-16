@@ -70,7 +70,9 @@ except:
 
 projectVer = "Powered by ULTMOS v"+version
 
-if osVer is not None and osVer == "Sierra" or osVer == "High Sierra" or osVer == "Mojave" or osVer == "Catalina" or osVer == "Big Sur" or osVer == "Monterey" or osVer == "Ventura" or osVer == "Sonoma":
+if "Beta" in osVer: osVer = osVer.replace(" Beta","")
+
+if osVer is not None and osVer == "Sierra" or osVer == "High Sierra" or osVer == "Mojave" or osVer == "Catalina" or osVer == "Big Sur" or osVer == "Monterey" or osVer == "Ventura" or osVer == "Sonoma" or osVer == "Sequoia":
     osName = "macOS "+osVer
 elif osVer is not None:
     osName = "Mac OS X "+osVer

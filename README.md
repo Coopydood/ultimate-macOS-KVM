@@ -25,7 +25,7 @@ However, you should **NOT** use macOS Sequoia as your main virtual setup - and s
 
 Preliminary built-in support for this version will be added to the project shortly.
 
-<h4><a href=https://filetransfer.io/data-package/GkQSCtTy#link>Download  ⎋</a></h4><br>
+<h4><a href=https://archive.org/download/macos-sequoia-dev1/BaseSystem.dmg>Download  ⎋</a></h4><br>
 
 ***
 
