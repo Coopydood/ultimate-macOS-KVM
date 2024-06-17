@@ -48,6 +48,9 @@ Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little h
 ## 💎》Features
 
 <ul>
+<li><b>Modern macOS Support <a href="https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Supported-Guest-OSes">⎋</a></b></li> 
+Experience the latest macOS has to offer with built-in support for macOS Sonoma, and even try out the latest macOS Sequoia beta!
+
 <li><b>AutoPilot <a href="https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot">⎋</a></b></li> 
 Automatically generates a valid, customised, and ready-to-use QEMU config script in seconds.
 
