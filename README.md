@@ -21,8 +21,7 @@ macOS Sequoia has not yet been tested extensively, but it has been **confirmed t
 
 <br>
 
-**AutoPilot now has an additional option for macOS Sequoia beta!** 
-Please feel free to try out the macOS Sequoia beta with ULTMOS and leave feedback on how it went! 
+**AutoPilot now has an additional option for macOS Sequoia beta!** <br>Please feel free to try out the macOS Sequoia beta with ULTMOS and leave feedback on how it went! 
 
 However, you should **NOT** use macOS Sequoia as your main virtual setup - and should be used for test purposes only. You have been warned!
 
