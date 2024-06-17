@@ -19,7 +19,7 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 
 macOS Sequoia has not yet been tested extensively, but it has been **confirmed to install and boot with the current version of ULTMOS** on the latest macOS developer beta.
 
-Please feel free to try out the macOS Sequoia developer beta with ULTMOS and leave feedback on how it went! 
+Please feel free to try out the macOS Sequoia beta with ULTMOS and leave feedback on how it went! 
 
 However, you should **NOT** use macOS Sequoia as your main virtual setup - and should be used for test purposes only. You have been warned!
 
