@@ -112,6 +112,37 @@ Here's a table with my best judgment on minimum, recommended, and best system re
 > [!NOTE]
 > The recommended and optimal specifications are for reference only.
 
+
+<details><summary><h4>macOS Guest Feature Support Matrix</h4></summary>
+
+|                          	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/bd4a791d-1ac2-4a9a-8ee0-22e4d5f88cd3"> | <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/184bb2ef-c447-4cbd-b07c-8b4b096e3944">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/cd8029e8-c256-4295-9908-37809d64dcfe">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/79a7a051-0f5a-419e-8544-b51b1572d3b9">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/7d341cce-4370-4430-b3d5-bf1868afe4a3">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/4829ebb4-ce7f-4ecf-8309-d691c9361f6b">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/aa49b5ba-6cca-4dab-bcfc-6bf21909e738">      	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/299ca6ef-83f9-4b2c-9d03-86d600e65d66">      	|
+|--------------------------	|--------	|--------	|--------	|--------	|--------	|--------	|---------	|---------	|
+|            **AutoPilot** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
+|     **Auto<br>Download** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✕    	|
+|    **Online<br>Install** 	|    ✕   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
+|   **Offline<br>Install** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
+|       **QEMU<br>Script** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓¹   	|    ✓¹    	|    ✓¹    	|
+|      **Virt<br>Manager** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ?²  	|    ?²   	|    ?²   	|
+|   **GPU<br>Passthrough** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓¹   	|    ✓¹    	|    ✓¹    	|
+| **VirtIO<br>Networking** 	|    ✕   	|    ✕   	|    ?³   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
+| **VirtIO<br>Storage** 	|    ✕   	|    ✕   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
+
+
+¹ <sup>If trying to boot macOS Ventura and later with GPU passthrough, you may need to do so using Virtual Machine Manager. The QEMU script may have issues with GPU passthrough.<sup>
+
+² <sup>macOS Ventura and later have been known to have issues booting    *without* GPU passthrough in Virtual Machine Manager.</sup>
+
+³ <sup>I have no idea whether or not VirtIO networking works on macOS Catalina.</sup>
+
+<br>
+
+> [!NOTE]
+> This table is a very **loose** representation of the current state of macOS versions and their support with ULTMOS / QEMU / KVM. It's more for reference and shouldn't be taken seriously.
+>
+> If you find something is wrongly marked, please feel free to update it.
+</details>
+
+
 ***
 
 ## 📦》Dependencies
