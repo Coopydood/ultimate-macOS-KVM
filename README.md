@@ -29,7 +29,8 @@ However, you should **NOT** use macOS Sequoia as your main virtual setup - and s
 You can download the latest recovery image below for use with AutoPilot.
 
 <br>
-<a href=https://archive.org/download/macos-sequoia-dev1/BaseSystem.dmg><p align="center"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a8f1cb8f-5ddd-45cc-8598-032180035607" height="38"></a><br><sub> <b>BaseSystem.dmg</b> (1.3 GB)</sub></p>
+
+<p align="center"><a href="https://archive.org/download/macos-sequoia-dev1/BaseSystem.dmg"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a8f1cb8f-5ddd-45cc-8598-032180035607" height="38"></a><br><sub> <b>BaseSystem.dmg</b> (1.3 GB)</sub></p>
 
 ***
 
