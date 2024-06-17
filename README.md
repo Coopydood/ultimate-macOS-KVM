@@ -13,19 +13,23 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 ***
 
 <img align="left" width="100" height="100" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/299ca6ef-83f9-4b2c-9d03-86d600e65d66">
-<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=312 width=2 />
+<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=140 width=2 />
 
-<h3>macOS Sequoia Support<br><sub>Coming Soon</sub></h3>
+<h3>macOS Sequoia Support<br><sub>Available Now</sub></h3>
 
 macOS Sequoia has not yet been tested extensively, but it has been **confirmed to install and boot with the current version of ULTMOS** on the latest macOS developer beta.
 
+<br>
+
+**AutoPilot now has an additional option for macOS Sequoia beta!** 
 Please feel free to try out the macOS Sequoia beta with ULTMOS and leave feedback on how it went! 
 
 However, you should **NOT** use macOS Sequoia as your main virtual setup - and should be used for test purposes only. You have been warned!
 
-Preliminary built-in support for this version will be added to the project shortly.
+You can download the latest recovery image below for use with AutoPilot.
 
-<h4><a href=https://archive.org/download/macos-sequoia-dev1/BaseSystem.dmg>Download  ⎋</a></h4><br>
+<br>
+<center><a href=https://archive.org/download/macos-sequoia-dev1/BaseSystem.dmg><img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a8f1cb8f-5ddd-45cc-8598-032180035607" height="38"></a><center><sub> <b>BaseSystem.dmg</b> (1.3 GB)</sub></center></center>
 
 ***
 
@@ -116,7 +120,7 @@ Here's a table with my best judgment on minimum, recommended, and best system re
 <details><summary><h4>macOS Guest Feature Support Matrix</h4></summary>
 
 |                          	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/bd4a791d-1ac2-4a9a-8ee0-22e4d5f88cd3"> | <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/184bb2ef-c447-4cbd-b07c-8b4b096e3944">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/cd8029e8-c256-4295-9908-37809d64dcfe">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/79a7a051-0f5a-419e-8544-b51b1572d3b9">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/7d341cce-4370-4430-b3d5-bf1868afe4a3">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/4829ebb4-ce7f-4ecf-8309-d691c9361f6b">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/aa49b5ba-6cca-4dab-bcfc-6bf21909e738">      	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/299ca6ef-83f9-4b2c-9d03-86d600e65d66">      	|
-|--------------------------	|--------	|--------	|--------	|--------	|--------	|--------	|---------	|---------	|
+|--------------------------:|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|:---------:|:---------:|
 |            **AutoPilot** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
 |     **Auto<br>Download** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✕    	|
 |    **Online<br>Install** 	|    ✕   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
