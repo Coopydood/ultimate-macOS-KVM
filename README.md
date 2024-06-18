@@ -12,6 +12,21 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 
 ***
 
+<img align="left" width="100" height="100" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/299ca6ef-83f9-4b2c-9d03-86d600e65d66">
+<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=282 width=2 />
+
+<h3>macOS Sequoia Support<br><sub>Coming Soon</sub></h3>
+
+macOS Sequoia has not yet been tested extensively, but it has been **confirmed to install and boot with the current version of ULTMOS** on the latest macOS developer beta.
+
+Please feel free to try out the macOS Sequoia developer beta with ULTMOS and leave feedback on how it went! 
+
+However, you should **NOT** use macOS Sequoia as your main virtual setup - and should be used for test purposes only. You have been warned!
+
+Preliminary built-in support for this version will be added to the project shortly.
+
+***
+
 ## 👋》Introduction
 
 Tired of all the restraints and poor performance of macOS VMs in hypervisors like VirtualBox or VMware? Well, the story changes when you run your virtual machines in **kernel space**. Welcome to the world of **K**ernel **V**irtual **M**achines.
@@ -21,8 +36,10 @@ You might be new to QEMU/KVM, or a long-time veteran - either way, this project 
 Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little help wrapping your head around this stuff, feel free to check out the [FAQs](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/FAQs) for some quick knowledge on the basics.
 
 <br>
-<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1244b64e-95b2-469a-8271-43c56e72b065" alt="ultimate-macOS-KVM" width="1400"/>
-<p align="center"><i>SussyMac v2.0 - Full virtual Hackintosh setup powered by ULTMOS.</i></p>
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/0205f5fe-9278-4f8f-8d5c-d3707f695f52" alt="ultimate-macOS-KVM" width="1400"/>
+
+<br>
+<p align="center"><i>The latest macOS Sequoia beta running on ULTMOS.</i></p>
 
 ***
 
@@ -255,7 +272,7 @@ Of course, if you're just testing the project, then a "clean install" is probabl
 
 Here's a few screenshots showing **ultimate-macOS-KVM** in action!
 
-<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/d93d92e1-5923-436f-a00d-d311c75c1680" width="90%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/aedd04b6-3334-482d-adbe-d3809238a652" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/593e8388-8b2d-4b12-99b4-1dbd7802dea8" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a7a60115-865a-4939-ab8f-e726a3d488a6" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1802c1d2-7d35-4e70-9ab2-13820ef7e3a9" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1fd0add5-c0c8-46a1-8897-3b80c37f98a1" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8380632b-dceb-41e7-acb0-b2bd15cbf575" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b32c2701-a934-42ce-ab69-06b1ae350f1b" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ee451491-35fa-436e-957b-888d2f7d488e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/c4e394c3-a666-4aab-9aa7-b40b1e84d977" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/feb19dce-7a9a-4527-884c-8b2f2d445e2f" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4a8b5249-3029-49d3-8539-229b3c179816" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4e7678f3-5ee4-4e69-93a7-d9ba9881cea7" width="45%"></img>
+<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/34ef4e38-557b-491f-9c3b-a57c9f03b81d" width="90%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/aedd04b6-3334-482d-adbe-d3809238a652" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/593e8388-8b2d-4b12-99b4-1dbd7802dea8" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a7a60115-865a-4939-ab8f-e726a3d488a6" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1802c1d2-7d35-4e70-9ab2-13820ef7e3a9" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1fd0add5-c0c8-46a1-8897-3b80c37f98a1" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8380632b-dceb-41e7-acb0-b2bd15cbf575" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b32c2701-a934-42ce-ab69-06b1ae350f1b" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ee451491-35fa-436e-957b-888d2f7d488e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/c4e394c3-a666-4aab-9aa7-b40b1e84d977" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/feb19dce-7a9a-4527-884c-8b2f2d445e2f" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4a8b5249-3029-49d3-8539-229b3c179816" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4e7678f3-5ee4-4e69-93a7-d9ba9881cea7" width="45%"></img>
 <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/dd012a63-415a-4b87-b096-feabdd3f8a5e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/32d2992d-a39a-4b34-976b-5e7ee5d5c926" width="45%"></img> 
 
 > [!TIP]

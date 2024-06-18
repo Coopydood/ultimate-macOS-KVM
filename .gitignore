@@ -39,6 +39,7 @@ ovmf/user_store/OVMF_VARS.fd
 boot/opencore-image-ng.sh
 boot/mnt
 docs/screenshots/ventura
+docs/screenshots/sonoma
 BaseSystem.dmg
 .gitignore
 boot.xml
