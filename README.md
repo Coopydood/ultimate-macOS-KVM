@@ -29,7 +29,7 @@ You can download the latest recovery image below for use with AutoPilot.
 
 <br>
 
-<p align="center"><a href="https://archive.org/download/macos-sequoia-dev1/BaseSystem.dmg"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a8f1cb8f-5ddd-45cc-8598-032180035607" height="38"></a><br><sub> <b>BaseSystem.dmg</b> (1.3 GB)</sub></p>
+<p align="center"><a href="https://archive.org/download/macos-sequoia/Latest/BaseSystem.dmg"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a8f1cb8f-5ddd-45cc-8598-032180035607" height="38"></a><br><sub> <b>BaseSystem.dmg</b> (1.3 GB)<br>Or, you can also download the <a href="https://archive.org/download/macos-sequoia/macos-sequoia_archive.torrent">torrent</a>.</sub></p>
 
 ***
 
