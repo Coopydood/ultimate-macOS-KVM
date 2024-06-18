@@ -25,7 +25,7 @@ macOS Sequoia has not yet been tested extensively, but it has been **confirmed t
 
 However, you should **NOT** use macOS Sequoia as your main virtual setup - and should be used for test purposes only. You have been warned!
 
-You can download the latest recovery image below for use with AutoPilot.
+You can download the latest recovery image below for use with AutoPilot. The file is hosted on the [Archive.org website](https://archive.org/details/macos-sequoia).
 
 <br>
 
