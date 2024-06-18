@@ -175,6 +175,27 @@ All of the dependencies, both required and optional, are listed below.
 <li><b>Network Block Device (NBD)</b> 》 <code>nbd</code> required for mounting the OpenCore image for editing on host system
 </ul>
 
+> [!tip]
+> In case PACMAN can't find virsh, use ```yay``` and ```fakeroot``` to install it:
+> 
+> ``` yay -S virsh ```
+
+<details open>
+<summary>Arch</summary>
+<br>
+<pre><code>pacman -Syu git wget qemu-full libvirt dnsmasq python virt-manager virsh
+</pre></code>
+</details>
+
+ <details open>
+<summary>Ubuntu / Debian</summary>
+ <br>
+ <pre><code>sudo apt-get install qemu uml-utilities virt-manager git \
+    wget libguestfs-tools p7zip-full make dmg2img tesseract-ocr \
+    tesseract-ocr-eng genisoimage vim net-tools screen -y
+</pre></code>
+</details>
+  
 > [!WARNING]
 > You **must** have all of the required dependencies installed before using this project. 
 
