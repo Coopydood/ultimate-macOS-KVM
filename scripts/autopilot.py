@@ -59,8 +59,8 @@ parser.add_argument("--use-local-notices", dest="useLocalNotices", help="Don't f
 args = parser.parse_args()
 
 detectChoice = 1
-latestOSName = "Sonoma"
-latestOSVer = "14"
+latestOSName = "Sequoia"
+latestOSVer = "15"
 runs = 0
 
 ###############################

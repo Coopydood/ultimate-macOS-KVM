@@ -51,8 +51,8 @@ global discordRPC
 global baseSystemNotifArmed
 
 detectChoice = 1
-latestOSName = "Sonoma"
-latestOSVer = "14"
+latestOSName = "Sequoia"
+latestOSVer = "15"
 runs = 0
 apFilePath = ""
 procFlow = 1

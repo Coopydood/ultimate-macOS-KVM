@@ -26,8 +26,8 @@ from cpydColours import color
 sys.path.insert(0, 'scripts')
 
 detectChoice = 1
-latestOSName = "Sonoma"
-latestOSVer = "14"
+latestOSName = "Sequoia"
+latestOSVer = "15"
 runs = 0
 
 version = open("./.version")

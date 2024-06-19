@@ -70,7 +70,8 @@ except:
 
 projectVer = "Powered by ULTMOS v"+version
 
-if "Beta" in osVer: osVer = osVer.replace(" Beta","")
+if osVer is not None:
+    if "Beta" in osVer: osVer = osVer.replace(" Beta","")
 
 if osVer is not None and osVer == "Sierra" or osVer == "High Sierra" or osVer == "Mojave" or osVer == "Catalina" or osVer == "Big Sur" or osVer == "Monterey" or osVer == "Ventura" or osVer == "Sonoma" or osVer == "Sequoia":
     osName = "macOS "+osVer
@@ -91,7 +92,12 @@ osOpt = os+"-"+osVer.lower()
 if osOpt != "macos-highsierra" and osOpt != "macos-mojave" and osOpt != "macos-catalina" and osOpt != "macos-bigsur" and osOpt != "macos-monterey" and osOpt != "macos-ventura" and osOpt != "macos-sonoma" and osOpt != "macos-sequoia" and osOpt != "macos-sierra" and osOpt != "macos-elcapitan" and osOpt != "macos-yosemite" and osOpt != "macos-mavericks" and osOpt != "macos-mountainlion" and osOpt != "macos-lion" and osOpt != "macos-snowleopard" and osOpt != "macos-leopard":
      osOpt = "macos-unknown" # arm large image to use the unknown asset if valid macOS version can't be detected
 
+if osName == "macOS Sequoia": osName = "macOS Sequoia Beta"
+
 osName1 = osName
+
+
+
 
 if show != "default":
     smolImage = osOpt
