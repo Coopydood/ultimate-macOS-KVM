@@ -169,7 +169,7 @@ def startup():
                             hddPath = open("./blobs/user/USR_HDD_PATH.apb")
                             hddPath = hddPath.read()
                             hddPath = hddPath.replace("$REPO_PATH",os.path.realpath(os.curdir))
-                        if (os.path.getsize(hddPath)) > 25177079296 and not os.path.exists("./blobs/user/.noBaseSystemReminder"):
+                        if (os.path.getsize(hddPath)) > 22177079296 and not os.path.exists("./blobs/user/.noBaseSystemReminder"):
                             baseSystemNotifArmed = True
                     #REQUIRES_SUDO = 1 # UNCOMMENT FOR DEBUGGING
 
