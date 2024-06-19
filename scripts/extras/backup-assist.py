@@ -24,8 +24,8 @@ import argparse
 
 
 detectChoice = 1
-latestOSName = "Ventura"
-latestOSVer = "13"
+latestOSName = "Sequoia"
+latestOSVer = "15"
 runs = 0
 
 class color:

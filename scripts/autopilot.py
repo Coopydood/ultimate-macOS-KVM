@@ -59,8 +59,8 @@ parser.add_argument("--use-local-notices", dest="useLocalNotices", help="Don't f
 args = parser.parse_args()
 
 detectChoice = 1
-latestOSName = "Sonoma"
-latestOSVer = "14"
+latestOSName = "Sequoia"
+latestOSVer = "15"
 runs = 0
 
 ###############################
@@ -1013,6 +1013,10 @@ def autopilot():
       if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
          print(color.YELLOW+"\n     ⚠"+color.END+color.BOLD+"   Download flow disabled for legacy versions.\n         You must download an image manually."+color.END)
 
+      if USR_TARGET_OS >= 15:
+         print(color.YELLOW+"\n     ⚠"+color.END+color.BOLD+"   Download flow disabled for beta versions.\n         You must download an image manually."+color.END)
+
+
       if customValue == 1:
          cpydLog("info",str("Custom value requested, setting up"))
       #   print(color.BOLD+color.PURPLE+"\n   FORMAT:"+color.YELLOW+""+color.END+color.BOLD,"<file>"+color.YELLOW+".img"+color.END+"\n   Enter a custom value.\n   \n   ")
@@ -1030,7 +1034,7 @@ def autopilot():
          blob.close()
          stage13()
       else:
-         if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
+         if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012 or USR_TARGET_OS >= 15:
             print(color.END+color.GRAY+"\n      1. Download from Apple..."+color.END)
             print(color.BOLD+"      2. Select existing...")
          else:
@@ -2214,10 +2218,13 @@ def autopilot():
          USR_TARGET_OS_NAME = "Ventura"
       elif USR_TARGET_OS == 14:
          USR_TARGET_OS_NAME = "Sonoma"
+      elif USR_TARGET_OS == 15:
+         USR_TARGET_OS_NAME = "Sequoia Beta"
 
       global osIcon
 
       osIcon = "ap-"+USR_TARGET_OS_NAME.lower().replace(" ","")
+      osIcon = "ap-"+USR_TARGET_OS_NAME.lower().replace(" beta","")
          
       if int(USR_TARGET_OS) < 1013 and int(USR_TARGET_OS) >= 100:
          osIcon = "ap-legacy"
@@ -2233,7 +2240,9 @@ def autopilot():
       blob.write(str(USR_TARGET_OS_NAME))
       blob.close()
 
-      if USR_TARGET_OS == 14:
+      if USR_TARGET_OS == 15:
+         USR_TARGET_OS_ID = "sequoia"
+      elif USR_TARGET_OS == 14:
          USR_TARGET_OS_ID = "sonoma"
       elif USR_TARGET_OS == 13:
          USR_TARGET_OS_ID = "ventura"
@@ -2386,8 +2395,9 @@ def autopilot():
          print(color.END+"      5. Catalina (10.15)")
          print(color.END+"      6. Mojave (10.14)")
          print(color.END+"      7. High Sierra (10.13)\n")
-
+         
          print(color.END+"      8. Legacy versions...\n")
+         print(color.END+"      9. Sequoia Beta (15)\n")
          customInput = str(input(color.BOLD+"Select> "+color.END))
          
          if customInput == "1":
@@ -2407,6 +2417,8 @@ def autopilot():
          elif customInput == "8":
             customValue = 2
             stage2()
+         elif customInput == "9":
+            customInput = 15
 
          else:
             customValue = 1

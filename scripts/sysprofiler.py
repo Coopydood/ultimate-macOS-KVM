@@ -705,7 +705,7 @@ if ".cdn_control" in liveBlobList: liveBlobList.remove(".cdn_control")
 time.sleep(0.1)
 progressUpdate(65)
 if len(userBlobList) > 0:
-    if len(userBlobList) < 17:
+    if len(userBlobList) < 16:
         cpydProfile(("UserBlobs  : YES ("+str(len(userBlobList))+" total)"),True)
         warnings.append("Only "+str(len(userBlobList))+" user blobs are present while more are expected,")
         warnings.append("might be from an old repo version or integrity damage\n")

@@ -28,8 +28,8 @@ sys.path.append('./resources/python')
 from cpydColours import color
 
 detectChoice = 1
-latestOSName = "Sonoma"
-latestOSVer = "14"
+latestOSName = "Sequoia"
+latestOSVer = "15"
 runs = 0
 noDelta = 0
 
