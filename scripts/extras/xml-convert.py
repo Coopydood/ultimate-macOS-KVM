@@ -39,8 +39,8 @@ global apFilePath
 
 detectChoice = "1"
 detectChoiceM = ""
-latestOSName = "Ventura"
-latestOSVer = "13"
+latestOSName = "Sequoia"
+latestOSVer = "15"
 runs = 0
 
 global cpydPassthrough
@@ -174,7 +174,7 @@ def convertBrains():
             global apVars
             global useBlobs
             apFileS = source.read()
-            apVars = ["macOS","macOS",apFilePath,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            apVars = ["macOS","macOS",apFilePath,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
             
             
             if autodetect == False or args.noblobs is True:
@@ -207,8 +207,8 @@ def convertBrains():
 
                 # REQUIRES FL 7
                 if os.path.exists("./blobs/user/USR_HDD_ISPHYSICAL.apb"):
-                    with open("./blobs/user/USR_HDD_ISPHYSICAL.apb") as blob: apVars[21] = str(blob.read())
-                    USR_HDD_ISPHYSICAL = apVars[21]
+                    with open("./blobs/user/USR_HDD_ISPHYSICAL.apb") as blob: apVars[22] = str(blob.read())
+                    USR_HDD_ISPHYSICAL = apVars[22]
                 else: USR_HDD_ISPHYSICAL = False
 
                 # REQUIRES FL 6
@@ -408,7 +408,7 @@ def convertBrains():
             apOSCvt = apOSCvt.replace("Mac OS X ","")
             apOSCvt = apOSCvt.replace(".","")
 
-            if USR_HDD_ISPHYSICAL == True:
+            if USR_HDD_ISPHYSICAL == "True":
                 apFileM = apFileM.replace("    <disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"qcow2\"/>\n      <source file=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->","    <disk type=\"block\" device=\"disk\"> <!-- HDD HEADER -->\n      <driver name=\"qemu\" type=\"raw\"/>\n      <source dev=\"$USR_HDD_PATH\"/>\n      <target dev=\"sdb\" bus=\"sata\" rotation_rate=\"7200\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"1\"/>\n    </disk> <!-- HDD FOOTER -->")
 
             if USR_HDD_TYPE == "HDD":       # DISK TYPE ROUTINE; REQUIRES CONFIG FL 6!
@@ -420,6 +420,9 @@ def convertBrains():
                 apFileM = apFileM.replace("<disk type=\"file\" device=\"disk\"> <!-- HDD HEADER -->","<!-- <disk type=\"file\" device=\"disk\">")
                 apFileM = apFileM.replace("</disk> <!-- HDD FOOTER -->","</disk> -->")
 
+            if USR_BOOT_FILE != "-2":
+                apFileM = apFileM.replace("<!-- BASESYSTEM HEADER -->","<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############-->\n\n    <disk type=\"file\" device=\"disk\"> \n      <driver name=\"qemu\" type=\"raw\"/>\n      <source file=\"$REPO_PATH/BaseSystem.img\"/>\n      <target dev=\"sdc\" bus=\"sata\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"2\"/>\n	  </disk> \n\n<!--#######################################################################-->")
+
 
             if USR_BOOT_FILE == "-2" and useBlobs == True:       # DISABLE THE DETACHED BASESYSTEM; REQUIRES BLOB METHOD!
                 apFileM = apFileM.replace("<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############-->","<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############")
@@ -427,6 +430,7 @@ def convertBrains():
                 apFileM = apFileM.replace("<!-- BASESYSTEM HEADER -->","")
                 apFileM = apFileM.replace("<!-- BASESYSTEM FOOTER -->","")
 
+            
             apFileM = apFileM.replace("$USR_MEMORY",str(apMemCvt))
             apFileM = apFileM.replace("$USR_CPU_CORES",apVars[6])
             apFileM = apFileM.replace("$USR_CPU_TOTAL",str(apTotalCvt))

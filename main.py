@@ -48,6 +48,7 @@ global apFilePath
 global VALID_FILE
 global REQUIRES_SUDO
 global discordRPC
+global baseSystemNotifArmed
 
 detectChoice = 1
 latestOSName = "Sonoma"
@@ -56,6 +57,8 @@ runs = 0
 apFilePath = ""
 procFlow = 1
 discordRPC = 1
+
+baseSystemNotifArmed = False
 
 version = open("./.version")
 version = version.read()
@@ -76,7 +79,8 @@ if os.path.exists("./resources/WEBVERSION"): os.system("rm ./resources/WEBVERSIO
 
 def startup():
     global detectChoice
-    
+    global apFile
+    global apFilePath
     detectChoice = None
 
     if not os.path.exists("resources/script_store/main.py"): # BACKUP ORIGINAL FILES TO STORE
@@ -108,6 +112,7 @@ def startup():
     if os.path.exists("./blobs/user/USR_CFG.apb"):
             global apFilePath
             global apFilePathNoPT
+            global apFile
             global apFilePathNoUSB
             global macOSVer
             global mOSString
@@ -132,10 +137,11 @@ def startup():
                 global VALID_FILE
                 global VALID_FILE_NOPT
                 global VALID_FILE_NOUSB
-
+                global baseSystemNotifArmed
                 VALID_FILE = 0
                 VALID_FILE_NOPT = 0
                 VALID_FILE_NOUSB = 0
+                
 
                 apFile = open("./"+apFilePath,"r")
 
@@ -153,9 +159,18 @@ def startup():
                 apFilePathNoPT = apFilePath.replace(".sh","-noPT.sh")
                 apFilePathNoUSB = apFilePath.replace(".sh","-noUSB.sh")
                 
-                if "APC-RUN" in apFile.read():
+                apFileM = apFile.read()
+
+                if "APC-RUN" in apFileM:
                     VALID_FILE = 1
-                    
+
+                    if "#-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw" not in apFileM and "-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw" in apFileM and "HDD_PATH=\"/dev/disk/" not in apFileM:
+                        if os.path.exists("./blobs/user/USR_HDD_PATH.apb"):
+                            hddPath = open("./blobs/user/USR_HDD_PATH.apb")
+                            hddPath = hddPath.read()
+                            hddPath = hddPath.replace("$REPO_PATH",os.path.realpath(os.curdir))
+                        if (os.path.getsize(hddPath)) > 25177079296 and not os.path.exists("./blobs/user/.noBaseSystemReminder"):
+                            baseSystemNotifArmed = True
                     #REQUIRES_SUDO = 1 # UNCOMMENT FOR DEBUGGING
 
                     if REQUIRES_SUDO == 1:
@@ -211,7 +226,40 @@ def startup():
 
 def clear(): print("\n" * 150)
 
+def baseSystemAlert():
+    global apFilePath
+    clear()
+    print("\n\n   "+color.BOLD+color.GREEN+"FINISHED INSTALLING MACOS?"+color.END,"")
+    print("   Finished install detected\n")
+    print("   The assistant has detected that your macOS installation \n   may be complete. Would you like me to remove the install\n   media from your config file for you?\n\n   This stops the \"macOS Base System\" boot entry from appearing.\n")
+    #print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)
+    print(color.BOLD+"      1. Remove BaseSystem"+color.END)
+    print(color.END+"         Detaches the macOS installer\n         from the",apFilePath+" file\n")
+    print(color.END+"      2. Not now")
+    print(color.END+"      3. Don't remind me again\n")
+    detectChoice5 = str(input(color.BOLD+"Select> "+color.END))
 
+    if detectChoice5 == "1":
+        with open("./"+apFilePath,"r") as apFile:
+            apFileM = apFile.read()
+            apFileM = apFileM.replace("-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw\n-device ide-hd,bus=sata.4,drive=BaseSystem","#-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw\n#-device ide-hd,bus=sata.4,drive=BaseSystem")
+            apFile.close()
+        time.sleep(1)
+        with open("./"+apFilePath,"w") as apFile:
+            apFile.write(apFileM)
+            apFile.close()
+        clear()
+        print("\n\n   "+color.BOLD+color.GREEN+"DONE"+color.END,"")
+        print("   BaseSystem removed successfully\n\n\n\n\n\n\n\n")
+        time.sleep(3)
+        clear()
+    elif detectChoice5 == "3":
+        with open("./blobs/user/.noBaseSystemReminder","w") as remindFile:
+            remindFile.write(" ")
+            remindFile.close()
+        clear()
+    else:
+        clear()
 
 os.system("chmod +x -R scripts/*.py")
 os.system("chmod +x -R scripts/extras/*.py")
@@ -291,8 +339,9 @@ elif detected == 2:
         
 else:
     clear()
+    
     startup()
-
+    #baseSystemAlert() # uncomment to always trigger notification
 if detectChoice == "1":
     os.system('./scripts/autopilot.py')
 elif detectChoice == "2":
@@ -345,11 +394,17 @@ elif detectChoice == "b" and VALID_FILE == 1 or detectChoice == "B" and VALID_FI
             subprocess.Popen(["python3","./scripts/drpc.py","--os",macOSVer])
     if REQUIRES_SUDO == 1:
         print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser privileges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
+        if baseSystemNotifArmed == True:
+            baseSystemAlert()
         if discordRPC == 0:
             os.system("sudo ./"+apFilePath+" -d 0")
         else:
             os.system("sudo ./"+apFilePath)
+        
+
     else:
+        if baseSystemNotifArmed == True:
+            baseSystemAlert()
         if discordRPC == 0:
             os.system("./"+apFilePath+" -d 0")
         else:
@@ -430,11 +485,15 @@ elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VAL
                 subprocess.Popen(["python3","./scripts/drpc.py","--os",macOSVer])
         if REQUIRES_SUDO == 1:
             print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser privileges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
+            if baseSystemNotifArmed == True:
+                baseSystemAlert()   
             if discordRPC == 0:
                 os.system("sudo ./"+apFilePath+" -d 0")
             else:
                 os.system("sudo ./"+apFilePath)
         else:
+            if baseSystemNotifArmed == True:
+                baseSystemAlert()
             if discordRPC == 0:
                 os.system("./"+apFilePath+" -d 0")
             else:
@@ -468,11 +527,15 @@ elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VAL
             subprocess.Popen(["python3","./scripts/drpc.py","--os",macOSVer])
         if REQUIRES_SUDO == 1:
             print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser privileges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
+            if baseSystemNotifArmed == True:
+                baseSystemAlert()
             if discordRPC == 0:
                 os.system("sudo ./"+apFilePathNoPT+" -d 0")
             else:
                 os.system("sudo ./"+apFilePathNoPT)
         else:
+            if baseSystemNotifArmed == True:
+                baseSystemAlert()
             if discordRPC == 0:
                 os.system("./"+apFilePathNoPT+" -d 0")
             else:
@@ -506,11 +569,15 @@ elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VAL
             subprocess.Popen(["python3","./scripts/drpc.py","--os",macOSVer])
         if REQUIRES_SUDO == 1:
             print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   This script uses physical device passthrough,\n   and needs superuser privileges to run.\n\n   Press CTRL+C to cancel.\n"+color.END)
+            if baseSystemNotifArmed == True:
+                baseSystemAlert()
             if discordRPC == 0:
                 os.system("sudo ./"+apFilePathNoUSB+" -d 0")
             else:
                 os.system("sudo ./"+apFilePathNoUSB)
         else:
+            if baseSystemNotifArmed == True:
+                baseSystemAlert()
             if discordRPC == 0:
                 os.system("./"+apFilePathNoUSB+" -d 0")
             else:
