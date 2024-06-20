@@ -247,6 +247,9 @@ $ ./main.py
 
 ...and you've come to the right place. ultimate-macOS-KVM includes several handy built-in tools to make VFIO-PCI passthrough (including GPUs) as pain-free as possible. Please see the documentation on how to get started with these tools.
 
+> [!TIP]
+> If you're looking for single GPU passthrough, DarknessRafix has an *excellent* guide that walks you through the process of setting this up using ULTMOS. You can read it [here](https://gitlab.com/DarknessRafix/macosvmgpupass).
+
 Oh, and speaking of...
 
 ***
@@ -369,6 +372,7 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[Hummenix](https://github.com/Hummenix)** 》Testing of ULTMOS across different Linux distros. 
 - **[CorpNewt](https://github.com/CorpNewt)** 》Creator of GenSMBIOS and many other Hackintosh essentials.
 - **[Acidanthera](https://github.com/Acidanthera)** 》The group behind OpenCore, Lilu, WhateverGreen, and MUCH more.
+- **[DarknessRafix]()** 》Extensive testing of the project and the author of some excellent ULTMOS guides! Oh, and was the very first person to install macOS Sequoia on ULTMOS - even before me.
 
 ***
 
