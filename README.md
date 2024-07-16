@@ -1,6 +1,6 @@
 <a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/492731ef1d95d2da534c660b001550f4d76a6c68/resources/images/bannerAlphaBasic.png?raw=true" alt="ultimate-macOS-KVM" width="500"/></a>
 
-### v0.12.1
+### v0.12.2
 
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
@@ -123,7 +123,7 @@ Here's a table with my best judgment on minimum, recommended, and best system re
 |--------------------------:|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|:---------:|:---------:|
 |            **AutoPilot** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
 |     **Auto<br>Download** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✕    	|
-|    **Online<br>Install** 	|    ✕   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
+|    **Online<br>Install** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
 |   **Offline<br>Install** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
 |       **QEMU<br>Script** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓¹   	|    ✓¹    	|    ✓¹    	|
 |      **Virt<br>Manager** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ?²  	|    ?²   	|    ?²   	|
@@ -178,7 +178,10 @@ All of the dependencies, both required and optional, are listed below.
 > [!WARNING]
 > You **must** have all of the required dependencies installed before using this project. 
 
-> [!tip]
+>[!NOTE]
+> As of [v0.12.0](https://github.com/Coopydood/ultimate-macOS-KVM/releases/tag/v0.12.0), some libraries, such as ``pypresence``, are bundled with the project by default and require no further user action or installation.
+
+> [!TIP]
 > Optional dependencies can enhance your experience, such as using your VM in a GUI, or showing what macOS version you're currently running on your Discord profile.
 >
 > Your experience is automatically adapted based on the dependencies you have installed. For example, if you have ``pypresence`` installed, Discord rich presence will be enabled automatically on AutoPilot scripts.
@@ -189,7 +192,7 @@ All of the dependencies, both required and optional, are listed below.
 
 Shocker; KVM is a module built into the *Linux kernel*, not **Windows Subsystem for Linux** or some UNIX-like terminal. You need a <ins>full install</ins> of at least base Linux **on your host**. Don't try any of that VM inception shenanigans.
 
-The easiest way to do this is by grabbing some mainstream Linux distro, like **Ubuntu, Linux Mint, Manjaro, endeavourOS** - among many, many others. You can theoretically pick any one you like. *I use Arch BTW.*
+The easiest way to do this is by grabbing some mainstream Linux distro, like **Ubuntu, Linux Mint, Manjaro, EndeavourOS** - among many, many others. You can theoretically pick any one you like. *I use Arch BTW.*
 
 > [!NOTE]
 > Testing of ULTMOS on different distrobutions is underway - but please note that is has been primarily developed and tested on **Arch** and **Debian**-based systems.
