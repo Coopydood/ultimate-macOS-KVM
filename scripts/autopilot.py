@@ -1012,8 +1012,7 @@ def autopilot():
       
       if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
          print(color.YELLOW+"\n     ⚠"+color.END+color.BOLD+"   Download flow disabled for legacy versions.\n         You must download an image manually."+color.END)
-
-      if USR_TARGET_OS >= 15:
+      elif USR_TARGET_OS >= 15 and USR_TARGET_OS <= 99:
          print(color.YELLOW+"\n     ⚠"+color.END+color.BOLD+"   Download flow disabled for beta versions.\n         You must download an image manually."+color.END)
 
 
@@ -1034,7 +1033,7 @@ def autopilot():
          blob.close()
          stage13()
       else:
-         if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012 or USR_TARGET_OS >= 15:
+         if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012 or USR_TARGET_OS >= 15 and USR_TARGET_OS <= 99:
             print(color.END+color.GRAY+"\n      1. Download from Apple..."+color.END)
             print(color.BOLD+"      2. Select existing...")
          else:
@@ -1054,7 +1053,7 @@ def autopilot():
             cpydLog("info",str("Requesting notice display"))
             showNotice()
 
-         if stageSelect == "1" and USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
+         if stageSelect == "1" and USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012 or USR_TARGET_OS >= 15 and USR_TARGET_OS <= 99:
             stage12()
          elif stageSelect == "1":
             cpydLog("info","Arming download mechanism")
