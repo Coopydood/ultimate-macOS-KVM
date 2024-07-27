@@ -1053,7 +1053,7 @@ def autopilot():
             cpydLog("info",str("Requesting notice display"))
             showNotice()
 
-         if stageSelect == "1" and USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012 or USR_TARGET_OS >= 15 and USR_TARGET_OS <= 99:
+         if stageSelect == "1" and USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012 or stageSelect == "1" and USR_TARGET_OS >= 15 and USR_TARGET_OS <= 99:
             stage12()
          elif stageSelect == "1":
             cpydLog("info","Arming download mechanism")
