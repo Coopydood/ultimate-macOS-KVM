@@ -205,7 +205,7 @@ It's easy to get up and running. Simply clone the repo using ``git``.
 Make sure you have **all** [dependencies](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/README.md#requirements) installed before getting started.
 
 ```sh
-$ git clone https://github.com/Coopydood/ultimate-macOS-KVM
+git clone https://github.com/Coopydood/ultimate-macOS-KVM
 ```
 
 > [!TIP]
@@ -217,7 +217,7 @@ Okay, so you've cloned my repo, and `cd`'d into the directory. Great!
 Now, before running the script - and to avoid the subsequent and inevitable gotcha - you should enable the ``libvirtd`` daemon first if it hasn't been already. Here's an example for Arch-based systems:
 
 ```sh
-$ sudo systemctl enable libvirtd
+sudo systemctl enable libvirtd
 ```
 > [!WARNING]
 > This command requires superuser privileges.
@@ -227,7 +227,7 @@ $ sudo systemctl enable libvirtd
 and/or check the status of the daemon with
 
 ```sh
-$ systemctl status libvirtd
+systemctl status libvirtd
 ```
 
 ***
@@ -239,7 +239,7 @@ Okay, now you're ready to use **ultimate-macOS-KVM**. Use the ``main.py`` file.
 This is your main menu / central hub for the project and everything can be accessed from here. 
 
 ```sh
-$ ./main.py
+./main.py
 ```
 > [!CAUTION]
 > Most sub-scripts included in the project should *not* be run on their own. Always use ``main.py`` unless the script was user-generated or stated otherwise.
