@@ -119,8 +119,12 @@ def menu():
 
     if detectchoice == 1 or detectchoice == "1":
         os.system("sudo modprobe nbd")
-        os.system("sudo qemu-nbd --connect=/dev/nbd0 boot/OpenCore.qcow2")
+        try:
+           os.system("sudo qemu-nbd --connect=/dev/nbd0 boot/OpenCore.qcow2")
+        except:
+           pass
         os.system("mkdir -p boot/mnt")
+        time.sleep(5) 
         os.system("sudo mount /dev/nbd0p1 boot/mnt -o uid=$UID,gid=$(id -g)")
         if args.quiet != True:
             print(spaces)
