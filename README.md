@@ -42,7 +42,7 @@ You might be new to QEMU/KVM, or a long-time veteran - either way, this project 
 Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little help wrapping your head around this stuff, feel free to check out the [FAQs](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/FAQs) for some quick knowledge on the basics.
 
 <br>
-<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/0205f5fe-9278-4f8f-8d5c-d3707f695f52" alt="ultimate-macOS-KVM" width="1400"/>
+<img src="https://github.com/user-attachments/assets/baad55d5-2c3d-421c-9394-b5892211479a" alt="ultimate-macOS-KVM" width="1400"/>
 
 <br>
 <p align="center"><i>The latest macOS Sequoia beta running on ULTMOS.</i></p>
