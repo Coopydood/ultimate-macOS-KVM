@@ -50,3 +50,7 @@ resources/python/pypresence/__pycache__/
 resources/python/smbios/Scripts/__pycache__
 resources/python/cpuinfo/__pycache__/
 blobs/user/.noBaseSystemReminder
+resources/.nrsMode
+resources/BaseSystem.dmg
+resources/BaseSystem.img
+testVM/

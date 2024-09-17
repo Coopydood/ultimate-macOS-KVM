@@ -42,6 +42,7 @@ detectChoiceM = ""
 latestOSName = "Sequoia"
 latestOSVer = "15"
 runs = 0
+nrsdir = None
 
 global cpydPassthrough
 cpydPassthrough = 0
@@ -56,9 +57,11 @@ parser.add_argument("-q", "--quiet", dest="quiet", help="Silences any UI output,
 parser.add_argument("-ni", "--no-import", dest="noimport", help="Don't offer import when conversion is finished", action="store_true")
 parser.add_argument("--no-blobs", dest="noblobs", help="Blocks the initialisation of arrays using AP blobs", action="store_true")
 parser.add_argument("--mark-ap", dest="markap", help="Internal use only", action="store_true")
+parser.add_argument("--nrs-dir", dest="nrsdir", help="Internal use only", type=str)
 #parser.add_argument("-f", "--force", dest="forceModel", metavar="<model>", help="Override auto-detected GPU with a custom model. Pretty useless, mostly for debugging.", type=str)
 args = parser.parse_args()
-
+if args.nrsdir is not None:
+    nrsdir = args.nrsdir
 def choiceMenu(): # UNUSED FOR NOW
 
     print("\n   This script can assist you in converting (or creating) an AutoPilot config\n   into an XML file for use with virsh. This script can then optionally\n   define and import the XML file into virt-manager for you."+color.END)
@@ -190,7 +193,10 @@ def convertBrains():
 
                 # HOWEVER, because this method relies on blob existence, there's no guarantee of a APC lineup
                 # Therefore, this will only be used if the APC was autodetected and user authorises this
+                sourceDir = "."+os.curdir
 
+                if nrsdir is not None:
+                    os.chdir(nrsdir)
                 #with open("./blobs/user/USR_NAME.apb") as blob: apVars[0] = str(blob.read())
                 with open("./blobs/user/USR_TARGET_OS.apb") as blob: macOSVer = int(blob.read())
                 with open("./blobs/user/USR_TARGET_OS.apb") as blob: apVars[1] = ""+str(blob.read())
@@ -221,8 +227,8 @@ def convertBrains():
                 if os.path.exists("./blobs/user/USR_HDD_PATH.apb"):
                     with open("./blobs/user/USR_HDD_PATH.apb") as blob: apVars[19] = str(blob.read())
                 else:
-                    apVars[19] = "$REPO_PATH/HDD.qcow2"
-                    apVars[19] = apVars[19].replace("$REPO_PATH",workdir)
+                    apVars[19] = "$VM_PATH/HDD.qcow2"
+                    apVars[19] = apVars[19].replace("$VM_PATH",workdir)
                 useBlobs = True
 
                 if int(macOSVer) <= 110 and int(macOSVer) > 99:
@@ -336,12 +342,12 @@ def convertBrains():
                     usbXML.append("<hostdev mode=\"subsystem\" type=\"usb\" managed=\"yes\">\n      <source>\n        <vendor id=\"0x"+usbVendor[x]+"\"/>\n        <product id=\"0x"+usbProduct[x]+"\"/>\n      </source>\n    </hostdev>")
                     
 
-                
 
         apFilePathNoExt = apFilePath.replace(".sh","")
         apFilePathNoExt = r"{}".format(apFilePathNoExt)
-        
-        os.system("cp ./resources/baseDomain"+" "+apFilePathNoExt+".xml")
+        if ".." in sourceDir:
+            sourceDir = sourceDir.replace("..",".") # fix sourcing paths
+        os.system("cp "+sourceDir+"/resources/baseDomain"+" "+apFilePathNoExt+".xml")
         with open(""+apFilePathNoExt+".xml","r") as file1:
             apFileM = file1.read()
             apFileM = apFileM.replace("baseDomain",str(apFilePathNoExt+".xml"))
@@ -421,7 +427,7 @@ def convertBrains():
                 apFileM = apFileM.replace("</disk> <!-- HDD FOOTER -->","</disk> -->")
 
             if USR_BOOT_FILE != "-2":
-                apFileM = apFileM.replace("<!-- BASESYSTEM HEADER -->","<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############-->\n\n    <disk type=\"file\" device=\"disk\"> \n      <driver name=\"qemu\" type=\"raw\"/>\n      <source file=\"$REPO_PATH/BaseSystem.img\"/>\n      <target dev=\"sdc\" bus=\"sata\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"2\"/>\n	  </disk> \n\n<!--#######################################################################-->")
+                apFileM = apFileM.replace("<!-- BASESYSTEM HEADER -->","<!--############# REMOVE THESE LINES AFTER MACOS INSTALLATION #############-->\n\n    <disk type=\"file\" device=\"disk\"> \n      <driver name=\"qemu\" type=\"raw\"/>\n      <source file=\"$VM_PATH/BaseSystem.img\"/>\n      <target dev=\"sdc\" bus=\"sata\"/>\n      <address type=\"drive\" controller=\"0\" bus=\"0\" target=\"0\" unit=\"2\"/>\n	  </disk> \n\n<!--#######################################################################-->")
 
 
             if USR_BOOT_FILE == "-2" and useBlobs == True:       # DISABLE THE DETACHED BASESYSTEM; REQUIRES BLOB METHOD!
@@ -443,10 +449,10 @@ def convertBrains():
             apFileM = apFileM.replace("$USR_NETWORK_ADAPTER",apVars[16])
             apFileM = apFileM.replace("$USR_MAC_ADDRESS",apVars[17])
             if apVars[19] == 0:
-                apFileM = apFileM.replace("$USR_HDD_PATH","$REPO_PATH/HDD.qcow2")
+                apFileM = apFileM.replace("$USR_HDD_PATH","$VM_PATH/HDD.qcow2")
             else:
                 apFileM = apFileM.replace("$USR_HDD_PATH",apVars[19])
-            apFileM = apFileM.replace("$REPO_PATH",workdir)
+            apFileM = apFileM.replace("$VM_PATH",workdir)
             apFileM = apFileM.replace("$USR_OS_VERSION",apOSCvt)
             apFileM = apFileM.replace("$USR_OS_NAME",apVars[18])
             apFileM = apFileM.replace("$USR_HEADER","Converted from "+apFilePath)
@@ -485,6 +491,10 @@ def convertBrains():
         with open(""+apFilePathNoExt+".xml","w") as file:
             file.write(apFileM)
         time.sleep(2)
+
+        os.chdir(sourceDir)         
+
+
 
     apFile = open(""+apFilePathNoExt+".xml","r")
     if "APC-RUN" in apFile.read():

@@ -47,7 +47,8 @@ CPU_MODEL="$USR_CPU_MODEL"
 CPU_FEATURE_ARGS="$USR_CPU_FEATURE_ARGS"
 
 REPO_PATH="$USR_REPO_PATH"
-OVMF_DIR="$USR_REPO_PATH/ovmf"
+VM_PATH="$USR_VM_PATH"
+OVMF_DIR="$USR_VM_PATH/ovmf"
 
 VFIO_ID_0="$USR_VFIO_ID_0"
 VFIO_ID_1="$USR_VFIO_ID_1"
@@ -86,13 +87,13 @@ args=(
 -smbios type=2
 -device ich9-intel-hda -device hda-duplex
 -device ich9-ahci,id=sata
--drive id=OpenCore,if=none,format=qcow2,file="$REPO_PATH/boot/OpenCore.qcow2"
+-drive id=OpenCore,if=none,format=qcow2,file="$VM_PATH/boot/OpenCore.qcow2"
 -drive id=HDD,if=none,file="$HDD_PATH",format=qcow2
 -device ide-hd,bus=sata.2,drive=OpenCore,bootindex=1
 -device ide-hd,bus=sata.3,drive=HDD,rotation_rate=7200
 
 ############## REMOVE THESE LINES AFTER MACOS INSTALLATION ###############
--drive id=BaseSystem,if=none,file="$REPO_PATH/BaseSystem.img",format=raw
+-drive id=BaseSystem,if=none,file="$VM_PATH/BaseSystem.img",format=raw
 -device ide-hd,bus=sata.4,drive=BaseSystem
 ##########################################################################
 

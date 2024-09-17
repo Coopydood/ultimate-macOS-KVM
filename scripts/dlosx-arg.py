@@ -27,7 +27,7 @@ except ImportError:
     from urlparse import urlparse
 
 SELF_DIR = os.path.dirname(os.path.realpath(__file__))
-
+repoDir = os.path.abspath(os.curdir)
 RECENT_MAC = 'Mac-7BA5B2D9E42DDD94'
 MLB_ZERO = '00000000000000000'
 MLB_VALID = 'C02749200YGJ803AX'
@@ -46,6 +46,9 @@ INFO_SIGN_HASH = 'CH'
 INFO_SIGN_SESS = 'CT'
 INFO_REQURED = [INFO_PRODUCT, INFO_IMAGE_LINK, INFO_IMAGE_HASH, INFO_IMAGE_SESS,
                 INFO_SIGN_LINK, INFO_SIGN_HASH, INFO_SIGN_SESS]
+
+
+os.chdir("./resources/")
 
 global enableProgress
 global enablePercentage
@@ -152,7 +155,12 @@ def get_image_info(session, bid, mlb=MLB_ZERO, diag=False, os_type='default', ci
     return info
 
 def passon():
-    os.system('./scripts/cvtosx.sh > /dev/null 2>&1')
+    global nrs
+    os.chdir(repoDir)
+    if nrs == True: # NEW RESOURCE SYSTEM
+        os.system('./scripts/cvtosx.sh --nrs > /dev/null 2>&1')
+    else:
+        os.system('./scripts/cvtosx.sh > /dev/null 2>&1')
     
 
 def save_image(url, sess, filename='', directory=''):
@@ -531,6 +539,7 @@ class gdata:
 def main():
     global enableProgress
     global enablePercentage
+    global nrs
     parser = argparse.ArgumentParser(description='Gather recovery information for Macs')
     parser.add_argument('--action', choices=['download', 'selfcheck', 'verify', 'guess'], default='',
                         help='Action to perform: "download" - performs recovery downloading,'
@@ -556,9 +565,14 @@ def main():
                         help='use custom board list for checking, defaults to boards.json')
     parser.add_argument("--disable-progress", dest="disableProgress", help="Disable progress bar UI displays",action="store_true")
     parser.add_argument("--disable-percentage", dest="disablePercentage", help="Disable progress bar percentages and data labels",action="store_true")
-
+    parser.add_argument("--nrs", dest="nrs", help="Specify whether to use New Resource System (NRS) - INTERNAL USE ONLY",action="store_true")
     args = parser.parse_args()
 
+    if args.nrs == True:
+         nrs = True
+    else:
+        nrs = False
+    
     if args.disableProgress == True:
          enableProgress = False
     else:
