@@ -1,6 +1,6 @@
 <a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/492731ef1d95d2da534c660b001550f4d76a6c68/resources/images/bannerAlphaBasic.png?raw=true" alt="ultimate-macOS-KVM" width="500"/></a>
 
-### v0.12.3
+### v0.12.4
 
 Helping you build the ultimate macOS virtual machine, powered by KVM.
 
@@ -17,19 +17,11 @@ Helping you build the ultimate macOS virtual machine, powered by KVM.
 
 <h3>macOS Sequoia Support<br><sub>Available Now</sub></h3>
 
-macOS Sequoia has not yet been tested extensively, but it has been **confirmed to install and boot with the current version of ULTMOS** on the latest macOS developer beta.
+macOS Sequoia has not yet been tested extensively, but it has been **confirmed to install and boot with the current version of ULTMOS** on the latest macOS version.
 
 <br>
 
-**AutoPilot now has an additional option for macOS Sequoia beta!** <br>Please feel free to try out the macOS Sequoia beta with ULTMOS and leave feedback on how it went! 
-
-However, you should **NOT** use macOS Sequoia as your main virtual setup - and should be used for test purposes only. You have been warned!
-
-You can download the latest recovery image below for use with AutoPilot. The file is hosted on the [Archive.org website](https://archive.org/details/macos-sequoia).
-
-<br>
-
-<p align="center"><a href="https://archive.org/download/macos-sequoia/Latest/BaseSystem.dmg"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a8f1cb8f-5ddd-45cc-8598-032180035607" height="38"></a><br><sub> <b>BaseSystem.dmg</b> (1.3 GB)<br>Or, you can also download the <a href="https://archive.org/download/macos-sequoia/macos-sequoia_archive.torrent">torrent</a>.</sub></p>
+**AutoPilot now has an additional option for macOS Sequoia!** <br>Please feel free to try out the macOS Sequoia with ULTMOS and leave feedback on how it went! 
 
 ***
 
@@ -42,10 +34,10 @@ You might be new to QEMU/KVM, or a long-time veteran - either way, this project 
 Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little help wrapping your head around this stuff, feel free to check out the [FAQs](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/FAQs) for some quick knowledge on the basics.
 
 <br>
-<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/0205f5fe-9278-4f8f-8d5c-d3707f695f52" alt="ultimate-macOS-KVM" width="1400"/>
+<img src="https://github.com/user-attachments/assets/baad55d5-2c3d-421c-9394-b5892211479a" alt="ultimate-macOS-KVM" width="1400"/>
 
 <br>
-<p align="center"><i>The latest macOS Sequoia beta running on ULTMOS.</i></p>
+<p align="center"><i>macOS Sequoia running on ULTMOS.</i></p>
 
 ***
 
@@ -53,7 +45,7 @@ Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little h
 
 <ul>
 <li><b>Modern macOS Support <a href="https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Supported-Guest-OSes">⎋</a></b></li> 
-Experience the latest macOS has to offer with built-in support from macOS High Sierra to macOS Sonoma, and even try out the latest macOS Sequoia beta!
+Experience the latest macOS has to offer with built-in support from macOS High Sierra to macOS Sonoma, and even try out the latest macOS Sequoia!
 
 <li><b>AutoPilot <a href="https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot">⎋</a></b></li> 
 Automatically generates a valid, customised, and ready-to-use QEMU config script in seconds.
@@ -122,7 +114,7 @@ Here's a table with my best judgment on minimum, recommended, and best system re
 |                          	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/bd4a791d-1ac2-4a9a-8ee0-22e4d5f88cd3"> | <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/184bb2ef-c447-4cbd-b07c-8b4b096e3944">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/cd8029e8-c256-4295-9908-37809d64dcfe">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/79a7a051-0f5a-419e-8544-b51b1572d3b9">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/7d341cce-4370-4430-b3d5-bf1868afe4a3">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/4829ebb4-ce7f-4ecf-8309-d691c9361f6b">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/aa49b5ba-6cca-4dab-bcfc-6bf21909e738">      	| <img align="center" width="35" height="35" src="https://github.com/user-attachments/assets/7b9b72ee-5a89-49b4-ae17-7a188ed533ab">      	|
 |--------------------------:|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|:---------:|:---------:|
 |            **AutoPilot** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
-|     **Auto<br>Download** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✕    	|
+|     **Auto<br>Download** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
 |    **Online<br>Install** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
 |   **Offline<br>Install** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
 |       **QEMU<br>Script** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓¹   	|    ✓¹    	|    ✓¹    	|

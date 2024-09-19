@@ -38,8 +38,7 @@ ovmf/OVMF_VARS.fd
 ovmf/user_store/OVMF_VARS.fd
 boot/opencore-image-ng.sh
 boot/mnt
-docs/screenshots/ventura
-docs/screenshots/sonoma
+docs/.screenshots
 BaseSystem.dmg
 .gitignore
 boot.xml
@@ -51,3 +50,7 @@ resources/python/pypresence/__pycache__/
 resources/python/smbios/Scripts/__pycache__
 resources/python/cpuinfo/__pycache__/
 blobs/user/.noBaseSystemReminder
+resources/.nrsMode
+resources/BaseSystem.dmg
+resources/BaseSystem.img
+testVM/
