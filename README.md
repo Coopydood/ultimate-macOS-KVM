@@ -1,14 +1,16 @@
-<a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/dev/resources/images/bannerAlphaBasic.png?raw=true" alt="ultimate-macOS-KVM" width="500"/></a>
+<p align="center"><a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/dev/resources/images/ULTMOS.png?raw=true" alt="ultimate-macOS-KVM" width="200"/></a></p>
 
-### v0.13.0
+<h3 align="center">v0.13.0</h3>
+<p align="center">Helping you build the ultimate macOS virtual machine, powered by KVM.</p>
 
-Helping you build the ultimate macOS virtual machine, powered by KVM.
+<p align="center"><a href="https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest"><b>What's new?</b></a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest">Switch to dev branch... ⎋</a>
 
-**[What's new?](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;**[Switch to dev branch... ⎋](https://github.com/Coopydood/ultimate-macOS-KVM/tree/dev)
 
-<br>
+***
 
 [![ULTMOS VERSION](https://img.shields.io/github/v/release/Coopydood/ultimate-macOS-KVM?style=for-the-badge&color=1793D1&logo=github&logoColor=white&label=)](https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest) [![GitHub](https://img.shields.io/github/license/Coopydood/ultimate-macOS-KVM?label=Licence&logo=unlicense&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/LICENSE) [![GitHub repo size](https://img.shields.io/github/repo-size/Coopydood/ultimate-macOS-KVM?color=07b55b&label=Size&logo=envoy-proxy&logoColor=white&style=for-the-badge)](https://github.com/Coopydood/ultimate-macOS-KVM) [![Discord](https://img.shields.io/discord/574943603466436628?color=7d86ff&label=Discord&logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/WzWkSsT)
+
+
 
 ***
 
