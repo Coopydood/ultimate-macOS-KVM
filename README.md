@@ -1,6 +1,7 @@
-<p align="center"><a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/dev/resources/images/ULTMOS.png?raw=true" alt="ultimate-macOS-KVM" width="200"/></a></p>
+<p align="center"><a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/dev/resources/images/bannerAlphaBasicPortrait.png?raw=true" alt="ultimate-macOS-KVM" width="240"/></a></p>
 
 <h3 align="center">v0.13.0</h3>
+
 <p align="center">Helping you build the ultimate macOS virtual machine, powered by KVM.</p>
 
 <p align="center"><a href="https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest"><b>What's new?</b></a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest">Switch to dev branch... ⎋</a>
