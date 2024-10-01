@@ -7,3 +7,5 @@ gem "just-the-docs", "0.10.0" # pinned to the current release
 # gem "just-the-docs"       
 
 gem "jekyll-default-layout"
+
+gem "jekyll-github-metadata"
