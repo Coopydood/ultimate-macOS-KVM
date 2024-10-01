@@ -3,3 +3,6 @@ description: ultimate-macOS-KVM
 theme: just-the-docs
 
 url: https://coopydood.github.io/ultimate-macOS-KVM
+
+plugins:
+  - jekyll-default-layout
