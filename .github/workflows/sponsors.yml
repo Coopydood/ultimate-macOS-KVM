@@ -13,7 +13,7 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           file: 'README.md'
-          template: '<a href="https://github.com/{{{ login }}}"><img src="https://images.weserv.nl/?url=https://github.com/{{{ login }}}.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="{{{ login }}}"></a>'
+          template: '<a href="https://github.com/{{{ login }}}"><img src="https://images.weserv.nl/?url=https://github.com/{{{ login }}}.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="{{{ login }}}"></a> '
           active-only: false
 
       - name: Deploy to GitHub Pages (dev)
