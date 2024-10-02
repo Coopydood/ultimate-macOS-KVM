@@ -1,0 +1,30 @@
+{"0": {
+    "doc": "Changelogs",
+    "title": "Changelogs",
+    "content": " ",
+    "url": "/docs/changelogs/",
+    
+    "relUrl": "/docs/changelogs/"
+  },"1": {
+    "doc": "Home",
+    "title": "What’s up, doc?",
+    "content": "Welcome to the docs folder! . This is where you’ll find my lovingly-created pieces of information designed to help you navigate the whacky, unreliable world of my code! . Anything in here, other than this readme, will likely just be offline versions of the wiki, available online at https://github.com/Coopydood/ultimate-macOS-KVM/wiki . Anyway, good luck - you’ll probably need it! &lt;3 . Written and maintained by Coopydood. You can contribute to documentation, too! . ",
+    "url": "/#whats-up-doc",
+    
+    "relUrl": "/#whats-up-doc"
+  },"2": {
+    "doc": "Home",
+    "title": "Home",
+    "content": " ",
+    "url": "/",
+    
+    "relUrl": "/"
+  },"3": {
+    "doc": "v0.13.0",
+    "title": "v0.13.0",
+    "content": "Major update • –/09/2024 . This update includes the following features / fixes / changes: . | Full branding redesign | New Resource System (NRS) | Support for multiple virtual machines under one repo | Complete rework of core scripts to integrate with NRS | Better networking setup on new VMs | Added warning about Resizeable BAR to VFIO passthrough assistant | Added and updated documentation | Updated README gallery screenshots | Removed screenshots folder | need more drinks? introducing the resizeable bar! | . To see individual code changes, visit the project’s commits page at https://github.com/Coopydood/ultimate-macOS-KVM/commits/main . [!NOTE] Remember, commits by Coopydood will always be signed as 4CD28348A3DD016F or GitHub’s public key. ",
+    "url": "/docs/changelogs/v0-13-0/",
+    
+    "relUrl": "/docs/changelogs/v0-13-0/"
+  }
+}

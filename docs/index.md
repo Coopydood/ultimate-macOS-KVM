@@ -1,3 +1,9 @@
+---
+title: Home
+layout: home
+nav_order: 0
+---
+
 ## What's up, doc?
 
 Welcome to the docs folder!
