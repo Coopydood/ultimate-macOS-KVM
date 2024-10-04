@@ -35,14 +35,14 @@ except:
     depRPC = 0
 
 detectChoice = 1
-latestOSName = "Sonoma"
-latestOSVer = "14"
+latestOSName = "Sequoia"
+latestOSVer = "15"
 
 scriptName = "System Profile Tool"
 script = "sysprofiler.py"
 scriptID = "SPT"
 scriptVendor = "Coopydood"
-scriptVer = 1.0
+scriptVer = 1.1
 branch = "Unknown"
 
 version = open("./.version")
@@ -171,6 +171,7 @@ def cpydProfile(logMsg,warn=None):
 ultmosGenVer = "Unknown"
 genEpoch = "Unknown"
 featureLvl = "Unknown"
+upgraded = 0
 
 output_stream = os.popen("git branch --show-current")
 branch = output_stream.read()
@@ -178,6 +179,23 @@ branch = branch.replace("\n","")
 
 time.sleep(0.1)
 progressUpdate(4)
+
+# Check if repo was ever updated
+if os.path.exists("./resources/script_store/.version"):
+    cloneVer = open("./resources/script_store/.version")
+    cloneVer = cloneVer.read()
+    cloneVerN = cloneVer.replace(".","")
+    versionN = version.replace(".","")
+    if int(cloneVerN) < int(versionN):
+        upgraded = True
+    else:
+        upgraded = False
+    
+    storeList = []
+    for x in os.listdir("./resources/script_store/"):
+        if "." in x:
+            storeList.append(x)
+    if ".script_store" in storeList: storeList.remove(".script_store")
 
 if os.path.exists("./blobs/user/USR_CFG.apb"):
     
@@ -441,6 +459,19 @@ if branch != "main":
     warnings.append("is not considered stable and bugs are likely\n")
 else:
     cpydProfile(("Branch     : "+branch))
+if upgraded == True:
+    cpydProfile(("Upgraded   : YES"),True) #("+str(cloneVer)+")"),True)
+    warnings.append(("This copy of the ULTMOS repository was originally cloned"))
+    warnings.append("on version "+str(cloneVer)+" and updated by the user using RUU\n")
+
+    for f in storeList[0:(len(storeList)-1)]:
+        cpydProfile("             ├ "+f)
+    cpydProfile("             └ "+storeList[-1])
+
+elif upgraded == False:
+    cpydProfile(("Upgraded   : NO"))
+else:
+    cpydProfile(("Upgraded   : UNKNOWN"))
 cpydProfile((" \n"))
 cpydProfile("OPERATING SYSTEM")
 cpydProfile("────────────────────────────────────────────────────────")
@@ -611,7 +642,7 @@ if vfcKernel == 1:
     cpydProfile(("Kernel     : "+"Configured"))
 if vfcKernel == 0:
     cpydProfile(("Kernel     : "+"Misconfigured"),True)
-    warnings.append("The kernel does not appear to be set up correctly,")
+    warnings.append("VFIO passthrough unavailable due to kernel setup,")
     warnings.append("expected drivers are not available / running\n")
 cpydProfile(("Stubbed    : "+str(len(pci_ids))))
 if len(pci_ids) > 0:

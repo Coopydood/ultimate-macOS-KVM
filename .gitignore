@@ -22,6 +22,9 @@ boot-noPT.sh
 ovmf/OVMF_VARS-1280x720.fd
 setup.py
 resources/script_store/*.py
+resources/script_store/.version
+resources/script_store/hyperchromiac/*.py
+resources/script_store/hyperchromiac/*.sh
 resources/script_store/*.sh
 resources/script_store/*.json
 resources/script_store/extras/*.py
