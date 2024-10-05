@@ -7,6 +7,7 @@ layout: table_wrappers
 <html lang="{{ site.lang | default: 'en-US' }}">
 {% include head.html %}
 <body>
+<div class="everything">
   <a class="skip-to-main" href="#main-content">Skip to main content</a>
   {% include icons/icons.html %}
   {% if page.nav_enabled == true %}
@@ -39,7 +40,7 @@ layout: table_wrappers
       {% include components/search_footer.html %}
     {% endif %}
   </div>
-
+</div>
   {% if site.mermaid %}
     {% include components/mermaid.html %}
   {% endif %}

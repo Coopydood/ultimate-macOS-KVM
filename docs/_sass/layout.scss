@@ -4,7 +4,8 @@
   z-index: 0;
   display: flex;
   flex-wrap: wrap;
-  background-color: $sidebar-color;
+  background-color: hex($sidebar-color);
+  backdrop-filter: blur(25px);
 
   @include mq(md) {
     flex-flow: column nowrap;
