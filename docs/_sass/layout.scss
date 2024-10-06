@@ -4,7 +4,7 @@
   z-index: 0;
   display: flex;
   flex-wrap: wrap;
-  background-color: hex($sidebar-color);
+  background-color: rgba($sidebar-color, 0.5);
   backdrop-filter: blur(25px);
 
   @include mq(md) {
@@ -61,14 +61,13 @@
 
   @include mq(md) {
     position: relative;
-    max-width: $content-width;
-    max-height: 100%;
   }
 }
 
 .main-content-wrap {
   padding-top: $gutter-spacing-sm;
   padding-bottom: $gutter-spacing-sm;
+  background-attachment: fixed;
 
   @include container;
 
