@@ -4,8 +4,6 @@
   z-index: 0;
   display: flex;
   flex-wrap: wrap;
-  background-color: rgba($sidebar-color, 0.5);
-  backdrop-filter: blur(25px);
 
   @include mq(md) {
     flex-flow: column nowrap;
