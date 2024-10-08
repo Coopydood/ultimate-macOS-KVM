@@ -1,0 +1,15 @@
+<script> 
+const toggleDarkMode = document.querySelector('.js-toggle-dark-mode'); 
+jtd.addEvent(toggleLightMode, 'click', function(){ 
+    if (jtd.getTheme() === 'light') { 
+        jtd.setTheme('dark'); 
+        toggleDarkMode.textContent = 'Preview dark color scheme'; 
+    } 
+    else { 
+        jtd.setTheme('light'); 
+        toggleDarkMode.textContent = 'Return to the light side'; 
+    } 
+}); 
+</script>
+
+<button class="btn js-toggle-dark-mode">Preview dark color scheme</button>
