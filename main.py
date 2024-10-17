@@ -130,6 +130,8 @@ def startup():
     else:
         print(color.BOLD+"\n\n   Welcome to"+color.CYAN,"ULTMOS"+color.END+color.GRAY,"v"+version+color.END)
         print("   by Coopydood"+color.END)
+        if(isWindows):
+            print("\n   Windows Detected, some options may not work! ")
         print("\n   This project can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, checking your system, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.")
 
 
@@ -178,7 +180,7 @@ def startup():
 
                 
 
-                if "REQUIRES_SUDO=1" in apFile.read():
+                if "REQUIRES_SUDO=1" in apFile.read() and not isWindows:
                     REQUIRES_SUDO = 1
                 else:
                     REQUIRES_SUDO = 0
@@ -309,8 +311,10 @@ vmc1 = output_stream.read()
 detected = 0
 
 global isVM
+global isWindows
 
 isVM = False
+isWindows = False
 
 if "VMware" in vmc1:
    detected = 1
@@ -326,6 +330,9 @@ if "Bochs" in vmc1 or "Sea BIOS" in vmc1 or "SeaBIOS" in vmc1:
 
 if platform.system() != "Linux":
     detected = 2
+if "Windows" and "10" or "8.1" in platform.platform():
+    detected = 0
+    isWindows = True
 
 
 clear()
@@ -374,19 +381,19 @@ else:
     startup()
     #baseSystemAlert() # uncomment to always trigger notification
 if detectChoice == "1":
-    os.system('./scripts/autopilot.py')
+    os.system('python3 ./scripts/autopilot.py')
 elif detectChoice == "2":
-    os.system('./scripts/dlosx.py')
+    os.system('python3 ./scripts/dlosx.py')
 
 elif detectChoice == "3":
     clear()
-    os.system('./scripts/compatchecks.py')
+    os.system('python3 ./scripts/compatchecks.py')
 elif detectChoice == "4":
     clear()
-    os.system('./scripts/vfio-menu.py')
+    os.system('python3 ./scripts/vfio-menu.py')
 elif detectChoice == "e" or detectChoice == "E":
     clear()
-    os.system('./scripts/extras.py')
+    os.system('python3 ./scripts/extras.py')
 elif detectChoice == "w" or detectChoice == "W":
     clear()
     print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING RELEASE NOTES IN DEFAULT BROWSER"+color.END,"")
@@ -395,7 +402,7 @@ elif detectChoice == "w" or detectChoice == "W":
     os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/docs/changelogs/v'+versionDash+".md > /dev/null 2>&1")
     time.sleep(6)
     clear()
-    os.system('./main.py')
+    os.system('python3 ./main.py')
 elif detectChoice == "u" or detectChoice == "U":
     clear()
     os.system('./scripts/repo-update.py --menuFlow')
@@ -459,7 +466,7 @@ elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VAL
         
         apFile = open("./"+apFilePathNoPT,"r")
 
-        if "REQUIRES_SUDO=1" in apFile.read():
+        if "REQUIRES_SUDO=1" in apFile.read() and not isWindows:
             REQUIRES_SUDO = 1
         else:
             REQUIRES_SUDO = 0
@@ -476,7 +483,7 @@ elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VAL
         
         apFile = open("./"+apFilePathNoUSB,"r")
 
-        if "REQUIRES_SUDO=1" in apFile.read():
+        if "REQUIRES_SUDO=1" in apFile.read() and not isWindows:
             REQUIRES_SUDO = 1
         else:
             REQUIRES_SUDO = 0
@@ -537,7 +544,7 @@ elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VAL
 
                 
 
-        if "REQUIRES_SUDO=1" in apFile.read():
+        if "REQUIRES_SUDO=1" in apFile.read() and not isWindows:
             REQUIRES_SUDO = 1
         else:
             REQUIRES_SUDO = 0
@@ -579,7 +586,7 @@ elif detectChoice == "o" and VALID_FILE_NOPT == 1 or detectChoice == "o" and VAL
 
                 
 
-        if "REQUIRES_SUDO=1" in apFile.read():
+        if "REQUIRES_SUDO=1" in apFile.read() and not isWindows:
             REQUIRES_SUDO = 1
         else:
             REQUIRES_SUDO = 0
@@ -639,4 +646,4 @@ elif detectChoice == "q" or detectChoice == "Q":
 
 elif detected != 2:
     clear()
-    os.system('./main.py')
+    os.system('python3 ./main.py')

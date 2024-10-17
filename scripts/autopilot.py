@@ -141,14 +141,14 @@ logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
 
 if enableLog == True: # LOG SUPPORT
    if not os.path.exists("./logs"):
-      os.system("mkdir ./logs")
+      os.mkdir("./logs")
 
-   
-   os.system("echo ULTMOS AUTOPILOT LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S'))+" > ./logs/APC_RUN_"+logTime+".log")
-   os.system("echo ───────────────────────────────────────────────────────────────────"+" >> ./logs/APC_RUN_"+logTime+".log")
-
+   logFile = open("./logs/APC_RUN_"+logTime+".log","ab")
+   logFile.write(str("ULTMOS AUTOPILOT LOG "+str(datetime.today().strftime('%d-%m-%Y %H:%M:%S')+"\n")).encode())
+   logFile.write("───────────────────────────────────────────────────────────────────\n".encode())
+   logFile.close()
    def cpydLog(logStatus,logMsg,*args):
-      logFile = open("./logs/APC_RUN_"+logTime+".log","a")
+      logFile = open("./logs/APC_RUN_"+logTime+".log","ab")
       #if logStatus == "ok":      logStatus = "[ ✔ ]"
       #if logStatus == "info":    logStatus = "[ ✦ ]"
       #if logStatus == "warn":    logStatus = "[ ⚠ ]"
@@ -166,7 +166,7 @@ if enableLog == True: # LOG SUPPORT
       entryTime = str(datetime.today().strftime('%H:%M:%S.%f'))
       entryTime = entryTime[:-3]
       entryLine = ("["+entryTime+"]"+str(logStatus)+" "+str(logMsg)+"\n")
-      logFile.write(entryLine)
+      logFile.write(entryLine.encode())
       #os.system("cp ./logs/APC_RUN_"+logTime+".log ./logs/latest.log")
       logFile.close()
 else:
@@ -705,7 +705,10 @@ def autopilot():
                print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING STAGE HELP PAGE IN DEFAULT BROWSER"+color.END,"")
                print("   Continue in your browser\n")
                print("\n   I have attempted to open this stage's help page in\n   your default browser. Please be patient.\n\n   You will be returned to the last screen in 5 seconds.\n\n\n\n\n")
-               os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#review-your-preferences > /dev/null 2>&1')
+               if platform.system != "Linux":
+                  os.system('start https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#review-your-preferences > >nul 2>&1')
+               else:
+                  os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot#review-your-preferences > /dev/null 2>&1')
                time.sleep(6)
                clear()
                stage15()
@@ -771,7 +774,17 @@ def autopilot():
       print(color.END+"\n      B. Back")
       print(color.END+"      ?. Help")
       print(color.END+"      Q. Exit\n   ")
-      stageSelect = str(input(color.BOLD+"Select> "+color.END))
+      if(platform.system == "Linux"):
+         stageSelect = str(input(color.BOLD+"Select> "+color.END))
+      else: 
+         # virt-manager is not available on the MSYS2 Repos, so skip XML
+         cpydLog("ok",str("XML generation will be skipped from AP flow"))
+         USR_CREATE_XML = "False"
+         blob = open("./blobs/USR_CREATE_XML.apb","w")
+         blob.write(USR_CREATE_XML)
+         blob.close()
+         customValue = 1
+         stage15()
 
       if str(stageSelect) == triggerValue and armSelectionTriggerNotice == True:
             cpydLog("warn",str("Selection notice trap has been triggered"))
@@ -2846,7 +2859,7 @@ def autopilot():
             handoff()
 
          elif stageSelectE == "2":
-            os.system("./scripts/autopilot.py")
+            os.system("python3 ./scripts/autopilot.py")
 
          elif stageSelectE == "q" or stageSelectE == "Q":
             return
@@ -3287,6 +3300,7 @@ def autopilot():
          if USR_TARGET_OS_ID == "sonoma": # APPLY 14.4 FIX
             configData = configData.replace("-device usb-ehci,id=ehci","#-device usb-ehci,id=ehci")
             os.system("cp "+repoDir+"/resources/ovmf/OVMF_VARS_SonomaPatch.fd ovmf/OVMF_VARS.fd")
+         if(platform.system()=="Windows"): os.system("cat ovmf/OVMF_VARS.fd ovmf/OVMF_CODE.fd > ovmf/OVMF.fd")
 
          if USR_HDD_TYPE == "HDD":
             cpydLog("ok",("Disk type is HDD, leaving rotation rate as default"))
@@ -3391,21 +3405,35 @@ def autopilot():
             cpydLog("ok",("OS ID is valid, sending to dlosx script"))
             if enableProgress == True:
                if enablePercentage == True: #    NOW USING NRS
-                  os.system(repoDir+"/scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --nrs")
+                  os.system("python3 "+repoDir+"/scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --nrs")
                else:
-                  os.system(repoDir+"/scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --disable-percentage --nrs")
+                  os.system("python3 "+repoDir+"/scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --disable-percentage --nrs")
             else:
-               os.system(repoDir+"/scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --disable-progress --nrs")
+               os.system("python3 "+repoDir+"/scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --disable-progress --nrs")
 
          else:
             cpydLog("warn",("OS ID is NOT valid, running dlosx without passthrough"))
-            os.system(repoDir+"/scripts/dlosx.py --nrs")
+            os.system("python3 "+repoDir+"/scripts/dlosx.py --nrs")
          #subprocess.Popen(cmd).wait()
          #print(os.path.getsize("./BaseSystem.img"))
 
          os.chdir(nrsDir)
-         os.system("mv "+repoDir+"/resources/BaseSystem.img ./BaseSystem.img") # Use new resource location
-
+         if(os.path.exists(repoDir+"/resources/BaseSystem.img")):
+          os.system("mv "+repoDir+"/resources/BaseSystem.img ./BaseSystem.img") # Use new resource location
+         if(os.path.exists(repoDir+"/resources/BaseSystem.dmg")):
+            cpydLog("warn",("BaseSystem image is still in the DMG format, will convert now"))
+            os.system("mv "+repoDir+"/resources/BaseSystem.dmg ./BaseSystem.dmg") # Use new resource location
+            try: # DISCORD RPC
+               RPC.update(large_image=osIcon,large_text=projectVer,state="Converting image format...",details="AutoPilot",small_image="doodremount",small_text="Converting...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+            except:
+               None
+            time.sleep(1)
+            if(platform.system != "Linux"):
+               os.system(repoDir+"/resources/dmg2img.exe ./BaseSystem.dmg >nul 2>&1")
+            else:
+               os.system(repoDir+"/resources/dmg2img ./BaseSystem.dmg > /dev/null 2>&1")
+            cpydLog("info",("Finished converting, removing source DMG"))
+            os.system("rm ./BaseSystem.dmg")
          if os.path.exists("./BaseSystem.img"):
             cpydLog("info",("Checking BaseSystem with a size of "+str(os.path.getsize("./BaseSystem.img"))))
          if os.path.exists("./BaseSystem.img") and os.path.getsize("./BaseSystem.img") > 314572800:
@@ -3454,7 +3482,10 @@ def autopilot():
             PROC_LOCALCOPY_CVTN = 1
             refreshStatusGUI()
             time.sleep(1)
-            os.system(repoDir+"/resources/dmg2img ./BaseSystem.dmg > /dev/null 2>&1")
+            if(platform.system != "Linux"):
+               os.system(repoDir+"/resources/dmg2img.exe ./BaseSystem.dmg >nul 2>&1")
+            else:
+               os.system(repoDir+"/resources/dmg2img ./BaseSystem.dmg > /dev/null 2>&1")
             cpydLog("info",("Finished converting, removing source DMG"))
             os.system("rm ./BaseSystem.dmg")
             time.sleep(1)
@@ -3567,7 +3598,7 @@ def autopilot():
             existingWarning1()
          else:
             cpydLog("info",("Generating hard disk image file"))
-            os.system("qemu-img create -f qcow2 HDD.qcow2 "+str(USR_HDD_SIZE_B)+"B > /dev/null 2>&1")
+            os.system("qemu-img create -f qcow2 HDD.qcow2 "+str(USR_HDD_SIZE_B)+"B >nul 2>&1")
             time.sleep(3)
             PROC_GENHDD = 2
          progressUpdate(39)
@@ -3624,6 +3655,11 @@ def autopilot():
          configData = configData.replace("#                       $ ./main.py                        #","#\n#   To boot this script, run the following command:\n#   $ ./"+str(USR_CFG))
          configData = configData.replace("#    ./main.py","")
          configData = configData.replace("############################################################.","#")
+         if(platform.system() == "Windows"):
+            configData = configData.replace("-enable-kvm", "-accel whpx,kernel-irqchip=off")
+            configData = configData.replace('-drive if=pflash,format=raw,readonly=on,file="$OVMF_DIR/OVMF_CODE.fd"', '-bios "$OVMF_DIR/OVMF.fd"')
+            configData = configData.replace('-drive if=pflash,format=raw,file="$OVMF_DIR/OVMF_VARS.fd"','')
+            configData = configData.replace("pkill", "taskkill -im")
          cpydLog("info",("Generating epoch timestamp"))
          configData = configData.replace("GEN_EPOCH=000000000","GEN_EPOCH="+str(int(time.time())))
          cpydLog("ok",("Epoch timestamped as "+str(int(time.time()))))
