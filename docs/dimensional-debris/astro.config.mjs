@@ -10,6 +10,9 @@ export default defineConfig({
 			logo: {
 				src: './src/assets/ULTMOS.png',
 			},
+			customCss: [
+				'./src/styles/custom.css',
+			  ],
 			social: {
 				github: 'https://github.com/Coopydood/ultimate-macOS-KVM',
 				discord: 'https://discord.gg/WzWkSsT',
