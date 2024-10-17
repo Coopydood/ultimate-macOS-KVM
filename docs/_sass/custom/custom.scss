@@ -46,15 +46,21 @@ html {
 
   }
 
-  .main-content {
+  .main-content, 
+  .footer {
+// @sproott - I was here
 
-    h1 h2 h3 h4 h5 {
+    h1, 
+    h2, 
+    h3, 
+    h4, 
+    h5 {
 
-      color: $grey-dk-100;
+      color: $grey-dk-300;
 
     }
 
-    color: $grey-dk-100;
+    color: $grey-dk-300;
 
   }
 
