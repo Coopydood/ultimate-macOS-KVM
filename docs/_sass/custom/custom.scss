@@ -16,7 +16,6 @@ html {
 
   background-color: rgba($body-background-color, 0.94);
   backdrop-filter: blur(500px);
-  -webkit-backdrop-filter: blur(500px);
   min-height: 100vh;
 
 }
@@ -31,10 +30,39 @@ html {
 
 .light-mode {
 
+  @import "../color_schemes/light.scss";
+
   background-image: url(https://media.discordapp.net/attachments/764964269460029442/1293703419483394159/SequoiaLight.png?ex=670856b3&is=67070533&hm=4898869ebea28d70fafa001b371d4acd7f5489b1b1cfba1e6afcc3e0a2d32396&=&format=webp&quality=lossless);
   background-position: center center;
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
+
+  .main {
+
+    background-color: rgba($white, 0.6);
+    backdrop-filter: blur(500px);
+    min-height: 100vh;
+
+  }
+
+  .main-content {
+
+    h1 h2 h3 h4 h5 {
+
+      color: $grey-dk-100;
+
+    }
+
+    color: $grey-dk-100;
+
+  }
+
+  .side-bar {
+
+    background-color: rgba($white, 0.7);
+    backdrop-filter: blur(25px);
+
+  }
 
 }

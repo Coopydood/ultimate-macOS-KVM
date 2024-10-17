@@ -6,7 +6,7 @@ onload = function() {
   // Check for saved mode preference in localStorage
   const currentTheme = localStorage.getItem('theme');
   if (currentTheme === 'light') {
-    bodyElement.classList.add('light-mode');
+    bodyElement.classList.toggle('light-mode');
   }
 
   // Toggle mode and save preference
