@@ -26,6 +26,10 @@ export default defineConfig({
 					],
 				},
 				{
+					label: 'Changelogs',
+					autogenerate: { directory: 'changelogs' },
+				},
+				{
 					label: 'Reference',
 					autogenerate: { directory: 'reference' },
 				},
