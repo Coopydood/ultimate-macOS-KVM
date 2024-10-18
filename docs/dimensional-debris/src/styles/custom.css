@@ -1,11 +1,12 @@
 :root {
   --ultmos-window-padding: 5rem;
+  --ultmos-sidebar-opacity: 0.8;
 
-  --sl-color-bg-sidebar: #17181c88;
+  --sl-color-bg-sidebar: rgba(23, 24, 28, var(--ultmos-sidebar-opacity));
 }
 
 :root[data-theme="light"] {
-  --sl-color-bg-sidebar: #ffffff88;
+  --sl-color-bg-sidebar: rgba(255, 255, 255, var(--ultmos-sidebar-opacity));
 }
 
 .ultmos-window-shadow {
