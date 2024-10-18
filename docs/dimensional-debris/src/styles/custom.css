@@ -1,3 +1,9 @@
 :root {
   --ultmos-window-padding: 5rem;
 }
+
+nav[aria-labelledby="starlight__on-this-page--mobile"] {
+  position: relative;
+  top: 0;
+  inset-inline-start: 0;
+}

@@ -25,8 +25,7 @@ import type { Props } from "@astrojs/starlight/props";
       order: 2;
       position: relative;
       width: calc(
-        var(--sl-sidebar-width) +
-          (100% - var(--sl-content-width) - var(--sl-sidebar-width)) / 2 - 2 *
+        var(--sl-sidebar-width) + (100% - var(--sl-content-width)) / 2 - 2 *
           var(--ultmos-window-padding)
       );
     }
@@ -51,8 +50,7 @@ import type { Props } from "@astrojs/starlight/props";
 
       order: 1;
       width: calc(
-        var(--sl-content-width) +
-          (100% - var(--sl-content-width) - var(--sl-sidebar-width)) / 2 - 2 *
+        var(--sl-content-width) + (100% - var(--sl-content-width)) / 2 - 2 *
           var(--ultmos-window-padding)
       );
     }
