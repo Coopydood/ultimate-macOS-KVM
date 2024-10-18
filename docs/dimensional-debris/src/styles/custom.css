@@ -1,5 +1,5 @@
 :root {
-  --ultmos-window-padding: 5rem;
+  --ultmos-window-padding: 2.5rem;
   --ultmos-sidebar-opacity: 0.8;
 
   --sl-color-bg-sidebar: rgba(23, 24, 28, var(--ultmos-sidebar-opacity));
