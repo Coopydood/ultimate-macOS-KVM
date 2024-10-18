@@ -1,14 +1,26 @@
 ---
-const files = await Astro.fetchContent('../content/docs/changelogs/**/*.md');
+import semver from "semver";
+import type { Props } from "@astrojs/starlight/props";
+import Default from "@astrojs/starlight/components/Sidebar.astro";
 
-// Sort by filenames in descending order
-const sortedFiles = files.sort((a, b) => b.fileName.localeCompare(a.fileName));
+const { sidebar: originalSidebar } = Astro.props;
+
+const sortEntries = (entries: Props["sidebar"]) =>
+  entries.sort((a, b) => {
+    if (a.type !== "link" || b.type !== "link")
+      throw new Error("Unexpected entry type");
+    return semver.compare(b.label, a.label);
+  });
+
+const sidebar = originalSidebar.map((group) => {
+  if (group.type !== "group") return group;
+  if (group.label !== "Changelogs") return group;
+
+  return {
+    ...group,
+    entries: sortEntries(group.entries),
+  };
+});
 ---
 
-<ul>
-  {sortedFiles.map(file => (
-    <li>
-      <a href={file.url}>{file.frontmatter.title || file.fileName}</a>
-    </li>
-  ))}
-</ul>
+<Default {...Astro.props} sidebar={sidebar} />
