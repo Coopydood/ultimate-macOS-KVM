@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
+import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
@@ -10,13 +11,15 @@ export default defineConfig({
       logo: {
         src: "./src/assets/ULTMOS.png",
       },
-      customCss: ["./src/styles/custom.css"],
+      customCss: ["./src/styles/custom.css", "./src/tailwind.css"],
       social: {
         github: "https://github.com/Coopydood/ultimate-macOS-KVM",
         discord: "https://discord.gg/WzWkSsT",
       },
       components: {
         Sidebar: "./src/components/Sidebar.astro",
+        PageFrame: "./src/components/PageFrame.astro",
+        TwoColumnContent: "./src/components/TwoColumnContent.astro",
       },
       sidebar: [
         {
@@ -27,15 +30,18 @@ export default defineConfig({
           ],
         },
         {
+          label: "Reference",
+          autogenerate: { directory: "reference" },
+        },
+        {
           label: "Changelogs",
           autogenerate: { directory: "changelogs" },
           collapsed: true,
         },
-        {
-          label: "Reference",
-          autogenerate: { directory: "reference" },
-        },
       ],
+    }),
+    tailwind({
+      applyBaseStyles: false,
     }),
   ],
 });
