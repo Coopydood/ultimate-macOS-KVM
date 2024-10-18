@@ -43,7 +43,7 @@ boot/opencore-image-ng.sh
 boot/mnt
 docs/.screenshots
 BaseSystem.dmg
-.gitignore
+
 boot.xml
 ovmf/OVMF_VARS_PT.fd
 resources/.notices
