@@ -197,11 +197,11 @@ def startup():
                 if "APC-RUN" in apFileM:
                     VALID_FILE = 1
 
-                    if "#-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw" not in apFileM and "-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw" in apFileM and "HDD_PATH=\"/dev/disk/" not in apFileM:
+                    if "#-drive id=BaseSystem,if=none,file=\"$VM_PATH/BaseSystem.img\",format=raw" not in apFileM and "-drive id=BaseSystem,if=none,file=\"$VM_PATH/BaseSystem.img\",format=raw" in apFileM and "HDD_PATH=\"/dev/disk/" not in apFileM:
                         if os.path.exists("./blobs/user/USR_HDD_PATH.apb"):
                             hddPath = open("./blobs/user/USR_HDD_PATH.apb")
                             hddPath = hddPath.read()
-                            hddPath = hddPath.replace("$REPO_PATH",os.path.realpath(os.curdir))
+                            hddPath = hddPath.replace("$VM_PATH",os.path.realpath(os.curdir))
                         if (os.path.getsize(hddPath)) > 22177079296 and not os.path.exists("./blobs/user/.noBaseSystemReminder"):
                             baseSystemNotifArmed = True
                     #REQUIRES_SUDO = 1 # UNCOMMENT FOR DEBUGGING
@@ -275,7 +275,7 @@ def baseSystemAlert():
     if detectChoice5 == "1":
         with open("./"+apFilePath,"r") as apFile:
             apFileM = apFile.read()
-            apFileM = apFileM.replace("-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw\n-device ide-hd,bus=sata.4,drive=BaseSystem","#-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw\n#-device ide-hd,bus=sata.4,drive=BaseSystem")
+            apFileM = apFileM.replace("-drive id=BaseSystem,if=none,file=\"$VM_PATH/BaseSystem.img\",format=raw\n-device ide-hd,bus=sata.4,drive=BaseSystem","#-drive id=BaseSystem,if=none,file=\"$VM_PATH/BaseSystem.img\",format=raw\n#-device ide-hd,bus=sata.4,drive=BaseSystem")
             apFile.close()
         time.sleep(1)
         with open("./"+apFilePath,"w") as apFile:
