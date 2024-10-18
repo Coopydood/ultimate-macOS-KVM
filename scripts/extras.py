@@ -75,11 +75,11 @@ startup()
 clear()
 
 if detectChoice == "1":
-    os.system('./scripts/extras/xml-convert.py')
+    os.system('python3 ./scripts/extras/xml-convert.py')
 elif detectChoice == "99":
-    os.system('./scripts/vfio-menu.py')
+    os.system('python3 ./scripts/vfio-menu.py')
 elif detectChoice == "2":
-    os.system('./scripts/hyperchromiac/nbdassistant.py')
+    os.system('python3 ./scripts/hyperchromiac/nbdassistant.py')
 #elif detectChoice == "3":
 #    
 #    print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING PROJECT IN DEFAULT BROWSER"+color.END,"")
@@ -90,11 +90,11 @@ elif detectChoice == "2":
 #    clear()
 #    os.system('./scripts/extras.py')
 elif detectChoice == "3":
-    os.system('./scripts/extras/boot-args.py')
+    os.system('python3 ./scripts/extras/boot-args.py')
 elif detectChoice == "4":
-    os.system('./scripts/hyperchromiac/grub-args.py')
+    os.system('python3 ./scripts/hyperchromiac/grub-args.py')
 elif detectChoice == "5":
-    os.system('./resources/python/smbios/GenSMBIOS.py')
+    os.system('python3 ./resources/python/smbios/GenSMBIOS.py')
 elif detectChoice == "i" or detectChoice == "I":
     
     print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING ISSUE CREATOR IN DEFAULT BROWSER"+color.END,"")
@@ -103,12 +103,12 @@ elif detectChoice == "i" or detectChoice == "I":
     os.system('xdg-open https://github.com/Coopydood/ultimate-macOS-KVM/issues/new > /dev/null 2>&1')
     time.sleep(6)
     clear()
-    os.system('./scripts/extras.py')
+    os.system('python3 ./scripts/extras.py')
 
 
 elif detectChoice == "r" or detectChoice == "R":
-    os.system('./scripts/restoretools.py')
+    os.system('python3 ./scripts/restoretools.py')
 elif detectChoice == "b" or detectChoice == "B":
-    os.system('./main.py')
+    os.system('python3 ./main.py')
 elif detectChoice == "q" or detectChoice == "Q":
     exit

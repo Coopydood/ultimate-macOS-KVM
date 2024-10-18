@@ -3945,7 +3945,7 @@ def autopilot():
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.chdir(repoDir)
-            os.system(repoDir+"/main.py")
+            os.system("python3 "+repoDir+"/main.py")
 
          elif stageSelect == "q" or stageSelect == "Q":
             cpydLog("fatal",("User quit"))
@@ -4022,7 +4022,7 @@ def autopilot():
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             os.chdir(repoDir)
-            os.system(repoDir+"/main.py")
+            os.system("python3 "+repoDir+"/main.py")
 
          elif stageSelect == "q" or stageSelect == "Q":
             cpydLog("fatal",("User quit"))
@@ -4066,7 +4066,7 @@ elif detectChoice == "?":
 elif detectChoice == "2":
     cpydLog("info",("Returning to main menu"))
     os.chdir(repoDir)
-    os.system('./main.py')
+    os.system('python3 ./main.py')
 
 elif detectChoice == "q" or detectChoice == "Q":
     cpydLog("fatal",("User quit"))
