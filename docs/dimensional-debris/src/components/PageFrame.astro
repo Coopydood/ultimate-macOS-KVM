@@ -17,11 +17,10 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
       hasSidebar && (
         <nav
           class="sidebar"
-          aria-label={Astro.locals.t("sidebarNav.accessibleLabel")}
         >
           <div
             id="starlight__sidebar"
-            class="sidebar-pane rounded-xl ultmos-window-shadow"
+            class="sidebar-pane ultmos-window-shadow"
           >
             <div class="sidebar-content sl-flex -z-1">
               <slot name="sidebar" />
@@ -32,7 +31,7 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
     }
 
     <div
-      class="ms-[var(--sl-content-inline-start)] overflow-y-auto ultmos-window-shadow rounded-xl md:rounded-l-none"
+      class="ms-[var(--sl-content-inline-start)] overflow-y-auto ultmos-window-shadow md:rounded-l-none"
     >
       <header class="header">
         <slot name="header" />
@@ -96,6 +95,8 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
     width: 100%;
     background-color: var(--ultmos-black-translucent);
     overflow-y: auto;
+    border-radius: 5px 0px 0px 5px;
+    backdrop-filter: blur(50px);
   }
 
   :global([aria-expanded="true"]) ~ .sidebar-pane {
@@ -118,7 +119,7 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
   }
 
   .main-content {
-    background-color: var(--sl-color-bg);
+    background-color: rgba(var(--sl-color-bg-rgb), 0.8);
     position: relative;
     z-index: calc(var(--sl-z-index-menu) + 1);
   }
@@ -132,6 +133,15 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
       width: var(--sl-sidebar-width);
       background-color: var(--sl-color-bg-sidebar);
       border-inline-end: 1px solid var(--sl-color-hairline-shade);
+    }
+  }
+
+  @media (max-width: 50rem) {
+    .page-wrapper {
+      padding: 0px;
+    }
+    .page {
+      height: 100vh;
     }
   }
 </style>
