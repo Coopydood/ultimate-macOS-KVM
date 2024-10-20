@@ -119,9 +119,22 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
   }
 
   .main-content {
-    background-color: rgba(var(--sl-color-bg-rgb), 0.8);
     position: relative;
     z-index: calc(var(--sl-z-index-menu) + 1);
+    backdrop-filter: blur(150px);
+  }
+
+  .main-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: var(--sl-color-bg);
+    opacity: 0.9;
+
+    z-index: -1;
   }
 
   @media (min-width: 50rem) {
