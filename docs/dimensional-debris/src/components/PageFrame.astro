@@ -1,0 +1,160 @@
+---
+import type { Props } from "@astrojs/starlight/props";
+import { getImage } from "astro:assets";
+import MobileMenuToggle from "@astrojs/starlight/components/MobileMenuToggle.astro";
+import sequoiaLight from "../assets/SequoiaLight.jpg";
+import sequoiaDark from "../assets/SequoiaDark.jpg";
+
+const { hasSidebar } = Astro.props;
+
+const sequoiaLightOptimized = await getImage({ src: sequoiaLight });
+const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
+---
+
+<div class="page-wrapper h-screen">
+  <div class="page sl-flex">
+    {
+      hasSidebar && (
+        <nav
+          class="sidebar"
+        >
+          <div
+            id="starlight__sidebar"
+            class="sidebar-pane ultmos-window-shadow"
+          >
+            <div class="sidebar-content sl-flex -z-1">
+              <slot name="sidebar" />
+            </div>
+          </div>
+        </nav>
+      )
+    }
+
+    <div
+      class="ms-[var(--sl-content-inline-start)] overflow-y-auto ultmos-window-shadow md:rounded-l-none"
+    >
+      <header class="header">
+        <slot name="header" />
+        <MobileMenuToggle {...Astro.props} />
+      </header>
+      <div class="main-content"><slot /></div>
+    </div>
+  </div>
+</div>
+
+<style
+  define:vars={{
+    darkBackground: `url("${sequoiaDarkOptimized.src}")`,
+    lightBackground: `url("${sequoiaLightOptimized.src}")`,
+  }}
+>
+  :global(:root) .page-wrapper {
+    --ultmos-background-image: var(--darkBackground);
+  }
+  :global(:root[data-theme="light"]) .page-wrapper {
+    --ultmos-background-image: var(--lightBackground);
+  }
+
+  .page-wrapper {
+    padding: var(--ultmos-window-padding);
+    background-image: var(--ultmos-background-image);
+    background-size: cover;
+  }
+
+  .page {
+    flex-direction: column;
+    position: relative;
+    height: calc(100vh - 2 * var(--ultmos-window-padding));
+  }
+
+  .header {
+    z-index: var(--sl-z-index-navbar);
+    position: sticky;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+    width: 100%;
+    height: var(--sl-nav-height);
+    border-bottom: 1px solid var(--sl-color-hairline-shade);
+    padding: var(--sl-nav-pad-y) var(--sl-nav-pad-x);
+    padding-inline-end: var(--sl-nav-pad-x);
+    background-color: var(--sl-color-bg-nav);
+  }
+
+  :global([data-has-sidebar]) .header {
+    padding-inline-end: calc(
+      var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size)
+    );
+  }
+
+  .sidebar-pane {
+    visibility: var(--sl-sidebar-visibility, hidden);
+    position: absolute;
+    z-index: var(--sl-z-index-menu);
+    inset-inline-start: 0;
+    inset-block: 0;
+    width: 100%;
+    background-color: var(--ultmos-black-translucent);
+    overflow-y: auto;
+    border-radius: 5px 0px 0px 5px;
+    backdrop-filter: blur(50px);
+  }
+
+  :global([aria-expanded="true"]) ~ .sidebar-pane {
+    --sl-sidebar-visibility: visible;
+  }
+
+  .sidebar-content {
+    height: 100%;
+    min-height: max-content;
+    padding: 1rem var(--sl-sidebar-pad-x) 0;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  @media (min-width: 50rem) {
+    .sidebar-content::after {
+      content: "";
+      padding-bottom: 1px;
+    }
+  }
+
+  .main-content {
+    position: relative;
+    z-index: calc(var(--sl-z-index-menu) + 1);
+    backdrop-filter: blur(150px);
+  }
+
+  .main-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: var(--sl-color-bg);
+    opacity: 0.9;
+
+    z-index: -1;
+  }
+
+  @media (min-width: 50rem) {
+    :global([data-has-sidebar]) .header {
+      padding-inline-end: var(--sl-nav-pad-x);
+    }
+    .sidebar-pane {
+      --sl-sidebar-visibility: visible;
+      width: var(--sl-sidebar-width);
+      background-color: var(--sl-color-bg-sidebar);
+      border-inline-end: 1px solid var(--sl-color-hairline-shade);
+    }
+  }
+
+  @media (max-width: 50rem) {
+    .page-wrapper {
+      padding: 0px;
+    }
+    .page {
+      height: 100vh;
+    }
+  }
+</style>

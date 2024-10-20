@@ -1,0 +1,39 @@
+:root {
+  --ultmos-window-padding: 2.5rem;
+  --ultmos-sidebar-opacity: 0.8;
+
+  --sl-color-bg-sidebar: rgba(23, 24, 28, var(--ultmos-sidebar-opacity));
+}
+
+:root[data-theme="light"] {
+  --sl-color-bg-sidebar: rgba(255, 255, 255, var(--ultmos-sidebar-opacity));
+}
+
+.ultmos-window-shadow {
+  box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.4);
+}
+
+nav[aria-labelledby="starlight__on-this-page--mobile"] {
+  position: relative;
+  top: 0;
+  inset-inline-start: 0;
+}
+
+starlight-menu-button>button {
+  position: absolute;
+}
+
+@media (min-width: 50rem) {
+  .header {
+    grid-template-columns:
+      /* 1 (site title): runs up until the main content column’s left edge or the width of the title, whichever is the largest  */
+      minmax(calc(max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))),
+        auto)
+      /* 2 (search box): all free space that is available. */
+      1fr
+      /* 3 (right items): use the space that these need. */
+      auto !important;
+  }
+
+  
+}
