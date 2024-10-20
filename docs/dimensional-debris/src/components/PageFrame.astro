@@ -29,10 +29,10 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
       )
     }
 
-    <div
-      class="ms-[var(--sl-content-inline-start)] overflow-y-auto rounded-b-xl md:rounded-bl-none"
-    >
-      <div class="main-content"><slot /></div>
+    <div class="rounded-b-xl md:rounded-bl-none overflow-hidden">
+      <div class="main-content overflow-y-auto h-full">
+        <slot />
+      </div>
     </div>
   </div>
 </div>
@@ -126,6 +126,7 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
     position: relative;
     background-color: var(--sl-color-bg-content);
     backdrop-filter: blur(150px);
+    margin-inline-start: var(--sl-content-inline-start);
   }
 
   @media (min-width: 50rem) {
