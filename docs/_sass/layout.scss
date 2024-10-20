@@ -4,7 +4,6 @@
   z-index: 0;
   display: flex;
   flex-wrap: wrap;
-  background-color: $sidebar-color;
 
   @include mq(md) {
     flex-flow: column nowrap;
@@ -16,7 +15,6 @@
   }
 
   @include mq(lg) {
-    width: calc((100% - #{$nav-width + $content-width}) / 2 + #{$nav-width});
     min-width: $nav-width;
   }
 
@@ -60,13 +58,14 @@
 
   @include mq(md) {
     position: relative;
-    max-width: $content-width;
   }
 }
 
 .main-content-wrap {
   padding-top: $gutter-spacing-sm;
   padding-bottom: $gutter-spacing-sm;
+  background-attachment: fixed;
+
 
   @include container;
 
@@ -121,7 +120,6 @@
   @include mq(md) {
     height: $header-height;
     max-height: $header-height;
-    border-bottom: $border $border-color;
   }
 }
 
