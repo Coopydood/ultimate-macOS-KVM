@@ -90,20 +90,20 @@ startup()
 clear()
 
 if detectChoice3 == "1":
-    os.system('./scripts/restore/nvram.py')
+    os.system('python3 ./scripts/restore/nvram.py')
 elif detectChoice3 == "2":
-    os.system('./scripts/restore/ocimage.py')
+    os.system('python3 ./scripts/restore/ocimage.py')
 elif detectChoice3 == "3":
-    os.system('./scripts/restore/ovmf.py')
+    os.system('python3 ./scripts/restore/ovmf.py')
 
 elif detectChoice3 == "4":
-    os.system('./scripts/restore/apwf.py')
+    os.system('python3 ./scripts/restore/apwf.py')
 
 elif detectChoice3 == "r" or detectChoice3 == "R":
-    os.system('./scripts/restore/localfull.py')
+    os.system('python3 ./scripts/restore/localfull.py')
 elif detectChoice3 == "x" or detectChoice3 == "X":
-    os.system('./scripts/restore/obliterator.py')
+    os.system('python3 ./scripts/restore/obliterator.py')
 elif detectChoice3 == "b" or detectChoice3 == "B":
-    os.system('./scripts/extras.py')
+    os.system('python3 ./scripts/extras.py')
 elif detectChoice3 == "q" or detectChoice3 == "Q":
     exit
