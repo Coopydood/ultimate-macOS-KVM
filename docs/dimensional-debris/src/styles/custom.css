@@ -1,12 +1,15 @@
 :root {
-  --ultmos-window-padding: 2.5rem;
+  --ultmos-window-padding: 1rem;
   --ultmos-sidebar-opacity: 0.8;
+  --ultmos-content-opacity: 0.9;
 
-  --sl-color-bg-sidebar: rgba(23, 24, 28, var(--ultmos-sidebar-opacity));
+  --sl-color-bg-sidebar: rgba(36, 39, 47, var(--ultmos-sidebar-opacity));
+  --sl-color-bg-content: rgba(23, 24, 28, var(--ultmos-content-opacity));
 }
 
 :root[data-theme="light"] {
   --sl-color-bg-sidebar: rgba(255, 255, 255, var(--ultmos-sidebar-opacity));
+  --sl-color-bg-content: rgba(255, 255, 255, var(--ultmos-content-opacity));
 }
 
 .ultmos-window-shadow {
@@ -35,5 +38,7 @@ starlight-menu-button>button {
       auto !important;
   }
 
-  
+  :root {
+    --ultmos-window-padding: 2.5rem;
+  }
 }

@@ -12,16 +12,15 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
 ---
 
 <div class="page-wrapper h-screen">
-  <div class="page sl-flex">
+  <div class="page sl-flex ultmos-window-shadow rounded-xl">
+    <header class="header rounded-t-xl md:rounded-tl-none">
+      <slot name="header" />
+    </header>
     {
       hasSidebar && (
-        <nav
-          class="sidebar"
-        >
-          <div
-            id="starlight__sidebar"
-            class="sidebar-pane ultmos-window-shadow"
-          >
+        <nav class="sidebar">
+          <MobileMenuToggle {...Astro.props} />
+          <div id="starlight__sidebar" class="sidebar-pane rounded-l-xl">
             <div class="sidebar-content sl-flex -z-1">
               <slot name="sidebar" />
             </div>
@@ -31,12 +30,8 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
     }
 
     <div
-      class="ms-[var(--sl-content-inline-start)] overflow-y-auto ultmos-window-shadow md:rounded-l-none"
+      class="ms-[var(--sl-content-inline-start)] overflow-y-auto rounded-b-xl md:rounded-bl-none"
     >
-      <header class="header">
-        <slot name="header" />
-        <MobileMenuToggle {...Astro.props} />
-      </header>
       <div class="main-content"><slot /></div>
     </div>
   </div>
@@ -70,7 +65,7 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
   .header {
     z-index: var(--sl-z-index-navbar);
     position: sticky;
-    inset-inline-start: 0;
+    inset-inline-start: var(--ultmos-window-padding);
     inset-block-start: 0;
     width: 100%;
     height: var(--sl-nav-height);
@@ -78,6 +73,15 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
     padding: var(--sl-nav-pad-y) var(--sl-nav-pad-x);
     padding-inline-end: var(--sl-nav-pad-x);
     background-color: var(--sl-color-bg-nav);
+  }
+
+  @media (min-width: 50rem) {
+    .header {
+      inset-inline-start: calc(
+        var(--sl-sidebar-width) + var(--ultmos-window-padding)
+      );
+      width: calc(100% - var(--sl-sidebar-width));
+    }
   }
 
   :global([data-has-sidebar]) .header {
@@ -91,11 +95,11 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
     position: absolute;
     z-index: var(--sl-z-index-menu);
     inset-inline-start: 0;
-    inset-block: 0;
+    inset-block-start: var(--sl-nav-height);
+    inset-block-end: 0;
     width: 100%;
     background-color: var(--ultmos-black-translucent);
     overflow-y: auto;
-    border-radius: 5px 0px 0px 5px;
     backdrop-filter: blur(50px);
   }
 
@@ -120,21 +124,8 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
 
   .main-content {
     position: relative;
-    z-index: calc(var(--sl-z-index-menu) + 1);
+    background-color: var(--sl-color-bg-content);
     backdrop-filter: blur(150px);
-  }
-
-  .main-content::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: var(--sl-color-bg);
-    opacity: 0.9;
-
-    z-index: -1;
   }
 
   @media (min-width: 50rem) {
@@ -146,15 +137,7 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
       width: var(--sl-sidebar-width);
       background-color: var(--sl-color-bg-sidebar);
       border-inline-end: 1px solid var(--sl-color-hairline-shade);
-    }
-  }
-
-  @media (max-width: 50rem) {
-    .page-wrapper {
-      padding: 0px;
-    }
-    .page {
-      height: 100vh;
+      inset-block-start: 0;
     }
   }
 </style>
