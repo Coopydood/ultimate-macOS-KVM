@@ -1,8 +1,22 @@
 // @ts-check
 import { defineConfig } from "astro/config"
+import fs from "node:fs"
 import remarkGithubAlerts from "remark-github-alerts"
+import semver from "semver"
 import starlight from "@astrojs/starlight"
 import tailwind from "@astrojs/tailwind"
+
+const changelogSlugs = fs
+  .readdirSync("./src/content/docs/changelogs/", { withFileTypes: true })
+  .filter((entry) => entry.isFile())
+  .map((entry) => entry.name.split(".").slice(0, -1).join("."))
+  .sort((a, b) => {
+    const aVersion = a.replaceAll("-", ".")
+    const bVersion = b.replaceAll("-", ".")
+
+    return semver.compare(bVersion, aVersion)
+  })
+  .map((slug) => `changelogs/${slug}`)
 
 // https://astro.build/config
 export default defineConfig({
@@ -25,7 +39,6 @@ export default defineConfig({
         discord: "https://discord.gg/WzWkSsT",
       },
       components: {
-        Sidebar: "./src/components/Sidebar.astro",
         PageFrame: "./src/components/PageFrame.astro",
         TwoColumnContent: "./src/components/TwoColumnContent.astro",
         SiteTitle: "./src/components/SiteTitle.astro",
@@ -44,7 +57,7 @@ export default defineConfig({
         },
         {
           label: "Changelogs",
-          autogenerate: { directory: "changelogs" },
+          items: changelogSlugs,
           collapsed: true,
         },
       ],
