@@ -14,9 +14,6 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "ULTMOS",
-      logo: {
-        src: "./src/assets/ULTMOS.png",
-      },
       customCss: [
         "./src/styles/custom.css",
         "./src/tailwind.css",

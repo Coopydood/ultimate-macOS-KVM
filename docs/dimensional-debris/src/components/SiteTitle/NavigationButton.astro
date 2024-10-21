@@ -8,18 +8,23 @@ interface Props {
 
 const { disabled = false, direction } = Astro.props
 
-const opacity = disabled ? 0.25 : 0.5
+const color = disabled ? "var(--sl-color-gray-5)" : "var(--sl-color-gray-3)"
 ---
 
 <navigation-button data-direction={direction}>
-  <a class="h-[20px] w-[27px] flex justify-center items-center cursor-pointer"
+  <a
+    class="px-3 py-2 flex justify-center items-center cursor-pointer rounded-md"
     ><slot /></a
   >
 </navigation-button>
 
-<style define:vars={{ opacity }}>
+<style define:vars={{ color }}>
   a {
-    color: rgb(0 0 0 / var(--opacity));
+    color: var(--color);
+  }
+
+  a:hover {
+    background-color: var(--sl-color-gray-5);
   }
 </style>
 
