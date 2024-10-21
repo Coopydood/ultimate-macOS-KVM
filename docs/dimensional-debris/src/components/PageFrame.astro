@@ -22,8 +22,10 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
         <nav class="sidebar">
           <MobileMenuToggle {...Astro.props} />
           <div id="starlight__sidebar" class="sidebar-pane">
-            <div class="sidebar-content sl-flex -z-1">
+            <div class="sidebar-controls">
               <WindowControls />
+            </div>
+            <div class="sidebar-content sl-flex">
               <slot name="sidebar" />
             </div>
           </div>
@@ -99,7 +101,6 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
     inset-block-end: 0;
     width: 100%;
     background-color: var(--ultmos-black-translucent);
-    overflow-y: auto;
     backdrop-filter: blur(50px);
   }
 
@@ -107,10 +108,15 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
     --sl-sidebar-visibility: visible;
   }
 
+  .sidebar-controls {
+    padding: 1rem var(--sl-sidebar-pad-x);
+  }
+
   .sidebar-content {
+    overflow-y: auto;
     height: 100%;
     min-height: max-content;
-    padding: 1rem var(--sl-sidebar-pad-x) 0;
+    padding: 0 var(--sl-sidebar-pad-x);
     flex-direction: column;
     gap: 1rem;
   }
