@@ -1,17 +1,26 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import remarkGithubAlerts from "remark-github-alerts";
 import starlight from "@astrojs/starlight";
 import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
+  markdown: {
+    remarkPlugins: [remarkGithubAlerts],
+  },
   integrations: [
     starlight({
       title: "ULTMOS",
       logo: {
         src: "./src/assets/ULTMOS.png",
       },
-      customCss: ["./src/styles/custom.css", "./src/tailwind.css"],
+      customCss: [
+        "./src/styles/custom.css",
+        "./src/tailwind.css",
+        "remark-github-alerts/styles/github-colors-light.css",
+        "remark-github-alerts/styles/github-base.css",
+      ],
       social: {
         github: "https://github.com/Coopydood/ultimate-macOS-KVM",
         discord: "https://discord.gg/WzWkSsT",

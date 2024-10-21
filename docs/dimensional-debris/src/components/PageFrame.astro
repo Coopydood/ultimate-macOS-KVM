@@ -4,6 +4,7 @@ import { getImage } from "astro:assets";
 import MobileMenuToggle from "@astrojs/starlight/components/MobileMenuToggle.astro";
 import sequoiaLight from "../assets/SequoiaLight.jpg";
 import sequoiaDark from "../assets/SequoiaDark.jpg";
+import WindowControls from "./WindowControls.astro";
 
 const { hasSidebar } = Astro.props;
 
@@ -12,16 +13,17 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
 ---
 
 <div class="page-wrapper h-screen">
-  <div class="page sl-flex ultmos-window-shadow rounded-xl">
-    <header class="header rounded-t-xl md:rounded-tl-none">
+  <div class="page sl-flex ultmos-window-shadow rounded-xl overflow-hidden">
+    <header class="header">
       <slot name="header" />
     </header>
     {
       hasSidebar && (
         <nav class="sidebar">
           <MobileMenuToggle {...Astro.props} />
-          <div id="starlight__sidebar" class="sidebar-pane rounded-l-xl">
+          <div id="starlight__sidebar" class="sidebar-pane">
             <div class="sidebar-content sl-flex -z-1">
+              <WindowControls />
               <slot name="sidebar" />
             </div>
           </div>
@@ -29,10 +31,8 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
       )
     }
 
-    <div class="rounded-b-xl md:rounded-bl-none overflow-hidden">
-      <div class="main-content overflow-y-auto h-full">
-        <slot />
-      </div>
+    <div class="main-content overflow-y-auto">
+      <slot />
     </div>
   </div>
 </div>
@@ -76,7 +76,7 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark });
   }
 
   @media (min-width: 50rem) {
-    .header {
+    :global([data-has-sidebar]) .header {
       inset-inline-start: calc(
         var(--sl-sidebar-width) + var(--ultmos-window-padding)
       );

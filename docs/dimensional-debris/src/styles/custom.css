@@ -1,5 +1,6 @@
 :root {
   --ultmos-window-padding: 1rem;
+
   --ultmos-sidebar-opacity: 0.8;
   --ultmos-content-opacity: 0.9;
 
@@ -10,6 +11,15 @@
 :root[data-theme="light"] {
   --sl-color-bg-sidebar: rgba(255, 255, 255, var(--ultmos-sidebar-opacity));
   --sl-color-bg-content: rgba(255, 255, 255, var(--ultmos-content-opacity));
+}
+
+:root[data-theme="dark"] {
+  --color-note: #2f81f7;
+  --color-tip: #3fb950;
+  --color-warning: #d29922;
+  --color-severe: #db6d28;
+  --color-caution: #f85149;
+  --color-important: #a371f7;
 }
 
 .ultmos-window-shadow {

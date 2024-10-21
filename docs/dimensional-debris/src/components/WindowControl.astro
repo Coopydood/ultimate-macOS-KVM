@@ -1,0 +1,18 @@
+---
+interface Props {
+  color: string;
+}
+
+const { color } = Astro.props;
+---
+
+<div
+  class="h-[12px] w-[12px] rounded-full border-[0.5px] border-black border-opacity-20"
+>
+</div>
+
+<style define:vars={{ color }}>
+  div {
+    background-color: var(--color);
+  }
+</style>
