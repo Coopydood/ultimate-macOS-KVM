@@ -1,0 +1,21 @@
+---
+interface Props {
+  disabled?: boolean;
+}
+
+const { disabled = false } = Astro.props;
+
+console.log(disabled);
+
+const opacity = disabled ? 0.25 : 0.5;
+---
+
+<a class="h-[20px] w-[27px] flex justify-center items-center cursor-pointer"
+  ><slot /></a
+>
+
+<style define:vars={{ opacity }}>
+  a {
+    color: rgb(0 0 0 / var(--opacity));
+  }
+</style>

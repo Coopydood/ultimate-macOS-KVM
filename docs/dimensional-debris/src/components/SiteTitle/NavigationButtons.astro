@@ -1,0 +1,12 @@
+---
+import ArrowBack from "./ArrowBack.astro";
+import ArrowForward from "./ArrowForward.astro";
+import NavigationButton from "./NavigationButton.astro";
+---
+
+<div
+  class="flex justify-start items-center gap-[1px] text-black text-opacity-50"
+>
+  <NavigationButton disabled><ArrowBack /></NavigationButton>
+  <NavigationButton><ArrowForward /></NavigationButton>
+</div>

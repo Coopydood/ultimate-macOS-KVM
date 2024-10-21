@@ -29,6 +29,7 @@ export default defineConfig({
         Sidebar: "./src/components/Sidebar.astro",
         PageFrame: "./src/components/PageFrame.astro",
         TwoColumnContent: "./src/components/TwoColumnContent.astro",
+        SiteTitle: "./src/components/SiteTitle.astro",
       },
       sidebar: [
         {

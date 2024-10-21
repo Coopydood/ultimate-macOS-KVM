@@ -1,0 +1,22 @@
+---
+import type { Props } from "@astrojs/starlight/props";
+import NavigationButtons from "./SiteTitle/NavigationButtons.astro";
+
+const { entry } = Astro.props;
+
+const title = entry.data.title ?? "ULTMOS";
+---
+
+<div class="flex justify-between gap-[10px]">
+  <NavigationButtons />
+  <span>
+    {title}
+  </span>
+</div>
+
+<style>
+  span {
+    font-size: var(--sl-text-h4);
+    font-weight: 600;
+  }
+</style>

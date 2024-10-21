@@ -1,0 +1,6 @@
+- [ ] back/forward actions
+- [ ] traffic light actions
+  - [ ] _close_ closes the virtual window and the user can reopen using a desktop launch icon
+  - [ ] _minimize_ would do the same thing? Or maybe it would persist the site you were on, whereas close would discard it?
+  - [ ] _maximize_ removes the padding, maybe even make the browser tab full-screen?
+- [ ] icons for categories in navigation
