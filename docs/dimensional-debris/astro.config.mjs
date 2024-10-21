@@ -1,11 +1,13 @@
 // @ts-check
-import { defineConfig } from "astro/config";
-import remarkGithubAlerts from "remark-github-alerts";
-import starlight from "@astrojs/starlight";
-import tailwind from "@astrojs/tailwind";
+import { defineConfig } from "astro/config"
+import remarkGithubAlerts from "remark-github-alerts"
+import starlight from "@astrojs/starlight"
+import tailwind from "@astrojs/tailwind"
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://coopydood.github.io",
+  base: "ultimate-macOS-KVM",
   markdown: {
     remarkPlugins: [remarkGithubAlerts],
   },
@@ -54,4 +56,4 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
   ],
-});
+})
