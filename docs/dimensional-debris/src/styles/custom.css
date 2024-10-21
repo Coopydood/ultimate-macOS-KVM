@@ -56,3 +56,8 @@ site-search>button {
     --ultmos-window-padding: 2.5rem;
   }
 }
+
+.right-sidebar {
+  height: 100%;
+  padding-top: 0;
+}
