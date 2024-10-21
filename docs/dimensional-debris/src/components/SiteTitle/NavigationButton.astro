@@ -1,21 +1,44 @@
 ---
+import type { Direction } from "./types"
+
 interface Props {
-  disabled?: boolean;
+  disabled?: boolean
+  direction: Direction
 }
 
-const { disabled = false } = Astro.props;
+const { disabled = false, direction } = Astro.props
 
-console.log(disabled);
-
-const opacity = disabled ? 0.25 : 0.5;
+const opacity = disabled ? 0.25 : 0.5
 ---
 
-<a class="h-[20px] w-[27px] flex justify-center items-center cursor-pointer"
-  ><slot /></a
->
+<navigation-button data-direction={direction}>
+  <a class="h-[20px] w-[27px] flex justify-center items-center cursor-pointer"
+    ><slot /></a
+  >
+</navigation-button>
 
 <style define:vars={{ opacity }}>
   a {
     color: rgb(0 0 0 / var(--opacity));
   }
 </style>
+
+<script>
+  import type { Direction } from "./types"
+
+  class NavigationButton extends HTMLElement {
+    connectedCallback() {
+      const direction = this.dataset.direction as Direction
+      const a = this.querySelector("a")!
+      a.addEventListener("click", () => {
+        if (direction === "forward") {
+          history.forward()
+        } else {
+          history.back()
+        }
+      })
+    }
+  }
+
+  customElements.define("navigation-button", NavigationButton)
+</script>
