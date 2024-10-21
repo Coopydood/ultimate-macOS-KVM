@@ -36,6 +36,10 @@ starlight-menu-button>button {
   position: absolute;
 }
 
+site-search>button {
+  margin-left: auto;
+}
+
 @media (min-width: 50rem) {
   .header {
     grid-template-columns:
