@@ -14,7 +14,7 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
 
 <div class="page-wrapper h-screen">
   <div class="page sl-flex ultmos-window-shadow rounded-xl overflow-hidden">
-    <div class="overflow-y-auto">
+    <div class="page-content">
       <header class="header">
         <slot name="header" />
       </header>
@@ -66,6 +66,12 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
     height: calc(100vh - 2 * var(--ultmos-window-padding));
   }
 
+  .page-content {
+    overflow-y: auto;
+    height: 100%;
+    scroll-padding-top: calc(var(--sl-nav-height) + 1.5rem);
+  }
+
   .header {
     z-index: var(--sl-z-index-navbar);
     position: sticky;
@@ -102,6 +108,8 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
     width: 100%;
     background-color: var(--ultmos-black-translucent);
     backdrop-filter: blur(50px);
+    display: flex;
+    flex-direction: column;
   }
 
   :global([aria-expanded="true"]) ~ .sidebar-pane {
@@ -114,8 +122,7 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
 
   .sidebar-content {
     overflow-y: auto;
-    height: 100%;
-    min-height: max-content;
+    flex-grow: 1;
     padding: 0 var(--sl-sidebar-pad-x);
     flex-direction: column;
     gap: 1rem;
@@ -129,6 +136,7 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
   }
 
   .main-frame {
+    min-height: calc(100% - var(--sl-nav-height));
     background-color: var(--sl-color-bg-content);
     backdrop-filter: blur(150px);
     margin-inline-start: var(--sl-content-inline-start);
