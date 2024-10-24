@@ -32,11 +32,11 @@ nav[aria-labelledby="starlight__on-this-page--mobile"] {
   inset-inline-start: 0;
 }
 
-starlight-menu-button>button {
+starlight-menu-button > button {
   position: absolute;
 }
 
-site-search>button {
+site-search > button {
   margin-left: auto;
 }
 
@@ -44,8 +44,7 @@ site-search>button {
   .header {
     grid-template-columns:
       /* 1 (site title): runs up until the main content column’s left edge or the width of the title, whichever is the largest  */
-      minmax(calc(max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))),
-        auto)
+      minmax(calc(max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))), auto)
       /* 2 (search box): all free space that is available. */
       1fr
       /* 3 (right items): use the space that these need. */
@@ -55,9 +54,4 @@ site-search>button {
   :root {
     --ultmos-window-padding: 2.5rem;
   }
-}
-
-.right-sidebar {
-  height: 100%;
-  padding-top: 0;
 }

@@ -1,5 +1,5 @@
 ---
-import type { Props } from "@astrojs/starlight/props";
+import type { Props } from "@astrojs/starlight/props"
 ---
 
 <div class="lg:sl-flex">
@@ -31,12 +31,14 @@ import type { Props } from "@astrojs/starlight/props";
     }
 
     .right-sidebar {
-      position: relative;
-      top: 0;
+      position: sticky;
+      top: var(--sl-nav-height);
       border-inline-start: 1px solid var(--sl-color-gray-6);
-      padding-top: var(--sl-nav-height);
+      padding-top: 0;
       width: 100%;
-      height: 100vh;
+      height: calc(
+        100vh - 2 * var(--ultmos-window-padding) - var(--sl-nav-height)
+      );
       overflow-y: auto;
       scrollbar-width: none;
     }
