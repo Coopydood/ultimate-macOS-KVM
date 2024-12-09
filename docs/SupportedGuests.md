@@ -1,17 +1,19 @@
 ## macOS
 
-<img align="left" width="90" height="90" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/aa49b5ba-6cca-4dab-bcfc-6bf21909e738">
+<img align="left" width="90" height="90" src="https://github.com/user-attachments/assets/7b9b72ee-5a89-49b4-ae17-7a188ed533ab">
 
-<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=1020 width=2 />
+<img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=900 width=2 />
 
-<h3>macOS Sonoma<br><sub>14.5</sub></h3>
+<h3>macOS Sequoia<br></h3>
 
-This project currently supports the latest version of macOS Sonoma, as well as every prior version down to macOS High Sierra. 
+This project currently supports the latest version of macOS Sequoia, as well as every prior version down to macOS High Sierra. 
 
 The option to use legacy versions is available, but no support will be provided and any issues you encounter are your own to solve!<br>
 
 #### Supported
 
+<img align="left" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/aa49b5ba-6cca-4dab-bcfc-6bf21909e738"> 
+<h5>macOS Sonoma</h5>
 <img align="left" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/4829ebb4-ce7f-4ecf-8309-d691c9361f6b"> 
 <h5>macOS Ventura</h5>
 <img align="left" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/7d341cce-4370-4430-b3d5-bf1868afe4a3"> 
@@ -24,11 +26,6 @@ The option to use legacy versions is available, but no support will be provided 
 <h5>macOS Mojave</h5>
 <img align="left" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/bd4a791d-1ac2-4a9a-8ee0-22e4d5f88cd3"> 
 <h5>macOS High Sierra</h5><br>
-
-#### Pre-Release
-
-<img align="left" width="35" height="35" src="https://github.com/user-attachments/assets/7b9b72ee-5a89-49b4-ae17-7a188ed533ab"> 
-<h5>macOS Sequoia Beta</h5><br>
 
 
 #### Legacy
@@ -66,7 +63,7 @@ If you find something is wrongly marked, please feel free to update it.
 |                          	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/bd4a791d-1ac2-4a9a-8ee0-22e4d5f88cd3"> | <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/184bb2ef-c447-4cbd-b07c-8b4b096e3944">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/cd8029e8-c256-4295-9908-37809d64dcfe">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/79a7a051-0f5a-419e-8544-b51b1572d3b9">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/7d341cce-4370-4430-b3d5-bf1868afe4a3">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/4829ebb4-ce7f-4ecf-8309-d691c9361f6b">     	| <img align="center" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/aa49b5ba-6cca-4dab-bcfc-6bf21909e738">      	| <img align="center" width="35" height="35" src="https://github.com/user-attachments/assets/7b9b72ee-5a89-49b4-ae17-7a188ed533ab">      	|
 |--------------------------:|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|:---------:|:---------:|
 |            **AutoPilot** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
-|     **Auto<br>Download** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✕    	|
+|     **Auto<br>Download** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
 |    **Online<br>Install** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
 |   **Offline<br>Install** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓    	|    ✓    	|
 |       **QEMU<br>Script** 	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓   	|    ✓¹   	|    ✓¹    	|    ✓¹    	|
