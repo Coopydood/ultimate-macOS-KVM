@@ -57,8 +57,9 @@ This method is the officially supported method of passthrough in ULTMOS, and the
 >
 > **Your host will NOT be able to use the device!!!**
 
+***
 
-## 2.1 Kernel modules
+### 2.1 Kernel modules
 
 Your Linux kernel must be set up to load a few extra *kernel modules* on boot. This can usually be done fairly easily by editing the configuration file responsible for generating your kernel image.
 
@@ -104,7 +105,9 @@ sudo mkinitcpio -P
 ```
 You do not have to reboot yet.
 
-## 2.2 Kernel parameters
+***
+
+### 2.2 Kernel parameters
 
 We now need to edit your kernel parameters. For most people, this can be done through your GRUB entries.
 
@@ -155,4 +158,6 @@ If using Grub Customizer, save the changes. If you are editing GRUB manually, ru
 
 You should then reboot.
 
-## 2.3 IOMMU groups
+***
+
+### 2.3 IOMMU groups
