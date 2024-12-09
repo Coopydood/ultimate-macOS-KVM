@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "dev"
+      - "web"
     paths:
       - "docs/**"
   
