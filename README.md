@@ -371,7 +371,11 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 
 ***
 
+## ⭐️》Star History
 
+[![Star History Chart](https://api.star-history.com/svg?repos=Coopydood/ultimate-macOS-KVM&type=Date)](https://star-history.com/#Coopydood/ultimate-macOS-KVM&Date)
+
+***
 
 <p align="center">
   <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/39d78d4b-8ce8-44f4-bba7-fefdbf2f80db" width="10%"> </img>
