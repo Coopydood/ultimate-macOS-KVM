@@ -380,6 +380,7 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Coopydood/ultimate-macOS-KVM&type=Date" />
  </picture>
 </a>
+
 ***
 
 <p align="center">
