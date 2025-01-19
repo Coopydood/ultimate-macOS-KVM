@@ -291,6 +291,16 @@ Of course, if you're just testing the project, then a "clean install" is probabl
 
 ***
 
+## ⌨️》Contributing
+
+Want to help shape the future of ULTMOS? Found a bug in a line (or huge block) of my terrible code? You can help fix it!
+
+Any and all contributions are greatly appreciated and reviewed thoroughly, even if they don't make it into the project. The mere fact you took an interest in my project is awesome enough!
+
+**However, when making code contributions, you MUST open your pull requests on the `dev` branch.** For safety reasons, the main branch is protected and pull requests directly to it will be denied. It's not personal - the protection is more to stop me from accidentally nuking the whole project or something. 
+
+***
+
 ## 🖼️》Gallery
 
 Here's a few screenshots showing **ultimate-macOS-KVM** in action!
