@@ -353,6 +353,16 @@ This project would not be possible without the incredible work of the [OpenCore 
 
 ***
 
+## ⌨️》Contributing
+
+Want to help shape the future of ULTMOS? Found a bug in a line (or huge block) of my terrible code? You can help fix it!
+
+Any and all contributions are greatly appreciated and reviewed thoroughly, even if they don't make it into the project. The mere fact you took an interest in my project is awesome enough!
+
+**However, when making code contributions, you MUST open your pull requests on the `dev` branch.** For safety reasons, the main branch is protected and pull requests directly to it will be denied. It's not personal - the protection is more to stop me from accidentally nuking the whole project or something. 
+
+***
+
 ## 🤝》Credits & Greetz
 
 While I am the creator of these automation/ease-of-use scripts, this project is not possible without both the prior and current works of some very talented people. The people who have tested the project are also included.
