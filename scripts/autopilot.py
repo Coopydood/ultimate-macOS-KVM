@@ -445,11 +445,6 @@ def autopilot():
    USR_SCREEN_RES = "1280x720"
    USR_TARGET_OS_NAME = "Catalina"
 
-
-   ###############################
-   FEATURE_LEVEL = 7                   # DO NOT CHANGE - WILL BREAK THINGS!
-   ###############################
-
    global currentStage
    currentStage = 1
    
@@ -718,6 +713,30 @@ def autopilot():
       else:
          handoff()
 
+   def experimentalAudio():
+      global apFilePath
+      global USR_EXP_AUDIO
+      clear()
+      print("\n\n   "+color.BOLD+color.BLUE+"ENABLE EXPERIMENTAL AUDIO SUPPORT?"+color.END,"")
+      print("   Try this feature early\n")
+      print("   Based on suggestions from the ULTMOS community, experimental \n   audio support is being tested. You can help test this\n   feature if you'd like.\n\n   Enable experimental audio support?\n")
+      #print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)
+      print(color.BOLD+"      1. Enable"+color.END)
+      print(color.END+"         Adds experimental audio support\n")
+      print(color.END+"      2. No thanks\n")
+      detectChoice5 = str(input(color.BOLD+"Select> "+color.END))
+
+      if detectChoice5 == "1":
+         USR_EXP_AUDIO = True
+         stage15()
+
+      elif detectChoice5 == "2":
+         USR_EXP_AUDIO = False 
+         stage15()
+
+      else:
+         experimentalAudio()
+
    def stage14():
       global customValue
       global currentStage
@@ -788,7 +807,7 @@ def autopilot():
          blob.write(USR_CREATE_XML)
          blob.close()
          currentStage = currentStage + 1
-         stage15()
+         experimentalAudio()
 
       elif stageSelect == "2":
          cpydLog("ok",str("XML generation will be skipped from AP flow"))
@@ -797,7 +816,7 @@ def autopilot():
          blob.write(USR_CREATE_XML)
          blob.close()
          customValue = 1
-         stage15()
+         experimentalAudio()
 
       elif stageSelect == "b" or stageSelect == "B":
          currentStage = 1
@@ -3166,6 +3185,7 @@ def autopilot():
          cpydLog("info",("STARTING GENERATION PHASE"))
          global PROC_GENXML
          global USR_CFG
+         global USR_EXP_AUDIO
          global customValue
          global customInput
          global errorMessage
@@ -3303,6 +3323,12 @@ def autopilot():
          
          progressUpdate(72)
          
+
+         if USR_EXP_AUDIO == True:
+            cpydLog("info",("Enabling experimental audio support"))
+            configData = configData.replace("-device ich9-intel-hda -device hda-duplex","-audio driver=sdl,model=virtio")
+         else:
+            cpydLog("info",("Experimental audio support will not be enabled"))
 
 
          cpydLog("ok",("Variable injection complete"))

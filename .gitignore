@@ -59,3 +59,10 @@ resources/BaseSystem.img
 testVM/
 docs/_site
 docs/.history
+docs/docs
+docs/dimensional-debris
+docs/assets
+docs/.screenshots
+docs/.bundle
+docs/_sass
+docs/_layouts

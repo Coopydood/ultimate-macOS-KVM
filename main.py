@@ -118,8 +118,8 @@ def startup():
     #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
     #print("   Select an option to continue.")
 
-    if not os.path.exists("./resources/.nrsMode"):
-        fts()
+    #if not os.path.exists("./resources/.nrsMode"):       # FOR FUTURE DEVELOPMENT
+    #    fts()
 
     if isVM == True:
         print(color.YELLOW+"\n   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
