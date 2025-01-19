@@ -22,6 +22,9 @@ boot-noPT.sh
 ovmf/OVMF_VARS-1280x720.fd
 setup.py
 resources/script_store/*.py
+resources/script_store/.version
+resources/script_store/hyperchromiac/*.py
+resources/script_store/hyperchromiac/*.sh
 resources/script_store/*.sh
 resources/script_store/*.json
 resources/script_store/extras/*.py
@@ -40,7 +43,7 @@ boot/opencore-image-ng.sh
 boot/mnt
 docs/.screenshots
 BaseSystem.dmg
-.gitignore
+
 boot.xml
 ovmf/OVMF_VARS_PT.fd
 resources/.notices
@@ -54,3 +57,12 @@ resources/.nrsMode
 resources/BaseSystem.dmg
 resources/BaseSystem.img
 testVM/
+docs/_site
+docs/.history
+docs/docs
+docs/dimensional-debris
+docs/assets
+docs/.screenshots
+docs/.bundle
+docs/_sass
+docs/_layouts

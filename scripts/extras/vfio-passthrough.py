@@ -74,8 +74,6 @@ cpydLog("info",("Vendor     : "+scriptVendor))
 cpydLog("info",(" "))
 cpydLog("info",("Logging to ./logs/VPTA_RUN_"+logTime+".log"))
 
-
-
 # Declare method of clearing the screen the Coopydoopydoo way.
 def clear():
    os.system("clear")
@@ -127,7 +125,7 @@ symbol: str = "》"
 def usbOffer():
     time.sleep(3)
     clear()
-    print("\n\n   "+color.BOLD+color.YELLOW+"⚠  VIRTUAL INPUT DEVICES REMOVED"+color.END,"")
+    print("\n\n   "+color.BOLD+color.YELLOW+"VIRTUAL INPUT DEVICES REMOVED"+color.END,"")
     print("   Virtual monitor was removed\n")
     print("   The assistant has detected that you "+color.BOLD+"passed through a GPU."+color.END+"\n   To accommodate this, the virtual guest monitor had to be\n   removed. This also means you can't use the virtual input\n   devices that utilise the monitor.\n\n   To send input to the guest, you may want to passthrough\n   USB input devices attached to your host. This project\n   can do this for you. You don't need this if you also\n   passed through a host USB controller.\n")
     #print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)
@@ -184,7 +182,7 @@ def preliminary():
     if (len(vfio_ids) == 0 or len(vfio_names) == 0 or len(pci_ids) == 0):
         # TODO: LOGGING SHIT GOING SOUTH
         clear()
-        print(f"   \033[91m\033[1m✖  NO VFIO-PCI DEVICES FOUND\033[0m\n")
+        print(f"   \033[91m\033[1mNO VFIO-PCI DEVICES FOUND\033[0m\n")
         print(f"   The script couldn't find any stubbed PCI devices")
         print(f"   to use with VFIO. Check your boot arguments!!!\n")
         cpydLog("fatal", "User's machine does not have any stubbed VFIO-PCI devices.")
@@ -357,7 +355,7 @@ def phase3():
             print(f"   {color.BOLD}{color.BLUE}❖  GPU DETECTED{color.END}")
             print(f"   VBIOS ROM file selection{color.END}\n")
             print(f"   {color.BOLD}{vfio_names[pci_ids.index(selected_vfio_ids[i])]}{color.END}\n")
-            print(f"   Some GPUs need a romfile to function in a VM, others do not.\n   Please specify the direct path to a VBIOS romfile below,\n   or type \"skip\" if you don't need one.")
+            print(f"   Some GPUs need a romfile to function in a VM, others do not.\n   Please specify the direct path to a VBIOS romfile below,\n   or type \"skip\" if you don't need one.\n\n   "+color.BOLD+color.YELLOW+"WARNING\n   "+color.END+color.BOLD+"You may need to disable ReSizeable BAR (ReBAR) in your\n   host's BIOS utility. This feature is known to cause\n   major issues with GPU passthrough.")
             cpydLog("wait", f"Awaiting for user input on GPU romfile for {selected_vfio_ids[i]}")
             user_input: str = input(f"{color.BOLD}\nAbsolute Path of VBIOS>{color.END} ")
             if (user_input == "" or user_input == None):
@@ -375,7 +373,7 @@ def phase3():
             qemu_flags.append(f"-device vfio-pci,host=\"{selected_vfio_ids[i]}\",bus=pcie.0")
     if naviDetected == 1:
         clear()
-        print("\n\n   "+color.BOLD+color.YELLOW+"⚠  BOOT PATCH AVAILABLE"+color.END,"")
+        print("\n\n   "+color.BOLD+color.YELLOW+"BOOT PATCH AVAILABLE"+color.END,"")
         print("   You may need to apply a fix to boot macOS\n")
         print("   The assistant has detected that you may have a"+color.BOLD+" Navi-based"+color.END+" GPU. \n   A patch is available to fix the macOS boot process. I can add\n   this patch for you automatically just now, or you can do it\n   later using the macOS Boot Argument Assistant.")
         print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)

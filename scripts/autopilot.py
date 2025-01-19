@@ -35,6 +35,8 @@ try:
 except:
      None
 global FEATURE_LEVEL
+global repoDir
+global nrsDir
 
 script = "autopilot.py"
 scriptName = "AutoPilot"
@@ -54,7 +56,7 @@ parser.add_argument("--no-auto-download", dest="customDownload", help="Asks the 
 parser.add_argument("--no-cleanup", dest="disableCleanup", help="Doesn't clean blob files after run",action="store_true")
 parser.add_argument("--use-local-notices", dest="useLocalNotices", help="Don't fetch online notices, use local only (DEBUG ONLY)",action="store_true")
 
-
+repoDir = os.path.abspath(os.curdir)
 
 args = parser.parse_args()
 
@@ -64,7 +66,7 @@ latestOSVer = "15"
 runs = 0
 
 ###############################
-FEATURE_LEVEL = 8                   # DO NOT CHANGE - WILL BREAK THINGS!
+FEATURE_LEVEL = 9                   # DO NOT CHANGE - WILL BREAK THINGS!
 ###############################
 
 enableLog = True
@@ -74,6 +76,8 @@ enableBlobCheck = True
 enableProgress = True
 customDownload = False
 showSummary = True
+
+
 
 if args.disableLog == True:
    enableLog = False
@@ -113,9 +117,24 @@ if args.disablePercentage == True:
 else:
    enablePercentage = True
 
-version = open("./.version")
+version = open(repoDir+"/.version")
 version = version.read()
 
+dirMode = 1
+nrsDir = os.path.realpath(os.curdir) # PREPARE FOR NRS INTEGRATION
+os.chdir(nrsDir)
+
+if dirMode == 2:
+   try:
+      os.mkdir("./boot")
+      os.mkdir("./blobs")
+      os.mkdir("./blobs/user")
+      os.mkdir("./blobs/stale")
+      os.mkdir("./ovmf")
+      os.mkdir("./ovmf/user_store")
+      os.mkdir("./roms")
+   except:
+      None
 
 global logTime
 logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
@@ -174,7 +193,7 @@ projectVer = "Powered by ULTMOS v"+version
 if enableRPC == True:
    try:
       RPC.connect()
-      RPC.update(large_image="ultmos",large_text=projectVer,details="AutoPilot",buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+      RPC.update(large_image="ultmos-g2",large_text=projectVer,details="AutoPilot",buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
       cpydLog("ok","Discord rich presence connected")
    except:
       None
@@ -190,14 +209,21 @@ def startup():
    global skipNotices
    global noticeGoBackAction
    clear()
+
+   if dirMode == 2:
+      cpydLog("warn",("An NRS folder structure was detected, NRS will be used"))
+      cpydLog("warn",("NRS directory set to "+nrsDir))
+   else:
+      cpydLog("ok",("The NRS folder structure was not detected, will not use NRS"))
+
    if skipNotices == True:
       cpydLog("warn",("Skipping notice list"))
    else:
       if localNotices != True:
          cpydLog("info",("Downloading notice list"))
-         if os.path.exists("./resources/.notices"): os.system("rm ./resources/.notices")
+         if os.path.exists(repoDir+"/resources/.notices"): os.system("rm "+repoDir+"/resources/.notices")
          try:
-            os.system("wget --output-document=./resources/.notices -q --no-cache --no-cookies --no-dns-cache --no-check-certificate https://gist.github.com/Coopydood/b0887a6e21614c7c490ab3969662407f/raw/notices.json")
+            os.system("wget --output-document="+repoDir+"/resources/.notices -q --no-cache --no-cookies --no-dns-cache --no-check-certificate https://gist.github.com/Coopydood/b0887a6e21614c7c490ab3969662407f/raw/notices.json")
             cpydLog("ok",("Notice list downloaded"))
          except Exception:
             skipNotices = True
@@ -205,10 +231,10 @@ def startup():
             return False
       else:
          cpydLog("debug",("Using local notices only, --use-local-notices flag specified"))
-      if os.path.exists("./resources/.notices"): 
+      if os.path.exists(repoDir+"/resources/.notices"): 
          cpydLog("info",("Checking notice list"))
          try:
-            noticeFile = open("resources/.notices")
+            noticeFile = open(repoDir+"/resources/.notices")
             noticeData = json.load(noticeFile)
             global notices
             global noticeArray
@@ -330,7 +356,7 @@ def showNotice():
          print("\n  ",color.BOLD+"You "+color.GREEN+"can"+color.END+color.BOLD+" still continue."+color.END)
       elif activeNotice["type"] != "info":
          print("\n  ",color.BOLD+"You "+color.RED+"cannot"+color.END+color.BOLD+" continue."+color.END)
-      print("\n  ",color.BOLD+"Last updated:",color.END+str(datetime.fromtimestamp(os.path.getmtime("./resources/.notices")).strftime("%d/%m/%Y %H:%M:%S"))+"\n")
+      print("\n  ",color.BOLD+"Last updated:",color.END+str(datetime.fromtimestamp(os.path.getmtime(repoDir+"/resources/.notices")).strftime("%d/%m/%Y %H:%M:%S"))+"\n")
       
 
       if activeNotice["blockAccess"] != True: 
@@ -382,6 +408,7 @@ def autopilot():
    global USR_CPU_FEATURE_ARGS
    global USR_ALLOCATED_RAM
    global USR_REPO_PATH
+   global USR_VM_PATH
    global USR_NETWORK_DEVICE
    global USR_ID
    global USR_NAME
@@ -411,17 +438,12 @@ def autopilot():
    USR_CFG = "boot.sh"
    USR_TARGET_OS = 1015
    USR_HDD_SIZE = "80G"
-   USR_HDD_PATH = "$REPO_PATH"
+   USR_HDD_PATH = "$VM_PATH"
    USR_HDD_TYPE = "HDD"
    USR_BOOT_FILE = "BaseSystem.img"
    USR_MAC_ADDRESS = "00:16:cb:00:21:09"
    USR_SCREEN_RES = "1280x720"
    USR_TARGET_OS_NAME = "Catalina"
-
-
-   ###############################
-   FEATURE_LEVEL = 7                   # DO NOT CHANGE - WILL BREAK THINGS!
-   ###############################
 
    global currentStage
    currentStage = 1
@@ -510,6 +532,7 @@ def autopilot():
       global USR_CPU_FEATURE_ARGS
       global USR_ALLOCATED_RAM
       global USR_REPO_PATH
+      global USR_VM_PATH
       global USR_NETWORK_DEVICE
       global USR_ID
       global USR_NAME
@@ -690,6 +713,30 @@ def autopilot():
       else:
          handoff()
 
+   def experimentalAudio():
+      global apFilePath
+      global USR_EXP_AUDIO
+      clear()
+      print("\n\n   "+color.BOLD+color.BLUE+"ENABLE EXPERIMENTAL AUDIO SUPPORT?"+color.END,"")
+      print("   Try this feature early\n")
+      print("   Based on suggestions from the ULTMOS community, experimental \n   audio support is being tested. You can help test this\n   feature if you'd like.\n\n   Enable experimental audio support?\n")
+      #print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)
+      print(color.BOLD+"      1. Enable"+color.END)
+      print(color.END+"         Adds experimental audio support\n")
+      print(color.END+"      2. No thanks\n")
+      detectChoice5 = str(input(color.BOLD+"Select> "+color.END))
+
+      if detectChoice5 == "1":
+         USR_EXP_AUDIO = True
+         stage15()
+
+      elif detectChoice5 == "2":
+         USR_EXP_AUDIO = False 
+         stage15()
+
+      else:
+         experimentalAudio()
+
    def stage14():
       global customValue
       global currentStage
@@ -760,7 +807,7 @@ def autopilot():
          blob.write(USR_CREATE_XML)
          blob.close()
          currentStage = currentStage + 1
-         stage15()
+         experimentalAudio()
 
       elif stageSelect == "2":
          cpydLog("ok",str("XML generation will be skipped from AP flow"))
@@ -769,13 +816,13 @@ def autopilot():
          blob.write(USR_CREATE_XML)
          blob.close()
          customValue = 1
-         stage15()
+         experimentalAudio()
 
       elif stageSelect == "b" or stageSelect == "B":
          currentStage = 1
-         #if USR_TARGET_OS >= 14 and USR_TARGET_OS <= 14: 
-         #   stage12()
-         if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012: 
+         if USR_TARGET_OS >= 14 and USR_TARGET_OS <= 14: 
+            stage12()
+         elif USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012: 
             stage12()
          else:
             stage13()
@@ -848,17 +895,17 @@ def autopilot():
          blob.close()
          currentStage = currentStage + 1
          stage14()
-      #if USR_TARGET_OS >= 14 and USR_TARGET_OS <= 14: 
-      #   cpydLog("warn",str("Custom resolution unsupported with Sonoma patching, using default value of "+str(defaultValue)))
-      #   USR_SCREEN_RES = "1280x720"
-      #   blob = open("./blobs/USR_SCREEN_RES.apb","w")
-      #   blob.write(USR_SCREEN_RES)
-      #   blob.close()
-      #   blob = open("./blobs/.cdn_control","w")
-      #   blob.write("fresh_cdn")
-      #   blob.close()
-      #   currentStage = currentStage + 1
-      #   stage14()
+      if USR_TARGET_OS >= 14 and USR_TARGET_OS <= 14: 
+         cpydLog("warn",str("Custom resolution unsupported with Sonoma patching, using default value of "+str(defaultValue)))
+         USR_SCREEN_RES = "1280x720"
+         blob = open("./blobs/USR_SCREEN_RES.apb","w")
+         blob.write(USR_SCREEN_RES)
+         blob.close()
+         blob = open("./blobs/.cdn_control","w")
+         blob.write("fresh_cdn")
+         blob.close()
+         currentStage = currentStage + 1
+         stage14()
       else:   
          print("   "+color.BOLD+"━━━━━━━13/14━━━━━━"+color.GRAY+"━"+color.END)
          print("\n   "+color.BOLD+"Screen resolution"+color.END)
@@ -1036,7 +1083,7 @@ def autopilot():
          blob.close()
          stage13()
       else:
-         if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012: #or USR_TARGET_OS >= 15 and USR_TARGET_OS <= 99:
+         if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
             print(color.END+color.GRAY+"\n      1. Download from Apple..."+color.END)
             print(color.BOLD+"      2. Select existing...")
          else:
@@ -1560,7 +1607,7 @@ def autopilot():
          cpydLog("wait",("Waiting for user input"))
          customInput = str(input(color.BOLD+"Value> "+color.END))
          cpydLog("ok",("User input received"))
-         USR_HDD_PATH = "$REPO_PATH/HDD.qcow2"
+         USR_HDD_PATH = "$VM_PATH/HDD.qcow2"
          USR_HDD_SIZE = customInput
          cpydLog("ok",str("Custom value was set to "+str(customInput)))               #+".sh" #<--- change required prefix/suffix
          currentStage = currentStage + 1
@@ -1641,7 +1688,7 @@ def autopilot():
          if stageSelect == "1":
             cpydLog("ok",str("Using default value of "+str(defaultValue)))
             USR_HDD_SIZE = defaultValue
-            USR_HDD_PATH = "$REPO_PATH/HDD.qcow2"
+            USR_HDD_PATH = "$VM_PATH/HDD.qcow2"
             blob = open("./blobs/USR_HDD_PATH.apb","w")
             blob.write(USR_HDD_PATH)
             blob.close()
@@ -2235,7 +2282,8 @@ def autopilot():
 
       osIcon = "ap-"+USR_TARGET_OS_NAME.lower().replace(" ","")
       osIcon = "ap-"+USR_TARGET_OS_NAME.lower().replace(" beta","")
-         
+      osIcon = osIcon+"-g2"   
+      
       if int(USR_TARGET_OS) < 1013 and int(USR_TARGET_OS) >= 100:
          osIcon = "ap-legacy"
 
@@ -2386,7 +2434,7 @@ def autopilot():
          stage1()
 
       try: # DISCORD RPC
-         RPC.update(large_image="ultmos",large_text=projectVer,details="AutoPilot",state="Selecting macOS version",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         RPC.update(large_image="ultmos-g2",large_text=projectVer,details="AutoPilot",state="Selecting macOS version",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
       except:
          None
 
@@ -2410,6 +2458,7 @@ def autopilot():
          print(color.END+"      8. High Sierra (10.13)\n")
          
          print(color.END+"      9. Legacy versions...\n")
+         
          customInput = str(input(color.BOLD+"Select> "+color.END))
          
          if customInput == "1":
@@ -2431,7 +2480,6 @@ def autopilot():
          elif customInput == "9":
             customValue = 2
             stage2()
-         
 
          else:
             customValue = 1
@@ -2653,7 +2701,7 @@ def autopilot():
       clear()
 
       try: # DISCORD RPC
-         RPC.update(large_image="ultmos",large_text=projectVer,details="AutoPilot",state="Naming their config file",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
+         RPC.update(large_image="ultmos-g2",large_text=projectVer,details="AutoPilot",state="Naming their config file",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
       except:
          None
 
@@ -2938,7 +2986,7 @@ def autopilot():
          errorMessage = "Couldn't prepare files. You may have insufficient\n           permissions or damaged files."
          refreshStatusGUI()
          cpydLog("info",("Setting up environment"))
-         os.system("cp resources/baseConfig resources/config.sh")
+         os.system("cp "+repoDir+"/resources/baseConfig "+repoDir+"/resources/config.sh")
          progressUpdate(12)
          cpydLog("ok",("Copied baseConfig into live working file"))
          time.sleep(1)
@@ -2959,7 +3007,7 @@ def autopilot():
          if USR_TARGET_OS <= 1015 and USR_TARGET_OS >= 1013 and USR_TARGET_OS > 99:
             cpydLog("ok",("Selected OLD OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
-            os.system("cp resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
+            os.system("cp "+repoDir+"/resources/oc_store/compat_old/OpenCore.qcow2 boot/OpenCore.qcow2")
             progressUpdate(32)
             #os.system("cp resources/oc_store/compat_old/config.plist boot/config.plist")
             #os.system("cp -R resources/oc_store/compat_old/EFI boot/EFI")
@@ -2967,13 +3015,13 @@ def autopilot():
          elif USR_TARGET_OS <= 1012 and USR_TARGET_OS >= 108 and USR_TARGET_OS >= 100:
             cpydLog("ok",("Selected NEW LEGACY OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
-            os.system("cp resources/oc_store/legacy_new/OpenCore.qcow2 boot/OpenCore.qcow2")
+            os.system("cp "+repoDir+"/resources/oc_store/legacy_new/OpenCore.qcow2 boot/OpenCore.qcow2")
             progressUpdate(32)
             cpydLog("ok",("OpenCore image copied"))
          elif USR_TARGET_OS <= 1012 and USR_TARGET_OS <= 107 and USR_TARGET_OS >= 100:
             cpydLog("ok",("Selected OLD LEGACY OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
-            os.system("cp resources/oc_store/legacy_new/OpenCore.qcow2 boot/OpenCore.qcow2")
+            os.system("cp "+repoDir+"/resources/oc_store/legacy_new/OpenCore.qcow2 boot/OpenCore.qcow2")
             progressUpdate(32)
             cpydLog("ok",("OpenCore image copied"))
          #elif USR_TARGET_OS >= 1400:
@@ -2984,29 +3032,29 @@ def autopilot():
          else:
             cpydLog("ok",("Selected NEW OpenCore image"))
             cpydLog("info",("Copying OpenCore image in place"))
-            os.system("cp resources/oc_store/compat_new/OpenCore.qcow2 boot/OpenCore.qcow2")
+            os.system("cp "+repoDir+"/resources/oc_store/compat_new/OpenCore.qcow2 boot/OpenCore.qcow2")
             progressUpdate(32)
             #os.system("cp resources/oc_store/compat_new/config.plist boot/config.plist")
             #os.system("cp -R resources/oc_store/compat_new/EFI boot/EFI")
             cpydLog("ok",("OpenCore image copied"))
          
          cpydLog("info",("Copying OVMF code into place"))
-         os.system("cp resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
-         os.system("cp resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
+         os.system("cp "+repoDir+"/resources/ovmf/OVMF_CODE.fd ovmf/OVMF_CODE.fd")
+         os.system("cp "+repoDir+"/resources/ovmf/OVMF_VARS.fd ovmf/OVMF_VARS.fd")
          progressUpdate(40)
          cpydLog("info",("Copying OVMF vars for resolution "+str(USR_SCREEN_RES)))
-         os.system("cp resources/ovmf/OVMF_VARS_"+USR_SCREEN_RES+".fd ovmf/OVMF_VARS.fd")
+         os.system("cp "+repoDir+"/resources/ovmf/OVMF_VARS_"+USR_SCREEN_RES+".fd ovmf/OVMF_VARS.fd")
          progressUpdate(46)
          cpydLog("ok",("OVMF files copied"))
 
          # NOW COPY A DUPLICATE TO LOCAL STORE FOR RESTORATION WITH SETTINGS PRESERVATION
          cpydLog("info",("Creating local OVMF variable store"))
-         os.system("cp resources/ovmf/OVMF_VARS_"+USR_SCREEN_RES+".fd ovmf/user_store/OVMF_VARS.fd")
+         os.system("cp "+repoDir+"/resources/ovmf/OVMF_VARS_"+USR_SCREEN_RES+".fd ovmf/user_store/OVMF_VARS.fd")
          progressUpdate(62)
          
          cpydLog("info",("Performing integrity check"))
          integrityConfig = 1
-         if os.path.exists("resources/config.sh"):
+         if os.path.exists(""+repoDir+"/resources/config.sh"):
             integrityConfig = integrityConfig + 0
          else:
             integrityConfig = integrityConfig - 1
@@ -3137,6 +3185,7 @@ def autopilot():
          cpydLog("info",("STARTING GENERATION PHASE"))
          global PROC_GENXML
          global USR_CFG
+         global USR_EXP_AUDIO
          global customValue
          global customInput
          global errorMessage
@@ -3221,7 +3270,7 @@ def autopilot():
          progressUpdate(31)
 
          cpydLog("info",("Beginning variable injection"))
-         with open("resources/config.sh","r") as file:
+         with open(repoDir+"/resources/config.sh","r") as file:
             configData = file.read()
          configData = configData.replace("$USR_CPU_SOCKS",str(USR_CPU_SOCKS))
          configData = configData.replace("$USR_CPU_CORES",str(USR_CPU_CORES))
@@ -3229,7 +3278,8 @@ def autopilot():
          configData = configData.replace("$USR_CPU_MODEL",str(USR_CPU_MODEL))
          configData = configData.replace("$USR_CPU_FEATURE_ARGS",str(USR_CPU_FEATURE_ARGS))
          configData = configData.replace("$USR_ALLOCATED_RAM",str(USR_ALLOCATED_RAM))
-         configData = configData.replace("$USR_REPO_PATH",workdir)
+         configData = configData.replace("$USR_REPO_PATH",repoDir)
+         configData = configData.replace("$USR_VM_PATH",nrsDir)
          configData = configData.replace("$USR_NETWORK_DEVICE",str(USR_NETWORK_DEVICE))
          progressUpdate(37)
          if USR_TARGET_OS >= 1013 or USR_TARGET_OS <= 99:
@@ -3256,7 +3306,7 @@ def autopilot():
          progressUpdate(64)
          if USR_TARGET_OS_ID == "sonoma": # APPLY 14.4 FIX
             configData = configData.replace("-device usb-ehci,id=ehci","#-device usb-ehci,id=ehci")
-            os.system("cp resources/ovmf/OVMF_VARS_SonomaPatch.fd ovmf/OVMF_VARS.fd")
+            os.system("cp "+repoDir+"/resources/ovmf/OVMF_VARS_SonomaPatch.fd ovmf/OVMF_VARS.fd")
 
          if USR_HDD_TYPE == "HDD":
             cpydLog("ok",("Disk type is HDD, leaving rotation rate as default"))
@@ -3274,6 +3324,12 @@ def autopilot():
          progressUpdate(72)
          
 
+         if USR_EXP_AUDIO == True:
+            cpydLog("info",("Enabling experimental audio support"))
+            configData = configData.replace("-device ich9-intel-hda -device hda-duplex","-audio driver=sdl,model=virtio")
+         else:
+            cpydLog("info",("Experimental audio support will not be enabled"))
+
 
          cpydLog("ok",("Variable injection complete"))
 
@@ -3287,7 +3343,7 @@ def autopilot():
          progressUpdate(82)
          cpydLog("info",("Checking if Discord rich presence is available"))
          
-         if os.path.exists("./resources/python/pypresence/presence.py"): # Now uses built in script
+         if os.path.exists(repoDir+"/resources/python/pypresence/presence.py"): # Now uses built in script
             cpydLog("ok",("Discord rich presence is available, will enable in script"))
             configData = configData.replace("DISCORD_RPC=1","DISCORD_RPC=1")
          else:
@@ -3303,15 +3359,15 @@ def autopilot():
          cpydLog("info",("Setting up BaseSystem image attachment"))
          if USR_BOOT_FILE == "-2":
             cpydLog("warn",("Detaching BaseSystem from script, user skipped"))
-            configData = configData.replace("-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw","#-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw")
+            configData = configData.replace("-drive id=BaseSystem,if=none,file=\"$VM_PATH/BaseSystem.img\",format=raw","#-drive id=BaseSystem,if=none,file=\"$VM_PATH/BaseSystem.img\",format=raw")
             configData = configData.replace("-device ide-hd,bus=sata.4,drive=BaseSystem","#-device ide-hd,bus=sata.4,drive=BaseSystem")
-         with open ("resources/config.sh","w") as file:
+         with open (repoDir+"/resources/config.sh","w") as file:
             cpydLog("info",("Writing changes"))
             file.write(configData)
             cpydLog("ok",("Changes written to file"))
          progressUpdate(96)
          cpydLog("info",("Performing integrity check"))
-         with open("resources/config.sh","r") as file:
+         with open(repoDir+"/resources/config.sh","r") as file:
             configDataTest = file.read()
          if "ALLOCATED_RAM=\""+str(USR_ALLOCATED_RAM) in configDataTest:
             integrityCfg3 = 0
@@ -3340,6 +3396,7 @@ def autopilot():
          global PROC_FETCHDL
          global USR_TARGET_OS_F
          global USR_TARGET_OS_ID
+         global repoDir
          cpydLog("info",("STARTING REMOTE RECOVERY PHASE"))
          try: # DISCORD RPC
                RPC.update(large_image=osIcon,large_text=projectVer,state="Downloading recovery image...",details="AutoPilot",small_image="doodnetwork",small_text="Downloading Data...",start=sparkTime,buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
@@ -3352,22 +3409,29 @@ def autopilot():
          integrityImg = 1
          refreshStatusGUI()
          time.sleep(2)
+         os.chdir(repoDir)
          cpydLog("info",("Setting target OS to "+str(USR_TARGET_OS)))
          #print(color.BOLD+"   Downloading macOS",str(USR_TARGET_OS_F)+"...")
+         #print(repoDir+"/scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --disable-percentage")
          if len(USR_TARGET_OS_ID) > 1 and customDownload == False:
             cpydLog("ok",("OS ID is valid, sending to dlosx script"))
             if enableProgress == True:
-               if enablePercentage == True:
-                  os.system("./scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID)
+               if enablePercentage == True: #    NOW USING NRS
+                  os.system(repoDir+"/scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --nrs")
                else:
-                  os.system("./scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --disable-percentage")
+                  os.system(repoDir+"/scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --disable-percentage --nrs")
             else:
-               os.system("./scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --disable-progress")
+               os.system(repoDir+"/scripts/dlosx-arg.py -s "+USR_TARGET_OS_ID+" --disable-progress --nrs")
+
          else:
             cpydLog("warn",("OS ID is NOT valid, running dlosx without passthrough"))
-            os.system("./scripts/dlosx.py")
+            os.system(repoDir+"/scripts/dlosx.py --nrs")
          #subprocess.Popen(cmd).wait()
          #print(os.path.getsize("./BaseSystem.img"))
+
+         os.chdir(nrsDir)
+         os.system("mv "+repoDir+"/resources/BaseSystem.img ./BaseSystem.img") # Use new resource location
+
          if os.path.exists("./BaseSystem.img"):
             cpydLog("info",("Checking BaseSystem with a size of "+str(os.path.getsize("./BaseSystem.img"))))
          if os.path.exists("./BaseSystem.img") and os.path.getsize("./BaseSystem.img") > 314572800:
@@ -3416,7 +3480,7 @@ def autopilot():
             PROC_LOCALCOPY_CVTN = 1
             refreshStatusGUI()
             time.sleep(1)
-            os.system("resources/dmg2img ./BaseSystem.dmg > /dev/null 2>&1")
+            os.system(repoDir+"/resources/dmg2img ./BaseSystem.dmg > /dev/null 2>&1")
             cpydLog("info",("Finished converting, removing source DMG"))
             os.system("rm ./BaseSystem.dmg")
             time.sleep(1)
@@ -3563,7 +3627,7 @@ def autopilot():
          refreshStatusGUI()
          time.sleep(2)
          
-         if os.path.exists("resources/config.sh"):
+         if os.path.exists(repoDir+"/resources/config.sh"):
             cpydLog("ok",("Integrity check PASSED"))
             integrityImg = 1
          else:
@@ -3572,7 +3636,7 @@ def autopilot():
             throwError()
          
          progressUpdate(2)
-         with open("resources/config.sh","r") as file:
+         with open(repoDir+"/resources/config.sh","r") as file:
             cpydLog("info",("Dumping contents of baseConfig to memory"))
             configData = file.read()
          progressUpdate(8)
@@ -3589,11 +3653,11 @@ def autopilot():
          cpydLog("info",("Generating epoch timestamp"))
          configData = configData.replace("GEN_EPOCH=000000000","GEN_EPOCH="+str(int(time.time())))
          cpydLog("ok",("Epoch timestamped as "+str(int(time.time()))))
-         with open ("resources/config.sh","w") as file:
+         with open (repoDir+"/resources/config.sh","w") as file:
             cpydLog("info",("Writing to file"))
             file.write(configData)
          progressUpdate(12)
-         with open("resources/config.sh","r") as file:
+         with open(repoDir+"/resources/config.sh","r") as file:
             configDataTest = file.read()
          if "#   THIS FILE WAS GENERATED USING AUTOPILOT." in configDataTest:
             integrityImg + 0
@@ -3604,7 +3668,7 @@ def autopilot():
             throwError()
          progressUpdate(77)
          cpydLog("info",("Moving working file into place"))
-         os.system("mv resources/config.sh ./"+USR_CFG)
+         os.system("mv "+repoDir+"/resources/config.sh ./"+USR_CFG)
          
          progressUpdate(91)
          #if USR_CREATE_XML == "True":
@@ -3648,9 +3712,14 @@ def autopilot():
             os.system("cp blobs/*.apb blobs/user/")
             progressUpdate(38)
             time.sleep(1)
+            nrsTargetConfig = os.path.abspath("./"+USR_CFG)
+            nrsTargetDir = nrsDir
+            os.chdir(repoDir)
             cpydLog("ok",("Handing off to XMLC and waiting for result"))
-            os.system("./scripts/extras/xml-convert.py --no-import --quiet --mark-ap --convert ./"+USR_CFG)
+            #print(repoDir+"/scripts/extras/xml-convert.py --no-import --quiet --mark-ap --convert "+nrsTargetConfig+" --nrs-dir "+nrsTargetDir)
+            os.system(repoDir+"/scripts/extras/xml-convert.py --no-import --quiet --mark-ap --convert "+nrsTargetConfig+" --nrs-dir "+nrsTargetDir)
             cpydLog("info",("Got exit signal from XMLC, checking integrity"))
+            os.chdir(nrsDir)
             progressUpdate(94)
             global errorMessage
             errorMessage = "Failed to convert script to XML."
@@ -3769,6 +3838,7 @@ def autopilot():
       global USR_CPU_FEATURE_ARGS
       global USR_ALLOCATED_RAM
       global USR_REPO_PATH
+      global USR_VM_PATH
       global USR_NETWORK_DEVICE
       global USR_ID
       global USR_NAME
@@ -3786,7 +3856,7 @@ def autopilot():
          RPC.update(large_image=osIcon,large_text=projectVer,state=finishedText,details="AutoPilot",small_image="doodsuccess",small_text="Finished",buttons=([{"label": "View on GitHub", "url": "https://github.com/Coopydood/ultimate-macOS-KVM"}])) 
       except:
          None
-      
+
       cpydLog("ok",("Timer was stopped with a recorded time of "+str(exTime)+" seconds in live mode"))
       clear()
       cpydLog("ok",("AutoPilot stages complete, displaying user summary screen"))
@@ -3837,7 +3907,7 @@ def autopilot():
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
             
-            os.system("./scripts/extras/xml-convert.py --import "+USR_CFG_XML)
+            os.system(repoDir+"/scripts/extras/xml-convert.py --import "+USR_CFG_XML)
          
          elif stageSelect == "2":
             cpydLog("info",("Handing off to QEMU; booting "+USR_CFG))
@@ -3864,7 +3934,8 @@ def autopilot():
             cpydLog("info",("Returning to main menu"))
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
-            os.system("./main.py")
+            os.chdir(repoDir)
+            os.system(repoDir+"/main.py")
 
          elif stageSelect == "q" or stageSelect == "Q":
             cpydLog("fatal",("User quit"))
@@ -3940,7 +4011,8 @@ def autopilot():
             cpydLog("info",("Returning to main menu"))
             cpydLog("fatal",("bye"))
             cpydLog("fatal","───────────────── END OF LOGFILE ─────────────────")
-            os.system("./main.py")
+            os.chdir(repoDir)
+            os.system(repoDir+"/main.py")
 
          elif stageSelect == "q" or stageSelect == "Q":
             cpydLog("fatal",("User quit"))
@@ -3983,6 +4055,7 @@ elif detectChoice == "?":
    os.system('./scripts/autopilot.py')
 elif detectChoice == "2":
     cpydLog("info",("Returning to main menu"))
+    os.chdir(repoDir)
     os.system('./main.py')
 
 elif detectChoice == "q" or detectChoice == "Q":

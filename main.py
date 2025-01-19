@@ -88,6 +88,39 @@ def startup():
         os.system("cp ./main.py ./resources/script_store/")
         os.system("cp ./.version ./resources/script_store/")
 
+
+    def fts():
+        clear()
+        print("\n\n   "+color.BOLD+color.BLUE+"                WELCOME TO"+color.CYAN+" ULTMOS"+color.BLUE+color.BOLD+""+color.END)
+        print("                First time setup wizard\n")
+        print("   Welcome! As this is your first time using ULTMOS, you\n   must select how you'd like to use the project.\n   The project can be run in 2 modes.")
+        print(color.BOLD+"\n      1. Standard mode (recommended)")
+        print(color.END+"         This mode is the default, and sets up the repo to\n         use a traditional folder structure; designed for \n         use with one virtual machine at a time. Making a\n         new VM would replace the old one.")
+        #print(color.BOLD+"\n      2. Create a new XML file using AutoPilot...")
+        #print(color.END+"         Use this option if you do not have an AutoPilot config file.\n         This script will take you through the AutoPilot steps before\n         generating an XML file based on your answers. No existing\n         data, such as vHDDs, can be used with this method.")
+        print(color.BOLD+color.GRAY+"\n      2. Dynamic mode (BETA)"+color.END)
+        print(color.GRAY+"         This mode is intended to replace standard mode. It\n         instead allows you to create many VMs under one\n         repo, sharing project resources. This means you can\n         easily move and copy VMs to other computers.")
+        print(color.RED+"         This feature is currently unavailable.\n"+color.END)
+        print("   Please select a mode to begin.\n")
+    
+        #print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"WARNING"+color.END+"\n   This action requires superuser permissions.\n"+color.END)
+        detectChoiceMode = str(input(color.BOLD+"Select> "+color.END))
+
+        if detectChoiceMode == detectChoiceMode:
+            clear()
+            nrsblob = open("./resources/.nrsMode","w")
+            nrsblob.write("1")
+            nrsblob.close()
+        else:
+            fts()
+    
+    #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
+    #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
+    #print("   Select an option to continue.")
+
+    #if not os.path.exists("./resources/.nrsMode"):       # FOR FUTURE DEVELOPMENT
+    #    fts()
+
     if isVM == True:
         print(color.YELLOW+"\n   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
     if os.path.exists("blobs/user/USR_CFG.apb"):
@@ -98,12 +131,10 @@ def startup():
         print(color.BOLD+"\n\n   Welcome to"+color.CYAN,"ULTMOS"+color.END+color.GRAY,"v"+version+color.END)
         print("   by Coopydood"+color.END)
         print("\n   This project can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, checking your system, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.")
-    
-    
-    #print(color.BOLD+"\n"+"Profile:"+color.END,"https://github.com/Coopydood")
-    #print(color.BOLD+"   Repo:"+color.END,"https://github.com/Coopydood/ultimate-macOS-KVM")
-    #print("   Select an option to continue.")
 
+
+
+    
 
     if os.path.exists("./blobs/USR_TARGET_OS.apb") and not os.path.exists("./blobs/user/USR_TARGET_OS.apb"):  # Rescue live blobs if coming from older repo version
         os.system("mv ./blobs/*.apb ./blobs/user")
@@ -164,11 +195,11 @@ def startup():
                 if "APC-RUN" in apFileM:
                     VALID_FILE = 1
 
-                    if "#-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw" not in apFileM and "-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw" in apFileM and "HDD_PATH=\"/dev/disk/" not in apFileM:
+                    if "#-drive id=BaseSystem,if=none,file=\"$VM_PATH/BaseSystem.img\",format=raw" not in apFileM and "-drive id=BaseSystem,if=none,file=\"$VM_PATH/BaseSystem.img\",format=raw" in apFileM and "HDD_PATH=\"/dev/disk/" not in apFileM:
                         if os.path.exists("./blobs/user/USR_HDD_PATH.apb"):
                             hddPath = open("./blobs/user/USR_HDD_PATH.apb")
                             hddPath = hddPath.read()
-                            hddPath = hddPath.replace("$REPO_PATH",os.path.realpath(os.curdir))
+                            hddPath = hddPath.replace("$VM_PATH",os.path.realpath(os.curdir))
                         if (os.path.getsize(hddPath)) > 22177079296 and not os.path.exists("./blobs/user/.noBaseSystemReminder"):
                             baseSystemNotifArmed = True
                     #REQUIRES_SUDO = 1 # UNCOMMENT FOR DEBUGGING
@@ -242,7 +273,7 @@ def baseSystemAlert():
     if detectChoice5 == "1":
         with open("./"+apFilePath,"r") as apFile:
             apFileM = apFile.read()
-            apFileM = apFileM.replace("-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw\n-device ide-hd,bus=sata.4,drive=BaseSystem","#-drive id=BaseSystem,if=none,file=\"$REPO_PATH/BaseSystem.img\",format=raw\n#-device ide-hd,bus=sata.4,drive=BaseSystem")
+            apFileM = apFileM.replace("-drive id=BaseSystem,if=none,file=\"$VM_PATH/BaseSystem.img\",format=raw\n-device ide-hd,bus=sata.4,drive=BaseSystem","#-drive id=BaseSystem,if=none,file=\"$VM_PATH/BaseSystem.img\",format=raw\n#-device ide-hd,bus=sata.4,drive=BaseSystem")
             apFile.close()
         time.sleep(1)
         with open("./"+apFilePath,"w") as apFile:

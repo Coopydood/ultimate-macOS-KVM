@@ -40,8 +40,8 @@
   <vcpu placement="static">$USR_CPU_TOTAL</vcpu>
   <os>
     <type arch="x86_64" machine="pc-q35-4.2">hvm</type>
-    <loader readonly="yes" type="pflash">$REPO_PATH/$OVMF_DIR/OVMF_CODE.fd</loader>
-    <nvram>$REPO_PATH/$OVMF_DIR/OVMF_VARS.fd</nvram>
+    <loader readonly="yes" type="pflash">$VM_PATH/$OVMF_DIR/OVMF_CODE.fd</loader>
+    <nvram>$VM_PATH/$OVMF_DIR/OVMF_VARS.fd</nvram>
     <boot dev="hd"/>
   </os>
   <features>
@@ -63,7 +63,7 @@
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2"/>
-      <source file="$REPO_PATH/boot/OpenCore.qcow2"/>
+      <source file="$VM_PATH/boot/OpenCore.qcow2"/>
       <target dev="sda" bus="sata"/>
       <address type="drive" controller="0" bus="0" target="0" unit="0"/>
     </disk>
