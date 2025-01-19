@@ -4,7 +4,7 @@
 
 <p align="center">Helping you build the ultimate macOS virtual machine, powered by KVM.</p>
 
-<p align="center"><a href="https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest"><b>What's new?</b></a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest">Switch to dev branch... ⎋</a>
+<p align="center"><a href="https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest"><b>What's new?</b></a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="https://github.com/Coopydood/ultimate-macOS-KVM/tree/dev">Switch to dev branch... ⎋</a>
 
 <br>
 
