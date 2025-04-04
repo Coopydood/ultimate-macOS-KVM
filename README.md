@@ -352,7 +352,7 @@ These awesome people were generous enough to donate financially to help fuel the
 
 <img align="left" width="100" height="100" src="https://dortania.github.io/docs/latest/Logos/Logo.png">
 
-<h3>Powered by OpenCore<br><sub>Version 1.0.1</sub></h3>
+<h3>Powered by OpenCore<br><sub>Version 1.0.4</sub></h3>
 
 This project would not be possible without the incredible work of the [OpenCore development team](https://github.com/Acidanthera). Thank you to everyone involved! ❤️
 
