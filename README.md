@@ -1,6 +1,6 @@
 <p align="center"><a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/dev/resources/images/bannerAlphaBasicPortrait.png?raw=true" alt="Logo" width="250"/></a></p>
 
-<h2 align="center">v0.13.0</h2>
+<h2 align="center">v0.13.1</h2>
 
 <p align="center">Helping you build the ultimate macOS virtual machine, powered by KVM.</p>
 
@@ -11,10 +11,6 @@
 <div align=center><br>
 <a href="https://github.com/Coopydood/ultimate-macOS-KVM/releases/latest"><img src="https://img.shields.io/github/v/release/Coopydood/ultimate-macOS-KVM?style=for-the-badge&color=1793D1&logo=github&logoColor=white&label="></a> <a href="https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Coopydood/ultimate-macOS-KVM?label=Licence&logo=unlicense&logoColor=white&style=for-the-badge"></a> <a href="https://github.com/Coopydood/ultimate-macOS-KVM"><img src="https://img.shields.io/github/repo-size/Coopydood/ultimate-macOS-KVM?color=07b55b&label=Size&logo=envoy-proxy&logoColor=white&style=for-the-badge"></a> <a href="https://discord.gg/WzWkSsT"> <img src="https://img.shields.io/discord/574943603466436628?color=7d86ff&label=Discord&logo=discord&logoColor=white&style=for-the-badge"></a>
 </div>
-
-***
-
-<h3 align=center>⭐⠀⠀Thank you for 500 stars!⠀⠀💛</h3>
 
 ***
 
@@ -347,7 +343,7 @@ Apple has attempted to classify the OSK as a trade secret but has ultimately fai
 
 These awesome people were generous enough to donate financially to help fuel the 3AM misadventures this project is made from. Thank you so much!
 
-<!-- sponsors --><a href="https://github.com/WaveringAna"><img src="https://images.weserv.nl/?url=https://github.com/WaveringAna.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="WaveringAna"></a><a href="https://github.com/SaRoKu"><img src="https://images.weserv.nl/?url=https://github.com/SaRoKu.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="SaRoKu"></a><!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/WaveringAna"><img src="https://images.weserv.nl/?url=https://github.com/WaveringAna.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="WaveringAna"></a><a href="https://github.com/SaRoKu"><img src="https://images.weserv.nl/?url=https://github.com/SaRoKu.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="SaRoKu"></a><a href="https://github.com/eversiege"><img src="https://images.weserv.nl/?url=https://github.com/eversiege.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="eversiege"></a><a href="https://github.com/citkane"><img src="https://images.weserv.nl/?url=https://github.com/citkane.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="citkane"></a><a href="https://github.com/cynman"><img src="https://images.weserv.nl/?url=https://github.com/cynman.png?v=1&h=100&w=100&fit=cover&mask=circle&maxage=7d" height="50px" width="50px" alt="cynman"></a><!-- sponsors -->
 
 <br><br>
 <sup>If you find this project helpful, and want to support development, you can <a href="https://github.com/sponsors/Coopydood">sponsor it</a>! Any and all donations are incredibly appreciated and never expected or required! </sup>
@@ -356,7 +352,7 @@ These awesome people were generous enough to donate financially to help fuel the
 
 <img align="left" width="100" height="100" src="https://dortania.github.io/docs/latest/Logos/Logo.png">
 
-<h3>Powered by OpenCore<br><sub>Version 1.0.1</sub></h3>
+<h3>Powered by OpenCore<br><sub>Version 1.0.4</sub></h3>
 
 This project would not be possible without the incredible work of the [OpenCore development team](https://github.com/Acidanthera). Thank you to everyone involved! ❤️
 
