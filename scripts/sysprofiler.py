@@ -867,7 +867,7 @@ if apFilePath is not None:
     if os.path.exists("./blobs/user/USR_HDD_PATH.apb"):
         targetHDDPath = open("./blobs/user/USR_HDD_PATH.apb")
         targetHDDPath = targetHDDPath.read()
-        targetHDDPath = targetHDDPath.replace("$REPO_PATH",os.path.realpath(os.path.curdir))
+        targetHDDPath = targetHDDPath.replace("$VM_PATH",os.path.realpath(os.path.curdir))
     else:
         targetHDDPath = "Unknown"
     
@@ -1006,7 +1006,13 @@ if warningCount > 0:
 time.sleep(0.1)
 progressUpdate(99)
 logFile.close()
-
+logFile = open("./logs/SPT_"+logTime+".log", "r")
+logFileC = logFile.read()
+logFileC = logFileC.replace(str(os.getlogin),"REDACTED")
+logFile.close()
+logFile = open("./logs/SPT_"+logTime+".log", "w")
+logFile.write(logFileC)
+logFile.close()
 time.sleep(0.1)
 progressUpdate(100)
 time.sleep(3)
