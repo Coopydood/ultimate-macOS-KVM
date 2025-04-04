@@ -14,10 +14,6 @@
 
 ***
 
-<h3 align=center>⭐⠀⠀Thank you for 500 stars!⠀⠀💛</h3>
-
-***
-
 <img align="left" width="100" height="100" src="https://github.com/user-attachments/assets/7b9b72ee-5a89-49b4-ae17-7a188ed533ab">
 <img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=153 width=2 />
 
