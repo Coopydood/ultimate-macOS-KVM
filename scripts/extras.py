@@ -50,6 +50,7 @@ def startup():
         print(color.END+"      3. macOS Boot Argument Editor...")
         print(color.END+"      4. GRUB Argument Editor...")
         print(color.END+"      5. Generate SMBIOS / Serial Number...\n")
+        print(color.END+"      C. Cleanup Tools...")
         print(color.RED+"      R. Restore tools...")
         print(color.END+"      I. Report an issue...")
         print(color.END+"      B. Back...")
@@ -95,6 +96,8 @@ elif detectChoice == "4":
     os.system('./scripts/hyperchromiac/grub-args.py')
 elif detectChoice == "5":
     os.system('./resources/python/smbios/GenSMBIOS.py')
+elif detectChoice == "c" or detectChoice == "C":
+    os.system('./scripts/extras/cleanup.py')
 elif detectChoice == "i" or detectChoice == "I":
     
     print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING ISSUE CREATOR IN DEFAULT BROWSER"+color.END,"")
