@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # pylint: disable=C0301,C0116,C0103,R0903
 
+"""
+This script was created by kunihir0
+https://github.com/kunihir0
+https://github.com/Coopydood/ultimate-macOS-KVM
+"""
+
 import os
 import time
 import subprocess
@@ -22,6 +28,7 @@ script = "cleanup.py"
 scriptName = "Ultimate macOS KVM Uninstaller"
 scriptID = "UNINST"
 scriptVendor = "Coopydood"
+scriptSubVendor = "kunihir0"
 
 # Parse command line arguments
 parser = argparse.ArgumentParser("Uninstaller for Ultimate macOS KVM")
@@ -371,7 +378,7 @@ def show_menu():
     """Show the main cleanup menu"""
     clear()
     print(f"\n\n   {color.BOLD}{color.RED}Ultimate macOS KVM UNINSTALLER{color.END}")
-    print(f"   Ultimate macOS KVM v{version}\n")
+    print(f"   Ultimate macOS KVM v{version} | Script by {scriptSubVendor}\n")
     print(f"   This tool allows you to clean up or completely remove Ultimate macOS KVM\n")
     
     print(f"{color.BOLD}      1. Clean downloaded macOS images")
