@@ -208,6 +208,7 @@ def startup():
    global noticeData
    global skipNotices
    global noticeGoBackAction
+   noticeData = None
    clear()
 
    if dirMode == 2:
