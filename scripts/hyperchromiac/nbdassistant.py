@@ -7,9 +7,13 @@
 # Import Required Modules
 import os
 import time
+import sys
 import subprocess
 from datetime import datetime
+sys.path.append('./resources/python')
+from cpydColours import color
 import argparse
+
 
 version = open("./.version")
 version = version.read()
@@ -26,6 +30,8 @@ args = parser.parse_args()
 
 global logTime
 logTime = str(datetime.today().strftime('%d-%m-%Y_%H-%M-%S'))
+
+def clear(): print("\n" * 150)
 
 if args.disableLog == True:
    enableLog = False
@@ -107,7 +113,7 @@ def menu():
     # Menu
     if args.mount != True and args.unmount != True:
         print(spaces + "   \033[1m\033[94mOPENCORE ASSISTANT\033[0m")
-        print("   by \033[1mHyperchromiac\033[0m\n")
+        print("   by \033[1mHyperchromiac\033[0m and \033[1mkunihir0\033[0m\n")
         print("   This script was created with the sole purpose of simplifying\n   the process of mounting and unmounting your OpenCore.qcow2\n   so you can make any modifications necessary. \033[37m(e.g. config.plist)\n\n\033[93m   It is highly recommended that you \033[91m\033[1mBACKUP\033[0m\033[93m your OpenCore.qcow2\n   in case you mess something up.\033[0m\n")
         print("   Select an option to continue.\n")
         print("      1. Mount OpenCore ⚠\n         This will mount your OpenCore.qcow2 with read-write permissions.\n         \033[93mWill prompt you for superuser permissions, which are required.\033[0m\n")
@@ -154,6 +160,9 @@ def menu():
         os.system("mkdir -p boot/mnt")
         
         # Load NBD module
+        clear()
+        print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To mount the OpenCore image,\n   the script needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
+
         os.system("sudo modprobe nbd")
         
         # Connect the OpenCore qcow2 image
@@ -226,6 +235,9 @@ def menu():
         
         # Unmount and disconnect
         cpydLog("info", "Unmounting boot/mnt directory")
+        clear()
+        print(color.YELLOW+color.BOLD+"\n   ⚠ "+color.END+color.BOLD+"SUPERUSER PRIVILEGES"+color.END+"\n   To mount the OpenCore image,\n   the script needs superuser to continue.\n\n   Press CTRL+C to cancel.\n"+color.END)
+        
         unmount_result, unmount_stdout, unmount_stderr = run_command("sudo umount -R boot/mnt")
         
         if unmount_result != 0:

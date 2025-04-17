@@ -27,8 +27,7 @@ if not os.path.exists("./main.py"):
 script = "cleanup.py"
 scriptName = "Ultimate macOS KVM Uninstaller"
 scriptID = "UNINST"
-scriptVendor = "Coopydood"
-scriptSubVendor = "kunihir0"
+scriptVendor = "kunihir0"
 
 # Parse command line arguments
 parser = argparse.ArgumentParser("Uninstaller for Ultimate macOS KVM")
@@ -185,11 +184,11 @@ def check_virtmanager_vms():
                 continue
         
         if ultmos_vms:
-            print(f"  {color.YELLOW}Found {len(ultmos_vms)} Ultimate macOS KVM VM(s) in virt-manager:{color.END}")
+            print(f"  {color.YELLOW}Found {len(ultmos_vms)} ULTMOS VM(s) in virt-manager:{color.END}")
             for vm in ultmos_vms:
                 print(f"  - {vm}")
         else:
-            print(f"  {color.GREEN}No Ultimate macOS KVM VMs found in virt-manager.{color.END}")
+            print(f"  {color.GREEN}No ULTMOS VMs found in virt-manager.{color.END}")
             
         return ultmos_vms
         
@@ -198,11 +197,11 @@ def check_virtmanager_vms():
         return []
 
 def remove_virtmanager_vms(vm_list):
-    """Remove Ultimate macOS KVM VMs from virt-manager"""
+    """Remove ULTMOS VMs from virt-manager"""
     if not vm_list:
         return True
         
-    print(f"\n{color.BOLD}{color.YELLOW}Removing Ultimate macOS KVM VMs from virt-manager...{color.END}")
+    print(f"\n{color.BOLD}{color.YELLOW}Removing ULTMOS VMs from virt-manager...{color.END}")
     
     success = True
     for vm in vm_list:
@@ -250,7 +249,7 @@ echo "Removing Ultimate macOS KVM directory: {directory}"
         if virt_vms:
             script_content += f"""
 # Removing related VMs from virt-manager
-echo "Removing Ultimate macOS KVM VMs from virt-manager..."
+echo "Removing ULTMOS VMs from virt-manager..."
 """
             for vm in virt_vms:
                 script_content += f"""
@@ -300,12 +299,12 @@ fi
 
 def uninstall_ultimate_macos_kvm(force=False, keep_data=False):
     """Complete self-destructing uninstallation of Ultimate macOS KVM"""
-    print(f"\n{color.BOLD}{color.RED}UNINSTALLING Ultimate macOS KVM...{color.END}")
+    print(f"\n{color.BOLD}{color.RED}UNINSTALLING ULTMOS...{color.END}")
     
     # Serious warning
     print(f"\n{color.BOLD}{color.RED}WARNING: THIS WILL COMPLETELY REMOVE Ultimate macOS KVM!{color.END}")
     print(f"{color.YELLOW}This is a permanent operation that will:{color.END}")
-    print(f"  - Delete ALL Ultimate macOS KVM files, scripts, and configurations")
+    print(f"  - Delete ALL ULTMOS files, scripts, and configurations")
     print(f"  - Remove all downloaded macOS images")
     
     if keep_data:
@@ -316,7 +315,7 @@ def uninstall_ultimate_macos_kvm(force=False, keep_data=False):
     # Check for VMs in virt-manager
     virt_vms = check_virtmanager_vms()
     if virt_vms:
-        print(f"\n{color.RED}WARNING: Found Ultimate macOS KVM VMs in virt-manager!{color.END}")
+        print(f"\n{color.RED}WARNING: Found ULTMOS VMs in virt-manager!{color.END}")
         print(f"These will also be removed during uninstallation.")
     
     # Confirmation - require typing "UNINSTALL" to proceed
@@ -329,7 +328,7 @@ def uninstall_ultimate_macos_kvm(force=False, keep_data=False):
         
         # If VMs were found, ask for specific confirmation
         if virt_vms and not force:
-            print(f"\n{color.YELLOW}Do you want to remove the Ultimate macOS KVM VMs from virt-manager? (y/n): {color.END}")
+            print(f"\n{color.YELLOW}Do you want to remove the ULTMOS VMs from virt-manager? (y/n): {color.END}")
             vm_confirmation = input()
             if vm_confirmation.lower() not in ['y', 'yes']:
                 print(f"  {color.YELLOW}VMs will be kept in virt-manager.{color.END}")
@@ -377,17 +376,17 @@ def uninstall_ultimate_macos_kvm(force=False, keep_data=False):
 def show_menu():
     """Show the main cleanup menu"""
     clear()
-    print(f"\n\n   {color.BOLD}{color.RED}Ultimate macOS KVM UNINSTALLER{color.END}")
-    print(f"   Ultimate macOS KVM v{version} | Script by {scriptSubVendor}\n")
-    print(f"   This tool allows you to clean up or completely remove Ultimate macOS KVM\n")
+    print(f"\n\n   {color.BOLD}{color.RED}ULTMOS UNINSTALLER{color.END}")
+    print(f"   by {color.BOLD}{scriptVendor}{color.END}\n")
+    print(f"   This tool allows you to clean up or completely remove Ultimate macOS KVM.\n")
     
     print(f"{color.BOLD}      1. Clean downloaded macOS images")
     print(f"{color.END}         Removes downloaded recovery and installation files\n")
     
-    print(f"{color.BOLD}      2. {color.RED}Uninstall Ultimate macOS KVM (keep virtual disks){color.END}")
+    print(f"{color.BOLD}     {color.RED} 2. Uninstall ULTMOS (keep virtual disks){color.END}")
     print(f"{color.END}         Completely removes Ultimate macOS KVM but backs up your VM disk images\n")
     
-    print(f"{color.BOLD}      3. {color.RED}Uninstall Ultimate macOS KVM (remove EVERYTHING){color.END}")
+    print(f"{color.BOLD}     {color.RED} 3. Uninstall ULTMOS (remove EVERYTHING){color.END}")
     print(f"{color.END}         Complete removal including all virtual disk images\n")
     
     print(f"{color.END}      Q. Exit\n")

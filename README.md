@@ -1,6 +1,6 @@
 <p align="center"><a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/dev/resources/images/bannerAlphaBasicPortrait.png?raw=true" alt="Logo" width="250"/></a></p>
 
-<h2 align="center">v0.13.1</h2>
+<h2 align="center">v0.13.2</h2>
 
 <p align="center">Helping you build the ultimate macOS virtual machine, powered by KVM.</p>
 
