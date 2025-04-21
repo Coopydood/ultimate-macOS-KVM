@@ -127,6 +127,53 @@ def create_basic_self_destruct_script(directory: str, keep_user_data: bool = Fal
 # Wait for the parent process to exit
 sleep 2
 
+# Safety checks to ensure we're deleting the correct directory
+echo "Performing safety checks before removal..."
+
+# Check if directory exists
+if [ ! -d "{directory}" ]; then
+  echo "Directory {directory} does not exist. Aborting."
+  exit 1
+fi
+
+# Check if it's a valid Ultimate macOS KVM repository
+REQUIRED_FILES=("main.py" "LICENSE" "README.md")
+REQUIRED_DIRS=("scripts" "resources")
+FILES_FOUND=0
+DIRS_FOUND=0
+
+for file in "${{REQUIRED_FILES[@]}}"; do
+  if [ -f "{directory}/$file" ]; then
+    FILES_FOUND=$((FILES_FOUND + 1))
+  fi
+done
+
+for dir in "${{REQUIRED_DIRS[@]}}"; do
+  if [ -d "{directory}/$dir" ]; then
+    DIRS_FOUND=$((DIRS_FOUND + 1))
+  fi
+done
+
+# Require at least 2 expected files and 1 expected directory
+if [ $FILES_FOUND -lt 2 ] || [ $DIRS_FOUND -lt 1 ]; then
+  echo "SAFETY CHECK FAILED: {directory} does not appear to be a valid Ultimate macOS KVM repository."
+  echo "Uninstallation aborted for your safety."
+  exit 1
+fi
+
+# Check if it's not a system directory
+UNSAFE_PATHS=("/" "/bin" "/boot" "/dev" "/etc" "/home" "/lib" "/lib64" "/media" "/mnt" "/opt" "/proc" "/root" "/run" "/sbin" "/srv" "/sys" "/tmp" "/usr" "/var")
+
+DIR_PATH=$(realpath "{directory}")
+for path in "${{UNSAFE_PATHS[@]}}"; do
+  if [ "$DIR_PATH" = "$path" ]; then
+    echo "SAFETY CHECK FAILED: Cannot delete system directory: $DIR_PATH"
+    echo "Uninstallation aborted for your safety."
+    exit 1
+  fi
+done
+
+echo "Safety checks passed - confirmed it's the UMK5 repository"
 echo "Removing Ultimate macOS KVM directory: {directory}"
 """
         
@@ -157,10 +204,16 @@ fi
 """
 
         script_content += f"""
-# Remove everything
-rm -rf "{directory}"
+# Remove entire repository at once
+echo "Removing entire repository: {directory}"
+rm -rf --preserve-root "{directory}"
 
-echo "Ultimate macOS KVM has been completely removed."
+# Verify removal was successful
+if [ -d "{directory}" ]; then
+  echo "Warning: Some files/directories may remain."
+else
+  echo "Ultimate macOS KVM has been completely removed."
+fi
 
 if [ -d "{temp_backup_dir}" ]; then
   echo "Your virtual disk images have been backed up to: {temp_backup_dir}"

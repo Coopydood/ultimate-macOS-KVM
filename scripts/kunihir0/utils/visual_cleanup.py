@@ -200,56 +200,109 @@ def backup_user_data(source_dir: str, backup_dir: str):
     print_step("User data backup complete", "success")
     print_step(f"Backed up to: {backup_dir}")
 
+def is_safe_to_delete(directory: str) -> bool:
+    """Check if it's safe to delete the directory
+    
+    Performs sanity checks to avoid accidentally deleting system directories
+    
+    Args:
+        directory: Directory to check
+        
+    Returns:
+        bool: True if safe to delete, False otherwise
+    """
+    # Check if directory is empty or root
+    if not directory or directory == '/' or directory == '.' or directory == '..':
+        return False
+    
+    # Check if directory exists
+    if not os.path.exists(directory):
+        return False
+        
+    # Don't remove system directories
+    unsafe_paths = ['/', '/bin', '/boot', '/dev', '/etc', '/home', '/lib', '/lib64',
+                   '/media', '/mnt', '/opt', '/proc', '/root', '/run', '/sbin',
+                   '/srv', '/sys', '/tmp', '/usr', '/var']
+    
+    # Get absolute path for safety
+    abs_path = os.path.abspath(directory)
+    
+    if abs_path in unsafe_paths:
+        return False
+    
+    # Verify it's actually the UMK5 repository by checking for specific files
+    required_files = ['main.py', 'LICENSE', 'README.md']
+    required_directories = ['scripts', 'resources']
+    
+    files_found = 0
+    dirs_found = 0
+    
+    for item in required_files:
+        if os.path.isfile(os.path.join(abs_path, item)):
+            files_found += 1
+            
+    for item in required_directories:
+        if os.path.isdir(os.path.join(abs_path, item)):
+            dirs_found += 1
+            
+    # Require at least 2 expected files and 1 expected directory
+    if files_found < 2 or dirs_found < 1:
+        return False
+        
+    return True
+
 def remove_directory(directory: str):
     """Remove a directory with visual feedback
     
     Args:
         directory: Directory to remove
     """
-    print_step(f"Removing directory: {directory}")
+    print_step(f"Removing repository: {directory}")
     
-    # Count total items for progress tracking
-    total_items = sum([len(dirs) + len(files) for _, dirs, files in os.walk(directory, topdown=False)])
-    
-    if total_items == 0:
-        print_step("Directory is already empty", "warning")
+    # Perform safety checks
+    if not is_safe_to_delete(directory):
+        print_step("SAFETY CHECK FAILED: Cannot delete this directory!", "fail")
+        print_step("The directory does not appear to be a valid Ultimate macOS KVM repository", "fail")
+        print_step("Uninstallation aborted for your safety", "fail")
         return
     
-    # Remove files and directories with progress tracking
-    removed_items = 0
-    for root, dirs, files in os.walk(directory, topdown=False):
-        # Remove files first
-        for file in files:
-            path = os.path.join(root, file)
-            spinner(f"Removing: {os.path.basename(path)}", 0.05)
-            try:
-                os.unlink(path)
-                removed_items += 1
-                if removed_items % 5 == 0:  # Update progress every 5 items
-                    progress_bar(removed_items / total_items, "Cleanup Progress", 30)
-            except Exception as e:
-                print_step(f"Failed to remove {path}: {str(e)}", "fail")
-        
-        # Then remove directories
-        for dir in dirs:
-            path = os.path.join(root, dir)
-            spinner(f"Removing dir: {os.path.basename(path)}", 0.05)
-            try:
-                os.rmdir(path)
-                removed_items += 1
-                if removed_items % 5 == 0:  # Update progress every 5 items
-                    progress_bar(removed_items / total_items, "Cleanup Progress", 30)
-            except Exception as e:
-                print_step(f"Failed to remove directory {path}: {str(e)}", "fail")
+    if not os.path.exists(directory):
+        print_step("Directory does not exist", "warning")
+        return
     
-    # Finally remove the root directory
+    print_step("Safety checks passed - confirmed it's the UMK5 repository")
+    print_step("Preparing to remove entire repository")
+    spinner("Calculating size...", 1.0)
+    
     try:
-        os.rmdir(directory)
-    except Exception:
-        pass
+        # Use shutil.rmtree to directly remove the entire directory structure
+        print_step("Removing entire repository at once")
+        spinner("Deleting repository...", 2.0)
+        
+        # Display a progress bar for visual feedback
+        for i in range(10):
+            progress_bar((i+1) / 10, "Removal Progress", 30)
+            time.sleep(0.2)
+        
+        # Actually perform the deletion
+        shutil.rmtree(directory, ignore_errors=True)
+        
+        # Show full progress
+        progress_bar(1.0, "Removal Progress", 30)
+    except Exception as e:
+        print_step(f"Error during removal: {str(e)}", "fail")
+        # Try basic rm -rf as fallback, but only if safety checks passed
+        try:
+            # Use --preserve-root as an extra safety measure
+            subprocess.run(['rm', '-rf', '--preserve-root', directory], check=False)
+        except:
+            pass
     
-    print("")
-    print_step("Directory removal complete", "success")
+    # Final check to see if directory was successfully removed
+    if os.path.exists(directory):
+        print_step("Warning: Some files/directories may remain", "warning")
+    else:
+        print_step("Repository removal complete", "success")
 
 def self_destruct(directory: str, keep_user_data: bool = False, virt_vms: Optional[List[str]] = None):
     """Perform the complete self-destruct operation with visual feedback
