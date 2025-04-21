@@ -29,9 +29,83 @@ except (ImportError, NameError):
     color = Colors
 
 
-def create_self_destruct_script(directory: str, keep_user_data: bool = False, virt_vms: Optional[List[str]] = None, 
+def create_self_destruct_script(directory: str, keep_user_data: bool = False, virt_vms: Optional[List[str]] = None,
                                log_func=print) -> Optional[str]:
     """Create a temporary script that will delete the Ultimate macOS KVM directory after this script terminates
+    
+    Args:
+        directory: Directory to delete
+        keep_user_data: Whether to backup user data during uninstallation
+        virt_vms: List of VM names to remove from virt-manager
+        log_func: Function to use for logging
+        
+    Returns:
+        str or None: Path to the self-destruct script, or None if failed
+    """
+    # Create a temp directory for our visual cleanup script
+    temp_dir = tempfile.mkdtemp(prefix='ultmos_uninstall_')
+    cleanup_script_path = os.path.join(temp_dir, "visual_cleanup.py")
+    
+    try:
+        # Get path to the visual cleanup module
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        source_script_path = os.path.join(current_dir, "visual_cleanup.py")
+        
+        # Copy the visual cleanup script to the temp directory
+        try:
+            import shutil
+            shutil.copy2(source_script_path, cleanup_script_path)
+            os.chmod(cleanup_script_path, 0o755)
+            log_func(f"  Prepared visual cleanup script.")
+        except Exception as e:
+            log_func(f"  {color.YELLOW}Warning: Could not copy visual script: {str(e)}{color.END}")
+            log_func(f"  {color.YELLOW}Falling back to basic uninstallation.{color.END}")
+            return create_basic_self_destruct_script(directory, keep_user_data, virt_vms, log_func)
+        
+        # Create the wrapper shell script
+        fd, path = tempfile.mkstemp(suffix='.sh')
+        
+        # Format VM list for command line if provided
+        vm_args = ""
+        if virt_vms:
+            vm_list = " ".join([f'"{vm}"' for vm in virt_vms])
+            vm_args = f"--vms {vm_list}"
+        
+        # Create the shell script that calls our Python script
+        script_content = f"""#!/bin/bash
+# Wait for the parent process to exit
+sleep 2
+
+# Run the visual cleanup script
+python3 "{cleanup_script_path}" --directory "{directory}" {vm_args} {"--keep-data" if keep_user_data else ""}
+
+# Clean up the temp directory (self-cleanup)
+rm -rf "{temp_dir}"
+"""
+        
+        # Write the script
+        with os.fdopen(fd, 'w') as tmp:
+            tmp.write(script_content)
+        
+        # Make it executable
+        os.chmod(path, 0o755)
+        return path
+    except Exception as e:
+        log_func(f"  {color.RED}Failed to create self-destruct script: {str(e)}{color.END}")
+        try:
+            # Clean up
+            if os.path.exists(cleanup_script_path):
+                os.unlink(cleanup_script_path)
+            if os.path.exists(temp_dir):
+                os.rmdir(temp_dir)
+        except:
+            pass
+        return None
+
+
+def create_basic_self_destruct_script(directory: str, keep_user_data: bool = False, virt_vms: Optional[List[str]] = None,
+                               log_func=print) -> Optional[str]:
+    """Create a basic shell script for self-destruction (fallback if visual cleanup fails)
     
     Args:
         directory: Directory to delete
@@ -120,12 +194,20 @@ def execute_self_destruct(script_path: str, log_func=print) -> bool:
         bool: True if script was started successfully, False otherwise
     """
     try:
-        subprocess.Popen(['sudo', script_path], 
-                         stdout=subprocess.DEVNULL, 
-                         stderr=subprocess.DEVNULL, 
-                         start_new_session=True)
+        log_func(f"\n{color.GREEN}Starting uninstallation with visual feedback...{color.END}")
+        log_func(f"You may be prompted for your sudo password.")
+        
+        # Run the script with sudo but keep stdin, stdout, and stderr open
+        # This ensures the user can see and respond to the password prompt
+        process = subprocess.Popen(['sudo', script_path])
+        
+        # Wait briefly to allow the sudo prompt to appear
+        import time
+        time.sleep(1)
+        
         log_func(f"\n{color.GREEN}Uninstallation in progress...{color.END}")
-        log_func(f"You can close this terminal now. Ultimate macOS KVM is being removed.")
+        log_func(f"A visual interface will guide you through the uninstallation.")
+        log_func(f"Once you've entered your password (if prompted), the process will begin automatically.")
         return True
     except Exception as e:
         log_func(f"\n{color.RED}Failed to start uninstallation: {str(e)}{color.END}")
