@@ -139,6 +139,7 @@ def remove_vm_data_only(force=False):
         print(f"{color.YELLOW}This operation will:{color.END}")
         print(f"  - Remove VMs from virt-manager if found")
         print(f"  - Delete all VM disk images in the disks/ directory")
+        print(f"  - Handle any disk images in the root directory")
         print(f"  - Keep the ULTMOS repository intact")
         
         # Check for VMs in virt-manager
@@ -146,6 +147,9 @@ def remove_vm_data_only(force=False):
         
         # Check for running QEMU processes
         running_vms = check_running_vms()
+        
+        # Check for root directory disk images
+        root_disk_images = check_root_disk_images()
         
         # Confirmation
         if not force:
@@ -171,6 +175,10 @@ def remove_vm_data_only(force=False):
         # Stop running QEMU processes
         if running_vms:
             stop_running_vms(running_vms, force)
+        
+        # Handle root disk images
+        if root_disk_images:
+            handle_root_disk_images(root_disk_images, force)
         
         # Check and unmount any mounted images
         check_mounted_images()
@@ -239,6 +247,140 @@ def check_mounted_images():
         print(f"  {color.YELLOW}Warning: Could not check for mounted images: {str(e)}{color.END}")
     
     return True
+
+def check_root_disk_images():
+    """Check for disk images in the root directory that might conflict with autopilot"""
+    print(f"\n{color.BOLD}{color.BLUE}Checking for disk images in root directory...{color.END}")
+    
+    root_dir = os.path.abspath(".")
+    root_images = []
+    
+    # Common disk image patterns
+    disk_patterns = [
+        "*.qcow2",
+        "*.img",
+        "*.raw",
+        "*.vdi",
+        "*.vmdk",
+        "HDD*"
+    ]
+    
+    # Find all disk images in root directory
+    for pattern in disk_patterns:
+        import glob
+        matching_files = glob.glob(os.path.join(root_dir, pattern))
+        # Filter out known system files like BaseSystem.img and OpenCore.qcow2 in boot/
+        filtered_files = [f for f in matching_files if not (
+            "boot/OpenCore.qcow2" in f or
+            "BaseSystem.img" in f or
+            "/resources/" in f or
+            "/boot/" in f
+        )]
+        root_images.extend(filtered_files)
+    
+    # Report findings
+    if root_images:
+        print(f"  {color.YELLOW}Found {len(root_images)} disk images in root directory:{color.END}")
+        for img in root_images:
+            print(f"  - {os.path.basename(img)}")
+    else:
+        print(f"  {color.GREEN}No disk images found in root directory.{color.END}")
+        
+    return root_images
+
+def handle_root_disk_images(disk_images, force=False):
+    """Handle disk images found in the root directory"""
+    if not disk_images:
+        return True
+    
+    print(f"\n{color.BOLD}{color.YELLOW}Disk images found in root directory need attention{color.END}")
+    print(f"  These disk images may conflict with autopilot if you reinstall.")
+    
+    # Present options
+    if not force:
+        print(f"\n  {color.BOLD}What would you like to do?{color.END}")
+        print(f"  1. Move to 'disks/' directory (recommended)")
+        print(f"  2. Delete disk images")
+        print(f"  3. Keep as is (may cause conflicts with autopilot)")
+        
+        choice = input(f"\n  {color.BOLD}Choice [1-3]: {color.END}")
+        
+        if choice == "1":
+            # Create disks directory if it doesn't exist
+            disks_dir = os.path.join(os.path.abspath("."), "disks")
+            os.makedirs(disks_dir, exist_ok=True)
+            
+            # Move each file
+            for disk_path in disk_images:
+                disk_name = os.path.basename(disk_path)
+                target_path = os.path.join(disks_dir, disk_name)
+                
+                # Check if target already exists
+                if os.path.exists(target_path):
+                    print(f"  {color.YELLOW}Warning: {disk_name} already exists in disks/{color.END}")
+                    overwrite = input(f"  Overwrite? (y/n): ")
+                    if overwrite.lower() not in ['y', 'yes']:
+                        print(f"  {color.YELLOW}Skipping {disk_name}{color.END}")
+                        continue
+                
+                try:
+                    print(f"  Moving {disk_name} to disks/ directory...")
+                    shutil.move(disk_path, target_path)
+                    print(f"  {color.GREEN}✓{color.END} Successfully moved {disk_name}")
+                except Exception as e:
+                    print(f"  {color.RED}✗{color.END} Failed to move {disk_name}: {str(e)}")
+            
+            return True
+            
+        elif choice == "2":
+            # Delete confirmation
+            print(f"\n  {color.RED}WARNING: This will permanently delete the disk images.{color.END}")
+            confirm = input(f"  {color.BOLD}Type 'DELETE' to confirm: {color.END}")
+            
+            if confirm != "DELETE":
+                print(f"  {color.YELLOW}Deletion cancelled.{color.END}")
+                return False
+                
+            # Delete each file
+            for disk_path in disk_images:
+                try:
+                    print(f"  Deleting {os.path.basename(disk_path)}...")
+                    os.remove(disk_path)
+                    print(f"  {color.GREEN}✓{color.END} Successfully deleted {os.path.basename(disk_path)}")
+                except Exception as e:
+                    print(f"  {color.RED}✗{color.END} Failed to delete {os.path.basename(disk_path)}: {str(e)}")
+            
+            return True
+            
+        elif choice == "3":
+            print(f"\n  {color.YELLOW}Keeping disk images in root directory.{color.END}")
+            print(f"  {color.YELLOW}Note: This may cause conflicts if you run autopilot again.{color.END}")
+            return True
+            
+        else:
+            print(f"\n  {color.RED}Invalid choice. Keeping disk images as is.{color.END}")
+            return False
+    else:
+        # In force mode, move to disks/
+        disks_dir = os.path.join(os.path.abspath("."), "disks")
+        os.makedirs(disks_dir, exist_ok=True)
+        
+        for disk_path in disk_images:
+            try:
+                disk_name = os.path.basename(disk_path)
+                target_path = os.path.join(disks_dir, disk_name)
+                print(f"  Moving {disk_name} to disks/ directory...")
+                
+                # Handle existing files in force mode by overwriting
+                if os.path.exists(target_path):
+                    os.remove(target_path)
+                
+                shutil.move(disk_path, target_path)
+                print(f"  {color.GREEN}✓{color.END} Successfully moved {disk_name}")
+            except Exception as e:
+                print(f"  {color.RED}✗{color.END} Failed to handle {os.path.basename(disk_path)}: {str(e)}")
+        
+        return True
 
 def check_virtmanager_vms():
     """Check for Ultimate macOS KVM VMs imported into virt-manager"""
@@ -598,6 +740,11 @@ def uninstall_ultimate_macos_kvm(force=False, keep_data=False):
         print(f"\n{color.RED}WARNING: Found running macOS VMs started directly!{color.END}")
         print(f"These will also be stopped during uninstallation.")
     
+    # Check for disk images in the root directory
+    root_disk_images = check_root_disk_images()
+    if root_disk_images:
+        handle_root_disk_images(root_disk_images, force)
+    
     # Confirmation - require typing "UNINSTALL" to proceed
     if not force:
         print(f"\n{color.BOLD}This action cannot be undone. Type {color.RED}UNINSTALL{color.END}{color.BOLD} to proceed or anything else to cancel: {color.END}")
@@ -750,6 +897,7 @@ def main():
         if args.downloads:
             clean_downloaded_images(force)
         elif args.vmonly:
+            # Check for both root disk images and disks in the disks/ directory
             remove_vm_data_only(force)
         else:
             # Default action is to uninstall
@@ -768,16 +916,39 @@ def main():
             
             elif selection == "2":
                 clear()
+                # Check for disk images in the root directory
+                root_disk_images = check_root_disk_images()
+                
+                # Handle these images before proceeding with VM removal
+                if root_disk_images and not handle_root_disk_images(root_disk_images, False):
+                    print(f"\n{color.YELLOW}VM data removal cancelled.{color.END}")
+                    print("\nPress Enter to continue...")
+                    input()
+                    continue
+                    
+                # Proceed with regular VM data removal    
                 remove_vm_data_only(False)
                 print("\nPress Enter to continue...")
                 input()
             
             elif selection == "3":
                 clear()
+                # Check for disk images in the root directory to ensure they're backed up
+                root_disk_images = check_root_disk_images()
+                if root_disk_images:
+                    print(f"\n{color.YELLOW}Found disk images in root directory.{color.END}")
+                    print(f"{color.YELLOW}These will be included in the backup before uninstallation.{color.END}")
+                    
                 uninstall_ultimate_macos_kvm(False, True)  # Keep user data
             
             elif selection == "4":
                 clear()
+                # Check for disk images in the root directory
+                root_disk_images = check_root_disk_images()
+                if root_disk_images:
+                    print(f"\n{color.RED}WARNING: Found disk images in root directory.{color.END}")
+                    print(f"{color.RED}These will be PERMANENTLY DELETED along with everything else!{color.END}")
+                    
                 uninstall_ultimate_macos_kvm(False, False)  # Remove everything
             
             elif selection.lower() == "q":
