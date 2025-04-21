@@ -34,6 +34,7 @@ parser = argparse.ArgumentParser("Uninstaller for Ultimate macOS KVM")
 parser.add_argument("--downloads", dest="downloads", help="Clean downloaded recovery images", action="store_true")
 parser.add_argument("--force", dest="force", help="Force uninstallation without confirmation", action="store_true")
 parser.add_argument("--keep-data", dest="keepdata", help="Keep user data during uninstallation", action="store_true")
+parser.add_argument("--vm-only", dest="vmonly", help="Remove only VM and VM data, keep repository", action="store_true")
 args = parser.parse_args()
 
 # Try to get version
@@ -107,6 +108,84 @@ def clean_downloaded_images(force=False):
     print(f"  {color.GREEN}Cleaned {cleaned_count} downloaded recovery images.{color.END}")
     return cleaned_count
 
+def remove_vm_data_only(force=False):
+        """Remove VM and VM data without uninstalling ULTMOS repository"""
+        print(f"\n{color.BOLD}{color.BLUE}REMOVING VM AND VM DATA ONLY{color.END}")
+        
+        # Warning
+        print(f"\n{color.BOLD}{color.YELLOW}WARNING: This will remove VMs and VM data only{color.END}")
+        print(f"{color.YELLOW}This operation will:{color.END}")
+        print(f"  - Remove VMs from virt-manager if found")
+        print(f"  - Delete all VM disk images in the disks/ directory")
+        print(f"  - Keep the ULTMOS repository intact")
+        
+        # Check for VMs in virt-manager
+        virt_vms = check_virtmanager_vms()
+        
+        # Confirmation
+        if not force:
+            print(f"\n{color.BOLD}Type {color.YELLOW}REMOVE-VM{color.END}{color.BOLD} to proceed or anything else to cancel: {color.END}")
+            confirmation = input()
+            if confirmation != "REMOVE-VM":
+                print(f"\n{color.YELLOW}VM removal cancelled.{color.END}")
+                return 0
+        
+        # Remove VMs from virt-manager if found
+        if virt_vms:
+            if not force:
+                print(f"\n{color.YELLOW}Do you want to remove the ULTMOS VMs from virt-manager? (y/n): {color.END}")
+                vm_confirmation = input()
+                if vm_confirmation.lower() in ['y', 'yes']:
+                    remove_virtmanager_vms(virt_vms)
+                else:
+                    print(f"  {color.YELLOW}VMs will be kept in virt-manager.{color.END}")
+            else:
+                # Force removal of VMs
+                remove_virtmanager_vms(virt_vms)
+        
+        # Check and unmount any mounted images
+        check_mounted_images()
+        
+        # Remove disk directory
+        disks_dir = os.path.join(os.path.abspath("."), "disks")
+        if os.path.exists(disks_dir):
+            try:
+                print(f"\n{color.BOLD}Removing VM disk images...{color.END}")
+                # List all files to be deleted
+                files_found = False
+                for root, dirs, files in os.walk(disks_dir):
+                    for file in files:
+                        files_found = True
+                        file_path = os.path.join(root, file)
+                        print(f"  Removing: {file_path}")
+                
+                if not files_found:
+                    print(f"  {color.YELLOW}No files found in disks directory.{color.END}")
+                    
+                # Actually remove the directory
+                shutil.rmtree(disks_dir)
+                print(f"\n{color.GREEN}✓{color.END} Successfully removed all VM disk images.")
+                
+                # Create an empty disks directory to maintain project structure
+                os.makedirs(disks_dir, exist_ok=True)
+                print(f"  {color.GREEN}✓{color.END} Created empty disks directory.")
+                
+                return 1
+            except Exception as e:
+                print(f"\n{color.RED}Error removing VM disk images: {str(e)}{color.END}")
+                return 0
+        else:
+            print(f"\n{color.YELLOW}No VM disk directory found.{color.END}")
+            print(f"  {color.BLUE}Creating disks directory to maintain project structure...{color.END}")
+            
+            try:
+                os.makedirs(disks_dir, exist_ok=True)
+                print(f"  {color.GREEN}✓{color.END} Created empty disks directory.")
+                return 1
+            except Exception as e:
+                print(f"  {color.RED}✗{color.END} Failed to create disks directory: {str(e)}")
+                return 0
+
 def check_mounted_images():
     """Check for mounted qcow2 images and try to unmount them"""
     print(f"\n{color.BOLD}{color.BLUE}Checking for mounted images...{color.END}")
@@ -138,7 +217,7 @@ def check_virtmanager_vms():
     
     # Check if virsh is available
     try:
-        result = subprocess.run(['which', 'virsh'], 
+        result = subprocess.run(['which', 'virsh'],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if result.returncode != 0:
             print(f"  {color.YELLOW}virt-manager/virsh not found. Skipping VM check.{color.END}")
@@ -146,55 +225,84 @@ def check_virtmanager_vms():
     except Exception:
         print(f"  {color.YELLOW}Could not check for virsh. Skipping VM check.{color.END}")
         return []
-        
-    # List all domains from virsh
+    
+    # Try both user-level and system-level approaches
+    ultmos_vms = []
+    
+    # Try user-level first (no sudo)
     try:
-        result = subprocess.run(['virsh', 'list', '--all', '--name'], 
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        vm_list = result.stdout.strip().split('\n')
-        
-        # Filter for Ultimate macOS KVM VMs
-        ultmos_vms = []
-        for vm in vm_list:
-            vm = vm.strip()
-            if not vm:  # Skip empty lines
-                continue
-                
-            # Check if this is an Ultimate macOS KVM VM by examining its XML definition
-            try:
-                xml_result = subprocess.run(['virsh', 'dumpxml', vm], 
-                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-                xml_content = xml_result.stdout
-                
-                # Look specifically for Ultimate macOS KVM identifiers in the XML
-                is_ultmos_vm = False
-                
-                # Check for specific identifiers in the VM XML
-                if "ULTMOS" in xml_content:
-                    is_ultmos_vm = True
-                if "ultimate-macOS-KVM" in xml_content or "Ultimate macOS KVM" in xml_content:
-                    is_ultmos_vm = True
-                if "OpenCore.qcow2" in xml_content and ("macOS" in vm or "OSX" in vm):
-                    is_ultmos_vm = True
-                
-                if is_ultmos_vm:
-                    ultmos_vms.append(vm)
-            except Exception:
-                # Skip this VM if we can't get its XML
-                continue
-        
-        if ultmos_vms:
-            print(f"  {color.YELLOW}Found {len(ultmos_vms)} ULTMOS VM(s) in virt-manager:{color.END}")
-            for vm in ultmos_vms:
-                print(f"  - {vm}")
-        else:
-            print(f"  {color.GREEN}No ULTMOS VMs found in virt-manager.{color.END}")
-            
-        return ultmos_vms
-        
+        print(f"  {color.BLUE}Checking for VMs at user level...{color.END}")
+        result = subprocess.run(['virsh', 'list', '--all', '--name'],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if result.returncode == 0:
+            vm_list = result.stdout.strip().split('\n')
+            ultmos_vms = process_vm_list(vm_list, False)  # False = no sudo
     except Exception as e:
-        print(f"  {color.YELLOW}Error checking for virt-manager VMs: {str(e)}{color.END}")
-        return []
+        print(f"  {color.YELLOW}Error checking for user-level VMs: {str(e)}{color.END}")
+    
+    # If no VMs found at user level, try system level with sudo
+    if not ultmos_vms:
+        try:
+            print(f"  {color.BLUE}Checking for VMs at system level (sudo)...{color.END}")
+            result = subprocess.run(['sudo', 'virsh', 'list', '--all', '--name'],
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            if result.returncode == 0:
+                vm_list = result.stdout.strip().split('\n')
+                ultmos_vms = process_vm_list(vm_list, True)  # True = use sudo
+        except Exception as e:
+            print(f"  {color.YELLOW}Error checking for system-level VMs: {str(e)}{color.END}")
+    
+    # Report findings
+    if ultmos_vms:
+        print(f"  {color.YELLOW}Found {len(ultmos_vms)} ULTMOS VM(s) in virt-manager:{color.END}")
+        for vm in ultmos_vms:
+            print(f"  - {vm}")
+    else:
+        print(f"  {color.GREEN}No ULTMOS VMs found in virt-manager.{color.END}")
+    
+    return ultmos_vms
+
+def process_vm_list(vm_list, use_sudo):
+    """Process a list of VMs and filter for ULTMOS VMs"""
+    ultmos_vms = []
+    
+    for vm in vm_list:
+        vm = vm.strip()
+        if not vm:  # Skip empty lines
+            continue
+            
+        # Check if this is an Ultimate macOS KVM VM by examining its XML definition
+        try:
+            if use_sudo:
+                xml_result = subprocess.run(['sudo', 'virsh', 'dumpxml', vm],
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            else:
+                xml_result = subprocess.run(['virsh', 'dumpxml', vm],
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                
+            if xml_result.returncode != 0:
+                continue  # Skip if we can't get XML
+                
+            xml_content = xml_result.stdout
+            
+            # Look specifically for Ultimate macOS KVM identifiers in the XML
+            is_ultmos_vm = False
+            
+            # Check for specific identifiers in the VM XML
+            if "ULTMOS" in xml_content:
+                is_ultmos_vm = True
+            if "ultimate-macOS-KVM" in xml_content or "Ultimate macOS KVM" in xml_content:
+                is_ultmos_vm = True
+            if "OpenCore.qcow2" in xml_content and ("macOS" in vm or "OSX" in vm):
+                is_ultmos_vm = True
+            
+            if is_ultmos_vm:
+                ultmos_vms.append(vm)
+        except Exception:
+            # Skip this VM if we can't get its XML
+            continue
+    
+    return ultmos_vms
 
 def remove_virtmanager_vms(vm_list):
     """Remove ULTMOS VMs from virt-manager"""
@@ -205,28 +313,68 @@ def remove_virtmanager_vms(vm_list):
     
     success = True
     for vm in vm_list:
-        try:
-            # Try to destroy the VM first (if running)
-            subprocess.run(['virsh', 'destroy', vm], 
-                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                        
-            # Undefine the VM with storage
-            result = subprocess.run(['virsh', 'undefine', vm, '--remove-all-storage'], 
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            
-            if result.returncode == 0:
-                print(f"  {color.GREEN}✓{color.END} Removed VM: {vm}")
-            else:
-                # Try without storage removal as fallback
-                result = subprocess.run(['virsh', 'undefine', vm], 
-                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        print(f"  Attempting to remove VM: {vm}")
+        
+        # Try both user and system level removal (first without sudo, then with sudo)
+        sudo_levels = [False, True]  # First False (no sudo), then True (with sudo)
+        vm_removed = False
+        
+        for use_sudo in sudo_levels:
+            if vm_removed:
+                break
+                
+            try:
+                # Command prefix based on sudo level
+                cmd_prefix = ['sudo'] if use_sudo else []
+                sudo_text = "with sudo" if use_sudo else "without sudo"
+                print(f"  Trying {sudo_text}...")
+                
+                # Try to destroy the VM first (if running)
+                destroy_cmd = cmd_prefix + ['virsh', 'destroy', vm]
+                subprocess.run(destroy_cmd,
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                           
+                # Try to undefine VM with NVRAM and storage removal
+                undefine_cmd = cmd_prefix + ['virsh', 'undefine', vm, '--remove-all-storage', '--nvram']
+                result = subprocess.run(undefine_cmd,
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                
                 if result.returncode == 0:
-                    print(f"  {color.GREEN}✓{color.END} Removed VM (storage may remain): {vm}")
-                else:
-                    print(f"  {color.RED}✗{color.END} Failed to remove VM: {vm}")
-                    success = False
-        except Exception as e:
-            print(f"  {color.RED}✗{color.END} Error removing VM {vm}: {str(e)}")
+                    print(f"  {color.GREEN}✓{color.END} Removed VM: {vm} {sudo_text}")
+                    vm_removed = True
+                    break
+                    
+                # Try again without storage removal
+                undefine_cmd = cmd_prefix + ['virsh', 'undefine', vm, '--nvram']
+                result = subprocess.run(undefine_cmd,
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                                   
+                if result.returncode == 0:
+                    print(f"  {color.GREEN}✓{color.END} Removed VM (storage may remain): {vm} {sudo_text}")
+                    vm_removed = True
+                    break
+                
+                # Try one last time without nvram flag
+                undefine_cmd = cmd_prefix + ['virsh', 'undefine', vm]
+                result = subprocess.run(undefine_cmd,
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                                   
+                if result.returncode == 0:
+                    print(f"  {color.GREEN}✓{color.END} Removed VM (nvram may remain): {vm} {sudo_text}")
+                    vm_removed = True
+                    break
+                    
+                # If we're on the last attempt (with sudo) and still failing, show error
+                if use_sudo:
+                    print(f"  {color.YELLOW}Failed with error: {result.stderr.strip()}{color.END}")
+                
+            except Exception as e:
+                if use_sudo:  # Only show error on last attempt
+                    print(f"  {color.RED}✗{color.END} Error removing VM {vm}: {str(e)}")
+        
+        # Check final removal status
+        if not vm_removed:
+            print(f"  {color.RED}✗{color.END} Failed to remove VM: {vm} after multiple attempts")
             success = False
             
     return success
@@ -237,6 +385,8 @@ def create_self_destruct_script(directory, keep_user_data=False, virt_vms=None):
     fd, path = tempfile.mkstemp(suffix='.sh')
     try:
         user_data_dir = os.path.join(directory, "disks")
+        # Define the backup directory regardless of whether we'll use it
+        temp_backup_dir = os.path.expanduser("~/ultmos_user_data_backup")
         
         script_content = f"""#!/bin/bash
 # Wait for the parent process to exit
@@ -253,13 +403,13 @@ echo "Removing ULTMOS VMs from virt-manager..."
 """
             for vm in virt_vms:
                 script_content += f"""
-virsh destroy "{vm}" 2>/dev/null
-virsh undefine "{vm}" --remove-all-storage 2>/dev/null || virsh undefine "{vm}" 2>/dev/null
+# Try both with and without sudo
+virsh destroy "{vm}" 2>/dev/null || sudo virsh destroy "{vm}" 2>/dev/null
+virsh undefine "{vm}" --remove-all-storage --nvram 2>/dev/null || sudo virsh undefine "{vm}" --remove-all-storage --nvram 2>/dev/null || virsh undefine "{vm}" --nvram 2>/dev/null || sudo virsh undefine "{vm}" --nvram 2>/dev/null || virsh undefine "{vm}" 2>/dev/null || sudo virsh undefine "{vm}" 2>/dev/null
 """
         
         # If we're keeping user data, move it to a temp location first
         if keep_user_data and os.path.exists(user_data_dir):
-            temp_backup_dir = os.path.expanduser("~/ultmos_user_data_backup")
             script_content += f"""
 # Create backup directory
 mkdir -p "{temp_backup_dir}"
@@ -372,22 +522,25 @@ def uninstall_ultimate_macos_kvm(force=False, keep_data=False):
         except:
             pass
         return 0
-
-def show_menu():
-    """Show the main cleanup menu"""
-    clear()
-    print(f"\n\n   {color.BOLD}{color.RED}ULTMOS UNINSTALLER{color.END}")
-    print(f"   by {color.BOLD}{scriptVendor}{color.END}\n")
-    print(f"   This tool allows you to clean up or completely remove Ultimate macOS KVM.\n")
     
-    print(f"{color.BOLD}      1. Clean downloaded macOS images")
-    print(f"{color.END}         Removes downloaded recovery and installation files\n")
-    
-    print(f"{color.BOLD}     {color.RED} 2. Uninstall ULTMOS (keep virtual disks){color.END}")
-    print(f"{color.END}         Completely removes Ultimate macOS KVM but backs up your VM disk images\n")
-    
-    print(f"{color.BOLD}     {color.RED} 3. Uninstall ULTMOS (remove EVERYTHING){color.END}")
-    print(f"{color.END}         Complete removal including all virtual disk images\n")
+    def show_menu():
+        """Show the main cleanup menu"""
+        clear()
+        print(f"\n\n   {color.BOLD}{color.RED}ULTMOS UNINSTALLER{color.END}")
+        print(f"   by {color.BOLD}{scriptVendor}{color.END}\n")
+        print(f"   This tool allows you to clean up or completely remove Ultimate macOS KVM.\n")
+        
+        print(f"{color.BOLD}      1. Clean downloaded macOS images")
+        print(f"{color.END}         Removes downloaded recovery and installation files\n")
+        
+        print(f"{color.BOLD}      2. {color.YELLOW}Remove VM and VM data only{color.END}")
+        print(f"{color.END}         Removes VMs from virt-manager and deletes disk images\n         while keeping the ULTMOS repository intact\n")
+        
+        print(f"{color.BOLD}      3. {color.RED}Uninstall ULTMOS (keep virtual disks){color.END}")
+        print(f"{color.END}         Completely removes Ultimate macOS KVM but backs up your VM disk images\n")
+        
+        print(f"{color.BOLD}      4. {color.RED}Uninstall ULTMOS (remove EVERYTHING){color.END}")
+        print(f"{color.END}         Complete removal including all virtual disk images\n")
     
     print(f"{color.END}      Q. Exit\n")
     
@@ -402,6 +555,8 @@ def main():
         
         if args.downloads:
             clean_downloaded_images(force)
+        elif args.vmonly:
+            remove_vm_data_only(force)
         else:
             # Default action is to uninstall
             uninstall_ultimate_macos_kvm(force, keep_data)
@@ -419,9 +574,15 @@ def main():
             
             elif selection == "2":
                 clear()
-                uninstall_ultimate_macos_kvm(False, True)  # Keep user data
+                remove_vm_data_only(False)
+                print("\nPress Enter to continue...")
+                input()
             
             elif selection == "3":
+                clear()
+                uninstall_ultimate_macos_kvm(False, True)  # Keep user data
+            
+            elif selection == "4":
                 clear()
                 uninstall_ultimate_macos_kvm(False, False)  # Remove everything
             
