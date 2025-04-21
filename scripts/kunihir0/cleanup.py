@@ -16,8 +16,30 @@ import argparse
 import shutil
 import tempfile
 from datetime import datetime
-sys.path.append('./resources/python')
-from cpydColours import color
+
+# Add the correct path to find the cpydColours module
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'resources', 'python')))
+
+# Define fallback color class in case import fails
+class color:
+    PURPLE = '\033[95m'
+    CYAN = '\033[96m'
+    DARKCYAN = '\033[36m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    END = '\033[0m'
+    GRAY = '\u001b[38;5;245m'
+
+# Try to import cpydColours but use our fallback if it fails
+try:
+    from cpydColours import color
+except ImportError:
+    # Already using the fallback color class defined above
+    pass
 
 # Check if we're in the correct directory
 if not os.path.exists("./main.py"):
@@ -122,6 +144,9 @@ def remove_vm_data_only(force=False):
         # Check for VMs in virt-manager
         virt_vms = check_virtmanager_vms()
         
+        # Check for running QEMU processes
+        running_vms = check_running_vms()
+        
         # Confirmation
         if not force:
             print(f"\n{color.BOLD}Type {color.YELLOW}REMOVE-VM{color.END}{color.BOLD} to proceed or anything else to cancel: {color.END}")
@@ -142,6 +167,10 @@ def remove_vm_data_only(force=False):
             else:
                 # Force removal of VMs
                 remove_virtmanager_vms(virt_vms)
+        
+        # Stop running QEMU processes
+        if running_vms:
+            stop_running_vms(running_vms, force)
         
         # Check and unmount any mounted images
         check_mounted_images()
@@ -379,6 +408,101 @@ def remove_virtmanager_vms(vm_list):
             
     return success
 
+def check_running_vms():
+    """Check for running QEMU processes that might be Ultimate macOS KVM VMs"""
+    print(f"\n{color.BOLD}{color.BLUE}Checking for running QEMU processes...{color.END}")
+    
+    try:
+        # Look for QEMU processes running macOS VMs (common patterns in cmdline)
+        result = subprocess.run(['ps', 'aux'], 
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                            
+        if result.returncode != 0:
+            print(f"  {color.YELLOW}Unable to check for running processes.{color.END}")
+            return []
+            
+        running_vms = []
+        ultmos_indicators = ["OpenCore.qcow2", "-name macOS", "ULTMOS", 
+                            f"{os.path.abspath('.')}/boot/OpenCore.qcow2",
+                            f"{os.path.abspath('.')}/disks/"]
+        
+        for line in result.stdout.splitlines():
+            line = line.lower()
+            if "qemu" in line and any(indicator.lower() in line for indicator in ultmos_indicators):
+                # Extract PID from the line
+                parts = line.split()
+                if len(parts) >= 2:
+                    try:
+                        pid = parts[1]
+                        running_vms.append(pid)
+                        print(f"  {color.YELLOW}Found running QEMU process: PID {pid}{color.END}")
+                    except (ValueError, IndexError):
+                        pass
+        
+        if not running_vms:
+            print(f"  {color.GREEN}No running macOS VMs found.{color.END}")
+            
+        return running_vms
+    except Exception as e:
+        print(f"  {color.YELLOW}Error checking for running processes: {str(e)}{color.END}")
+        return []
+
+def stop_running_vms(pids, force=False):
+    """Try to gracefully stop running QEMU processes"""
+    if not pids:
+        return True
+        
+    print(f"\n{color.BOLD}{color.YELLOW}Found running macOS VMs that need to be stopped{color.END}")
+    
+    # Get confirmation unless forced
+    if not force:
+        print(f"  {color.YELLOW}Running VMs must be stopped to continue.{color.END}")
+        confirmation = input(f"  {color.BOLD}Stop running VMs? (y/n): {color.END}")
+        if confirmation.lower() not in ['y', 'yes']:
+            print(f"  {color.YELLOW}Operation cancelled. Please shut down your VMs manually.{color.END}")
+            return False
+    
+    success = True
+    for pid in pids:
+        try:
+            print(f"  Trying to gracefully stop VM with PID {pid}...")
+            # First try SIGTERM for graceful shutdown
+            subprocess.run(['kill', pid], 
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            
+            # Wait a bit and check if process is gone
+            time.sleep(2)
+            if subprocess.run(['ps', '-p', pid], 
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode != 0:
+                print(f"  {color.GREEN}✓{color.END} Successfully stopped VM with PID {pid}")
+                continue
+                
+            # If still running, ask before using SIGKILL
+            if not force:
+                print(f"  {color.YELLOW}VM with PID {pid} is still running. Force kill? (y/n): {color.END}")
+                force_kill = input()
+                if force_kill.lower() not in ['y', 'yes']:
+                    print(f"  {color.YELLOW}VM with PID {pid} was not stopped.{color.END}")
+                    success = False
+                    continue
+            
+            # Force kill with SIGKILL
+            subprocess.run(['kill', '-9', pid], 
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            time.sleep(1)
+            
+            if subprocess.run(['ps', '-p', pid], 
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode != 0:
+                print(f"  {color.GREEN}✓{color.END} Successfully force-killed VM with PID {pid}")
+            else:
+                print(f"  {color.RED}✗{color.END} Failed to stop VM with PID {pid}")
+                success = False
+        except Exception as e:
+            print(f"  {color.RED}✗{color.END} Error stopping VM with PID {pid}: {str(e)}")
+            success = False
+    
+    return success
+
 def create_self_destruct_script(directory, keep_user_data=False, virt_vms=None):
     """Create a temporary script that will delete the Ultimate macOS KVM directory after this script terminates"""
     # Create a temp file for our self-destruct script
@@ -468,6 +592,12 @@ def uninstall_ultimate_macos_kvm(force=False, keep_data=False):
         print(f"\n{color.RED}WARNING: Found ULTMOS VMs in virt-manager!{color.END}")
         print(f"These will also be removed during uninstallation.")
     
+    # Check for running QEMU processes
+    running_vms = check_running_vms()
+    if running_vms:
+        print(f"\n{color.RED}WARNING: Found running macOS VMs started directly!{color.END}")
+        print(f"These will also be stopped during uninstallation.")
+    
     # Confirmation - require typing "UNINSTALL" to proceed
     if not force:
         print(f"\n{color.BOLD}This action cannot be undone. Type {color.RED}UNINSTALL{color.END}{color.BOLD} to proceed or anything else to cancel: {color.END}")
@@ -483,6 +613,14 @@ def uninstall_ultimate_macos_kvm(force=False, keep_data=False):
             if vm_confirmation.lower() not in ['y', 'yes']:
                 print(f"  {color.YELLOW}VMs will be kept in virt-manager.{color.END}")
                 virt_vms = []
+        
+        # If running VMs were found, ask for specific confirmation
+        if running_vms and not force:
+            print(f"\n{color.YELLOW}Do you want to stop the running macOS VMs? (y/n): {color.END}")
+            running_confirmation = input()
+            if running_confirmation.lower() not in ['y', 'yes']:
+                print(f"  {color.YELLOW}Running VMs will not be stopped.{color.END}")
+                running_vms = []
     
     # Check and unmount any mounted images
     if not check_mounted_images():
@@ -490,6 +628,10 @@ def uninstall_ultimate_macos_kvm(force=False, keep_data=False):
         if not force:
             print(f"Use --force to attempt deletion anyway.")
             return 0
+    
+    # Stop running QEMU processes
+    if running_vms:
+        stop_running_vms(running_vms, force)
     
     # Determine the Ultimate macOS KVM root directory (absolute path)
     ultmos_root = os.path.abspath(".")
@@ -522,25 +664,77 @@ def uninstall_ultimate_macos_kvm(force=False, keep_data=False):
         except:
             pass
         return 0
+
+def show_menu():
+    """Show the main cleanup menu"""
+    clear()
+    print(f"\n\n   {color.BOLD}{color.RED}ULTMOS UNINSTALLER{color.END}")
+    print(f"   by {color.BOLD}{scriptVendor}{color.END}\n")
+    print(f"   This tool allows you to clean up or completely remove Ultimate macOS KVM.\n")
     
-    def show_menu():
-        """Show the main cleanup menu"""
-        clear()
-        print(f"\n\n   {color.BOLD}{color.RED}ULTMOS UNINSTALLER{color.END}")
-        print(f"   by {color.BOLD}{scriptVendor}{color.END}\n")
-        print(f"   This tool allows you to clean up or completely remove Ultimate macOS KVM.\n")
-        
-        print(f"{color.BOLD}      1. Clean downloaded macOS images")
+    # Check if there are any VM resources to clean up
+    has_vms = False
+    vms_found = check_virtmanager_vms()
+    if vms_found:
+        has_vms = True
+    
+    # Check if there are disk images to delete
+    has_disk_images = False
+    disks_dir = os.path.join(os.path.abspath("."), "disks")
+    if os.path.exists(disks_dir):
+        for root, dirs, files in os.walk(disks_dir):
+            if files:
+                has_disk_images = True
+                break
+    
+    # Check if there are downloaded images
+    has_downloads = False
+    download_files = [
+        "./BaseSystem.dmg",
+        "./BaseSystem.img",
+        "./resources/BaseSystem.dmg",
+        "./resources/BaseSystem.img",
+        "./Install*.app",
+        "./macOS*.dmg",
+        "./OSX*.dmg",
+        "./Install*.dmg"
+    ]
+    
+    for file_pattern in download_files:
+        if "*" in file_pattern:
+            import glob
+            if glob.glob(file_pattern):
+                has_downloads = True
+                break
+        elif os.path.exists(file_pattern):
+            has_downloads = True
+            break
+    
+    print(f"{color.BOLD}      1. Clean downloaded macOS images")
+    if has_downloads:
         print(f"{color.END}         Removes downloaded recovery and installation files\n")
-        
-        print(f"{color.BOLD}      2. {color.YELLOW}Remove VM and VM data only{color.END}")
-        print(f"{color.END}         Removes VMs from virt-manager and deletes disk images\n         while keeping the ULTMOS repository intact\n")
-        
-        print(f"{color.BOLD}      3. {color.RED}Uninstall ULTMOS (keep virtual disks){color.END}")
-        print(f"{color.END}         Completely removes Ultimate macOS KVM but backs up your VM disk images\n")
-        
-        print(f"{color.BOLD}      4. {color.RED}Uninstall ULTMOS (remove EVERYTHING){color.END}")
-        print(f"{color.END}         Complete removal including all virtual disk images\n")
+    else:
+        print(f"{color.GRAY}         No downloaded images found{color.END}\n")
+    
+    print(f"{color.BOLD}      2. {color.YELLOW}Remove VM and VM data only{color.END}")
+    if has_vms or has_disk_images:
+        resources = []
+        if has_vms:
+            resources.append("VMs from virt-manager")
+        if has_disk_images:
+            resources.append("disk images")
+        print(f"{color.END}         Removes {' and '.join(resources)}\n         while keeping the ULTMOS repository intact\n")
+    else:
+        print(f"{color.GRAY}         No VMs or disk images found to remove{color.END}\n")
+    
+    print(f"{color.BOLD}      3. {color.RED}Uninstall ULTMOS (keep virtual disks){color.END}")
+    print(f"{color.END}         Completely removes Ultimate macOS KVM but backs up your VM disk images\n")
+    
+    print(f"{color.BOLD}      4. {color.RED}Uninstall ULTMOS (remove EVERYTHING){color.END}")
+    if has_disk_images:
+        print(f"{color.END}         Complete removal including {color.RED}all virtual disk images{color.END}\n")
+    else:
+        print(f"{color.END}         Complete removal of Ultimate macOS KVM repository\n")
     
     print(f"{color.END}      Q. Exit\n")
     
