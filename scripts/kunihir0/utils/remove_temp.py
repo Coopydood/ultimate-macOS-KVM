@@ -56,6 +56,39 @@ def clean_logs():
     count = delete_files_in_directory("logs", "APC_RUN_*.log")
     print(f"Removed {count} log files")
     return count
+    
+def clean_pycache():
+    """Clean Python bytecode files"""
+    print("\nCleaning Python bytecode files...")
+    count = 0
+    
+    # Find all __pycache__ directories recursively
+    for root, dirs, files in os.walk("."):
+        for dir_name in dirs:
+            if dir_name == "__pycache__":
+                pycache_dir = os.path.join(root, dir_name)
+                print(f"Cleaning directory: {pycache_dir}")
+                
+                # Remove all .pyc files
+                pyc_count = 0
+                for pyc_file in glob.glob(os.path.join(pycache_dir, "*.pyc")):
+                    if delete_file(pyc_file):
+                        count += 1
+                        pyc_count += 1
+                        
+                # Try to remove the directory if empty
+                try:
+                    if not os.listdir(pycache_dir):
+                        os.rmdir(pycache_dir)
+                        print(f"✓ Removed empty directory: {pycache_dir}")
+                except Exception as e:
+                    print(f"✗ Failed to remove directory {pycache_dir}: {str(e)}")
+                
+                if pyc_count > 0:
+                    print(f"  Removed {pyc_count} .pyc files from {pycache_dir}")
+    
+    print(f"Removed {count} Python bytecode files in total")
+    return count
 
 def clean_main_directory():
     """Clean files in the main directory"""
@@ -97,7 +130,9 @@ def clean_resources():
     
     resource_files = [
         "resources/BaseSystem.dmg",
-        "resources/BaseSystem.img"
+        "resources/BaseSystem.img",
+        "resources/.notices",
+        "resources/config.sh"
     ]
     
     for file_path in resource_files:
@@ -105,6 +140,64 @@ def clean_resources():
             count += 1
             
     print(f"Removed {count} resource files")
+    return count
+
+def clean_script_store():
+    """Clean script store files"""
+    print("\nCleaning script store files...")
+    count = 0
+    
+    # Clean all files in resources/script_store directory
+    count += delete_files_in_directory("resources/script_store", "*.*")
+    
+    # Clean files in subdirectories
+    script_store_subdirs = [
+        "resources/script_store/extras",
+        "resources/script_store/hyperchromiac",
+        "resources/script_store/kunihir0",
+        "resources/script_store/kunihir0/utils",
+        "resources/script_store/restore"
+    ]
+    
+    for subdir in script_store_subdirs:
+        if os.path.exists(subdir):
+            count += delete_files_in_directory(subdir, "*.*")
+    
+    print(f"Removed {count} script store files")
+    return count
+
+def clean_boot_files():
+    """Clean boot files"""
+    print("\nCleaning boot files...")
+    count = 0
+    
+    boot_files = [
+        "boot/OpenCore.qcow2"
+    ]
+    
+    for file_path in boot_files:
+        if delete_file(file_path):
+            count += 1
+            
+    print(f"Removed {count} boot files")
+    return count
+
+def clean_ovmf_files():
+    """Clean OVMF files"""
+    print("\nCleaning OVMF files...")
+    count = 0
+    
+    ovmf_files = [
+        "ovmf/OVMF_CODE.fd",
+        "ovmf/OVMF_VARS.fd",
+        "ovmf/user_store/OVMF_VARS.fd"
+    ]
+    
+    for file_path in ovmf_files:
+        if delete_file(file_path):
+            count += 1
+            
+    print(f"Removed {count} OVMF files")
     return count
 
 def delete_file_list(file_list):
@@ -138,7 +231,8 @@ def main():
     
     # List all files from the log
     files_to_clean = [
-        "logs/APC_RUN_21-04-2025_00-08-41.log",
+        # Log files
+        "logs/APC_RUN_*.log",
         
         # Blob files in main blobs directory
         "blobs/USR_CFG.apb",
@@ -162,6 +256,8 @@ def main():
         # Resource files
         "resources/BaseSystem.dmg",
         "resources/BaseSystem.img",
+        "resources/.notices",
+        "resources/config.sh",
         
         # Root directory files
         "BaseSystem.img",
@@ -190,7 +286,7 @@ def main():
         # Blob files in user directory
         "blobs/user/USR_ALLOCATED_RAM.apb",
         "blobs/user/USR_BOOT_FILE.apb",
-        "blobs/user/USR_CFG.apb", 
+        "blobs/user/USR_CFG.apb",
         "blobs/user/USR_CPU_CORES.apb",
         "blobs/user/USR_CPU_FEATURE_ARGS.apb",
         "blobs/user/USR_CPU_MODEL.apb",
@@ -204,7 +300,44 @@ def main():
         "blobs/user/USR_NETWORK_DEVICE.apb",
         "blobs/user/USR_SCREEN_RES.apb",
         "blobs/user/USR_TARGET_OS.apb",
-        "blobs/user/USR_TARGET_OS_NAME.apb"
+        "blobs/user/USR_TARGET_OS_NAME.apb",
+        
+        # Python bytecode files
+        "resources/python/__pycache__/*.pyc",
+        "resources/python/pypresence/__pycache__/*.pyc",
+        
+        # Boot and OVMF files
+        "boot/OpenCore.qcow2",
+        "ovmf/OVMF_CODE.fd",
+        "ovmf/OVMF_VARS.fd",
+        "ovmf/user_store/OVMF_VARS.fd",
+        
+        # Script store files
+        "resources/script_store/.version",
+        "resources/script_store/autopilot.py",
+        "resources/script_store/barrier.sh",
+        "resources/script_store/compatchecks.py",
+        "resources/script_store/cvtosx.sh",
+        "resources/script_store/dlosx-arg.py",
+        "resources/script_store/dlosx.py",
+        "resources/script_store/drpc.py",
+        "resources/script_store/extras.py",
+        "resources/script_store/iommu.sh",
+        "resources/script_store/main.py",
+        "resources/script_store/repo-update.py",
+        "resources/script_store/restoretools.py",
+        "resources/script_store/sysprofiler.py",
+        "resources/script_store/vfio-ids.py",
+        "resources/script_store/vfio-menu.py",
+        "resources/script_store/vfio-pci.py",
+        "resources/script_store/vmcheck.py",
+        
+        # Script store subdirectory files
+        "resources/script_store/extras/*.py",
+        "resources/script_store/hyperchromiac/*.py",
+        "resources/script_store/kunihir0/*.py",
+        "resources/script_store/kunihir0/utils/*.py",
+        "resources/script_store/restore/*.py"
     ]
     
     # Print summary
@@ -221,6 +354,10 @@ def main():
     total_removed += clean_main_directory()
     total_removed += clean_blobs_directory()
     total_removed += clean_resources()
+    total_removed += clean_pycache()
+    total_removed += clean_script_store()
+    total_removed += clean_boot_files()
+    total_removed += clean_ovmf_files()
     
     # Verify all files from the log have been cleaned
     print("\nVerifying all files have been cleaned...")
