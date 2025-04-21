@@ -17,6 +17,13 @@ import shutil
 import tempfile
 from datetime import datetime
 
+# Import our temp file removal utility
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+try:
+    from utils.remove_temp import clean_logs, clean_main_directory, clean_blobs_directory, clean_resources
+except ImportError:
+    print("Warning: Could not import remove_temp.py utility")
+
 # Add the correct path to find the cpydColours module
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'resources', 'python')))
 
@@ -57,6 +64,7 @@ parser.add_argument("--downloads", dest="downloads", help="Clean downloaded reco
 parser.add_argument("--force", dest="force", help="Force uninstallation without confirmation", action="store_true")
 parser.add_argument("--keep-data", dest="keepdata", help="Keep user data during uninstallation", action="store_true")
 parser.add_argument("--vm-only", dest="vmonly", help="Remove only VM and VM data, keep repository", action="store_true")
+parser.add_argument("--temp-files", dest="tempfiles", help="Clean temporary files created during VM setup", action="store_true")
 args = parser.parse_args()
 
 # Try to get version
@@ -129,6 +137,45 @@ def clean_downloaded_images(force=False):
     
     print(f"  {color.GREEN}Cleaned {cleaned_count} downloaded recovery images.{color.END}")
     return cleaned_count
+
+def clean_temporary_files(force=False):
+    """Clean temporary files using the remove_temp.py utility"""
+    print(f"\n{color.BOLD}{color.BLUE}Cleaning temporary files...{color.END}")
+    
+    # Check if we have the imported functions from remove_temp.py
+    if 'clean_logs' not in globals() or 'clean_main_directory' not in globals() or 'clean_blobs_directory' not in globals() or 'clean_resources' not in globals():
+        print(f"  {color.YELLOW}remove_temp.py utility not available. Skipping temporary file cleanup.{color.END}")
+        return 0
+    
+    # Confirmation
+    if not force:
+        print(f"  This will remove all temporary files created during the VM setup process.")
+        confirmation = input(f"  {color.BOLD}Continue with cleaning temporary files? (y/n): {color.END}")
+        if confirmation.lower() not in ['y', 'yes']:
+            print(f"  {color.YELLOW}Skipped cleaning temporary files.{color.END}")
+            return 0
+    
+    # Use the imported functions from remove_temp.py
+    total_removed = 0
+    try:
+        print(f"  {color.BLUE}Cleaning log files...{color.END}")
+        total_removed += clean_logs()
+        
+        print(f"  {color.BLUE}Cleaning main directory...{color.END}")
+        total_removed += clean_main_directory()
+        
+        print(f"  {color.BLUE}Cleaning blob files...{color.END}")
+        total_removed += clean_blobs_directory()
+        
+        print(f"  {color.BLUE}Cleaning resource files...{color.END}")
+        total_removed += clean_resources()
+        
+        print(f"  {color.GREEN}Successfully cleaned {total_removed} temporary files.{color.END}")
+    except Exception as e:
+        print(f"  {color.RED}Error during temp file cleanup: {str(e)}{color.END}")
+        return 0
+    
+    return total_removed
 
 def remove_vm_data_only(force=False):
         """Remove VM and VM data without uninstalling ULTMOS repository"""
@@ -883,6 +930,9 @@ def show_menu():
     else:
         print(f"{color.END}         Complete removal of Ultimate macOS KVM repository\n")
     
+    print(f"{color.BOLD}      5. {color.BLUE}Clean temporary files{color.END}")
+    print(f"{color.END}         Removes all temporary files created during the VM setup process\n")
+    
     print(f"{color.END}      Q. Exit\n")
     
     selection = input(f"{color.BOLD}Select> {color.END}")
@@ -899,6 +949,9 @@ def main():
         elif args.vmonly:
             # Check for both root disk images and disks in the disks/ directory
             remove_vm_data_only(force)
+        elif args.tempfiles:
+            # Clean temporary files created during VM setup
+            clean_temporary_files(force)
         else:
             # Default action is to uninstall
             uninstall_ultimate_macos_kvm(force, keep_data)
@@ -950,6 +1003,12 @@ def main():
                     print(f"{color.RED}These will be PERMANENTLY DELETED along with everything else!{color.END}")
                     
                 uninstall_ultimate_macos_kvm(False, False)  # Remove everything
+            
+            elif selection == "5":
+                clear()
+                clean_temporary_files(False)
+                print("\nPress Enter to continue...")
+                input()
             
             elif selection.lower() == "q":
                 break
