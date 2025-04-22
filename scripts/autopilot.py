@@ -199,9 +199,6 @@ if enableRPC == True:
       None
 
 
-
-
-
 def startup():
    global detectChoice
    global sparkTime
@@ -1331,6 +1328,8 @@ def autopilot():
       cpydLog("ok",str("Stage 10 sequence initiated"))
       if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
          defaultValue = "e1000-82545em"
+      elif USR_TARGET_OS >= 11 and USR_TARGET_OS <= 99:
+         defaultValue = "virtio-net"
       else:
          defaultValue = "vmxnet3"
 
