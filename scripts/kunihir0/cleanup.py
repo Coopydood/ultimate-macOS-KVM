@@ -484,8 +484,8 @@ class SafeUninstaller:
         else:
             try:
                 log.warning(f"Executing self-destruct script: sudo python3 {script_path} ...")
-                log.warning("This script will now exit. The cleanup will continue in the background.")
-                log.warning("You may be prompted for your sudo password by the background script.")
+                log.warning("Opening a terminal window to show the cleanup progress...")
+                log.warning("You may be prompted for your sudo password in the new terminal window.")
 
                 # Construct the command to execute the python script with sudo
                 cmd = ['sudo', 'python3', script_path,
@@ -495,16 +495,45 @@ class SafeUninstaller:
                     cmd.append('--vms')
                     cmd.extend(vm_names)
 
-                # Launch the script in the background using sudo, detaching it
-                process = subprocess.Popen(
-                    cmd,
-                    stdin=subprocess.DEVNULL, # Detach stdin
-                    stdout=subprocess.DEVNULL, # Detach stdout
-                    stderr=subprocess.DEVNULL, # Detach stderr
-                    close_fds=True, # Close file descriptors
-                    start_new_session=True # Start in a new session
-                 )
-                log.info(f"Self-destruct script launched with PID: {process.pid}")
+                # Launch the script in a visible terminal so user can see progress and animations
+                # The terminal will stay open after this script exits
+                terminal_cmd = ['x-terminal-emulator', '-e', ' '.join(['sudo', 'python3', str(script_path),
+                               '--directory', str(self.base_dir),
+                               '--keep-disks', str(self.config.keep_disks),
+                               '--vms'] + vm_names)]
+                
+                # Alternative terminal commands for different systems
+                if not check_command_exists('x-terminal-emulator', quiet=True):
+                    if check_command_exists('gnome-terminal', quiet=True):
+                        terminal_cmd = ['gnome-terminal', '--', 'sudo', 'python3', str(script_path),
+                                       '--directory', str(self.base_dir),
+                                       '--keep-disks', str(self.config.keep_disks),
+                                       '--vms'] + vm_names
+                    elif check_command_exists('kgx', quiet=True):
+                        terminal_cmd = ['kgx', '--', 'sudo', 'python3', str(script_path),
+                                       '--directory', str(self.base_dir),
+                                       '--keep-disks', str(self.config.keep_disks),
+                                       '--vms'] + vm_names
+                    elif check_command_exists('konsole', quiet=True):
+                        terminal_cmd = ['konsole', '-e', 'sudo python3 ' + str(script_path) +
+                                       ' --directory ' + str(self.base_dir) +
+                                       ' --keep-disks ' + str(self.config.keep_disks) +
+                                       ' --vms ' + ' '.join(vm_names)]
+                    elif check_command_exists('xterm', quiet=True):
+                        terminal_cmd = ['xterm', '-e', 'sudo python3 ' + str(script_path) +
+                                       ' --directory ' + str(self.base_dir) +
+                                       ' --keep-disks ' + str(self.config.keep_disks) +
+                                       ' --vms ' + ' '.join(vm_names)]
+                    else:
+                        # Fallback if no terminal is found
+                        log.warning("No suitable terminal emulator found. Running without visible output.")
+                        process = subprocess.Popen(cmd)
+                        log.info(f"Self-destruct script launched with PID: {process.pid}")
+                        # Do NOT track this operation here, as it happens after exit
+                        return True
+                
+                log.info(f"Launching self-destruct script in a new terminal window...")
+                process = subprocess.Popen(terminal_cmd)
                 # Do NOT track this operation here, as it happens after exit
                 return True # Return True assuming the script launch was successful
             except Exception as e:
@@ -701,7 +730,7 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
                 uninstaller.config.keep_disks = True
                 success = uninstaller.uninstall_everything() # Safe call using self-destruct
                 if success:
-                    log.success("Self-destruct script initiated successfully. Exiting.")
+                    log.success("Self-destruct script initiated successfully in a new terminal window. Exiting.")
                     return 0 # Exit after successful initiation
                 else:
                     log.error("Uninstallation (keeping disks) failed to initiate.")
@@ -731,7 +760,7 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
                 uninstaller.config.keep_disks = False
                 success = uninstaller.uninstall_everything() # Safe call using self-destruct
                 if success:
-                    log.success("Self-destruct script initiated successfully. Exiting.")
+                    log.success("Self-destruct script initiated successfully in a new terminal window. Exiting.")
                     return 0 # Exit after successful initiation
                 else:
                     log.error("Complete uninstallation failed to initiate.")
