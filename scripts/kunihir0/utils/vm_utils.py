@@ -894,20 +894,16 @@ def undefine_vm(vm_name: str, remove_storage: bool = False, dry_run: bool = Fals
             log.success(f"VM '{vm_name}' undefined successfully.")
             return True
         else:
-            # Command failed, analyze stderr
+            # Command failed, but check if it's because the VM is already undefined
             stderr_lower = stderr.lower()
+            log.error(f"Failed to undefine VM '{vm_name}'. Exit code was non-zero.")
+            if stderr:
+                 log.error(f"Virsh stderr: {stderr.strip()}")
+            # Check for "domain not found" errors - these should be treated as success
             if f"domain '{vm_name.lower()}' not found" in stderr_lower or "failed to get domain" in stderr_lower:
-                 log.info(f"VM '{vm_name}' not found or already undefined (treating as success).")
-                 return True # Specific case: VM doesn't exist, which is the desired end state.
-            elif "permission denied" in stderr_lower or "failed to connect" in stderr_lower or "authentication required" in stderr_lower:
-                 log.error(f"Permission error undefining VM '{vm_name}'. Check libvirt permissions.")
-                 # Failure logged by safe_run_virsh_command if quiet=False
-                 return False # Operation failed due to permissions
-            else:
-                 # Log the specific error if not already logged by run_command
-                 # safe_run_virsh_command logs errors when quiet=False, so we might not need extra logging here.
-                 log.error(f"Failed to undefine VM '{vm_name}'. Error: {stderr.strip()}")
-                 return False # Operation failed for another reason
+                log.info(f"VM '{vm_name}' was already undefined.")
+                return True # Treat as success when VM is already undefined
+            return False # Other types of failures
     except Exception as e:
         log.exception(f"An unexpected error occurred during VM undefine for '{vm_name}'", e)
         return False
@@ -959,6 +955,67 @@ def backup_vm_xml(vm_name: str, backup_dir: Union[str, Path], dry_run: bool = Fa
         return None
 
 
+def direct_remove_vm_with_sudo(vm_name: str, dry_run: bool = False) -> bool:
+    """A simplified, direct approach to remove a VM using sudo commands directly.
+    
+    This function bypasses the complex detection and undefine logic and directly
+    executes sudo commands to forcefully remove the VM.
+    
+    Args:
+        vm_name: The name of the VM to remove
+        dry_run: If True, simulate actions without making changes
+
+    Returns:
+        True if the operation was successful or simulated, False otherwise
+    """
+    log.info(f"Attempting direct VM removal with sudo for '{vm_name}'... (Dry Run: {dry_run})")
+    
+    try:
+        # Skip all checks and directly run the forceful undefine command
+        if dry_run:
+            log.info(f"[Dry Run] Would execute: sudo virsh undefine --domain {vm_name} --remove-all-storage --nvram")
+            return True
+        else:
+            import subprocess
+            
+            # Execute the command with all options for maximum chance of success
+            log.info(f"Executing direct sudo virsh undefine for '{vm_name}'...")
+            result = subprocess.run(
+                ["sudo", "virsh", "undefine", "--domain", vm_name, "--remove-all-storage", "--nvram"],
+                capture_output=True,
+                text=True,
+                check=False  # Don't raise exception on error
+            )
+            
+            # Check if command succeeded or if it failed because domain wasn't found (both count as success)
+            if result.returncode == 0:
+                log.success(f"Successfully removed VM '{vm_name}' with direct sudo command.")
+                return True
+            elif "failed to get domain" in result.stderr or "domain not found" in result.stderr:
+                log.info(f"VM '{vm_name}' was already undefined (not found in virsh).")
+                return True
+            else:
+                log.error(f"Failed to remove VM '{vm_name}' with direct sudo command: {result.stderr}")
+                
+                # One more attempt with the most basic command form
+                log.warning(f"Attempting simplified fallback command for '{vm_name}'...")
+                fallback = subprocess.run(
+                    ["sudo", "virsh", "undefine", vm_name],
+                    capture_output=True,
+                    text=True,
+                    check=False
+                )
+                
+                if fallback.returncode == 0:
+                    log.success(f"Successfully removed VM '{vm_name}' with fallback command.")
+                    return True
+                else:
+                    log.error(f"All attempts to remove VM '{vm_name}' failed. Last error: {fallback.stderr}")
+                    return False
+    except Exception as e:
+        log.exception(f"Unexpected error during direct VM removal for '{vm_name}'", e)
+        return False
+
 def remove_vm(vm: VirtualMachine, keep_disks: bool = True,
               backup_dir: Optional[Path] = None,
               dry_run: bool = False) -> bool: # Add dry_run parameter
@@ -978,57 +1035,60 @@ def remove_vm(vm: VirtualMachine, keep_disks: bool = True,
 
     # 1. Undefine from Libvirt (if applicable and exists)
     if check_command_exists("virsh", quiet=True):
-        from .safe_command_utils import run_sudo_command # Import necessary function
-        # Check state via virsh first to see if it's defined - ALWAYS use sudo for consistency
-        log.debug(f"Checking state for VM '{vm.name}' using sudo virsh domstate...")
-        state_success, _, state_stderr = run_sudo_command(
-            ["virsh", "domstate", vm.name],
-            prompt="Checking VM state requires sudo",
+        from .safe_command_utils import run_sudo_command # Import necessary functions
+        
+        # First try with dumpxml instead of domstate to verify if VM really exists
+        # This is more reliable as it actually tries to access the domain XML
+        # ALWAYS use sudo for the dumpxml check to avoid permission issues
+        log.debug(f"Verifying VM '{vm.name}' existence using sudo virsh dumpxml...")
+        dump_success, dump_output, dump_stderr = run_sudo_command(
+            ["virsh", "dumpxml", vm.name],
+            prompt="Libvirt operations require sudo to dump XML",
             quiet=True
         )
-        stderr_lower = state_stderr.lower() # Use lowercase for checks
+        
+        stderr_lower = dump_stderr.lower() if dump_stderr else "" # Use lowercase for checks
         is_defined_in_virsh = False # Default to not defined
         permission_error_check = False # Flag for permission error
 
-        if state_success:
-            # If domstate command succeeds, the VM is definitely defined in libvirt
+        if dump_success:
+            # If dumpxml command succeeds, the VM is definitely defined in libvirt
             is_defined_in_virsh = True
+            log.debug(f"VM '{vm.name}' exists in virsh (confirmed with sudo dumpxml).")
         else:
-            # If domstate failed, check the reason
+            # If dumpxml failed, check the reason
             if f"domain '{vm.name.lower()}' not found" in stderr_lower or "failed to get domain" in stderr_lower:
-                 log.debug(f"VM '{vm.name}' not found via virsh (domstate).")
+                 log.debug(f"VM '{vm.name}' not found via virsh (sudo dumpxml).")
                  is_defined_in_virsh = False
             elif "permission denied" in stderr_lower or "failed to connect" in stderr_lower or "authentication required" in stderr_lower:
-                 log.warning(f"Permission error checking state for VM '{vm.name}'. Cannot determine if defined in libvirt. Skipping libvirt removal steps.")
-                 is_defined_in_virsh = False # Treat as not defined if we can't check due to permissions
+                 # This shouldn't happen with sudo, but just in case
+                 log.warning(f"Permission error checking for VM '{vm.name}' despite using sudo. This is unexpected.")
+                 # Still attempt removal as there might be a libvirt connection issue rather than a permissions issue
+                 is_defined_in_virsh = True
                  permission_error_check = True # Flag that we hit a permission issue
             else:
-                 # Log other errors but assume not defined for safety
-                 log.warning(f"Could not determine libvirt definition status for VM '{vm.name}' due to unexpected error: {state_stderr}")
-                 is_defined_in_virsh = False
+                 # For other errors, assume VM exists and try to remove it anyway
+                 log.warning(f"Could not determine libvirt definition status for VM '{vm.name}' due to unexpected error: {dump_stderr}")
+                 is_defined_in_virsh = True # Assume it exists and try to remove it
 
+        # Get the VM name for consistent logging
+        current_vm_name = vm.name
+        
+        # Always try our direct sudo approach first - this is the most reliable method
         if is_defined_in_virsh:
-            log.info(f"VM '{vm.name}' appears to be defined in libvirt. Attempting removal...")
-            # Shutdown VM if running
-            if "running" in vm.state: # Use the state determined earlier if available
-                 # Pass dry_run status to shutdown_vm
-                 if not shutdown_vm(vm.name, force=False, timeout=60, dry_run=dry_run):
-                      # shutdown_vm handles logging, including dry run simulation
-                      log.error(f"Failed to shutdown VM '{vm.name}' via libvirt (or simulation failed). Cannot safely remove.")
-                      return False # Stop removal if shutdown fails
-
-            # Backup XML if requested (pass dry_run status)
+            log.info(f"VM '{current_vm_name}' detected in libvirt. Using direct sudo removal approach...")
+            
+            # Backup XML first if requested
             if backup_dir:
-                backup_vm_xml(vm.name, backup_dir, dry_run=dry_run) # Handles logging & dry run
-
-
-            # Undefine VM (pass dry_run status)
-            vm_removed_from_runtime = undefine_vm(vm.name, remove_storage=(not keep_disks), dry_run=dry_run) # Handles logging & dry run
+                log.debug(f"Backing up XML before removal for '{current_vm_name}'...")
+                backup_vm_xml(current_vm_name, backup_dir, dry_run=dry_run)
+            
+            # Use the direct subprocess approach which has proven most reliable
+            vm_removed_from_runtime = direct_remove_vm_with_sudo(current_vm_name, dry_run=dry_run)
+            
+            # If the direct approach failed, we'll continue with file cleanup anyway
             if not vm_removed_from_runtime:
-                 # undefine_vm handles logging, including dry run simulation failure if applicable
-                 log.error(f"Failed to undefine VM '{vm.name}' from libvirt (or simulation failed). Aborting script removal.")
-                 # Decide if we should still remove script files? For safety, maybe not.
-                 return False
+                log.warning(f"Direct VM removal failed for '{current_vm_name}'. Will continue with file cleanup.")
         else:
             # Log why we are skipping (unless it was a permission error, already logged)
             if not permission_error_check:

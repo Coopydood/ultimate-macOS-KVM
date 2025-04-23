@@ -103,6 +103,12 @@ def delete_file(path: Union[str, Path], quiet: bool = False) -> bool:
         # Delete the file
         file_path.unlink()
 
+        # Explicitly check if the file is gone after unlink
+        if file_path.exists():
+            if not quiet:
+                log.error(f"Deletion command succeeded, but file still exists: {file_path}. Check permissions or file attributes (e.g., immutable flag).")
+            return False # Deletion failed despite no exception
+
         if not quiet:
             log.success(f"Deleted file: {file_path}")
 
