@@ -605,6 +605,7 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
         dry_run_color = "bright_green" if uninstaller.config.dry_run else "bright_black" # Use gray/bright_black
         TerminalDisplay.print_centered(f"7. Toggle dry run mode {dry_run_status}", dry_run_color)
 
+        TerminalDisplay.print_centered("M. Return to main menu", "bright_green")
         TerminalDisplay.print_centered("0. Exit", "bright_cyan")
         print("\n") # Add spacing
 
@@ -841,6 +842,14 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
             status = "enabled" if uninstaller.config.dry_run else "disabled"
             TerminalDisplay.print_step(f"Dry run mode {status}", "success")
             time.sleep(1)
+            
+        elif choice.lower() == "m":
+            TerminalDisplay.print_step("Returning to main menu...", "success")
+            time.sleep(1)
+            # Use subprocess instead of os.system for better process handling
+            import subprocess
+            subprocess.run([sys.executable, './main.py'], check=True)
+            return 0  # Exit the current script after launching main menu
 
         else:
             TerminalDisplay.print_step("Invalid selection", "error")

@@ -305,12 +305,21 @@ def find_macos_vms() -> List[VirtualMachine]:
             if cfg_content and cfg_content.strip() == script_path.name:
                 is_confirmed_vm = True
                 log.debug(f"CONFIRMED VM '{vm_name}' via CFG blob matching script name '{script_path.name}'.")
-                # Optionally read VM name from blob if it exists (prefer user dir)
+                # Look for VM name in blob files - this is crucial for matching with libvirt
+                # Check both VM_NAME and TARGET_VM_NAME blobs
+                vm_name_blob_path = blobs_user_dir / "USR_VM_NAME.apb"
+                target_vm_name_blob_path = blobs_user_dir / "USR_TARGET_VM_NAME.apb"
+                
                 if is_valid_file(vm_name_blob_path, quiet=True):
                      name_content = read_file_text(vm_name_blob_path, quiet=True)
                      if name_content:
                           vm_name = name_content.strip()
-                          log.debug(f"Using VM name from blob: {vm_name}")
+                          log.debug(f"Using VM name from USR_VM_NAME.apb: {vm_name}")
+                elif is_valid_file(target_vm_name_blob_path, quiet=True):
+                     name_content = read_file_text(target_vm_name_blob_path, quiet=True)
+                     if name_content:
+                          vm_name = name_content.strip()
+                          log.debug(f"Using VM name from USR_TARGET_VM_NAME.apb: {vm_name}")
 
 
             # If confirmed, create VM object and determine state
@@ -393,10 +402,31 @@ def find_vm_by_name(vm_name: str) -> Optional[VirtualMachine]:
             state = _get_vm_state(vm_name)
             xml_path = extract_xml_path(vm_name) # Checks libvirt paths and local
 
+            # Check for custom VM name in blobs
+            blobs_user_dir = project_root / "blobs" / "user"
+            vm_name_orig = vm_name  # Store the original name for reference
+            
+            # Look for VM name in blob files
+            vm_name_blob_path = blobs_user_dir / "USR_VM_NAME.apb"
+            target_vm_name_blob_path = blobs_user_dir / "USR_TARGET_VM_NAME.apb"
+            
+            try:
+                if is_valid_file(vm_name_blob_path, quiet=True):
+                    name_content = read_file_text(vm_name_blob_path, quiet=True)
+                    if name_content:
+                        vm_name = name_content.strip()
+                        log.debug(f"Using VM name from USR_VM_NAME.apb: {vm_name} (was: {vm_name_orig})")
+                elif is_valid_file(target_vm_name_blob_path, quiet=True):
+                    name_content = read_file_text(target_vm_name_blob_path, quiet=True)
+                    if name_content:
+                        vm_name = name_content.strip()
+                        log.debug(f"Using VM name from USR_TARGET_VM_NAME.apb: {vm_name} (was: {vm_name_orig})")
+            except Exception as e:
+                log.warning(f"Error reading VM name blobs for {vm_name}: {e}")
+                
             # Attempt to get disk path from blobs (best effort)
             disk_paths = []
             try:
-                blobs_user_dir = project_root / "blobs" / "user"
                 hdd_path_blob = blobs_user_dir / "USR_HDD_PATH.apb"
                 hdd_path_str = read_file_text(hdd_path_blob, quiet=True)
                 if hdd_path_str:
@@ -819,7 +849,30 @@ def remove_vm(vm: VirtualMachine, keep_disks: bool = True,
         else:
              log.error(f"Failed to remove XML file: {vm.xml_path.name}")
 
-    # 4. Consider removing user blobs? This might be too destructive.
+    # 4. Delete disk images if keep_disks is False
+    if not keep_disks and vm.disk_paths:
+        from .disk_utils import DiskImage, delete_disk_image
+        log.info(f"Removing disk images for VM '{vm.name}'... (Dry Run: {dry_run})")
+        for disk_path in vm.disk_paths:
+            # Skip if the path doesn't exist or isn't a file
+            if not is_valid_file(disk_path, quiet=True):
+                log.warning(f"Disk file not found or inaccessible: {disk_path}")
+                continue
+                
+            # Create DiskImage object assuming it's not physical
+            disk = DiskImage(disk_path, is_physical=False)
+            
+            # Delete using disk_utils for extra safety measures
+            if dry_run:
+                log.info(f"[Dry Run] Would delete disk file: {disk_path}")
+            else:
+                log.info(f"Deleting disk file: {disk_path}")
+                if delete_disk_image(disk, quiet=False):  # Use disk_utils for safety
+                    log.success(f"Deleted disk file: {disk_path.name}")
+                else:
+                    log.error(f"Failed to delete disk file: {disk_path.name}")
+
+    # 5. Consider removing user blobs? This might be too destructive.
     #    Cleanup script should handle blob removal separately based on config.
 
     # Return overall success (primarily based on runtime removal if attempted)
