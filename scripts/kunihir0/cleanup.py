@@ -597,12 +597,13 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
         TerminalDisplay.print_centered("1. Show detected components", "bright_cyan")
         TerminalDisplay.print_centered("2. Remove VMs only", "bright_yellow")
         TerminalDisplay.print_centered("3. Clean temporary files only", "bright_blue")
-        TerminalDisplay.print_centered("4. Uninstall but keep disks", "bright_red")
-        TerminalDisplay.print_centered("5. Uninstall everything", "bright_red") # Use string name
+        TerminalDisplay.print_centered("4. Clean VMs and temporary files", "bright_magenta")
+        TerminalDisplay.print_centered("5. Uninstall but keep disks", "bright_red")
+        TerminalDisplay.print_centered("6. Uninstall everything", "bright_red") # Use string name
 
         dry_run_status = "(ON)" if uninstaller.config.dry_run else "(OFF)"
         dry_run_color = "bright_green" if uninstaller.config.dry_run else "bright_black" # Use gray/bright_black
-        TerminalDisplay.print_centered(f"6. Toggle dry run mode {dry_run_status}", dry_run_color)
+        TerminalDisplay.print_centered(f"7. Toggle dry run mode {dry_run_status}", dry_run_color)
 
         TerminalDisplay.print_centered("0. Exit", "bright_cyan")
         print("\n") # Add spacing
@@ -694,11 +695,19 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
                                print(f"  - {disk_path}")
 
 
-                # Update confirmation prompt
-                if uninstaller._confirm_action("Remove VM definitions and configuration files (disks untouched)?"):
+                # Update confirmation prompts
+                if uninstaller._confirm_action("Do you want to remove the disk images as well?"):
+                    uninstaller.config.keep_disks = False
+                    log.info("Disk images will be deleted along with VM definitions.")
+                else:
+                    uninstaller.config.keep_disks = True
+                    log.info("Disk images will be preserved.")
+
+                if uninstaller._confirm_action("Proceed with VM removal?"):
                     removed = uninstaller.remove_vms() # Safe call, logs internally
                     # Log final summary here
-                    log.info(f"VM removal operation completed. Removed {removed} VMs.")
+                    keep_status = "preserved" if uninstaller.config.keep_disks else "deleted"
+                    log.info(f"VM removal operation completed. Removed {removed} VMs, disk images {keep_status}.")
                 else:
                     log.info("VM removal cancelled.")
             input(f"\n{TerminalColor.colorize('Press Enter to continue...', 'cyan')}")
@@ -711,8 +720,67 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
             # Log final summary here
             log.info(f"Temporary file cleanup operation completed. Cleaned {cleaned} files.")
             input(f"\n{TerminalColor.colorize('Press Enter to continue...', 'cyan')}")
-
+            
         elif choice == "4":
+            TerminalDisplay.clear_screen()
+            TerminalDisplay.print_banner("Clean VMs and Temporary Files")
+            
+            # First handle VM removal
+            ProgressDisplay.spinner("Detecting VMs...", 0.5)
+            vms = uninstaller.find_vms()
+            if vms:
+                TerminalDisplay.print_step(f"Found {len(vms)} VMs:", "info")
+                files_to_remove: List[Path] = []
+                disks_associated: List[Path] = []
+                for vm in vms:
+                    print(f"  - {vm}")
+                    # Collect associated files that exist
+                    if vm.script_path and vm.script_path.exists():
+                        files_to_remove.append(vm.script_path)
+                    if vm.xml_path and vm.xml_path.exists():
+                        files_to_remove.append(vm.xml_path)
+                    # Collect associated disk paths
+                    for disk_path in vm.disk_paths:
+                        if disk_path.exists():
+                            disks_associated.append(disk_path)
+                
+                if disks_associated:
+                    TerminalDisplay.print_step(f"\nFound {len(disks_associated)} disk images:", "info")
+                    unique_disks = sorted(list(set(disks_associated)))
+                    for disk_path in unique_disks[:5]:
+                        try:
+                            print(f"  - {disk_path.relative_to(uninstaller.base_dir)}")
+                        except ValueError:
+                            print(f"  - {disk_path}")
+                    if len(unique_disks) > 5:
+                        print(f"  ... and {len(unique_disks) - 5} more")
+                
+                # Ask about disk removal
+                if uninstaller._confirm_action("Do you want to remove the disk images as well?"):
+                    uninstaller.config.keep_disks = False
+                    log.info("Disk images will be deleted along with VM definitions.")
+                else:
+                    uninstaller.config.keep_disks = True
+                    log.info("Disk images will be preserved.")
+                
+                if uninstaller._confirm_action("Proceed with VM removal?"):
+                    removed = uninstaller.remove_vms()
+                    keep_status = "preserved" if uninstaller.config.keep_disks else "deleted"
+                    log.info(f"VM removal operation completed. Removed {removed} VMs, disk images {keep_status}.")
+                else:
+                    log.info("VM removal cancelled.")
+            else:
+                TerminalDisplay.print_step("No macOS VMs found", "warning")
+            
+            # Then handle temporary file cleanup
+            TerminalDisplay.print_step("\nProceeding with temporary file cleanup...", "info")
+            ProgressDisplay.spinner("Scanning for temporary files...", 0.5)
+            cleaned = uninstaller.clean_temporary_files()
+            log.info(f"Temporary file cleanup operation completed. Cleaned {cleaned} files.")
+            
+            input(f"\n{TerminalColor.colorize('Press Enter to continue...', 'cyan')}")
+
+        elif choice == "5":
             TerminalDisplay.clear_screen()
             TerminalDisplay.print_banner("Uninstall (Keep Disks)")
             TerminalDisplay.print_step("WARNING: This will remove ULTMOS but keep/backup disks.", "warning")
@@ -738,7 +806,7 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
                 log.info("Operation cancelled.")
             input(f"\n{TerminalColor.colorize('Press Enter to continue...', 'cyan')}")
 
-        elif choice == "5":
+        elif choice == "6":
             TerminalDisplay.clear_screen()
             TerminalDisplay.print_banner("Uninstall EVERYTHING")
             TerminalDisplay.print_step("WARNING: This will completely remove ULTMOS", "error")
@@ -768,7 +836,7 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
                 log.info("Operation cancelled.")
             input(f"\n{TerminalColor.colorize('Press Enter to continue...', 'cyan')}")
 
-        elif choice == "6":
+        elif choice == "7":
             uninstaller.config.dry_run = not uninstaller.config.dry_run
             status = "enabled" if uninstaller.config.dry_run else "disabled"
             TerminalDisplay.print_step(f"Dry run mode {status}", "success")

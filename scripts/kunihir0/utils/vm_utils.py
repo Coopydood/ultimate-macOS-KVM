@@ -343,9 +343,21 @@ def find_macos_vms() -> List[VirtualMachine]:
                  if is_valid_file(basesystem_img, quiet=True):
                       disk_paths_set.add(basesystem_img)
                       log.debug(f"Added disk: {basesystem_img}")
+                      
+                      # Also check for associated HDD.qcow2 in the same directory
+                      hdd_qcow2 = basesystem_img.parent / "HDD.qcow2"
+                      if is_valid_file(hdd_qcow2, quiet=True):
+                           disk_paths_set.add(hdd_qcow2)
+                           log.debug(f"Added associated disk: {hdd_qcow2}")
                  elif is_valid_file(basesystem_dmg, quiet=True): # Check for DMG as fallback
                       disk_paths_set.add(basesystem_dmg)
                       log.debug(f"Added disk: {basesystem_dmg}")
+                      
+                      # Also check for associated HDD.qcow2 in the same directory
+                      hdd_qcow2 = basesystem_dmg.parent / "HDD.qcow2"
+                      if is_valid_file(hdd_qcow2, quiet=True):
+                           disk_paths_set.add(hdd_qcow2)
+                           log.debug(f"Added associated disk: {hdd_qcow2}")
 
 
                  vms[vm_name] = VirtualMachine(
@@ -393,6 +405,33 @@ def find_vm_by_name(vm_name: str) -> Optional[VirtualMachine]:
                      disk_paths.append(Path(hdd_path_str))
             except Exception as e:
                  log.warning(f"Could not parse disk path from blob for {vm_name}: {e}")
+                 
+            # Check for BaseSystem.img/.dmg and associated HDD.qcow2 files
+            try:
+                basesystem_img = project_root / "BaseSystem.img"
+                basesystem_dmg = project_root / "BaseSystem.dmg"
+                if is_valid_file(basesystem_img, quiet=True):
+                    if basesystem_img not in disk_paths:
+                        disk_paths.append(basesystem_img)
+                        log.debug(f"Added disk: {basesystem_img}")
+                    
+                    # Check for associated HDD.qcow2
+                    hdd_qcow2 = basesystem_img.parent / "HDD.qcow2"
+                    if is_valid_file(hdd_qcow2, quiet=True) and hdd_qcow2 not in disk_paths:
+                        disk_paths.append(hdd_qcow2)
+                        log.debug(f"Added associated disk: {hdd_qcow2}")
+                elif is_valid_file(basesystem_dmg, quiet=True):
+                    if basesystem_dmg not in disk_paths:
+                        disk_paths.append(basesystem_dmg)
+                        log.debug(f"Added disk: {basesystem_dmg}")
+                    
+                    # Check for associated HDD.qcow2
+                    hdd_qcow2 = basesystem_dmg.parent / "HDD.qcow2"
+                    if is_valid_file(hdd_qcow2, quiet=True) and hdd_qcow2 not in disk_paths:
+                        disk_paths.append(hdd_qcow2)
+                        log.debug(f"Added associated disk: {hdd_qcow2}")
+            except Exception as e:
+                log.warning(f"Error checking for BaseSystem and HDD files: {e}")
 
             # Create the VM object
             found_vm = VirtualMachine(
