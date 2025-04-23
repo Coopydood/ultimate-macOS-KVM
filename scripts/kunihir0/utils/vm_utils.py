@@ -18,7 +18,11 @@ from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
 
 # Import safe utilities and logger
-from .logger import default_logger as log
+from .logger import default_logger as log, LogLevel
+
+# Set log level to DEBUG to see all the VM name detection logs
+# Fix: use min_level property instead of non-existent set_level method
+log.min_level = LogLevel.DEBUG
 from .safe_command_utils import (
     run_command_with_output,
     run_virsh_command as safe_run_virsh_command,
@@ -62,7 +66,10 @@ class VirtualMachine:
 
     def __str__(self) -> str:
         """String representation of the VM."""
+        # Always display the VM's true name most prominently
+        # If available, include script name as secondary info
         script_info = f" (Script: {self.script_path.name})" if self.script_path else ""
+        # Show the VM name prominently - this is the name used for libvirt operations
         return f"{self.name}{script_info} ({self.state})"
 
 # --- Helper Functions (Keep QEMU process detection for state checking) ---
@@ -205,11 +212,19 @@ def _extract_info_from_qemu_cmdline(cmdline: str, pid: Optional[int] = None) -> 
 
 def _get_vm_state(vm_name: str) -> str:
     """Check virsh and QEMU processes to determine runtime state."""
+    from .safe_command_utils import run_sudo_command
+    
     state = "defined" # Default state if found via files but not running
 
-    # 1. Check Libvirt state
+    # 1. Check Libvirt state (always with sudo)
     if check_command_exists("virsh", quiet=True):
-        success, output, stderr = safe_run_virsh_command(["domstate", vm_name], quiet=True) # Use safe alias
+        # Always use sudo for virsh commands
+        success, output, stderr = run_sudo_command(
+            ["virsh", "domstate", vm_name],
+            prompt="Libvirt operations require sudo to check VM state",
+            quiet=True
+        )
+        
         if success:
             virsh_state = output.strip()
             if virsh_state == "running":
@@ -223,12 +238,9 @@ def _get_vm_state(vm_name: str) -> str:
             if f"domain '{vm_name.lower()}' not found" in stderr_lower or "failed to get domain" in stderr_lower:
                  log.debug(f"VM '{vm_name}' not found via virsh (domstate).")
                  # Keep state as "defined" or whatever the default is before this check
-            elif "permission denied" in stderr_lower or "failed to connect" in stderr_lower or "authentication required" in stderr_lower:
-                 log.warning(f"Permission error getting state for VM '{vm_name}'. Check libvirt access permissions (e.g., group membership, polkit) or try running the script with sudo.")
-                 # Keep state as "defined" but log the warning
             elif stderr: # Log other errors
                  log.warning(f"Could not get libvirt state for VM '{vm_name}': {stderr}")
-            # If not found or permission error, proceed to check QEMU processes
+            # If not found, proceed to check QEMU processes
 
     # 2. Check QEMU processes if not found running or accessible in libvirt
     if "running" not in state:
@@ -251,136 +263,249 @@ def _get_vm_state(vm_name: str) -> str:
 
 def find_macos_vms() -> List[VirtualMachine]:
     """
-    Find macOS VMs primarily by looking for configuration files
-    (.sh scripts and associated blobs) in the project directory.
-    Optionally updates state based on runtime checks (virsh/QEMU process).
+    Find macOS VMs using a simplified approach that primarily relies on virsh commands
+    to identify UMK (ULTMOS) VMs, with fallback to script-based detection.
+    
+    This implementation uses a more conservative approach with scoring to ensure we only
+    detect legitimate UMK VMs and avoid removing non-UMK VMs.
     """
-    vms: Dict[str, VirtualMachine] = {} # Use dict to deduplicate by name (script name)
-    log.info("Searching for VM configurations based on .sh scripts and blobs...")
-
+    vms: Dict[str, VirtualMachine] = {}  # Use dict to deduplicate by name
+    log.info("Searching for macOS VMs using simplified detection...")
+    
     try:
-        project_root = Path(__file__).resolve().parents[3] # Correct index for project root
-        blobs_user_dir = project_root / "blobs" / "user"
-
-        # Scan for potential boot scripts in the project root
-        for script_path in project_root.glob('*.sh'):
-            if not is_valid_file(script_path, quiet=True):
-                continue
-
-            vm_name_from_script = script_path.stem # e.g., "boot" from "boot.sh"
-            log.debug(f"Found potential script: {script_path.name}, potential VM name: {vm_name_from_script}")
-
-            # Check for corresponding user blobs as confirmation
-            # Check both ./blobs/ and ./blobs/user/ for the config blob
-            cfg_blob_path_user = blobs_user_dir / "USR_CFG.apb"
-            cfg_blob_path_root = project_root / "blobs" / "USR_CFG.apb" # Check root blobs dir too
-            vm_name_blob_path = blobs_user_dir / "USR_VM_NAME.apb" # Or check VM name blob
-
-            is_confirmed_vm = False
-            vm_name = vm_name_from_script # Default name
-            cfg_content = None
-            cfg_content_user = None
-            cfg_content_root = None
-
-            # Try reading from ./blobs/user/ first
-            log.debug(f"Checking blob path (user): {cfg_blob_path_user}")
-            if is_valid_file(cfg_blob_path_user, quiet=True):
-                 cfg_content_user = read_file_text(cfg_blob_path_user, quiet=True)
-                 log.debug(f"Content (user): '{cfg_content_user}'")
-                 if cfg_content_user:
-                     cfg_content = cfg_content_user # Prioritize user blob content
-                     log.debug(f"Using CFG blob content from user dir: {cfg_blob_path_user}")
-
-            # If not found or empty in user dir, try reading from ./blobs/
-            log.debug(f"Checking blob path (root): {cfg_blob_path_root}")
-            if not cfg_content and is_valid_file(cfg_blob_path_root, quiet=True):
-                 cfg_content_root = read_file_text(cfg_blob_path_root, quiet=True)
-                 log.debug(f"Content (root): '{cfg_content_root}'")
-                 if cfg_content_root:
-                     cfg_content = cfg_content_root # Use root blob content as fallback
-                     log.debug(f"Using CFG blob content from root blobs dir: {cfg_blob_path_root}")
-
-            # Now check if content matches script name
-            log.debug(f"Comparing blob content '{cfg_content.strip() if cfg_content else None}' with script name '{script_path.name}'")
-            if cfg_content and cfg_content.strip() == script_path.name:
-                is_confirmed_vm = True
-                log.debug(f"CONFIRMED VM '{vm_name}' via CFG blob matching script name '{script_path.name}'.")
-                # Look for VM name in blob files - this is crucial for matching with libvirt
-                # Check both VM_NAME and TARGET_VM_NAME blobs
-                vm_name_blob_path = blobs_user_dir / "USR_VM_NAME.apb"
-                target_vm_name_blob_path = blobs_user_dir / "USR_TARGET_VM_NAME.apb"
+        project_root = Path(__file__).resolve().parents[3]  # Path to project root
+        
+        # STEP 1: Check for boot.sh to get OS ID for improved matching
+        boot_script_path = project_root / "boot.sh"
+        os_id = ""
+        id_val = "macOS"  # Default ID to use if not found
+        boot_script_content = ""
+        
+        if is_valid_file(boot_script_path, quiet=True):
+            try:
+                boot_script_content = read_file_text(boot_script_path, quiet=True)
+                os_id_match = re.search(r'OS_ID="([^"]+)"', boot_script_content)
+                id_match = re.search(r'ID="([^"]+)"', boot_script_content)
                 
-                if is_valid_file(vm_name_blob_path, quiet=True):
-                     name_content = read_file_text(vm_name_blob_path, quiet=True)
-                     if name_content:
-                          vm_name = name_content.strip()
-                          log.debug(f"Using VM name from USR_VM_NAME.apb: {vm_name}")
-                elif is_valid_file(target_vm_name_blob_path, quiet=True):
-                     name_content = read_file_text(target_vm_name_blob_path, quiet=True)
-                     if name_content:
-                          vm_name = name_content.strip()
-                          log.debug(f"Using VM name from USR_TARGET_VM_NAME.apb: {vm_name}")
+                if os_id_match:
+                    os_id = os_id_match.group(1)
+                    log.debug(f"Found OS_ID in boot.sh: {os_id}")
+                if id_match:
+                    id_val = id_match.group(1)
+                    log.debug(f"Found ID in boot.sh: {id_val}")
+            except Exception as e:
+                log.debug(f"Error reading boot.sh: {e}")
+        
+        # STEP 2: Use virsh to list all domains (ALWAYS with sudo)
+        from .safe_command_utils import run_sudo_command
+        
+        log.info("Using virsh (with sudo) to detect macOS VMs...")
+        
+        # Always use sudo for virsh commands - this is required on many systems
+        success, output, stderr = run_sudo_command(
+            ["virsh", "list", "--all"],
+            prompt="Libvirt operations require sudo to list VMs",
+            quiet=True
+        )
+        
+        if success:
+            lines = output.strip().split('\n')
+            if len(lines) > 2:  # Skip header lines
+                # Process each domain line
+                for line in lines[2:]:  # Skip header rows
+                    # Example line: " 1  ultmos-12        shut off"
+                    # Example line: " -  my-other-vm      running "
+                    # Use regex for more robust parsing, specifically handling "shut off"
+                    # Regex breakdown:
+                    # \s*(\S+)       # Capture ID (non-whitespace) after optional leading space
+                    # \s+           # Separator space
+                    # (.*?)         # Capture Domain Name (non-greedy)
+                    # \s+           # Separator space
+                    # (running|shut off|paused|idle|pmsuspended|crashed|dying|unknown) # Capture known states
+                    # \s*$          # Optional trailing space to end of line
+                    match = re.match(r'\s*(\S+)\s+(.*?)\s+(running|shut off|paused|idle|pmsuspended|crashed|dying|unknown)\s*$', line, re.IGNORECASE)
+                    if match:
+                        _id, domain_name, domain_state = match.groups()
+                        # Clean up trailing whitespace potentially captured in domain_name
+                        domain_name = domain_name.rstrip()
+                        log.debug(f"Parsed virsh line: ID='{_id}', Name='{domain_name}', State='{domain_state}'")
+                    else:
+                        log.warning(f"Could not parse virsh list line with known states: {line}")
+                        # Fallback regex for potentially unknown states
+                        fallback_match = re.match(r'\s*(\S+)\s+(.*?)\s+(\S+)\s*$', line)
+                        if fallback_match:
+                             _id, domain_name, domain_state = fallback_match.groups()
+                             domain_name = domain_name.rstrip()
+                             log.debug(f"Parsed virsh line (fallback): ID='{_id}', Name='{domain_name}', State='{domain_state}'")
+                        else:
+                            log.error(f"Failed to parse virsh list line completely: {line}")
+                            continue # Skip malformed lines
+                    
+                    # Log that we are starting to process this specific VM
+                    log.debug(f"Processing parsed VM: Name='{domain_name}', State='{domain_state}'")
 
+                    # Implement a scoring system to identify UMK VMs
+                    # Higher score = more likely to be a UMK VM
+                    score = 0
+                    reasons = [] # Corrected indentation
 
-            # If confirmed, create VM object and determine state
-            if is_confirmed_vm and vm_name not in vms:
-                 state = _get_vm_state(vm_name) # Check runtime state
-                 # Extract disk paths (can reuse existing logic or adapt)
-                 # For simplicity, we might skip detailed disk path extraction here
-                 # or try reading USR_HDD_PATH.apb
-                 disk_paths_set: Set[Path] = set() # Use a set to avoid duplicates
-                 # Attempt to add disk from HDD blob
-                 hdd_path_blob = blobs_user_dir / "USR_HDD_PATH.apb"
-                 hdd_path_str = read_file_text(hdd_path_blob, quiet=True)
-                 if hdd_path_str:
-                      try:
-                           # Handle $VM_PATH replacement if necessary
-                           if "$VM_PATH" in hdd_path_str:
-                                hdd_path_str = hdd_path_str.replace("$VM_PATH", str(project_root))
-                           hdd_path = Path(hdd_path_str)
-                           if is_valid_file(hdd_path, quiet=True): # Check if path from blob is valid
-                                disk_paths_set.add(hdd_path)
-                                log.debug(f"Added disk from blob: {hdd_path}")
-                           else:
-                                log.warning(f"Disk path from blob is invalid: {hdd_path}")
-                      except Exception as e:
-                           log.warning(f"Could not parse disk path from blob {hdd_path_blob}: {e}")
+                    # Check for common UMK/macOS indicators in name
+                    macos_indicators = [
+                            "macOS", "Mac OS X", "ULTMOS",
+                            "Monterey", "Ventura", "Sonoma", "Big Sur",
+                            "Catalina", "Mojave", "High Sierra", "Sierra",
+                            "El Capitan", "Yosemite", "Mavericks"
+                        ]
+                        
+                    # Check boot.sh-derived names
+                    boot_derived_names = []
+                    if os_id:
+                        boot_derived_names = [
+                            f"{id_val} {os_id}",
+                            f"macOS {os_id}",
+                            f"Mac OS X {os_id}",
+                            os_id
+                        ]
+                        
+                        # Add highest score for exact match with boot.sh-derived name
+                        if domain_name in boot_derived_names:
+                            score += 10
+                            reasons.append(f"Exact match with boot.sh OS_ID ({os_id})")
+                    
+                    # Check for macOS indicators in name (weighted)
+                    for indicator in macos_indicators:
+                            if indicator.lower() in domain_name.lower():
+                                score += 5
+                                reasons.append(f"Contains macOS indicator: {indicator}")
+                                break
+                    # Log the initial score based on name checks
+                    log.debug(f"Initial score for {domain_name} based on name: {score} (Reasons: {reasons})")
+                    # If we have at least some indication this might be a macOS VM, proceed with XML check
+                    # Only proceed with XML check if initial score is > 0
+                    if score > 0:
+                        log.debug(f"Potential macOS VM found based on name: {domain_name} (Score: {score}, Reasons: {reasons})")
 
-                 # Explicitly check for BaseSystem.img/.dmg in project root
-                 basesystem_img = project_root / "BaseSystem.img"
-                 basesystem_dmg = project_root / "BaseSystem.dmg"
-                 if is_valid_file(basesystem_img, quiet=True):
-                      disk_paths_set.add(basesystem_img)
-                      log.debug(f"Added disk: {basesystem_img}")
-                      
-                      # Also check for associated HDD.qcow2 in the same directory
-                      hdd_qcow2 = basesystem_img.parent / "HDD.qcow2"
-                      if is_valid_file(hdd_qcow2, quiet=True):
-                           disk_paths_set.add(hdd_qcow2)
-                           log.debug(f"Added associated disk: {hdd_qcow2}")
-                 elif is_valid_file(basesystem_dmg, quiet=True): # Check for DMG as fallback
-                      disk_paths_set.add(basesystem_dmg)
-                      log.debug(f"Added disk: {basesystem_dmg}")
-                      
-                      # Also check for associated HDD.qcow2 in the same directory
-                      hdd_qcow2 = basesystem_dmg.parent / "HDD.qcow2"
-                      if is_valid_file(hdd_qcow2, quiet=True):
-                           disk_paths_set.add(hdd_qcow2)
-                           log.debug(f"Added associated disk: {hdd_qcow2}")
+                        log.debug(f"Attempting to dump XML for {domain_name}...")
+                        # Get XML to further verify and get disk paths (also with sudo)
+                        xml_success, xml_content, xml_stderr = run_sudo_command(
+                            ["virsh", "dumpxml", domain_name],
+                            prompt="Libvirt operations require sudo to dump XML",
+                            quiet=True
+                        )
+                        log.debug(f"XML dump for {domain_name} success: {xml_success}")
 
+                        if xml_success:
+                            # Check for UMK-specific indicators in XML
+                            ultmos_indicators = [
+                                "<type arch='x86_64' machine='q35'>hvm</type>",
+                                "OVMF_CODE.fd",
+                                "OVMF_VARS.fd",
+                                "OpenCore.qcow2",
+                                "macOS",
+                                "Mac OS X",
+                                "BaseSystem.img",
+                                "HDD.qcow2",
+                                "isa-applesmc",
+                                "vmware-cpuid-freq=on",
+                            ]
 
-                 vms[vm_name] = VirtualMachine(
-                     name=vm_name,
-                     state=state,
-                     script_path=script_path,
-                     xml_path=project_root / f"{vm_name}.xml", # Assume XML might exist
-                     disk_paths=sorted(list(disk_paths_set)) # Convert set to sorted list
-                 )
-                 log.info(f"Detected VM: {vms[vm_name]} with disks: {[p.name for p in vms[vm_name].disk_paths]}")
+                            for indicator in ultmos_indicators:
+                                if indicator in xml_content:
+                                    score += 2
+                                    reasons.append(f"XML contains UMK indicator: {indicator}")
 
+                            # Additional check for boot directory structure in disk paths
+                            if "boot/" in xml_content and ".qcow2" in xml_content:
+                                score += 3
+                                reasons.append("XML references boot/ directory with qcow2 files")
+                            log.debug(f"Score after XML check for {domain_name}: {score}")
+                            
+                            # Only add VM if final score is high enough
+                            if score >= 10: # Increased threshold back to 10
+                                log.debug(f"Score threshold met for {domain_name}. Preparing to add VM.")
+                                log.info(f"Confirmed macOS VM: {domain_name} (Score: {score})")
+                                log.debug(f"Detection reasons: {', '.join(reasons)}")
+
+                                # Extract disk paths
+                                disk_paths = extract_disk_paths(xml_content)
+                                log.debug(f"Extracted disk paths for {domain_name}: {[p.name for p in disk_paths]}")
+
+                                # Try to find a matching boot script
+                                script_path = None
+                                if is_valid_file(boot_script_path, quiet=True):
+                                    script_path = boot_script_path
+
+                                # Get XML path
+                                xml_path = extract_xml_path(domain_name)
+                                log.debug(f"Extracted XML path for {domain_name}: {xml_path}")
+                                
+                                log.debug(f"Adding VM '{domain_name}' to dictionary...")
+                                vms[domain_name] = VirtualMachine(
+                                    name=domain_name,
+                                    state=domain_state,
+                                    script_path=script_path,
+                                    xml_path=xml_path,
+                                    disk_paths=disk_paths
+                                )
+                                log.info(f"Added VM to cleanup list: {vms[domain_name]}")
+                                log.debug(f"Current VMs dictionary keys: {list(vms.keys())}")
+                            else:
+                                log.debug(f"Skipping VM {domain_name} - insufficient final confidence score ({score}) after XML check")
+                        else:
+                            log.warning(f"Failed to dump XML for potential VM {domain_name}: {xml_stderr}")
+                            log.debug(f"Skipping {domain_name} due to XML dump failure.")
+                    # else: # Implicitly skip if initial score is 0
+                    #    log.debug(f"Skipping XML check for {domain_name} - initial score is 0") # Optional log
+        else:
+            # Couldn't list domains - permission issues?
+            log.warning(f"Could not list libvirt domains with sudo: {stderr}")
+            log.warning("If this is a permission issue, make sure your user can run sudo commands.")
+        
+        # STEP 3: Fall back to checking boot.sh if no VMs found via virsh
+        if not vms and is_valid_file(boot_script_path, quiet=True):
+            log.info("No VMs found via virsh. Falling back to boot.sh detection.")
+            
+            # Check if boot.sh exists and looks like a valid UMK script
+            if "ULTMOS=" in boot_script_content or "OpenCore.qcow2" in boot_script_content:
+                # Just create a VM entry for boot.sh
+                vm_name = "boot"  # Default name
+                
+                # Try to extract a better name from boot.sh
+                if os_id:
+                    vm_name = f"{id_val} {os_id}"
+                
+                state = _get_vm_state(vm_name)  # This may not find anything
+                
+                # Look for disk files
+                disk_paths_set: Set[Path] = set()
+                
+                # Check for common disk paths
+                hdd_qcow2 = project_root / "HDD.qcow2"
+                basesystem_img = project_root / "BaseSystem.img"
+                basesystem_dmg = project_root / "BaseSystem.dmg"
+                
+                for path in [hdd_qcow2, basesystem_img, basesystem_dmg]:
+                    if is_valid_file(path, quiet=True):
+                        disk_paths_set.add(path)
+                        log.debug(f"Added disk from boot.sh fallback: {path}")
+                
+                # Create VM entry
+                vms[vm_name] = VirtualMachine(
+                    name=vm_name,
+                    state="unknown" if state == "defined" else state,
+                    script_path=boot_script_path,
+                    xml_path=None,
+                    disk_paths=sorted(list(disk_paths_set))
+                )
+                
+                log.info(f"Added VM via boot.sh fallback: {vms[vm_name]}")
+        
     except Exception as e:
-        log.exception("Unexpected error during file-based VM discovery", e)
-
+        log.exception("Unexpected error during VM discovery", e)
+    
+    if not vms:
+        log.warning("No macOS VMs were found using the simplified detection method.")
+    
     return list(vms.values())
 
 
@@ -406,23 +531,59 @@ def find_vm_by_name(vm_name: str) -> Optional[VirtualMachine]:
             blobs_user_dir = project_root / "blobs" / "user"
             vm_name_orig = vm_name  # Store the original name for reference
             
-            # Look for VM name in blob files
-            vm_name_blob_path = blobs_user_dir / "USR_VM_NAME.apb"
-            target_vm_name_blob_path = blobs_user_dir / "USR_TARGET_VM_NAME.apb"
+            # Look for VM name in ALL possible blob files - this is crucial for matching with libvirt
+            # List all potential blob files that might contain VM name, in priority order
+            vm_name_blob_candidates = [
+                blobs_user_dir / "USR_VM_NAME.apb",
+                blobs_user_dir / "USR_TARGET_VM_NAME.apb",
+                project_root / "blobs" / "USR_VM_NAME.apb",
+                project_root / "blobs" / "USR_TARGET_VM_NAME.apb",
+                blobs_user_dir / "USR_BOOT_NAME.apb",
+                blobs_user_dir / "USR_DOMAIN_NAME.apb",
+                project_root / "blobs" / "USR_BOOT_NAME.apb",
+                project_root / "blobs" / "USR_DOMAIN_NAME.apb"
+            ]
+            
+            log.debug(f"Checking for VM name in blob files for VM {vm_name}...")
+            found_name = False
             
             try:
-                if is_valid_file(vm_name_blob_path, quiet=True):
-                    name_content = read_file_text(vm_name_blob_path, quiet=True)
-                    if name_content:
-                        vm_name = name_content.strip()
-                        log.debug(f"Using VM name from USR_VM_NAME.apb: {vm_name} (was: {vm_name_orig})")
-                elif is_valid_file(target_vm_name_blob_path, quiet=True):
-                    name_content = read_file_text(target_vm_name_blob_path, quiet=True)
-                    if name_content:
-                        vm_name = name_content.strip()
-                        log.debug(f"Using VM name from USR_TARGET_VM_NAME.apb: {vm_name} (was: {vm_name_orig})")
+                # Try each candidate file
+                for blob_path in vm_name_blob_candidates:
+                    if is_valid_file(blob_path, quiet=True):
+                        name_content = read_file_text(blob_path, quiet=True)
+                        if name_content:
+                            vm_name = name_content.strip()
+                            log.debug(f"Found VM name in blob: {blob_path.name}: '{vm_name}' (was: {vm_name_orig})")
+                            found_name = True
+                            break
+                
+                # As a last resort, try to read from the script file itself to find VM name
+                if not found_name and is_valid_file(script_path, quiet=True):
+                    script_content = read_file_text(script_path, quiet=True)
+                    if script_content:
+                        # Look for common domain/VM name declarations in QEMU scripts
+                        name_patterns = [
+                            r'VM_NAME="([^"]+)"',
+                            r'VM_NAME=\'([^\']+)\'',
+                            r'VM_NAME=([^\s;]+)',
+                            r'domain="([^"]+)"',
+                            r'domain=\'([^\']+)\'',
+                            r'domain=([^\s;]+)',
+                            r'-name\s+([^,\s]+)',
+                            r'-name\s+guest=([^,\s]+)'
+                        ]
+                        
+                        import re
+                        for pattern in name_patterns:
+                            match = re.search(pattern, script_content)
+                            if match:
+                                vm_name = match.group(1).strip()
+                                log.debug(f"Extracted VM name from script: '{vm_name}' (was: {vm_name_orig})")
+                                found_name = True
+                                break
             except Exception as e:
-                log.warning(f"Error reading VM name blobs for {vm_name}: {e}")
+                log.warning(f"Error reading VM name for {vm_name_orig}: {e}")
                 
             # Attempt to get disk path from blobs (best effort)
             disk_paths = []
@@ -529,23 +690,69 @@ def extract_disk_paths(xml_content: str) -> List[Path]:
 
 def extract_xml_path(vm_name: str) -> Optional[Path]:
     """Find the XML file path for a VM defined in libvirt."""
-    # (Logic remains the same as before, using safe utils)
+    from .safe_command_utils import run_sudo_command
+
+    # First try to get XML path directly from virsh (with sudo)
+    try:
+        success, output, _ = run_sudo_command(
+            ["virsh", "domuuid", vm_name],
+            prompt="Libvirt operations require sudo to get VM UUID",
+            quiet=True
+        )
+
+        if success and output.strip():
+            uuid = output.strip()
+
+            # Common locations based on UUID
+            uuid_locations = [
+                Path("/etc/libvirt/qemu"),
+                Path("/var/lib/libvirt/qemu")
+            ]
+
+            # Try to locate XML based on UUID (requires sudo)
+            for base_location in uuid_locations:
+                xml_path = base_location / f"{uuid}.xml"
+
+                # Check if file exists and is readable using sudo head
+                # This avoids using '&&' which might be flagged as unsafe
+                file_check_cmd = ["head", "-n", "1", str(xml_path)]
+                file_check_success, _, file_check_stderr = run_sudo_command(
+                    file_check_cmd,
+                    prompt="Checking XML file existence requires sudo",
+                    quiet=True
+                )
+
+                # If head command succeeded (exit code 0), the file exists and is readable
+                if file_check_success:
+                    log.debug(f"Found XML path with sudo: {xml_path}")
+                    return xml_path
+                else:
+                    # Log why head might have failed (e.g., file not found, permission denied even for root)
+                    log.debug(f"sudo head check failed for {xml_path}: {file_check_stderr}")
+    except Exception as e:
+        log.debug(f"Error looking up XML via virsh: {e}")
+
+    # Fallback to checking common locations
     xml_locations = [
         Path("/etc/libvirt/qemu"),
         Path("/var/lib/libvirt/qemu"),
         Path.home() / ".config/libvirt/qemu",
         Path.home() / ".local/share/libvirt/qemu"
     ]
+
     for location in xml_locations:
         try:
             if is_valid_directory(location, quiet=True):
                 xml_path = location / f"{vm_name}.xml"
                 if is_valid_file(xml_path, quiet=True):
+                    log.debug(f"Found XML path in standard location: {xml_path}")
                     return xml_path
         except PermissionError:
-             log.debug(f"Permission denied checking libvirt XML location: {location}")
+            log.debug(f"Permission denied checking libvirt XML location: {location}")
         except Exception as e:
-            log.exception(f"Error checking libvirt XML location {location}", e)
+            log.debug(f"Error checking libvirt XML location {location}: {e}")
+
+    log.debug(f"Could not find XML path for VM: {vm_name}")
     return None
 
 
@@ -572,8 +779,8 @@ def shutdown_vm(vm_name: str, force: bool = False, timeout: int = 60, dry_run: b
         log.warning("'virsh' command not found. Cannot shutdown VM.")
         return False
     try:
-        success_state, state_output, stderr_state = safe_run_virsh_command( # Use safe alias
-            ["domstate", vm_name], quiet=True
+        success_state, state_output, stderr_state = safe_run_virsh_command( # Use safe alias with sudo fallback
+            ["domstate", vm_name], quiet=True, try_sudo=True
         )
         if not success_state:
             stderr_lower = stderr_state.lower()
@@ -599,7 +806,7 @@ def shutdown_vm(vm_name: str, force: bool = False, timeout: int = 60, dry_run: b
         success_action = True # Assume success for dry run
         stderr_action = ""
         if not dry_run:
-            success_action, _, stderr_action = safe_run_virsh_command(action_cmd, quiet=False)
+            success_action, _, stderr_action = safe_run_virsh_command(action_cmd, quiet=False, try_sudo=True)
         else:
             log.info(f"[Dry Run] Would execute: virsh {' '.join(action_cmd)}")
 
@@ -621,7 +828,7 @@ def shutdown_vm(vm_name: str, force: bool = False, timeout: int = 60, dry_run: b
             start_time = time.time()
             while time.time() - start_time < timeout:
                 wait_success, wait_state, wait_stderr = safe_run_virsh_command( # Use safe alias
-                    ["domstate", vm_name], quiet=True
+                    ["domstate", vm_name], quiet=True, try_sudo=True
                 )
                 if not wait_success:
                     # Log permission error specifically if it happens during wait
@@ -644,7 +851,7 @@ def shutdown_vm(vm_name: str, force: bool = False, timeout: int = 60, dry_run: b
             stderr_destroy_timeout = ""
             if not dry_run:
                 success_destroy_timeout, _, stderr_destroy_timeout = safe_run_virsh_command( # Use safe alias
-                    ["destroy", vm_name], quiet=False
+                    ["destroy", vm_name], quiet=False, try_sudo=True
                 )
             else:
                  log.info(f"[Dry Run] Would execute: virsh destroy {vm_name}")
@@ -679,22 +886,28 @@ def undefine_vm(vm_name: str, remove_storage: bool = False, dry_run: bool = Fals
         success = True # Assume success for dry run
         stderr = ""
         if not dry_run:
-            success, _, stderr = safe_run_virsh_command(command, quiet=False)
+            success, _, stderr = safe_run_virsh_command(command, quiet=False, try_sudo=True)
         else:
             log.info(f"[Dry Run] Would execute: virsh {' '.join(command)}")
 
-        if not success:
+        if success:
+            log.success(f"VM '{vm_name}' undefined successfully.")
+            return True
+        else:
+            # Command failed, analyze stderr
             stderr_lower = stderr.lower()
             if f"domain '{vm_name.lower()}' not found" in stderr_lower or "failed to get domain" in stderr_lower:
-                 log.info(f"VM '{vm_name}' not found or already undefined.")
-                 return True # Treat as success if not found
+                 log.info(f"VM '{vm_name}' not found or already undefined (treating as success).")
+                 return True # Specific case: VM doesn't exist, which is the desired end state.
             elif "permission denied" in stderr_lower or "failed to connect" in stderr_lower or "authentication required" in stderr_lower:
                  log.error(f"Permission error undefining VM '{vm_name}'. Check libvirt permissions.")
+                 # Failure logged by safe_run_virsh_command if quiet=False
                  return False # Operation failed due to permissions
-            # else: Generic error logged by safe_run_virsh_command
-            return False # Operation failed for other reason
-        log.success(f"VM '{vm_name}' undefined successfully.")
-        return True
+            else:
+                 # Log the specific error if not already logged by run_command
+                 # safe_run_virsh_command logs errors when quiet=False, so we might not need extra logging here.
+                 log.error(f"Failed to undefine VM '{vm_name}'. Error: {stderr.strip()}")
+                 return False # Operation failed for another reason
     except Exception as e:
         log.exception(f"An unexpected error occurred during VM undefine for '{vm_name}'", e)
         return False
@@ -716,7 +929,7 @@ def backup_vm_xml(vm_name: str, backup_dir: Union[str, Path], dry_run: bool = Fa
         xml_content = f"<!-- [Dry Run] XML content for {vm_name} -->" if dry_run else ""
         stderr = ""
         if not dry_run:
-            success, xml_content, stderr = safe_run_virsh_command(["dumpxml", vm_name], quiet=True)
+            success, xml_content, stderr = safe_run_virsh_command(["dumpxml", vm_name], quiet=True, try_sudo=True)
         else:
             log.info(f"[Dry Run] Would execute: virsh dumpxml {vm_name}")
 
@@ -765,8 +978,14 @@ def remove_vm(vm: VirtualMachine, keep_disks: bool = True,
 
     # 1. Undefine from Libvirt (if applicable and exists)
     if check_command_exists("virsh", quiet=True):
-        # Check state via virsh first to see if it's defined
-        state_success, _, state_stderr = safe_run_virsh_command(["domstate", vm.name], quiet=True)
+        from .safe_command_utils import run_sudo_command # Import necessary function
+        # Check state via virsh first to see if it's defined - ALWAYS use sudo for consistency
+        log.debug(f"Checking state for VM '{vm.name}' using sudo virsh domstate...")
+        state_success, _, state_stderr = run_sudo_command(
+            ["virsh", "domstate", vm.name],
+            prompt="Checking VM state requires sudo",
+            quiet=True
+        )
         stderr_lower = state_stderr.lower() # Use lowercase for checks
         is_defined_in_virsh = False # Default to not defined
         permission_error_check = False # Flag for permission error
@@ -818,8 +1037,12 @@ def remove_vm(vm: VirtualMachine, keep_disks: bool = True,
     else:
         log.info("virsh not found, skipping libvirt undefine step.")
 
-    # 2. Remove Script File (if it exists)
+    # 2. Remove Associated Files (Script and boot.xml)
     script_removed = True
+    boot_xml_removed = True
+    project_root = vm.script_path.parent if vm.script_path else None # Get project root if script path exists
+
+    # Remove Script File (e.g., boot.sh)
     if vm.script_path and is_valid_file(vm.script_path, quiet=True):
         if dry_run:
             log.info(f"[Dry Run] Would remove VM script file: {vm.script_path}")
@@ -827,33 +1050,47 @@ def remove_vm(vm: VirtualMachine, keep_disks: bool = True,
         else:
             log.info(f"Removing VM script file: {vm.script_path}")
             script_removed = delete_file(vm.script_path, quiet=False) # Use safe delete
-        # Log success/failure based on actual or simulated result
         if script_removed:
              log.success(f"{'[Dry Run] Would have r' if dry_run else 'R'}emoved script file: {vm.script_path.name}")
         else:
              log.error(f"Failed to remove script file: {vm.script_path.name}")
-             # Continue even if script removal fails? Maybe.
 
-    # 3. Remove XML File (if it exists)
-    xml_removed = True
-    if vm.xml_path and is_valid_file(vm.xml_path, quiet=True):
-        if dry_run:
-            log.info(f"[Dry Run] Would remove VM XML file: {vm.xml_path}")
-            xml_removed = True # Simulate success
+    # Remove boot.xml if it exists in the project root
+    if project_root:
+        boot_xml_path = project_root / "boot.xml"
+        if is_valid_file(boot_xml_path, quiet=True):
+            if dry_run:
+                log.info(f"[Dry Run] Would remove boot XML file: {boot_xml_path}")
+                boot_xml_removed = True # Simulate success
+            else:
+                log.info(f"Removing boot XML file: {boot_xml_path}")
+                boot_xml_removed = delete_file(boot_xml_path, quiet=False) # Use safe delete
+            if boot_xml_removed:
+                 log.success(f"{'[Dry Run] Would have r' if dry_run else 'R'}emoved boot XML file: {boot_xml_path.name}")
+            else:
+                 log.error(f"Failed to remove boot XML file: {boot_xml_path.name}")
         else:
-            log.info(f"Removing VM XML file: {vm.xml_path}")
-            xml_removed = delete_file(vm.xml_path, quiet=False) # Use safe delete
-        # Log success/failure based on actual or simulated result
-        if xml_removed:
-             log.success(f"{'[Dry Run] Would have r' if dry_run else 'R'}emoved XML file: {vm.xml_path.name}")
-        else:
-             log.error(f"Failed to remove XML file: {vm.xml_path.name}")
+            log.debug(f"boot.xml not found at {boot_xml_path}, skipping removal.")
+            boot_xml_removed = True # Treat as success if not found
+
+    # 3. Libvirt XML File - Handled by undefine.
+    #    The virsh undefine command (called via undefine_vm in Step 1)
+    #    should handle the removal of the libvirt-managed XML definition file.
+    #    Attempting to delete vm.xml_path separately is redundant and could
+    #    cause issues if it points to the system file. We only remove the script file.
+    xml_removed = True # Assume success as undefine handles it
 
     # 4. Delete disk images if keep_disks is False
     if not keep_disks and vm.disk_paths:
         from .disk_utils import DiskImage, delete_disk_image
         log.info(f"Removing disk images for VM '{vm.name}'... (Dry Run: {dry_run})")
         for disk_path in vm.disk_paths:
+            # --- Add check to skip OpenCore.qcow2 ---
+            if disk_path.name == "OpenCore.qcow2":
+                log.info(f"Preserving critical file: {disk_path.name}")
+                continue
+            # --- End check ---
+
             # Skip if the path doesn't exist or isn't a file
             if not is_valid_file(disk_path, quiet=True):
                 log.warning(f"Disk file not found or inaccessible: {disk_path}")
@@ -878,6 +1115,8 @@ def remove_vm(vm: VirtualMachine, keep_disks: bool = True,
     # Return overall success (primarily based on runtime removal if attempted)
     # If not managed by runtime, success depends on file removal.
     if not check_command_exists("virsh", quiet=True):
-         return script_removed and xml_removed # Success if files removed
+         # Success depends on script and boot.xml removal if not managed by runtime
+         return script_removed and boot_xml_removed
     else:
-         return vm_removed_from_runtime # Success if undefine worked (or wasn't needed/skipped due to perms)
+         # Success depends on runtime removal AND file removals
+         return vm_removed_from_runtime and script_removed and boot_xml_removed

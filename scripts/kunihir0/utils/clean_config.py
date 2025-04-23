@@ -28,7 +28,8 @@ LOG_PATTERNS: PatternList = [
 ROOT_PATTERNS: PatternList = [
     "BaseSystem.img",  # Installer image
     "boot.sh",         # Boot script
-    "HDD.qcow2"        # Main disk image
+    "HDD.qcow2",       # Main disk image
+    "boot.xml"         # Boot xml import
 ]
 
 # Blob file patterns (in various directories)

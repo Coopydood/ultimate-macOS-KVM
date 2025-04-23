@@ -1258,7 +1258,7 @@ def main():
 
     # --- Self Destruct with fancy animation ---
     try:
-        _wave_text("Removing self-destruct script...", cycles=1, rainbow=True)
+        _wave_text("Removing self-destruct script...", cycles=15, rainbow=True)
         current_script_path = Path(sys.argv[0]).resolve()
         if not args.dry_run:
             current_script_path.unlink(missing_ok=True)

@@ -214,15 +214,37 @@ def check_command_exists(command: str, quiet: bool = False) -> bool:
         return False
 
 
+def is_sudo_available() -> bool:
+    """Check if sudo is available and the user has sudo privileges.
+    
+    Returns:
+        True if sudo is available and user can run sudo without password, False otherwise
+    """
+    try:
+        # Try to run a simple command with sudo that requires minimal privileges
+        # Use -n flag to prevent sudo from asking for a password
+        result = subprocess.run(
+            ["sudo", "-n", "true"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=2
+        )
+        return result.returncode == 0
+    except (subprocess.SubprocessError, FileNotFoundError, OSError):
+        return False
+
+
 def run_virsh_command(
-    subcommand: List[str], 
-    quiet: bool = False
+    subcommand: List[str],
+    quiet: bool = False,
+    try_sudo: bool = True
 ) -> Tuple[bool, str, str]:
-    """Run a virsh command safely.
+    """Run a virsh command safely, with sudo if needed and available.
     
     Args:
         subcommand: Virsh subcommand and arguments as a list of strings
         quiet: If True, don't log messages
+        try_sudo: If True, attempt with sudo if regular command fails with permission error
         
     Returns:
         Tuple of (success, stdout, stderr)
@@ -236,8 +258,26 @@ def run_virsh_command(
     # Create the full command
     command = ["virsh"] + subcommand
     
-    # Run the command
-    return run_command_with_output(command, quiet=quiet)
+    # First try without sudo
+    success, stdout, stderr = run_command_with_output(command, quiet=quiet)
+    
+    # If command failed due to permissions and try_sudo is enabled
+    if not success and try_sudo and ("permission denied" in stderr.lower() or
+                                     "authentication required" in stderr.lower() or
+                                     "failed to connect" in stderr.lower()):
+        if not quiet:
+            log.warning("Virsh command failed due to permissions, attempting with sudo")
+        
+        # Check if sudo is available
+        if is_sudo_available():
+            return run_sudo_command(command, prompt="Libvirt operations require elevated privileges", quiet=quiet)
+        else:
+            if not quiet:
+                log.error("Sudo access required for virsh but not available")
+            return (False, stdout, stderr + "\n(sudo access required but not available)")
+    
+    # Return original result
+    return (success, stdout, stderr)
 
 
 def run_sudo_command(
