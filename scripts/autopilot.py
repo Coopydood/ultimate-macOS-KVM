@@ -199,15 +199,13 @@ if enableRPC == True:
       None
 
 
-
-
-
 def startup():
    global detectChoice
    global sparkTime
    global noticeData
    global skipNotices
    global noticeGoBackAction
+   noticeData = None
    clear()
 
    if dirMode == 2:
@@ -619,41 +617,44 @@ def autopilot():
          print("   "+"\n   "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
 
          if USR_CREATE_XML == "True":
-            print("   "+color.BOLD+color.PURPLE+"FILES   ",color.END+color.END+USR_CFG+", "+USR_CFG_XML)
+            print("   "+color.BOLD+color.PURPLE+"FILES   ",color.END+USR_CFG+", "+USR_CFG_XML)
          else:
-            print("   "+color.BOLD+color.PURPLE+"FILE    ",color.END+color.END+USR_CFG+color.END)
+            print("   "+color.BOLD+color.PURPLE+"FILE    ",color.END+USR_CFG+color.END)
 
 
          if USR_TARGET_OS < 1012 and USR_TARGET_OS >= 100:
-            print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"Mac OS X",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
+            print("   "+color.BOLD+color.GREEN+"OS      ",color.END+"Mac OS X",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
          else:
-            print("   "+color.BOLD+color.GREEN+"OS      ",color.END+color.END+"macOS",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
+            print("   "+color.BOLD+color.GREEN+"OS      ",color.END+"macOS",USR_TARGET_OS_NAME,color.END+"("+str(USR_TARGET_OS_F)+")")
 
 
-         print("   "+color.BOLD+color.YELLOW+"BOOT    ",color.END+color.END+USR_BOOT_FILE_F,color.END)
+         print("   "+color.BOLD+color.YELLOW+"BOOT    ",color.END+USR_BOOT_FILE_F,color.END)
 
 
-         print("   "+color.BOLD+color.CYAN+"CPU     ",color.END+color.END+USR_CPU_MODEL+",",USR_CPU_CORES,"cores,",USR_CPU_THREADS,"threads","("+USR_CPU_TOTAL_F+")"+color.END)  
+         print("   "+color.BOLD+color.CYAN+"CPU     ",color.END+USR_CPU_MODEL+",",USR_CPU_CORES,"cores,",USR_CPU_THREADS,"threads","("+USR_CPU_TOTAL_F+")"+color.END)  
          
 
          #print("   "+color.BOLD+color.CYAN+"        ",color.END+color.BOLD+USR_CPU_FEATURE_ARGS+color.END)
 
 
-         print("   "+color.BOLD+color.CYAN+"RAM     ",color.END+color.END+USR_ALLOCATED_RAM_F+" GB"+color.END)
+         print("   "+color.BOLD+color.CYAN+"RAM     ",color.END+USR_ALLOCATED_RAM_F+" GB"+color.END)
 
 
          if USR_HDD_SIZE == "-1":
-            print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_PATH_F+color.END)
+            print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+USR_HDD_PATH_F+color.END)
          elif USR_HDD_SIZE == "-2":
-            print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_PATH_F+color.END)
+            print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+USR_HDD_PATH_F+color.END)
          else:
-            print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+color.END+USR_HDD_SIZE_F+" GB (dynamic)"+color.END)
+            print("   "+color.BOLD+color.CYAN+"DISK    ",color.END+USR_HDD_SIZE_F+" GB (dynamic)"+color.END)
 
 
          if USR_MAC_ADDRESS != "00:16:cb:00:21:09":
-            print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+" ("+USR_MAC_ADDRESS+")")
+            print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+USR_NETWORK_DEVICE+color.END+" ("+USR_MAC_ADDRESS+")")
          else:
-            print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+color.END+USR_NETWORK_DEVICE+color.END+"")
+            print("   "+color.BOLD+color.CYAN+"NETWORK ",color.END+USR_NETWORK_DEVICE+color.END+"")
+
+         if USR_EXP_AUDIO == True:
+            print("   "+color.BOLD+color.CYAN+"EXTRAS  ",color.END+"Experimental audio support")
 
 
          print("   "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
@@ -1330,6 +1331,8 @@ def autopilot():
       cpydLog("ok",str("Stage 10 sequence initiated"))
       if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
          defaultValue = "e1000-82545em"
+      elif USR_TARGET_OS >= 11 and USR_TARGET_OS <= 99:
+         defaultValue = "virtio-net"
       else:
          defaultValue = "vmxnet3"
 
@@ -2880,85 +2883,85 @@ def autopilot():
          print("   "+"\n   "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
 
          if PROC_PREPARE == 0:
-            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Preparing files"+color.END)
+            print("      "+color.BOLD+color.RED+"● ",color.END+"Preparing files"+color.END)
          elif PROC_PREPARE == 1:
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Preparing files"+color.END)
          elif PROC_PREPARE == 2:
-            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Preparing files"+color.END)
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+"Preparing files"+color.END)
 
          if enableBlobCheck == True:
             if PROC_CHECKBLOBS == 0:
-               print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Checking preferences"+color.END)
+               print("      "+color.BOLD+color.RED+"● ",color.END+"Checking preferences"+color.END)
             elif PROC_CHECKBLOBS == 1:
                print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Checking preferences"+color.END)
             elif PROC_CHECKBLOBS == 2:
-               print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Checking preferences"+color.END)
+               print("      "+color.BOLD+color.GREEN+"● ",color.END+"Checking preferences"+color.END)
 
          if PROC_GENCONFIG == 0:
-            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Generating config script"+color.END)
+            print("      "+color.BOLD+color.RED+"● ",color.END+"Generating config script"+color.END)
          elif PROC_GENCONFIG == 1:
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Generating config script"+color.END)
          elif PROC_GENCONFIG == 2:
-            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Generating config script"+color.END)
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+"Generating config script"+color.END)
 
          if PROC_LOCALCOPY == 0 and USR_BOOT_FILE != "-2":
-            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
+            print("      "+color.BOLD+color.RED+"● ",color.END+"Copying recovery image into place"+color.END)
          elif PROC_LOCALCOPY == 1 and PROC_LOCALCOPY_CVTN == 0 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Copying recovery image into place"+color.END)
          elif PROC_LOCALCOPY == 1 and PROC_LOCALCOPY_CVTN == 1 and USR_BOOT_FILE != "-2":
-            print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
+            print("      "+color.BOLD+color.YELLOW+"● ",color.END+"Copying recovery image into place"+color.END)
          elif PROC_LOCALCOPY == 2 and USR_BOOT_FILE != "-2":
-            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Copying recovery image into place"+color.END)
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+"Copying recovery image into place"+color.END)
 
          if PROC_LOCALCOPY_CVTN == 1:
             print("      "+color.BOLD+"      ↳ "+"Converting image format"+color.END)
          
 
          if PROC_FETCHDL == 0 and USR_BOOT_FILE != "-2":
-            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Downloading recovery image"+color.END)
+            print("      "+color.BOLD+color.RED+"● ",color.END+"Downloading recovery image"+color.END)
          elif PROC_FETCHDL == 1 and USR_BOOT_FILE != "-2":
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Downloading recovery image"+color.END)
          elif PROC_FETCHDL == 2 and USR_BOOT_FILE != "-2":
-            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Downloading recovery image"+color.END)
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+"Downloading recovery image"+color.END)
 
          if PROC_GENHDD == 0 and USR_HDD_SIZE != "-1" and USR_HDD_SIZE != "-2":
-            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
+            print("      "+color.BOLD+color.RED+"● ",color.END+"Creating virtual hard disk"+color.END)
          elif PROC_GENHDD == 1 and USR_HDD_SIZE != "-1" and USR_HDD_SIZE != "-2":
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Creating virtual hard disk"+color.END)
          elif PROC_GENHDD == 2 and USR_HDD_SIZE != "-1" and USR_HDD_SIZE != "-2":
-            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+"Creating virtual hard disk"+color.END)
          elif PROC_GENHDD == 3 and USR_HDD_SIZE != "-1" and USR_HDD_SIZE != "-2":
-            print("      "+color.BOLD+color.CYAN+"● ",color.END+color.END+"Creating virtual hard disk"+color.END)
+            print("      "+color.BOLD+color.CYAN+"● ",color.END+"Creating virtual hard disk"+color.END)
 
          if PROC_APPLYPREFS == 0:
-            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Applying preferences"+color.END)
+            print("      "+color.BOLD+color.RED+"● ",color.END+"Applying preferences"+color.END)
          elif PROC_APPLYPREFS == 1:
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Applying preferences"+color.END)
          elif PROC_APPLYPREFS == 2:
-            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Applying preferences"+color.END)
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+"Applying preferences"+color.END)
 
          if USR_CREATE_XML == "True":
             if PROC_GENXML == 0:
-               print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Converting to domain XML file"+color.END)
+               print("      "+color.BOLD+color.RED+"● ",color.END+"Converting to domain XML file"+color.END)
             elif PROC_GENXML == 1:
                print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Converting to domain XML file"+color.END)
             elif PROC_GENXML == 2:
-               print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Converting to domain XML file"+color.END)
+               print("      "+color.BOLD+color.GREEN+"● ",color.END+"Converting to domain XML file"+color.END)
 
          if PROC_FIXPERMS == 0:
-            print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Fixing up permissions"+color.END)
+            print("      "+color.BOLD+color.RED+"● ",color.END+"Fixing up permissions"+color.END)
          elif PROC_FIXPERMS == 1:
             print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Fixing up permissions"+color.END)
          elif PROC_FIXPERMS == 2:
-            print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Fixing up permissions"+color.END)
+            print("      "+color.BOLD+color.GREEN+"● ",color.END+"Fixing up permissions"+color.END)
 
          if enableClean == True:
             if PROC_CLEANUP == 0:
-               print("      "+color.BOLD+color.RED+"● ",color.END+color.END+"Cleaning up"+color.END)
+               print("      "+color.BOLD+color.RED+"● ",color.END+"Cleaning up"+color.END)
             elif PROC_CLEANUP == 1:
                print("      "+color.BOLD+color.YELLOW+"● ",color.END+color.BOLD+"Cleaning up"+color.END)
             elif PROC_CLEANUP == 2:
-               print("      "+color.BOLD+color.GREEN+"● ",color.END+color.END+"Cleaning up"+color.END)
+               print("      "+color.BOLD+color.GREEN+"● ",color.END+"Cleaning up"+color.END)
 
          print("   "+color.BOLD+"───────────────────────────────────────────────────────────────────",color.END)
          progressUpdate(-1)
@@ -3866,9 +3869,9 @@ def autopilot():
       if USR_CREATE_XML != "True": print("   "+"\n   Your customised boot file is now ready.\n   You can now start using macOS."+color.END)
       else: print("   "+"\n   Your customised files are now ready.\n   You can now start using macOS."+color.END)
       print("   "+"\n   "+color.BOLD+"────────────────────────────────────────────",color.END)
-      if USR_CREATE_XML == "True": print("   "+color.BOLD+color.PURPLE+"FILES    ",color.END+color.END+USR_CFG+color.END+", "+USR_CFG_XML)
-      else: print("   "+color.BOLD+color.PURPLE+"FILE     ",color.END+color.END+USR_CFG+color.END)
-      print("   "+color.BOLD+color.RED+"COMMAND  ",color.END+color.END+"$ ./"+USR_CFG,color.END)
+      if USR_CREATE_XML == "True": print("   "+color.BOLD+color.PURPLE+"FILES    ",color.END+USR_CFG+color.END+", "+USR_CFG_XML)
+      else: print("   "+color.BOLD+color.PURPLE+"FILE     ",color.END+USR_CFG+color.END)
+      print("   "+color.BOLD+color.RED+"COMMAND  ",color.END+"$ ./"+USR_CFG,color.END)
       print("   "+color.BOLD+color.CYAN+"TIME    ",color.END+color.END,str(exTime),"seconds",color.END+"")
       currentStage = -3
       if enableLog == True:

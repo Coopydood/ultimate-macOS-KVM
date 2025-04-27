@@ -121,8 +121,7 @@ def startup():
     #if not os.path.exists("./resources/.nrsMode"):       # FOR FUTURE DEVELOPMENT
     #    fts()
 
-    if isVM == True:
-        print(color.YELLOW+"\n   ⚠  Virtual machine detected, functionality may be limited\n"+color.END)
+    
     if os.path.exists("blobs/user/USR_CFG.apb"):
             print(color.BOLD+"\n\n  "+color.CYAN,"ULTMOS"+color.END+color.GRAY,"v"+version+color.END)
             print("   by Coopydood"+color.END)
@@ -133,7 +132,8 @@ def startup():
         print("\n   This project can assist you in some often-tedious setup, including\n   processes like"+color.BOLD,"checking your GPU, checking your system, downloading macOS,\n   "+color.END+"and more. Think of it like your personal KVM swiss army knife.")
 
 
-
+    if isVM == True:
+        print(color.YELLOW+"\n   ⚠  Virtual machine detected, functionality may be limited"+color.END)
     
 
     if os.path.exists("./blobs/USR_TARGET_OS.apb") and not os.path.exists("./blobs/user/USR_TARGET_OS.apb"):  # Rescue live blobs if coming from older repo version

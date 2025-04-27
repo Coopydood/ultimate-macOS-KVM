@@ -52,6 +52,31 @@ ULTMOS now has built-in support for CorpNewt's [GenSMBIOS](https://github.com/co
 
 ***
 
+## C. Cleanup Tools...
+
+This utility is a powerful self-destructing uninstaller for Ultimate macOS KVM that provides the following functions:
+
+1. **Clean Downloaded Files**: Removes all macOS recovery images and installation files that were downloaded during setup.
+
+2. **Uninstall Ultimate macOS KVM (Keep VM Disks)**: Completely removes Ultimate macOS KVM from your system but backs up your virtual disk images to your home directory.
+
+3. **Uninstall Ultimate macOS KVM (Remove Everything)**: Performs a complete self-destructing uninstallation that removes Ultimate macOS KVM and all associated files, including virtual disk images.
+
+The uninstaller can be run interactively with a user-friendly menu or via command-line:
+- `./scripts/kunihir0/cleanup.py --downloads` - Clean only downloaded macOS images
+- `./scripts/kunihir0/cleanup.py --keep-data` - Uninstall Ultimate macOS KVM but back up your VM disks
+- `./scripts/kunihir0/cleanup.py` - Complete uninstallation (interactive mode)
+- Add `--force` to any command to skip confirmation prompts
+
+> [!WARNING]
+> The uninstall function is permanent and cannot be undone. It will completely remove the Ultimate macOS KVM directory using a self-destructing mechanism.
+> 
+> Virtual disk backups (if selected) will be stored in your home directory at `~/ultmos_user_data_backup`.
+>
+> The uninstaller will automatically detect and offer to remove any Ultimate macOS KVM VMs that were imported into virt-manager.
+
+***
+
 ## R. Restore tools...
 
 This opens a seperate menu providing options to restore various parts of the repository to defaults.

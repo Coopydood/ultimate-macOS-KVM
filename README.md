@@ -1,6 +1,6 @@
 <p align="center"><a href="https://coopydood.github.io/ultimate-macOS-KVM"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/blob/dev/resources/images/bannerAlphaBasicPortrait.png?raw=true" alt="Logo" width="250"/></a></p>
 
-<h2 align="center">v0.13.1</h2>
+<h2 align="center">v0.13.2</h2>
 
 <p align="center">Helping you build the ultimate macOS virtual machine, powered by KVM.</p>
 
@@ -378,6 +378,7 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[CorpNewt](https://github.com/CorpNewt)** 》Creator of GenSMBIOS and many other Hackintosh essentials.
 - **[Acidanthera](https://github.com/Acidanthera)** 》The group behind OpenCore, Lilu, WhateverGreen, and MUCH more.
 - **[DarknessRafix]()** 》Extensive testing of the project and the author of some excellent ULTMOS guides! Oh, and was the very first person to install macOS Sequoia on ULTMOS - even before me.
+- **[kunihir0](https://github.com/kunihir0)** 》Responsible for several bug fixes and core feature updates.
 
 ***
 
