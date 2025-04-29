@@ -1,303 +1,385 @@
 #!/usr/bin/env python3
 
 """
-Disk image utilities for the Ultimate macOS KVM project.
-Handles disk image detection, cleanup, and management.
+Safe utility functions for disk operations used by the UMK cleanup tools.
+
+This module follows the ULTMOS coding standards:
+- Uses pathlib instead of os module
+- Uses subprocess for command execution
+- Includes type hints
+- Has proper exception handling
+- Includes safeguards against deleting physical disks
 """
 
-import os
-import glob
 import shutil
-from typing import List, Dict, Optional, Any
+import time
+from pathlib import Path
+from typing import List, Dict, Optional, Set, Union, Tuple, Iterator
 
-class Colors:
-    """ANSI color codes for terminal output"""
-    BLUE = '\033[94m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    RED = '\033[91m'
-    BOLD = '\033[1m'
-    END = '\033[0m'
-
-# Try to import cpydColours but use our fallback if it fails
-try:
-    import sys
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'resources', 'python')))
-    from cpydColours import color
-except (ImportError, NameError):
-    # Using the fallback color class
-    color = Colors
+# Import safe utilities and logger
+from .logger import default_logger as log
+from .safe_command_utils import get_user_home
+from .safe_file_utils import (
+    is_valid_file,
+    is_valid_directory,
+    ensure_directory_exists,
+    copy_file,
+    move_file,
+    delete_file as safe_delete_file # Avoid potential conflict if DiskImage has delete method
+)
+from .config_utils import BlobData # Keep config_utils for BlobData
 
 
-# File patterns for detection
-DISK_IMAGE_PATTERNS = [
-    "*.qcow2",
-    "*.img",
-    "*.raw",
-    "*.vdi",
-    "*.vmdk",
-    "HDD*"
-]
-
-# Root directory filter patterns
-ROOT_DIR_FILTERS = [
-    "boot/OpenCore.qcow2",
-    "BaseSystem.img",
-    "/resources/",
-    "/boot/"
-]
-
-
-def check_root_disk_images(log_func=print) -> List[str]:
-    """Check for disk images in the root directory that might conflict with autopilot
+class DiskImage:
+    """Class representing a disk image file."""
     
-    Args:
-        log_func: Function to use for logging
+    def __init__(self, path: Union[str, Path], is_physical: bool = False):
+        """Initialize a disk image object.
         
-    Returns:
-        List[str]: List of paths to disk images in the root directory
-    """
-    log_func(f"\n{color.BOLD}{color.BLUE}Checking for disk images in root directory...{color.END}")
-    
-    root_dir = os.path.abspath(".")
-    root_images = []
-    
-    # Find all disk images in root directory
-    for pattern in DISK_IMAGE_PATTERNS:
-        matching_files = glob.glob(os.path.join(root_dir, pattern))
-        # Filter out known system files like BaseSystem.img and OpenCore.qcow2 in boot/
-        filtered_files = [f for f in matching_files if not any(filter_str in f for filter_str in ROOT_DIR_FILTERS)]
-        root_images.extend(filtered_files)
-    
-    # Report findings
-    if root_images:
-        log_func(f"  {color.YELLOW}Found {len(root_images)} disk images in root directory:{color.END}")
-        for img in root_images:
-            log_func(f"  - {os.path.basename(img)}")
-    else:
-        log_func(f"  {color.GREEN}No disk images found in root directory.{color.END}")
+        Args:
+            path: Path to the disk image
+            is_physical: Whether this is a physical disk
+        """
+        self.path = Path(path)
+        self.is_physical = is_physical
+        self._size: Optional[int] = None
         
-    return root_images
-
-
-def handle_root_disk_images(disk_images: List[str], force: bool = False, log_func=print) -> bool:
-    """Handle disk images found in the root directory
-    
-    Args:
-        disk_images: List of paths to disk images
-        force: Whether to force operations without confirmation
-        log_func: Function to use for logging
+    @property
+    def size(self) -> int:
+        """Get the size of the disk image.
         
-    Returns:
-        bool: True if handled successfully, False otherwise
-    """
-    if not disk_images:
-        return True
-    
-    log_func(f"\n{color.BOLD}{color.YELLOW}Disk images found in root directory need attention{color.END}")
-    log_func(f"  These disk images may conflict with autopilot if you reinstall.")
-    
-    # Present options
-    if not force:
-        log_func(f"\n  {color.BOLD}What would you like to do?{color.END}")
-        log_func(f"  1. Move to 'disks/' directory (recommended)")
-        log_func(f"  2. Delete disk images")
-        log_func(f"  3. Keep as is (may cause conflicts with autopilot)")
-        
-        choice = input(f"\n  {color.BOLD}Choice [1-3]: {color.END}")
-        
-        if choice == "1":
-            # Create disks directory if it doesn't exist
-            disks_dir = os.path.join(os.path.abspath("."), "disks")
-            os.makedirs(disks_dir, exist_ok=True)
-            
-            # Move each file
-            for disk_path in disk_images:
-                disk_name = os.path.basename(disk_path)
-                target_path = os.path.join(disks_dir, disk_name)
-                
-                # Check if target already exists
-                if os.path.exists(target_path):
-                    log_func(f"  {color.YELLOW}Warning: {disk_name} already exists in disks/{color.END}")
-                    overwrite = input(f"  Overwrite? (y/n): ")
-                    if overwrite.lower() not in ['y', 'yes']:
-                        log_func(f"  {color.YELLOW}Skipping {disk_name}{color.END}")
-                        continue
-                
-                try:
-                    log_func(f"  Moving {disk_name} to disks/ directory...")
-                    shutil.move(disk_path, target_path)
-                    log_func(f"  {color.GREEN}✓{color.END} Successfully moved {disk_name}")
-                except Exception as e:
-                    log_func(f"  {color.RED}✗{color.END} Failed to move {disk_name}: {str(e)}")
-            
-            return True
-            
-        elif choice == "2":
-            # Delete confirmation
-            log_func(f"\n  {color.RED}WARNING: This will permanently delete the disk images.{color.END}")
-            confirm = input(f"  {color.BOLD}Type 'DELETE' to confirm: {color.END}")
-            
-            if confirm != "DELETE":
-                log_func(f"  {color.YELLOW}Deletion cancelled.{color.END}")
-                return False
-                
-            # Delete each file
-            for disk_path in disk_images:
-                try:
-                    log_func(f"  Deleting {os.path.basename(disk_path)}...")
-                    os.remove(disk_path)
-                    log_func(f"  {color.GREEN}✓{color.END} Successfully deleted {os.path.basename(disk_path)}")
-                except Exception as e:
-                    log_func(f"  {color.RED}✗{color.END} Failed to delete {os.path.basename(disk_path)}: {str(e)}")
-            
-            return True
-            
-        elif choice == "3":
-            log_func(f"\n  {color.YELLOW}Keeping disk images in root directory.{color.END}")
-            log_func(f"  {color.YELLOW}Note: This may cause conflicts if you run autopilot again.{color.END}")
-            return True
-            
-        else:
-            log_func(f"\n  {color.RED}Invalid choice. Keeping disk images as is.{color.END}")
-            return False
-    else:
-        # In force mode, move to disks/
-        disks_dir = os.path.join(os.path.abspath("."), "disks")
-        os.makedirs(disks_dir, exist_ok=True)
-        
-        for disk_path in disk_images:
+        Returns:
+            Size in bytes
+        """
+        if self._size is None:
             try:
-                disk_name = os.path.basename(disk_path)
-                target_path = os.path.join(disks_dir, disk_name)
-                log_func(f"  Moving {disk_name} to disks/ directory...")
-                
-                # Handle existing files in force mode by overwriting
-                if os.path.exists(target_path):
-                    os.remove(target_path)
-                
-                shutil.move(disk_path, target_path)
-                log_func(f"  {color.GREEN}✓{color.END} Successfully moved {disk_name}")
+                # Use safe util to check validity first
+                if is_valid_file(self.path, quiet=True):
+                    # Only call stat if it's a valid file
+                    self._size = self.path.stat().st_size
+                else:
+                    # is_valid_file might log a warning if not quiet
+                    self._size = 0
+            except PermissionError as e:
+                # Log specific permission error during stat
+                log.warning(f"Permission denied getting size for {self.path}: {e}")
+                self._size = 0
             except Exception as e:
-                log_func(f"  {color.RED}✗{color.END} Failed to handle {os.path.basename(disk_path)}: {str(e)}")
+                # Log unexpected errors during stat
+                log.exception(f"Unexpected error getting size for {self.path}", e)
+                self._size = 0
+        # Ensure we return 0 if size couldn't be determined or is 0
+        return self._size or 0
+
+    @property
+    def name(self) -> str:
+        """Get the name of the disk image.
         
-        return True
+        Returns:
+            Filename
+        """
+        return self.path.name
+        
+    @property
+    def size_human(self) -> str:
+        """Get human-readable size.
+        
+        Returns:
+            Human-readable size string
+        """
+        size_bytes = self.size
+        
+        # Convert to appropriate unit
+        units = ['B', 'KB', 'MB', 'GB', 'TB']
+        size_unit = 0
+        
+        while size_bytes >= 1024 and size_unit < len(units) - 1:
+            size_bytes /= 1024
+            size_unit += 1
+            
+        return f"{size_bytes:.2f} {units[size_unit]}"
+        
+    def __str__(self) -> str:
+        """String representation of the disk image."""
+        physical_flag = " (PHYSICAL DEVICE)" if self.is_physical else ""
+        return f"{self.path}{physical_flag} - {self.size_human}"
 
 
-def clean_disk_directory(force: bool = False, log_func=print) -> bool:
-    """Clean the disks directory
+def find_disk_images(base_dir: Union[str, Path], patterns: List[str]) -> List[DiskImage]:
+    """Find disk images in the base directory matching patterns.
     
     Args:
-        force: Whether to force operations without confirmation
-        log_func: Function to use for logging
+        base_dir: Base directory to search in
+        patterns: List of glob patterns to match
         
     Returns:
-        bool: True if cleaning was successful, False otherwise
+        List of DiskImage objects
     """
-    disks_dir = os.path.join(os.path.abspath("."), "disks")
-    if os.path.exists(disks_dir):
+    base_path = Path(base_dir)
+    # Use safe util to check directory validity, log warning if invalid
+    if not is_valid_directory(base_path, quiet=False):
+        return []
+
+    disk_images: Set[Path] = set()
+    log.debug(f"Searching for disk images in {base_path} with patterns: {patterns}")
+
+    for pattern in patterns:
         try:
-            log_func(f"\n{color.BOLD}Removing VM disk images...{color.END}")
-            # List all files to be deleted
-            files_found = False
-            for root, dirs, files in os.walk(disks_dir):
-                for file in files:
-                    files_found = True
-                    file_path = os.path.join(root, file)
-                    log_func(f"  Removing: {file_path}")
-            
-            if not files_found:
-                log_func(f"  {color.YELLOW}No files found in disks directory.{color.END}")
-                
-            # Actually remove the directory
-            shutil.rmtree(disks_dir)
-            log_func(f"\n{color.GREEN}✓{color.END} Successfully removed all VM disk images.")
-            
-            # Create an empty disks directory to maintain project structure
-            os.makedirs(disks_dir, exist_ok=True)
-            log_func(f"  {color.GREEN}✓{color.END} Created empty disks directory.")
-            
-            return True
+            # Assuming patterns are relative to base_dir for simplicity and safety
+            if Path(pattern).is_absolute():
+                log.warning(f"Absolute pattern '{pattern}' ignored in find_disk_images. Use relative patterns.")
+                continue
+
+            # Use rglob for recursive search within base_dir
+            for file_path in base_path.rglob(pattern):
+                # Ensure it's a file using safe util (quiet internal check)
+                if is_valid_file(file_path, quiet=True):
+                    disk_images.add(file_path)
+        except PermissionError as e:
+             log.warning(f"Permission denied processing pattern '{pattern}': {e}")
         except Exception as e:
-            log_func(f"\n{color.RED}Error removing VM disk images: {str(e)}{color.END}")
-            return False
+            # Log other unexpected errors during globbing
+            log.exception(f"Error processing pattern '{pattern}' in find_disk_images", e)
+
+    log.debug(f"Found {len(disk_images)} potential disk image paths.")
+    # Create DiskImage objects (default to non-physical)
+    return [DiskImage(path) for path in sorted(list(disk_images))]
+
+
+def find_qcow2_images(base_dir: Union[str, Path]) -> List[DiskImage]:
+    """Find QCOW2 disk images in the directory.
+    
+    Args:
+        base_dir: Base directory to search in
+        
+    Returns:
+        List of DiskImage objects
+    """
+    return find_disk_images(base_dir, ["**/*.qcow2"])
+
+
+def find_raw_images(base_dir: Union[str, Path]) -> List[DiskImage]:
+    """Find raw disk images in the directory.
+    
+    Args:
+        base_dir: Base directory to search in
+        
+    Returns:
+        List of DiskImage objects
+    """
+    return find_disk_images(base_dir, ["**/*.img", "**/*.raw"])
+
+
+def get_disk_from_blob_data(blob_data: BlobData) -> Optional[DiskImage]:
+    """Get disk image info from blob data.
+    
+    Args:
+        blob_data: BlobData containing VM configuration
+        
+    Returns:
+        DiskImage object if found, None otherwise
+    """
+    if not blob_data.disk_path:
+        return None
+        
+    disk_path = blob_data.disk_path
+    
+    # Ensure the path exists and is a file using safe util, log warning if invalid
+    if not is_valid_file(disk_path, quiet=False):
+        return None
+
+    return DiskImage(disk_path, is_physical=blob_data.is_physical_disk)
+
+
+def check_disk_space(path: Union[str, Path], required_space: int) -> bool:
+    """Check if there's enough disk space available.
+    
+    Args:
+        path: Path to check space on
+        required_space: Required space in bytes
+        
+    Returns:
+        True if enough space available, False otherwise
+    """
+    try:
+        # Convert to Path
+        path_obj = Path(path)
+
+        # Find the nearest existing parent directory to check space
+        check_path = path_obj
+        # Use safe util to check existence and type (quiet internal check)
+        while not is_valid_directory(check_path, quiet=True):
+            if check_path == check_path.parent: # Reached root or invalid path
+                 log.error(f"Could not find existing directory to check disk space for path: {path}")
+                 return False
+            check_path = check_path.parent
+            # Safeguard for root directory
+            if str(check_path) == check_path.root: break
+
+
+        # Get free space using shutil.disk_usage
+        free_space = shutil.disk_usage(check_path).free
+        has_enough_space = free_space >= required_space
+
+        log.debug(f"Disk space check for {path}: Required={required_space}, Available on {check_path}={free_space}. Enough space: {has_enough_space}")
+        return has_enough_space
+
+    except FileNotFoundError as e:
+        # This might occur if shutil.disk_usage fails on the path
+        log.error(f"Path not found by shutil.disk_usage while checking disk space for: {path}: {e}")
+        return False
+    except PermissionError as e:
+        log.error(f"Permission denied checking disk space for: {path}", e)
+        return False
+    except Exception as e:
+        # Catch other potential errors from shutil.disk_usage
+        log.exception(f"Unexpected error checking disk space for: {path}", e)
+        return False
+
+
+def backup_disk_image(
+    disk_img: DiskImage, 
+    backup_dir: Union[str, Path],
+    quiet: bool = False
+) -> Optional[Path]:
+    """Backup a disk image if it's not a physical disk.
+    
+    Args:
+        disk_img: DiskImage to backup
+        backup_dir: Directory to store backup
+        quiet: If True, suppress output messages
+        
+    Returns:
+        Path to backup file if successful, None otherwise
+    """
+    # Never attempt to backup physical disks
+    if disk_img.is_physical:
+        if not quiet:
+            log.warning(f"SAFETY: Will not backup physical disk {disk_img.path}")
+        return None
+
+    # Convert to Path
+    backup_path = Path(backup_dir)
+    
+    # Ensure backup directory exists
+    # Ensure backup directory exists using safe util
+    if not ensure_directory_exists(backup_path, quiet=quiet):
+        # ensure_directory_exists logs the error
+        return None
+
+    # Check if source exists and is a file using safe util
+    if not is_valid_file(disk_img.path, quiet=quiet):
+        # is_valid_file logs the warning/error
+        return None
+
+    # Check if we have enough space
+    try:
+        if not check_disk_space(backup_path, disk_img.size):
+            if not quiet:
+                log.error(f"Not enough space to backup {disk_img.path} (needs {disk_img.size_human})")
+            return None
+    except Exception as e:
+         if not quiet:
+              log.error(f"Failed to check disk space for backup", e)
+         return None
+
+    # Create backup filename with timestamp
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    backup_file = backup_path / f"{disk_img.name}.{timestamp}.bak"
+    
+    if not quiet:
+        log.info(f"Backing up {disk_img.path} to {backup_file}")
+
+    # Copy the file using safe util
+    if copy_file(disk_img.path, backup_file, quiet=quiet):
+        # copy_file logs success/failure
+        return backup_file
     else:
-        log_func(f"\n{color.YELLOW}No VM disk directory found.{color.END}")
-        log_func(f"  {color.BLUE}Creating disks directory to maintain project structure...{color.END}")
-        
-        try:
-            os.makedirs(disks_dir, exist_ok=True)
-            log_func(f"  {color.GREEN}✓{color.END} Created empty disks directory.")
-            return True
-        except Exception as e:
-            log_func(f"  {color.RED}✗{color.END} Failed to create disks directory: {str(e)}")
-            return False
+        return None
 
 
-def clean_downloaded_images(force: bool = False, log_func=print) -> int:
-    """Clean downloaded macOS recovery images
+def delete_disk_image(disk_img: DiskImage, quiet: bool = False) -> bool:
+    """Delete a disk image if it's not a physical disk.
+
+    Args:
+        disk_img: DiskImage to delete
+        quiet: If True, suppress output messages
+
+    Returns:
+        True if deleted successfully, False otherwise
+    """
+    if disk_img.is_physical:
+        if not quiet:
+            log.warning(f"SAFETY: Will not delete physical disk {disk_img.path}")
+        return False
+
+    # Delete using safe util (handles existence check and logging)
+    # Pass quiet flag correctly
+    return safe_delete_file(disk_img.path, quiet=quiet)
+
+
+def move_disk_image(
+    disk_img: DiskImage, 
+    destination: Union[str, Path],
+    quiet: bool = False
+) -> bool:
+    """Move a disk image if it's not a physical disk.
     
     Args:
-        force: Whether to force operations without confirmation
-        log_func: Function to use for logging
+        disk_img: DiskImage to move
+        destination: Destination directory or file
+        quiet: If True, suppress output messages
         
     Returns:
-        int: Number of files cleaned
+        True if moved successfully, False otherwise
     """
-    # Download file patterns
-    download_files = [
-        "./BaseSystem.dmg",
-        "./BaseSystem.img",
-        "./resources/BaseSystem.dmg",
-        "./resources/BaseSystem.img",
-        "./Install*.app",
-        "./macOS*.dmg",
-        "./OSX*.dmg",
-        "./Install*.dmg"
-    ]
+    # Never attempt to move physical disks
+    if disk_img.is_physical:
+        if not quiet:
+            log.warning(f"SAFETY: Will not move physical disk {disk_img.path}")
+        return False
+
+    # Convert to Path
+    dest_path = Path(destination)
+
+    # Determine the final destination file path
+    # Use quiet=True for internal check
+    if is_valid_directory(dest_path, quiet=True):
+        dest_file_path = dest_path / disk_img.name
+    else:
+        # Assume it's a full file path, ensure parent exists
+        dest_file_path = dest_path
+        # Use quiet=False here to log error if parent creation fails
+        if not ensure_directory_exists(dest_file_path.parent, quiet=quiet):
+             return False
+
+    # Check if we have enough space on the destination's parent directory
+    try:
+        # Use quiet=False to log error if check fails
+        if not check_disk_space(dest_file_path.parent, disk_img.size):
+            if not quiet: # check_disk_space already logs errors
+                 pass # Error logged by check_disk_space
+            return False
+    except Exception as e:
+         # check_disk_space should handle its exceptions, but catch just in case
+         if not quiet:
+              log.exception(f"Unexpected error checking disk space for move", e)
+         return False
+
+    # Move the file using safe util, pass quiet flag
+    return move_file(disk_img.path, dest_file_path, quiet=quiet)
+
+
+def get_default_backup_dir() -> Path:
+    """Get the default backup directory.
     
-    log_func(f"\n{color.BOLD}{color.BLUE}Cleaning downloaded recovery images...{color.END}")
-    
-    # Count downloads
-    download_count = 0
-    for file_pattern in download_files:
-        if "*" in file_pattern:
-            matching_files = glob.glob(file_pattern)
-            download_count += len(matching_files)
-        elif os.path.exists(file_pattern):
-            download_count += 1
-    
-    if download_count == 0:
-        log_func(f"  {color.YELLOW}No downloaded recovery images found to clean.{color.END}")
-        return 0
-    
-    # Confirmation
-    if not force:
-        log_func(f"  Found {download_count} downloaded macOS recovery images to clean.")
-        confirmation = input(f"  {color.BOLD}Continue with cleaning downloaded recovery images? (y/n): {color.END}")
-        if confirmation.lower() not in ['y', 'yes']:
-            log_func(f"  {color.YELLOW}Skipped cleaning downloaded recovery images.{color.END}")
-            return 0
-    
-    # Clean downloads
-    cleaned_count = 0
-    for file_pattern in download_files:
-        if "*" in file_pattern:
-            matching_files = glob.glob(file_pattern)
-            for file_path in matching_files:
-                try:
-                    os.remove(file_path)
-                    log_func(f"  {color.GREEN}✓{color.END} Removed: {file_path}")
-                    cleaned_count += 1
-                except Exception as e:
-                    log_func(f"  {color.RED}✗{color.END} Failed to remove {file_path}: {str(e)}")
-        elif os.path.exists(file_pattern):
-            try:
-                os.remove(file_pattern)
-                log_func(f"  {color.GREEN}✓{color.END} Removed: {file_pattern}")
-                cleaned_count += 1
-            except Exception as e:
-                log_func(f"  {color.RED}✗{color.END} Failed to remove {file_pattern}: {str(e)}")
-    
-    log_func(f"  {color.GREEN}Cleaned {cleaned_count} downloaded recovery images.{color.END}")
-    return cleaned_count
+    Returns:
+        Path to the default backup directory
+    """
+    # Get user's home directory using safe util
+    home_dir_str = get_user_home(quiet=True) # Use quiet for internal call
+    home_dir = Path(home_dir_str)
+
+    # Create a timestamped directory in user's home
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    return home_dir / f"ultmos-backups-{timestamp}"
