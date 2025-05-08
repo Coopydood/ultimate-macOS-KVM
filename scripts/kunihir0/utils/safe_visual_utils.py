@@ -87,15 +87,22 @@ class TerminalColor:
         
         Args:
             text: The text to colorize
-            color: Color name (e.g., "red", "bright_green")
+            color: Color name (e.g., "red", "bright_green", "default")
             
         Returns:
             Colorized text string
         """
-        color_code = cls._color_map.get(color.lower(), "")
+        normalized_color = color.lower()
+        if normalized_color == "default":
+            # "default" color means no specific ANSI color code, effectively resetting to terminal default.
+            # The final cls.RESET in the standard path handles resetting after colored text.
+            # For "default", we return the text as is, without adding color codes or warnings.
+            return text
+
+        color_code = cls._color_map.get(normalized_color, "")
         if not color_code:
             log.warning(f"Unknown color: {color}")
-            return text
+            return text # Return original text if color is unknown
             
         return f"{color_code}{text}{cls.RESET}"
     
@@ -221,8 +228,8 @@ class TerminalDisplay:
             status_symbol = "⚠"
             color = "bright_yellow"
         elif status == "info":
-            status_symbol = "ℹ"
-            color = "bright_blue"
+            # status_symbol = "ℹ" # Remove symbol for info status
+            color = "bright_blue" # Keep the color
             
         display_text = step
         if status_symbol:

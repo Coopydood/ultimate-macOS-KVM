@@ -14,6 +14,7 @@ import argparse
 from pathlib import Path
 from typing import List, Dict, Optional, Set, Union, Tuple, Any
 import subprocess # Needed for Popen
+import os # For setting environment variables
 
 # --- Add Project Root to sys.path ---
 # This allows absolute imports like 'from scripts...' to work when the script is run directly.
@@ -31,6 +32,9 @@ except IndexError:
 # Import the centralized logger first
 from scripts.kunihir0.utils.logger import default_logger as log, LogLevel, set_log_level
 
+# Import theme manager
+from scripts.kunihir0.utils.theme_manager import get_theme_manager, ThemeConfig
+
 # Import safe utilities
 from scripts.kunihir0.utils.safe_file_utils import (
     delete_file, ensure_directory_exists, delete_directory_tree,
@@ -40,9 +44,9 @@ from scripts.kunihir0.utils.safe_file_utils import (
 from scripts.kunihir0.utils.safe_command_utils import (
     get_user_home, check_command_exists, clear_terminal
 )
-from scripts.kunihir0.utils.safe_visual_utils import (
-    TerminalDisplay, ProgressDisplay, TerminalColor
-)
+# Import safe_visual_utils with an alias
+import scripts.kunihir0.utils.safe_visual_utils as svu
+# Direct imports of TerminalDisplay and ProgressDisplay removed as they are accessed via theme_manager or svu alias
 
 # Import refactored or existing utils (assuming they now use safe methods internally)
 from scripts.kunihir0.utils.config_utils import (
@@ -261,15 +265,16 @@ class SafeUninstaller:
 
         # Confirm with user if needed
         if self.config.confirm_actions and files_to_clean_list:
-            TerminalDisplay.print_step(f"Found {len(files_to_clean_list)} temporary files to clean:", "info")
+            tm = get_theme_manager()
+            tm.display_step(f"Found {len(files_to_clean_list)} temporary files to clean:", "info")
             for file_path in files_to_clean_list[:5]:  # Show only first 5
                 try:
-                    print(f"  - {file_path.relative_to(self.base_dir)}")
+                    tm.display_step(f"  - {file_path.relative_to(self.base_dir)}", "info")
                 except ValueError:
-                    print(f"  - {file_path}") # Print absolute if not relative
+                    tm.display_step(f"  - {file_path}", "info") # Print absolute if not relative
 
             if len(files_to_clean_list) > 5:
-                print(f"  ... and {len(files_to_clean_list) - 5} more")
+                tm.display_step(f"  ... and {len(files_to_clean_list) - 5} more", "info")
 
             if not self._confirm_action("Clean these temporary files?"):
                 log.info("Skipping temporary file cleanup.")
@@ -320,8 +325,8 @@ class SafeUninstaller:
             log.info(f"{'Simulating removal of' if self.config.dry_run else 'Removing'} VM: {vm.name}")
             # backup_dir is None for this operation
 
-            # Add spinner for better UX
-            ProgressDisplay.spinner(f"{'Simulating removal of' if self.config.dry_run else 'Removing'} {vm.name}...", 0.5, quiet=False)
+            # Add progress display for better UX using theme manager
+            get_theme_manager().display_progress(f"{'Simulating removal of' if self.config.dry_run else 'Removing'} {vm.name}...", 0.5)
 
             # Call remove_vm from vm_utils, passing dry_run status
             # remove_vm now handles the dry-run logic internally for files
@@ -433,11 +438,12 @@ class SafeUninstaller:
 
         # Confirm with user
         if self.config.confirm_actions:
-            TerminalDisplay.print_step("⚠ WARNING: This will completely uninstall ULTMOS", "warning")
-            print("  - All VMs will be removed from libvirt (if found)")
+            tm = get_theme_manager()
+            tm.display_step("⚠ WARNING: This will completely uninstall ULTMOS", "warning")
+            tm.display_step("  - All VMs will be removed from libvirt (if found)", "warning")
             action = "backed up" if self.config.keep_disks else "deleted"
-            print(f"  - Disk images will be {action}")
-            print(f"  - The entire ULTMOS directory ({self.base_dir}) will be deleted")
+            tm.display_step(f"  - Disk images will be {action}", "warning")
+            tm.display_step(f"  - The entire ULTMOS directory ({self.base_dir}) will be deleted", "warning")
 
             # This is a critical operation, require confirmation
             if not self._confirm_action("Proceed with complete uninstallation?", is_critical=True):
@@ -459,6 +465,52 @@ class SafeUninstaller:
         else:
              log.info("Disk images will be deleted by the self-destruct script.")
 
+        # --- Prompt for Self-Destruct Visual Mode ---
+        tm = get_theme_manager()
+        log.info("Prompting user for self-destruct visual mode.")
+        
+        prompt_title = "Self-Destruct Visuals"
+        prompt_lines = [
+            "How would you like the final cleanup process to look?",
+            "1. Full Pretty Mode (Rich animations and visual effects)",
+            "2. Minimal Mode (All information, but with simpler, faster visuals; still colorful)"
+        ]
+        
+        # Display prompt using theme manager for consistency if possible, or simple input
+        # For simplicity here, using direct input with color, assuming theme_manager might not have a direct 2-choice prompt.
+        # A more integrated approach would use theme_manager.get_user_choice if it supports this format.
+        
+        print("\n" + svu.TerminalColor.colorize(prompt_title, "bright_yellow"))
+        for line in prompt_lines:
+            print(svu.TerminalColor.colorize(f"  {line}", "default"))
+        
+        visual_mode_choice = ""
+        while visual_mode_choice not in ["1", "2"]:
+            try:
+                visual_mode_choice = input(svu.TerminalColor.colorize("Enter your choice (1/2): ", "bright_cyan")).strip()
+                if visual_mode_choice not in ["1", "2"]:
+                    print(svu.TerminalColor.colorize("Invalid choice. Please enter 1 or 2.", "bright_red"))
+            except EOFError:
+                log.warning("EOF received, defaulting to Full Pretty Mode for self-destruct.")
+                visual_mode_choice = "1" # Default to full on EOF
+                break
+            except KeyboardInterrupt:
+                log.warning("User cancelled visual mode selection, defaulting to Full Pretty Mode for self-destruct.")
+                print("\nDefaulting to Full Pretty Mode.")
+                visual_mode_choice = "1" # Default to full on Ctrl+C
+                break
+
+        # Determine visual mode string based on choice
+        selected_visual_mode = "minimal" if visual_mode_choice == "2" else "full"
+
+        if selected_visual_mode == "minimal":
+            log.info("Minimal visual mode selected for self-destruct.")
+            tm.display_step("Minimal Mode selected for final cleanup.", "info")
+        else:
+            log.info("Full Pretty visual mode selected for self-destruct.")
+            tm.display_step("Full Pretty Mode selected for final cleanup.", "info")
+        
+        time.sleep(0.5) # Brief pause after selection
 
         # 3. Create and execute the self-destruct script
         script_path = create_self_destruct_script(
@@ -473,7 +525,7 @@ class SafeUninstaller:
             return False
 
         if self.config.dry_run:
-            log.info(f"[Dry Run] Would execute self-destruct script: sudo python3 {script_path} --directory {self.base_dir} --keep-disks {self.config.keep_disks} --vms {' '.join(vm_names)}")
+            log.info(f"[Dry Run] Would execute self-destruct script: sudo python3 {script_path} --directory {self.base_dir} --keep-disks {self.config.keep_disks} --visual-mode {selected_visual_mode} --vms {' '.join(vm_names)}")
             # Optionally try to delete the temp script even in dry run? Or leave it?
             # Let's leave it for inspection for now.
             # try:
@@ -488,42 +540,43 @@ class SafeUninstaller:
                 log.warning("You may be prompted for your sudo password in the new terminal window.")
 
                 # Construct the command to execute the python script with sudo
-                cmd = ['sudo', 'python3', script_path,
-                       '--directory', str(self.base_dir),
-                       '--keep-disks', str(self.config.keep_disks)]
+                cmd_base = ['sudo', 'python3', str(script_path),
+                            '--directory', str(self.base_dir),
+                            '--keep-disks', str(self.config.keep_disks),
+                            '--visual-mode', selected_visual_mode]
                 if vm_names:
-                    cmd.append('--vms')
-                    cmd.extend(vm_names)
+                    cmd = cmd_base + ['--vms'] + vm_names
+                else:
+                    cmd = cmd_base
 
                 # Launch the script in a visible terminal so user can see progress and animations
                 # The terminal will stay open after this script exits
-                terminal_cmd = ['x-terminal-emulator', '-e', ' '.join(['sudo', 'python3', str(script_path),
-                               '--directory', str(self.base_dir),
-                               '--keep-disks', str(self.config.keep_disks),
-                               '--vms'] + vm_names)]
+                
+                # Base arguments for the self_destruct_logic.py script
+                script_args_list = [
+                    'sudo', 'python3', str(script_path),
+                    '--directory', str(self.base_dir),
+                    '--keep-disks', str(self.config.keep_disks),
+                    '--visual-mode', selected_visual_mode
+                ]
+                if vm_names:
+                    script_args_list.extend(['--vms'] + vm_names)
+
+                # Join arguments for terminals that take a single string command
+                script_args_str = ' '.join(script_args_list)
+
+                terminal_cmd = ['x-terminal-emulator', '-e', script_args_str]
                 
                 # Alternative terminal commands for different systems
                 if not check_command_exists('x-terminal-emulator', quiet=True):
                     if check_command_exists('gnome-terminal', quiet=True):
-                        terminal_cmd = ['gnome-terminal', '--', 'sudo', 'python3', str(script_path),
-                                       '--directory', str(self.base_dir),
-                                       '--keep-disks', str(self.config.keep_disks),
-                                       '--vms'] + vm_names
+                        terminal_cmd = ['gnome-terminal', '--'] + script_args_list
                     elif check_command_exists('kgx', quiet=True):
-                        terminal_cmd = ['kgx', '--', 'sudo', 'python3', str(script_path),
-                                       '--directory', str(self.base_dir),
-                                       '--keep-disks', str(self.config.keep_disks),
-                                       '--vms'] + vm_names
+                        terminal_cmd = ['kgx', '--'] + script_args_list
                     elif check_command_exists('konsole', quiet=True):
-                        terminal_cmd = ['konsole', '-e', 'sudo python3 ' + str(script_path) +
-                                       ' --directory ' + str(self.base_dir) +
-                                       ' --keep-disks ' + str(self.config.keep_disks) +
-                                       ' --vms ' + ' '.join(vm_names)]
+                        terminal_cmd = ['konsole', '-e', script_args_str]
                     elif check_command_exists('xterm', quiet=True):
-                        terminal_cmd = ['xterm', '-e', 'sudo python3 ' + str(script_path) +
-                                       ' --directory ' + str(self.base_dir) +
-                                       ' --keep-disks ' + str(self.config.keep_disks) +
-                                       ' --vms ' + ' '.join(vm_names)]
+                        terminal_cmd = ['xterm', '-e', script_args_str]
                     else:
                         # Fallback if no terminal is found
                         log.warning("No suitable terminal emulator found. Running without visible output.")
@@ -547,16 +600,31 @@ class SafeUninstaller:
 
 
     def _confirm_action(self, prompt: str, timeout: Optional[int] = None, is_critical: bool = False) -> bool:
-        """Prompt the user for confirmation using safe visual utils."""
-        # Use TerminalDisplay for prompts
+        """Prompt the user for confirmation using theme manager."""
+        # Use theme manager for prompts
+        theme_manager = get_theme_manager()
         color = "bright_yellow" # Use string name
         extra_prompt = "(y/n): "
-        if is_critical:
-             color = "bright_red" # Use string name
-             prompt = f"{prompt} THIS IS IRREVERSIBLE!"
-             extra_prompt = "Type 'yes' to confirm: "
 
-        full_prompt = TerminalColor.colorize(prompt, color) + extra_prompt
+        if self.config.dry_run: # Accessing dry_run status from self.config
+            prompt = f"[Dry Run] {prompt}"
+            color = "bright_cyan" # Change color for dry run prompts to be less alarming
+
+        if is_critical:
+             # For critical actions in dry run, still indicate it's a simulated critical action
+             critical_color = "bright_magenta" if self.config.dry_run else "bright_red"
+             prompt = f"{prompt} THIS IS {'NORMALLY ' if self.config.dry_run else ''}IRREVERSIBLE!"
+             extra_prompt = "Type 'yes' to confirm: "
+             color = critical_color # Override color for critical prompts
+
+        # Format prompt with appropriate color and style based on theme
+        if theme_manager.get_theme_name() == "animated":
+            # In animated theme, we'll display the prompt using theme_manager
+            theme_manager.display_step(prompt, "warning" if not is_critical else "error")
+            full_prompt = extra_prompt
+        else:
+            # In standard theme, we'll use the combined prompt
+            full_prompt = svu.TerminalColor.colorize(prompt, color) + extra_prompt
 
         # Basic timeout implementation (no select/async needed for simple CLI)
         start_time = time.time()
@@ -569,7 +637,8 @@ class SafeUninstaller:
                  # A more robust solution would use select or threading
                  # For now, just check elapsed time after input
                  response = input().strip().lower()
-                 if time.time() - start_time > timeout:
+                 # Explicitly cast to float for comparison robustness
+                 if float(time.time() - start_time) > float(timeout):
                       print("\nTimeout elapsed. Assuming 'no'.")
                       return False
             else:
@@ -588,79 +657,104 @@ class SafeUninstaller:
 
 
 def run_menu(uninstaller: SafeUninstaller) -> int:
-    """Run the interactive uninstaller menu using safe visual utils."""
-
+    """Run the interactive uninstaller menu using the theme manager."""
+    # Get the theme manager instance
+    theme_manager = get_theme_manager()
+    
     while True:
-        # Display menu using TerminalDisplay
-        TerminalDisplay.print_banner("ULTMOS Safe Uninstaller")
-
-        TerminalDisplay.print_centered("1. Show detected components", "bright_cyan")
-        TerminalDisplay.print_centered("2. Remove VMs only", "bright_yellow")
-        TerminalDisplay.print_centered("3. Clean temporary files only", "bright_blue")
-        TerminalDisplay.print_centered("4. Clean VMs and temporary files", "bright_magenta")
-        TerminalDisplay.print_centered("5. Uninstall but keep disks", "bright_red")
-        TerminalDisplay.print_centered("6. Uninstall everything", "bright_red") # Use string name
-
-        dry_run_status = "(ON)" if uninstaller.config.dry_run else "(OFF)"
-        dry_run_color = "bright_green" if uninstaller.config.dry_run else "bright_black" # Use gray/bright_black
-        TerminalDisplay.print_centered(f"7. Toggle dry run mode {dry_run_status}", dry_run_color)
-
-        TerminalDisplay.print_centered("M. Return to main menu", "bright_green")
-        TerminalDisplay.print_centered("0. Exit", "bright_cyan")
-        print("\n") # Add spacing
-
-        # Show version at bottom
-        TerminalDisplay.print_centered(f"ULTMOS Version: {uninstaller.version}", "bright_black")
-        TerminalDisplay.print_centered(f"Safe Uninstaller by kunihir0", "bright_black")
-        print("\n")
-
-        # Get selection
+        # Define menu options
+        options = [
+            {"title": "Show detected components", "description": "Display all VMs and disk images", "color": "bright_cyan"},
+            {"title": "Remove VMs only", "description": "Remove VMs but keep disk images", "color": "bright_yellow"},
+            {"title": "Clean temporary files only", "description": "Remove temporary log files and cache", "color": "bright_blue"},
+            {"title": "Clean VMs and temporary files", "description": "Remove VMs and clean temporary files", "color": "bright_magenta"},
+            {"title": "Uninstall but keep disks", "description": "Remove ULTMOS but backup disk images", "color": "bright_red"},
+            {"title": "Uninstall everything", "description": "Completely remove ULTMOS and all data", "color": "bright_red"},
+            
+            # Toggle options
+            {"title": f"Toggle dry run mode ({('ON' if uninstaller.config.dry_run else 'OFF')})",
+             "description": "Simulate operations without making changes",
+             "color": "bright_green" if uninstaller.config.dry_run else "bright_black"},
+            
+            {"title": f"Toggle theme ({theme_manager.get_theme_display_name()})",
+             "description": "Switch between standard and animated theme",
+             "color": "bright_cyan"},
+            
+            {"title": "Return to main menu", "description": "Go back to ULTMOS main menu", "color": "bright_green"},
+            {"title": "Exit", "description": "Exit the uninstaller", "color": "bright_cyan"}
+        ]
+        
+        # Define menu content
+        title = "ULTMOS Safe Uninstaller"
+        subheading = "Safely remove ULTMOS components"
+        body_lines = [
+            "This utility helps you safely remove ULTMOS components from your system.",
+            "You can remove VMs, clean temporary files, or uninstall everything.",
+            "Use with caution - some operations cannot be undone.",
+            f"ULTMOS Version: {uninstaller.version} - Safe Uninstaller by kunihir0"
+        ]
+        
+        # Display the menu using the theme manager
+        theme_manager.display_menu(title, subheading, body_lines, options)
+        
+        # Get user choice using the theme manager
         try:
-            choice = input(TerminalColor.colorize("Select option> ", "bold")).strip()
+            choice = theme_manager.get_user_choice("Select option")
         except EOFError:
-             log.warning("Input stream closed, exiting menu.")
-             return 1 # Indicate error/exit
+            log.warning("Input stream closed, exiting menu.")
+            return 1  # Indicate error/exit
 
-        if choice == "0":
-            TerminalDisplay.print_step("Exiting uninstaller", "success")
+        # Accept various exit options
+        if choice in ["0", "10"] or choice.lower() in ["exit", "q", "quit"]:
+            theme_manager.display_step("Exiting uninstaller", "success")
             return 0
 
         elif choice == "1":
-            TerminalDisplay.clear_screen()
-            TerminalDisplay.print_banner("Detected Components")
+            theme_manager.clear_screen()
+            theme_manager.print_banner("Detected Components")
             # Show VMs
-            TerminalDisplay.print_step("Detected VMs:", "info")
+            theme_manager.display_step("Detected VMs:", "info")
             vms = uninstaller.find_vms() # Safe call
             if vms:
                 for vm in vms:
-                    print(f"  - {vm}") # Relies on VM __str__
+                    # Format VM output for clarity, especially when state is unknown
+                    vm_details = f"{vm.name}"
+                    if vm.script_path:
+                        vm_details += f" (Script: {vm.script_path.name})"
+                    if vm.state and vm.state.lower() != 'unknown':
+                        vm_details += f" ({vm.state})"
+                    else:
+                        # Explicitly state if detected via fallback and state is unknown
+                        vm_details += " (Detected via boot script, state unknown)"
+                    theme_manager.display_step(f"  - {vm_details}", "info")
             else:
-                TerminalDisplay.print_step("  No macOS VMs found", "warning")
+                theme_manager.display_step("  No macOS VMs found.", "warning") # Added period
 
             # Show disk images
-            TerminalDisplay.print_step("\nDetected disk images:", "info")
+            theme_manager.display_step("\nDetected disk images:", "info")
             disks = uninstaller.find_disk_images() # Safe call
             if disks:
+                theme_manager.display_step(f"Total disk images found: {len(disks)}", "info")
                 for disk in disks:
-                     print(f"  - {disk}") # Relies on DiskImage __str__
+                     theme_manager.display_step(f"  - {disk}", "info") # Relies on DiskImage __str__
             else:
-                TerminalDisplay.print_step("  No disk images found", "warning")
+                theme_manager.display_step("  No disk images found", "warning")
 
-            input(f"\n{TerminalColor.colorize('Press Enter to continue...', 'cyan')}")
+            theme_manager.get_user_choice("Press Enter to continue")
 
         elif choice == "2":
-            TerminalDisplay.clear_screen()
-            TerminalDisplay.print_banner("Remove VMs Only")
-            ProgressDisplay.spinner("Detecting VMs...", 0.5)
+            theme_manager.clear_screen()
+            theme_manager.print_banner("Remove VMs Only")
+            theme_manager.display_progress("Detecting VMs...", 0.5)
             vms = uninstaller.find_vms()
             if not vms:
-                TerminalDisplay.print_step("No macOS VMs found", "warning")
+                theme_manager.display_step("No macOS VMs found", "warning")
             else:
-                TerminalDisplay.print_step(f"Found {len(vms)} VMs:", "info")
+                theme_manager.display_step(f"Found {len(vms)} VMs:", "info")
                 files_to_remove: List[Path] = []
                 disks_associated: List[Path] = []
                 for vm in vms:
-                    print(f"  - {vm}") # Prints VM name and state
+                    theme_manager.display_step(f"  - {vm}", "info") # Prints VM name and state
                     # Collect associated files that exist
                     if vm.script_path and vm.script_path.exists():
                         files_to_remove.append(vm.script_path)
@@ -675,25 +769,25 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
 
                 # Display files to be removed if any were found
                 if files_to_remove:
-                     TerminalDisplay.print_step("\nAssociated configuration files to be removed:", "warning")
+                     theme_manager.display_step("\nAssociated configuration files to be removed:", "warning")
                      unique_files = sorted(list(set(files_to_remove))) # Ensure uniqueness and sort
                      for file_path in unique_files:
                           try:
                                # Try to display relative path for clarity
-                               print(f"  - {file_path.relative_to(uninstaller.base_dir)}")
+                               theme_manager.display_step(f"  - {file_path.relative_to(uninstaller.base_dir)}", "info")
                           except ValueError:
                                # Fallback to absolute path if not relative
-                               print(f"  - {file_path}")
+                               theme_manager.display_step(f"  - {file_path}", "info")
 
                 # Display associated disk files (these are NOT removed by this option)
                 if disks_associated:
-                     TerminalDisplay.print_step("\nAssociated disk images (NOT removed by this option):", "info")
+                     theme_manager.display_step("\nAssociated disk images (NOT removed by this option):", "info")
                      unique_disks = sorted(list(set(disks_associated)))
                      for disk_path in unique_disks:
                           try:
-                               print(f"  - {disk_path.relative_to(uninstaller.base_dir)}")
+                               theme_manager.display_step(f"  - {disk_path.relative_to(uninstaller.base_dir)}", "info")
                           except ValueError:
-                               print(f"  - {disk_path}")
+                               theme_manager.display_step(f"  - {disk_path}", "info")
 
 
                 # Update confirmation prompts
@@ -711,30 +805,30 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
                     log.info(f"VM removal operation completed. Removed {removed} VMs, disk images {keep_status}.")
                 else:
                     log.info("VM removal cancelled.")
-            input(f"\n{TerminalColor.colorize('Press Enter to continue...', 'cyan')}")
+            theme_manager.get_user_choice("Press Enter to continue")
 
         elif choice == "3":
-            TerminalDisplay.clear_screen()
-            TerminalDisplay.print_banner("Clean Temporary Files")
-            ProgressDisplay.spinner("Scanning for temporary files...", 0.5)
+            theme_manager.clear_screen()
+            theme_manager.print_banner("Clean Temporary Files")
+            theme_manager.display_progress("Scanning for temporary files...", 0.5)
             cleaned = uninstaller.clean_temporary_files() # Safe call, logs internally
             # Log final summary here
             log.info(f"Temporary file cleanup operation completed. Cleaned {cleaned} files.")
-            input(f"\n{TerminalColor.colorize('Press Enter to continue...', 'cyan')}")
+            theme_manager.get_user_choice("Press Enter to continue")
             
         elif choice == "4":
-            TerminalDisplay.clear_screen()
-            TerminalDisplay.print_banner("Clean VMs and Temporary Files")
+            theme_manager.clear_screen()
+            theme_manager.print_banner("Clean VMs and Temporary Files")
             
             # First handle VM removal
-            ProgressDisplay.spinner("Detecting VMs...", 0.5)
+            theme_manager.display_progress("Detecting VMs...", 0.5)
             vms = uninstaller.find_vms()
             if vms:
-                TerminalDisplay.print_step(f"Found {len(vms)} VMs:", "info")
+                theme_manager.display_step(f"Found {len(vms)} VMs:", "info")
                 files_to_remove: List[Path] = []
                 disks_associated: List[Path] = []
                 for vm in vms:
-                    print(f"  - {vm}")
+                    theme_manager.display_step(f"  - {vm}", "info")
                     # Collect associated files that exist
                     if vm.script_path and vm.script_path.exists():
                         files_to_remove.append(vm.script_path)
@@ -746,15 +840,15 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
                             disks_associated.append(disk_path)
                 
                 if disks_associated:
-                    TerminalDisplay.print_step(f"\nFound {len(disks_associated)} disk images:", "info")
+                    theme_manager.display_step(f"\nFound {len(disks_associated)} disk images:", "info")
                     unique_disks = sorted(list(set(disks_associated)))
                     for disk_path in unique_disks[:5]:
                         try:
-                            print(f"  - {disk_path.relative_to(uninstaller.base_dir)}")
+                            theme_manager.display_step(f"  - {disk_path.relative_to(uninstaller.base_dir)}", "info")
                         except ValueError:
-                            print(f"  - {disk_path}")
+                            theme_manager.display_step(f"  - {disk_path}", "info")
                     if len(unique_disks) > 5:
-                        print(f"  ... and {len(unique_disks) - 5} more")
+                        theme_manager.display_step(f"  ... and {len(unique_disks) - 5} more", "info")
                 
                 # Ask about disk removal
                 if uninstaller._confirm_action("Do you want to remove the disk images as well?"):
@@ -771,88 +865,106 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
                 else:
                     log.info("VM removal cancelled.")
             else:
-                TerminalDisplay.print_step("No macOS VMs found", "warning")
+                theme_manager.display_step("No macOS VMs found", "warning")
             
             # Then handle temporary file cleanup
-            TerminalDisplay.print_step("\nProceeding with temporary file cleanup...", "info")
-            ProgressDisplay.spinner("Scanning for temporary files...", 0.5)
+            theme_manager.display_step("\nProceeding with temporary file cleanup...", "info")
+            theme_manager.display_progress("Scanning for temporary files...", 0.5)
             cleaned = uninstaller.clean_temporary_files()
             log.info(f"Temporary file cleanup operation completed. Cleaned {cleaned} files.")
             
-            input(f"\n{TerminalColor.colorize('Press Enter to continue...', 'cyan')}")
+            theme_manager.get_user_choice("Press Enter to continue")
 
         elif choice == "5":
-            TerminalDisplay.clear_screen()
-            TerminalDisplay.print_banner("Uninstall (Keep Disks)")
-            TerminalDisplay.print_step("WARNING: This will remove ULTMOS but keep/backup disks.", "warning")
+            theme_manager.clear_screen()
+            theme_manager.print_banner("Uninstall (Keep Disks)")
+            if uninstaller.config.dry_run:
+                theme_manager.display_step("DRY RUN MODE: No actual changes will be made.", "success")
+            theme_manager.display_step("WARNING: This will remove ULTMOS but keep/backup disks.", "warning")
             # Backup dir is determined/shown by self-destruct script if needed
             # TerminalDisplay.print_step(f"Disk images will be backed up to: {uninstaller.config.backup_dir}", "info")
 
             vms = uninstaller.find_vms()
             if vms:
-                TerminalDisplay.print_step(f"Found {len(vms)} VMs whose definitions will be removed:", "warning")
-                for vm in vms: print(f"  - {vm.name}")
+                theme_manager.display_step(f"Found {len(vms)} VMs whose definitions will be removed:", "warning")
+                for vm in vms:
+                    theme_manager.display_step(f"  - {vm.name}", "info")
 
-            TerminalDisplay.print_step("This operation cannot be undone!", "warning")
-            if uninstaller._confirm_action("Are you SURE you want to uninstall ULTMOS (keeping disks)?", is_critical=True):
-                log.info("Starting uninstallation (keeping disks)...")
-                uninstaller.config.keep_disks = True
-                success = uninstaller.uninstall_everything() # Safe call using self-destruct
-                if success:
-                    log.success("Self-destruct script initiated successfully in a new terminal window. Exiting.")
-                    return 0 # Exit after successful initiation
-                else:
-                    log.error("Uninstallation (keeping disks) failed to initiate.")
+            theme_manager.display_step("This operation cannot be undone!", "warning")
+            # Confirmation is now handled within uninstaller.uninstall_everything()
+            log.info("Preparing for uninstallation (keeping disks)...")
+            uninstaller.config.keep_disks = True # Ensure this is set before calling
+            success = uninstaller.uninstall_everything() # This will handle its own confirmation
+
+            if success:
+                log.success("Self-destruct script initiated successfully. Exiting.")
+                return 0 # Exit after successful initiation
             else:
-                log.info("Operation cancelled.")
-            input(f"\n{TerminalColor.colorize('Press Enter to continue...', 'cyan')}")
+                # This branch is reached if uninstall_everything returns False (cancelled by user or failed).
+                # Specific reasons (cancelled/failed) are logged within uninstall_everything.
+                log.warning("Uninstallation (keeping disks) was not completed.")
+            theme_manager.get_user_choice("Press Enter to continue")
 
         elif choice == "6":
-            TerminalDisplay.clear_screen()
-            TerminalDisplay.print_banner("Uninstall EVERYTHING")
-            TerminalDisplay.print_step("WARNING: This will completely remove ULTMOS", "error")
-            TerminalDisplay.print_step("ALL YOUR VM DISK IMAGES WILL BE PERMANENTLY DELETED!", "error")
+            theme_manager.clear_screen()
+            theme_manager.print_banner("Uninstall EVERYTHING")
+            if uninstaller.config.dry_run:
+                theme_manager.display_step("DRY RUN MODE: No actual changes will be made.", "success")
+            theme_manager.display_step("WARNING: This will completely remove ULTMOS", "error")
+            theme_manager.display_step("ALL YOUR VM DISK IMAGES WILL BE PERMANENTLY DELETED (if not in dry run)!", "error")
 
             vms = uninstaller.find_vms()
             if vms:
-                TerminalDisplay.print_step(f"Found {len(vms)} VMs whose definitions will be removed:", "warning")
-                for vm in vms: print(f"  - {vm.name}")
+                theme_manager.display_step(f"Found {len(vms)} VMs whose definitions will be removed:", "warning")
+                for vm in vms:
+                    theme_manager.display_step(f"  - {vm.name}", "info")
             disks = uninstaller.find_disk_images()
             if disks:
-                TerminalDisplay.print_step(f"Found {len(disks)} disk images to DELETE:", "error")
-                for disk in disks[:5]: print(f"  - {disk.path.name} ({disk.size_human})")
-                if len(disks) > 5: print(f"  - ... and {len(disks) - 5} more")
+                theme_manager.display_step(f"Found {len(disks)} disk images to DELETE:", "error")
+                for disk in disks[:5]:
+                    theme_manager.display_step(f"  - {disk.path.name} ({disk.size_human})", "error")
+                if len(disks) > 5:
+                    theme_manager.display_step(f"  - ... and {len(disks) - 5} more", "error")
 
-            TerminalDisplay.print_step("THIS OPERATION CANNOT BE UNDONE!", "error")
-            if uninstaller._confirm_action("Are you ABSOLUTELY CERTAIN you want to DELETE EVERYTHING?", is_critical=True):
-                log.info("Starting complete uninstallation...")
-                uninstaller.config.keep_disks = False
-                success = uninstaller.uninstall_everything() # Safe call using self-destruct
-                if success:
-                    log.success("Self-destruct script initiated successfully in a new terminal window. Exiting.")
-                    return 0 # Exit after successful initiation
-                else:
-                    log.error("Complete uninstallation failed to initiate.")
+            theme_manager.display_step("THIS OPERATION CANNOT BE UNDONE!", "error")
+            # Confirmation is now handled within uninstaller.uninstall_everything()
+            log.info("Preparing for complete uninstallation...")
+            uninstaller.config.keep_disks = False # Ensure this is set before calling
+            success = uninstaller.uninstall_everything() # This will handle its own confirmation
+
+            if success:
+                log.success("Self-destruct script initiated successfully. Exiting.")
+                return 0 # Exit after successful initiation
             else:
-                log.info("Operation cancelled.")
-            input(f"\n{TerminalColor.colorize('Press Enter to continue...', 'cyan')}")
+                # This branch is reached if uninstall_everything returns False (cancelled by user or failed).
+                # Specific reasons (cancelled/failed) are logged within uninstall_everything.
+                log.warning("Complete uninstallation was not completed.")
+            theme_manager.get_user_choice("Press Enter to continue")
 
         elif choice == "7":
             uninstaller.config.dry_run = not uninstaller.config.dry_run
             status = "enabled" if uninstaller.config.dry_run else "disabled"
-            TerminalDisplay.print_step(f"Dry run mode {status}", "success")
+            theme_manager.display_step(f"Dry run mode {status}", "success")
             time.sleep(1)
             
-        elif choice.lower() == "m":
-            TerminalDisplay.print_step("Returning to main menu...", "success")
+        elif choice == "8":
+            new_theme = theme_manager.toggle_theme()
+            theme_manager.display_step(f"Theme switched to {theme_manager.get_theme_display_name()}", "success")
             time.sleep(1)
-            # Use subprocess instead of os.system for better process handling
-            import subprocess
-            subprocess.run([sys.executable, './main.py'], check=True)
-            return 0  # Exit the current script after launching main menu
+            
+        elif choice == "9" or choice.lower() in ["m", "main"]:
+            theme_manager.display_step("Returning to main menu...", "success")
+            time.sleep(1)
+            # When run directly without being imported from extras.py, return to main menu
+            # Otherwise just exit and let the parent script handle it
+            if __name__ == "__main__":
+                # Use subprocess instead of os.system for better process handling
+                import subprocess
+                subprocess.run([sys.executable, './main.py'], check=True)
+            return 0  # Exit the current script
 
         else:
-            TerminalDisplay.print_step("Invalid selection", "error")
+            theme_manager.display_step("Invalid selection", "error")
             time.sleep(1)
 
     return 0 # Should not be reached
@@ -890,6 +1002,14 @@ def main() -> int:
         help="Remove only VMs and exit"
     )
     parser.add_argument(
+        "--theme", choices=[ThemeConfig.THEME_STANDARD, ThemeConfig.THEME_ANIMATED], default=ThemeConfig.THEME_STANDARD,
+        help="Select theme for display (standard or animated)"
+    )
+    parser.add_argument(
+        "--quiet", action="store_true",
+        help="Enable quiet mode for animations (reduced visual effects)"
+    )
+    parser.add_argument(
         "--log-level", choices=[level.name for level in LogLevel], default="INFO",
         help="Set the minimum logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)"
     )
@@ -907,11 +1027,25 @@ def main() -> int:
         log.error(f"Invalid log level: {args.log_level}. Using INFO.")
         set_log_level(LogLevel.INFO)
 
+    # Configure theme manager with command line arguments
+    theme_manager = get_theme_manager()
+    
+    # Set theme based on command line args
+    theme_manager.config.set_theme(args.theme)
+    log.info(f"Using theme: {theme_manager.get_theme_display_name()}")
+    
+    # Configure quiet mode if specified
+    if args.quiet:
+        if not theme_manager.is_quiet_mode():  # Only toggle if not already in quiet mode
+            theme_manager.toggle_quiet_mode()
+        log.info(f"Quiet mode enabled for animations: {theme_manager.is_quiet_mode()}")
+    
+    # Handle color settings
     if args.no_color:
         # Disable colors in the logger (assuming logger has this capability)
         # Need to implement this in logger.py if not already present
         # log.use_colors(False) # Example call
-        pass # Placeholder if logger doesn't support disabling color yet
+        log.info("Color output disabled")
 
     log.info("ULTMOS Safe Uninstaller starting...")
     log.debug(f"Command line arguments: {args}")
