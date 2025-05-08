@@ -54,26 +54,32 @@ ULTMOS now has built-in support for CorpNewt's [GenSMBIOS](https://github.com/co
 
 ## C. Cleanup Tools...
 
-This utility is a powerful self-destructing uninstaller for Ultimate macOS KVM that provides the following functions:
+This utility provides several options for cleaning up temporary files or uninstalling ULTMOS, accessible via the interactive menu or command-line flags.
 
-1. **Clean Downloaded Files**: Removes all macOS recovery images and installation files that were downloaded during setup.
+**Interactive Menu Options:**
 
-2. **Uninstall Ultimate macOS KVM (Keep VM Disks)**: Completely removes Ultimate macOS KVM from your system but backs up your virtual disk images to your home directory.
+1.  **Show detected components**: Displays found VMs and disk images.
+2.  **Remove VMs only**: Removes VM definitions from libvirt. It will prompt whether to also delete associated disk images.
+3.  **Clean temporary files only**: Removes logs, temporary files, and stale blobs.
+4.  **Clean VMs and temporary files**: Combines options 2 and 3.
+5.  **Uninstall but keep disks**: Initiates the self-destruct process to remove ULTMOS but backs up disk images first.
+6.  **Uninstall everything**: Initiates the self-destruct process to remove ULTMOS *and* all associated disk images.
 
-3. **Uninstall Ultimate macOS KVM (Remove Everything)**: Performs a complete self-destructing uninstallation that removes Ultimate macOS KVM and all associated files, including virtual disk images.
+**Command-Line Flags:**
 
-The uninstaller can be run interactively with a user-friendly menu or via command-line:
-- `./scripts/kunihir0/cleanup.py --downloads` - Clean only downloaded macOS images
-- `./scripts/kunihir0/cleanup.py --keep-data` - Uninstall Ultimate macOS KVM but back up your VM disks
-- `./scripts/kunihir0/cleanup.py` - Complete uninstallation (interactive mode)
-- Add `--force` to any command to skip confirmation prompts
+The script [`scripts/kunihir0/cleanup.py`](scripts/kunihir0/cleanup.py) can be run directly with flags for specific non-interactive actions:
+- `./scripts/kunihir0/cleanup.py --temp-only`: Clean only temporary files and exit.
+- `./scripts/kunihir0/cleanup.py --vm-only`: Remove only VM definitions (will prompt about associated disks unless `--force` is used) and exit.
+- Add `--force` to skip confirmation prompts (Use with extreme caution!).
+- Add `--dry-run` to simulate actions without making changes.
+- The `--keep-disks` flag influences the behavior of the full uninstall options (interactive or future non-interactive flags) and the `--vm-only` flag when used with `--force`.
 
 > [!WARNING]
-> The uninstall function is permanent and cannot be undone. It will completely remove the Ultimate macOS KVM directory using a self-destructing mechanism.
-> 
-> Virtual disk backups (if selected) will be stored in your home directory at `~/ultmos_user_data_backup`.
+> The uninstall functions (options 5 & 6 in the menu) are permanent and cannot be undone. They use a self-destructing mechanism that removes the entire ULTMOS directory.
 >
-> The uninstaller will automatically detect and offer to remove any Ultimate macOS KVM VMs that were imported into virt-manager.
+> Virtual disk backups (if the "keep disks" option is chosen) will be stored in your home directory in a timestamped folder like `~/ultmos_backups_YYYYMMDD-HHMMSS`.
+>
+> The uninstaller automatically detects and offers to remove associated libvirt VM definitions during the uninstall process.
 
 ***
 
