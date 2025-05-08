@@ -62,8 +62,8 @@ except ImportError:
     pass
 
 # --- Custom theme imports ---
-# TerminalColor will be imported directly in StandardTheme where needed
-from scripts.kunihir0.utils.safe_visual_utils import TerminalDisplay
+# Import all necessary components from safe_visual_utils at the top
+from scripts.kunihir0.utils.safe_visual_utils import TerminalDisplay, TerminalColor, ProgressDisplay
 
 # --- Theme Configuration ---
 class ThemeConfig:
@@ -135,8 +135,7 @@ class StandardTheme:
         print("  ", self.cpyd.CALLTOACTION)
         
         # Print options
-        # Import TerminalColor here to use its colorize method
-        from scripts.kunihir0.utils.safe_visual_utils import TerminalColor as SafeTerminalColor
+        # TerminalColor is now imported at the top of the module
 
         if options:
             for i, option in enumerate(options):
@@ -144,19 +143,19 @@ class StandardTheme:
                 
                 # Use the color specified in the option, fallback to BOLD if no color or not supported
                 # TerminalColor.colorize handles the supports_color check internally.
-                colored_title = SafeTerminalColor.colorize(option_num_title, option.get("color", "bold"))
+                # Ensure option.get("color") is passed to colorize. If it's None, colorize handles it.
+                colored_title = TerminalColor.colorize(option_num_title, option.get("color"))
                 
-                # If colorize returned plain text (e.g. no color support, or "bold" was used as a placeholder)
-                # and we wanted bold, ensure it's bold.
-                # However, option.get("color", "bold") means if color is missing, it uses "bold" string,
-                # which TerminalColor.colorize will apply as bold style.
-                # If a specific color like "red" is given, colorize applies red.
-                # So, an explicit self.color.BOLD here might be redundant or conflict if option["color"] is already a style.
-
-                # Let's simplify: colorize will apply the style/color. Default to no specific color, just bold.
-                title_to_print = SafeTerminalColor.colorize(option_num_title, option.get("color"))
+                # If no color was specified in the option dict, and thus colorize might have returned plain text,
+                # and we want a default bold style.
+                # TerminalColor.colorize itself will apply "bold" style if "bold" string is passed.
+                # If option.get("color") is None, colorize returns plain text.
+                # We want to ensure that if no color is specified, it defaults to bold.
                 if not option.get("color"): # If no color was specified, make it bold by default
                     title_to_print = f"{self.color.BOLD}{option_num_title}{self.color.END}"
+                else:
+                    # Use the already colorized title (which might include bold if "bold" was the color)
+                    title_to_print = colored_title
                 
                 print("\n      " + title_to_print)
                 
@@ -254,6 +253,7 @@ class AnimatedTheme:
         
     def get_user_choice(self, prompt: str = None) -> str:
         """Get user input with animated prompt style."""
+        # TerminalColor is now imported at the top of the module
         choice = input(TerminalColor.colorize(prompt or "Select option> ", "bold"))
         return choice
         
@@ -263,7 +263,8 @@ class AnimatedTheme:
         
     def display_progress(self, message: str, progress: float = 0.0) -> None:
         """Display an animated progress bar."""
-        ProgressDisplay.progress_bar(message, progress)
+        # ProgressDisplay is now imported at the top of the module
+        ProgressDisplay.progress_bar(progress, message)
         
     def clear_screen(self) -> None:
         """Clear the screen with animation."""
