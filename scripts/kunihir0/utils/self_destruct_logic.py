@@ -18,6 +18,9 @@ import random
 import os
 from collections import deque
 
+# --- Visual Mode Control ---
+VISUAL_MODE = "full" # "full" or "minimal"
+
 # --- Enhanced Visual Feedback Functions (Dependency-Free) ---
 SPINNER_CHARS = ["✿", "❀", "✾", "❁", "✽", "✼", "✻", "✺", "✹", "✸"]
 COLORS = {
@@ -130,9 +133,15 @@ def _center_text(text, width=None, padding_char=" "):
 
 def _gradient_text(text, colors=None):
     """Create a color gradient across text."""
+    global VISUAL_MODE
     if colors is None:
         colors = ["pink", "purple", "cyan", "blue", "magenta"]
-    
+   
+    if VISUAL_MODE == "minimal":
+        # Minimal mode: use the first color or a default
+        default_color = colors[0] if colors else "cyan"
+        return _color_text(text, default_color)
+
     # Calculate color positions
     gradient = []
     for i in range(len(text)):
@@ -144,8 +153,14 @@ def _gradient_text(text, colors=None):
     # Add reset at the end
     return "".join(gradient) + COLORS["reset"]
 
-def _animate_text_reveal(text, delay=0.02, color=None, gradient=False, center=False, rainbow=False):
+def _animate_text_reveal(text, delay=0.02, color=None, gradient=False, center=False, rainbow=False, minimal_direct_print=False):
     """Reveal text character by character with optional color."""
+    global VISUAL_MODE
+    if VISUAL_MODE == "minimal" or minimal_direct_print:
+        effective_delay = 0.001 # Typewriter effect for minimal
+    else:
+        effective_delay = delay
+
     width, _ = _get_terminal_size()
     
     if center:
@@ -160,7 +175,7 @@ def _animate_text_reveal(text, delay=0.02, color=None, gradient=False, center=Fa
         for char in text:
             sys.stdout.write(f"{COLORS[rainbow_colors[color_idx % len(rainbow_colors)]]}{char}{COLORS['reset']}")
             sys.stdout.flush()
-            time.sleep(delay)
+            time.sleep(effective_delay)
             color_idx += 1
     elif gradient:
         gradient_colors = ["pink", "purple", "cyan", "blue", "magenta"] if gradient is True else gradient
@@ -170,23 +185,31 @@ def _animate_text_reveal(text, delay=0.02, color=None, gradient=False, center=Fa
                 color_idx = len(gradient_colors) - 1
             sys.stdout.write(f"{COLORS[gradient_colors[color_idx]]}{char}{COLORS['reset']}")
             sys.stdout.flush()
-            time.sleep(delay)
+            time.sleep(effective_delay)
     elif color:
         for char in text:
             sys.stdout.write(f"{COLORS[color]}{char}{COLORS['reset']}")
             sys.stdout.flush()
-            time.sleep(delay)
+            time.sleep(effective_delay)
     else:
         for char in text:
             sys.stdout.write(char)
             sys.stdout.flush()
-            time.sleep(delay)
+            time.sleep(effective_delay)
     print()
 
 def _sparkle_effect(text, duration=1.5, density=3, colors=None):
     """Create a sparkle effect across the text."""
+    global VISUAL_MODE
     if colors is None:
         colors = ["pink", "purple", "cyan", "yellow", "green", "blue"]
+
+    if VISUAL_MODE == "minimal":
+        _clear_screen() # Still clear for a clean print
+        print(_center_text(_gradient_text(text, colors)), flush=True) # Gradient will be simplified by _gradient_text
+        time.sleep(0.1) # Brief pause
+        return
+    # colors is already handled by the check at the beginning of the function if VISUAL_MODE is "full"
         
     sparkles = ["✨", "✧", "✦", "⋆", "✩", "✫", "✬", "✭", "✮", "✯", "★", "*"]
     width, height = _get_terminal_size()
@@ -260,6 +283,11 @@ def _sparkle_effect(text, duration=1.5, density=3, colors=None):
 
 def _bubble_effect(text, duration=1.0, speed=0.08):
     """Create bubbling text effect."""
+    global VISUAL_MODE
+    if VISUAL_MODE == "minimal":
+        print(_center_text(_color_text(text, "cyan")), flush=True) # Simple colored text
+        time.sleep(0.1)
+        return
     bubbles = ["○", "◌", "◍", "◎", "●", "◉"]
     bubble_colors = ["pink", "purple", "cyan", "yellow", "light_blue", "lavender"]
     
@@ -305,6 +333,21 @@ def _bubble_effect(text, duration=1.0, speed=0.08):
 
 def _wave_text(text, cycles=1, speed=0.002, amplitude=3, rainbow=False):
     """Create a sine wave animation of text."""
+    global VISUAL_MODE
+    if VISUAL_MODE == "minimal":
+        _clear_screen()
+        if rainbow:
+            colors = ["red", "orange", "yellow", "green", "cyan", "blue", "purple", "pink"]
+            color_text_minimal = ""
+            for i, char in enumerate(text):
+                color_idx = i % len(colors)
+                color_text_minimal += f"{COLORS[colors[color_idx]]}{char}{COLORS['reset']}"
+            print(_center_text(color_text_minimal))
+        else:
+            print(_center_text(_color_text(text, "cyan"))) # Default color
+        time.sleep(0.1)
+        return
+
     width, height = _get_terminal_size()
     text_len = len(text)
     
@@ -377,17 +420,18 @@ def _wave_text(text, cycles=1, speed=0.002, amplitude=3, rainbow=False):
     else:
         print(_center_text(text))
 
-def _progress_bar(text, width=40, progress=0.0, fill_char="•", empty_char="·", 
+def _progress_bar(text, width=40, progress=0.0, fill_char="•", empty_char="·",
                  bar_color="cyan", text_color="yellow", pulse=False):
     """Show a progress bar with a given progress (0.0 to 1.0)"""
+    global VISUAL_MODE
     # Ensure progress is between 0 and 1
     progress = max(0.0, min(1.0, progress))
     
-    # Apply pulsing effect if requested
-    if pulse:
+    # Apply pulsing effect if requested (and not in minimal mode)
+    if pulse and VISUAL_MODE == "full":
         pulse_factor = abs(math.sin(time.time() * 5))
         filled_width = int(width * progress * (0.8 + 0.2 * pulse_factor))
-    else:
+    else: # Minimal mode or pulse is False
         filled_width = int(width * progress)
     
     # Create bar components
@@ -421,9 +465,18 @@ def _progress_bar(text, width=40, progress=0.0, fill_char="•", empty_char="·"
 
 def _countdown(seconds, text="Starting in", colors=None):
     """Display a cute countdown with optional color cycling."""
+    global VISUAL_MODE
     if colors is None:
         colors = ["pink", "purple", "cyan", "blue", "lavender"]
-    
+
+    if VISUAL_MODE == "minimal":
+        for i in range(seconds, 0, -1):
+            print(f"{text} {i}...")
+            time.sleep(1)
+        print(f"{text} 0...") # Final message
+        time.sleep(0.5)
+        return
+
     _hide_cursor()
     width, _ = _get_terminal_size()
     
@@ -445,7 +498,7 @@ def _countdown(seconds, text="Starting in", colors=None):
         # Pulse effect
         for _ in range(5):  # 5 pulses per second
             pulse_value = abs(math.sin(time.time() * 10)) * 0.3 + 0.7
-            brightness = int(pulse_value * 255)
+            # brightness = int(pulse_value * 255) # Not used
             # We can't actually change brightness easily in terminal,
             # but we can simulate with extra sparkles
             if random.random() < pulse_value * 0.5:
@@ -461,6 +514,16 @@ def _countdown(seconds, text="Starting in", colors=None):
 
 def _spinner(text: str, duration: float = 0.5, spin_type="flower"):
     """Enhanced text-based spinner with fun characters."""
+    global VISUAL_MODE
+    if VISUAL_MODE == "minimal":
+        width, _ = _get_terminal_size()
+        display = f" {text}..."
+        if len(display) > width:
+            display = display[:width-3] + "..."
+        print(f"\r{display}", end="", flush=True)
+        time.sleep(duration if duration > 0.1 else 0.1) # Still pause briefly
+        print(f"\r{' ' * len(display)}\r", end="", flush=True) # Clear the line
+        return
     spinner_types = {
         "flower": ["✿", "❀", "✾", "❁", "✽", "✼"],
         "star": ["✦", "✧", "✩", "✪", "✫", "✬", "✭", "✮"],
@@ -509,6 +572,7 @@ def _spinner(text: str, duration: float = 0.5, spin_type="flower"):
 
 def _print_step(message: str, status: str = "", animate=True):
     """Prints a step message with an optional status indicator."""
+    global VISUAL_MODE
     symbols = {
         "success": "✓",
         "warning": "!",
@@ -551,14 +615,24 @@ def _print_step(message: str, status: str = "", animate=True):
         formatted_msg = formatted_msg[:width-3] + "..."
     
     # Animate text reveal if requested
-    if animate:
+    if animate and VISUAL_MODE == "full":
         print("\r" + " " * width, end="\r", flush=True)
         _animate_text_reveal(formatted_msg, delay=0.003)
-    else:
+    elif animate and VISUAL_MODE == "minimal": # Minimal mode still uses animate_text_reveal but it's faster
+        print("\r" + " " * width, end="\r", flush=True)
+        _animate_text_reveal(formatted_msg, delay=0.001, minimal_direct_print=True)
+    else: # Not animated or minimal mode with animate=False
         print(formatted_msg)
 
 def _typing_effect(text, speed=0.03, variance=0.02):
     """Simulates typing with realistic timing variations."""
+    global VISUAL_MODE
+    if VISUAL_MODE == "minimal":
+        sys.stdout.write(text)
+        sys.stdout.flush()
+        print()
+        time.sleep(0.01) # Minimal pause
+        return
     _hide_cursor()
     for char in text:
         # Add some randomness to typing speed for realism
@@ -642,6 +716,11 @@ def _run_virsh_command(command: List[str], dry_run=False):
 
 def _fade_transition(duration=0.5):
     """Create a simple fade transition effect."""
+    global VISUAL_MODE
+    if VISUAL_MODE == "minimal":
+        _clear_screen()
+        time.sleep(0.05) # Brief pause
+        return
     _hide_cursor()
     term_width, term_height = _get_terminal_size()
     
@@ -670,6 +749,14 @@ def _fade_transition(duration=0.5):
 
 def _exploding_text(text, duration=1.5):
     """Create an explosion animation with text."""
+    global VISUAL_MODE
+    if VISUAL_MODE == "minimal":
+        _clear_screen()
+        height, _ = _get_terminal_size()
+        print("\n" * (height // 2 - 1))
+        print(_center_text(_color_text(text, "purple")))
+        time.sleep(0.1)
+        return
     width, height = _get_terminal_size()
     text_length = len(text)
     center_x = width // 2
@@ -743,6 +830,10 @@ def _exploding_text(text, duration=1.5):
 
 def _display_floating_particles(duration=2.0):
     """Display floating particle effects in the background."""
+    global VISUAL_MODE
+    if VISUAL_MODE == "minimal":
+        # Do nothing in minimal mode for background effects
+        return
     width, height = _get_terminal_size()
     
     # Create particles
@@ -793,12 +884,13 @@ def _display_floating_particles(duration=2.0):
 
 def _show_interactive_menu(options, title="Select an option", gradient=True, frame=True):
     """Display an interactive menu and return the selected option with visual enhancements."""
+    global VISUAL_MODE
     width, _ = _get_terminal_size()
     
-    # Format the title with gradient if requested
-    if gradient:
+    # Format the title with gradient if requested (simplified for minimal)
+    if gradient and VISUAL_MODE == "full":
         title_display = _gradient_text(f"✨ {title} ✨", ["purple", "pink", "cyan"])
-    else:
+    else: # Minimal mode or no gradient
         title_display = _color_text(f"✨ {title} ✨", "purple")
     
     # Build menu content
@@ -827,7 +919,11 @@ def _show_interactive_menu(options, title="Select an option", gradient=True, fra
                 # Visual confirmation of selection
                 selected_option = options[choice_idx]
                 confirmation = f"You selected: {_color_text(selected_option, 'green')}"
-                _bubble_effect(confirmation, 0.8)
+                if VISUAL_MODE == "full":
+                    _bubble_effect(confirmation, 0.8)
+                else: # Minimal mode confirmation
+                    print(confirmation)
+                    time.sleep(0.2)
                 return choice_idx
             print(_color_text("Invalid option. Please try again.", "red"))
         except ValueError:
@@ -835,12 +931,19 @@ def _show_interactive_menu(options, title="Select an option", gradient=True, fra
 
 # --- Main Execution Logic ---
 def main():
+    global VISUAL_MODE # Ensure we're using the global
     parser = argparse.ArgumentParser(description="ULTMOS Self-Destruct Script")
     parser.add_argument("--directory", required=True, help="Absolute path to the directory to remove")
     parser.add_argument("--keep-disks", required=True, choices=['True', 'False'], help="Whether to keep/backup disks")
     parser.add_argument("--vms", nargs='*', default=[], help="List of VM names to undefine")
     parser.add_argument("--dry-run", action="store_true", help="Simulate the cleanup without making actual changes")
     args = parser.parse_args()
+
+    # Determine visual mode
+    env_mode = os.environ.get("ULTMOS_SELF_DESTRUCT_MODE", "full").lower()
+    if env_mode == "minimal":
+        VISUAL_MODE = "minimal"
+    # else VISUAL_MODE remains "full" (its default set at the top of the file)
 
     target_dir = Path(args.directory).resolve()
     keep_disks_flag = args.keep_disks == 'True'
