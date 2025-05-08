@@ -500,12 +500,13 @@ class SafeUninstaller:
                 visual_mode_choice = "1" # Default to full on Ctrl+C
                 break
 
-        if visual_mode_choice == "2":
-            os.environ['ULTMOS_SELF_DESTRUCT_MODE'] = 'minimal'
+        # Determine visual mode string based on choice
+        selected_visual_mode = "minimal" if visual_mode_choice == "2" else "full"
+
+        if selected_visual_mode == "minimal":
             log.info("Minimal visual mode selected for self-destruct.")
             tm.display_step("Minimal Mode selected for final cleanup.", "info")
         else:
-            os.environ['ULTMOS_SELF_DESTRUCT_MODE'] = 'full'
             log.info("Full Pretty visual mode selected for self-destruct.")
             tm.display_step("Full Pretty Mode selected for final cleanup.", "info")
         
@@ -524,7 +525,7 @@ class SafeUninstaller:
             return False
 
         if self.config.dry_run:
-            log.info(f"[Dry Run] Would execute self-destruct script: sudo python3 {script_path} --directory {self.base_dir} --keep-disks {self.config.keep_disks} --vms {' '.join(vm_names)}")
+            log.info(f"[Dry Run] Would execute self-destruct script: sudo python3 {script_path} --directory {self.base_dir} --keep-disks {self.config.keep_disks} --visual-mode {selected_visual_mode} --vms {' '.join(vm_names)}")
             # Optionally try to delete the temp script even in dry run? Or leave it?
             # Let's leave it for inspection for now.
             # try:
@@ -539,42 +540,43 @@ class SafeUninstaller:
                 log.warning("You may be prompted for your sudo password in the new terminal window.")
 
                 # Construct the command to execute the python script with sudo
-                cmd = ['sudo', 'python3', script_path,
-                       '--directory', str(self.base_dir),
-                       '--keep-disks', str(self.config.keep_disks)]
+                cmd_base = ['sudo', 'python3', str(script_path),
+                            '--directory', str(self.base_dir),
+                            '--keep-disks', str(self.config.keep_disks),
+                            '--visual-mode', selected_visual_mode]
                 if vm_names:
-                    cmd.append('--vms')
-                    cmd.extend(vm_names)
+                    cmd = cmd_base + ['--vms'] + vm_names
+                else:
+                    cmd = cmd_base
 
                 # Launch the script in a visible terminal so user can see progress and animations
                 # The terminal will stay open after this script exits
-                terminal_cmd = ['x-terminal-emulator', '-e', ' '.join(['sudo', 'python3', str(script_path),
-                               '--directory', str(self.base_dir),
-                               '--keep-disks', str(self.config.keep_disks),
-                               '--vms'] + vm_names)]
+                
+                # Base arguments for the self_destruct_logic.py script
+                script_args_list = [
+                    'sudo', 'python3', str(script_path),
+                    '--directory', str(self.base_dir),
+                    '--keep-disks', str(self.config.keep_disks),
+                    '--visual-mode', selected_visual_mode
+                ]
+                if vm_names:
+                    script_args_list.extend(['--vms'] + vm_names)
+
+                # Join arguments for terminals that take a single string command
+                script_args_str = ' '.join(script_args_list)
+
+                terminal_cmd = ['x-terminal-emulator', '-e', script_args_str]
                 
                 # Alternative terminal commands for different systems
                 if not check_command_exists('x-terminal-emulator', quiet=True):
                     if check_command_exists('gnome-terminal', quiet=True):
-                        terminal_cmd = ['gnome-terminal', '--', 'sudo', 'python3', str(script_path),
-                                       '--directory', str(self.base_dir),
-                                       '--keep-disks', str(self.config.keep_disks),
-                                       '--vms'] + vm_names
+                        terminal_cmd = ['gnome-terminal', '--'] + script_args_list
                     elif check_command_exists('kgx', quiet=True):
-                        terminal_cmd = ['kgx', '--', 'sudo', 'python3', str(script_path),
-                                       '--directory', str(self.base_dir),
-                                       '--keep-disks', str(self.config.keep_disks),
-                                       '--vms'] + vm_names
+                        terminal_cmd = ['kgx', '--'] + script_args_list
                     elif check_command_exists('konsole', quiet=True):
-                        terminal_cmd = ['konsole', '-e', 'sudo python3 ' + str(script_path) +
-                                       ' --directory ' + str(self.base_dir) +
-                                       ' --keep-disks ' + str(self.config.keep_disks) +
-                                       ' --vms ' + ' '.join(vm_names)]
+                        terminal_cmd = ['konsole', '-e', script_args_str]
                     elif check_command_exists('xterm', quiet=True):
-                        terminal_cmd = ['xterm', '-e', 'sudo python3 ' + str(script_path) +
-                                       ' --directory ' + str(self.base_dir) +
-                                       ' --keep-disks ' + str(self.config.keep_disks) +
-                                       ' --vms ' + ' '.join(vm_names)]
+                        terminal_cmd = ['xterm', '-e', script_args_str]
                     else:
                         # Fallback if no terminal is found
                         log.warning("No suitable terminal emulator found. Running without visible output.")

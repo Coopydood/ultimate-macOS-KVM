@@ -937,11 +937,11 @@ def main():
     parser.add_argument("--keep-disks", required=True, choices=['True', 'False'], help="Whether to keep/backup disks")
     parser.add_argument("--vms", nargs='*', default=[], help="List of VM names to undefine")
     parser.add_argument("--dry-run", action="store_true", help="Simulate the cleanup without making actual changes")
+    parser.add_argument("--visual-mode", choices=['full', 'minimal'], default="full", help="Visual mode for the script output ('full' or 'minimal')")
     args = parser.parse_args()
 
-    # Determine visual mode
-    env_mode = os.environ.get("ULTMOS_SELF_DESTRUCT_MODE", "full").lower()
-    if env_mode == "minimal":
+    # Determine visual mode from command line argument
+    if args.visual_mode == "minimal":
         VISUAL_MODE = "minimal"
     # else VISUAL_MODE remains "full" (its default set at the top of the file)
 
