@@ -46,10 +46,7 @@ from scripts.kunihir0.utils.safe_command_utils import (
 )
 # Import safe_visual_utils with an alias
 import scripts.kunihir0.utils.safe_visual_utils as svu
-# Keep other direct imports if needed, or import them via svu as well
-from scripts.kunihir0.utils.safe_visual_utils import (
-    TerminalDisplay, ProgressDisplay
-)
+# Direct imports of TerminalDisplay and ProgressDisplay removed as they are accessed via theme_manager or svu alias
 
 # Import refactored or existing utils (assuming they now use safe methods internally)
 from scripts.kunihir0.utils.config_utils import (
@@ -640,7 +637,8 @@ class SafeUninstaller:
                  # A more robust solution would use select or threading
                  # For now, just check elapsed time after input
                  response = input().strip().lower()
-                 if time.time() - start_time > timeout:
+                 # Explicitly cast to float for comparison robustness
+                 if float(time.time() - start_time) > float(timeout):
                       print("\nTimeout elapsed. Assuming 'no'.")
                       return False
             else:
