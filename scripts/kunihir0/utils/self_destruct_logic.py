@@ -930,6 +930,104 @@ def _show_interactive_menu(options, title="Select an option", gradient=True, fra
         except ValueError:
             print(_color_text("Please enter a number.", "red"))
 
+# --- Dystopian Whirl Effect ---
+def _dystopian_whirl_effect(text, duration=3.0):
+    """Create a monochromatic, dystopian whirlpool/color wheel effect."""
+    global VISUAL_MODE
+    # This effect is specifically for full mode. Minimal mode gets a simple print.
+    if VISUAL_MODE == "minimal":
+        _print_step(text, "success", animate=False)
+        return
+
+    _hide_cursor()
+    _clear_screen()
+    width, height = _get_terminal_size()
+    center_x, center_y = width // 2, height // 2
+
+    whirl_chars = ["▓", "▒", "░", "█", "*", "+", "."]
+    # Monochromatic palette (greys)
+    dystopia_palette = [
+        "\033[38;5;235m",  # Darkest grey
+        "\033[38;5;237m",
+        "\033[38;5;239m",
+        "\033[38;5;241m",  # Medium grey
+        "\033[38;5;243m",
+        "\033[38;5;245m",
+        "\033[38;5;247m",  # Lighter grey
+    ]
+    text_color_code = "\033[38;5;252m" # Very light grey / off-white for text
+
+    start_time = time.time()
+    angle_offset = 0
+    num_rings = 3 # Keep it somewhat sparse for a starker feel
+    ring_spacing = 3
+    
+    # Ensure max_base_radius is positive
+    max_base_radius = min(center_x, center_y) - (num_rings * ring_spacing) - len(text)//2 - 2
+    if max_base_radius < 2: max_base_radius = 2
+
+
+    text_lines = text.split('\n')
+    text_block_height = len(text_lines)
+    text_block_width = max(len(line) for line in text_lines) if text_lines else 0
+    text_start_y = center_y - text_block_height // 2
+
+    while time.time() - start_time < duration:
+        _clear_screen() # Clear screen each frame for a potentially glitchy/dystopian feel
+
+        # Draw whirlpool rings
+        for r_idx in range(num_rings):
+            # Pulsing and slightly varying radius for each ring
+            base_ring_radius = max_base_radius + r_idx * ring_spacing
+            pulse_factor = math.sin(time.time() * (2.5 - r_idx*0.5) + r_idx) # Different pulse per ring
+            current_radius = base_ring_radius + pulse_factor * 2 # Pulse amplitude of 2 chars
+            if current_radius < 1: current_radius = 1
+            
+            num_points_on_ring = int(current_radius * math.pi) # Adjust density
+            if num_points_on_ring < 6: num_points_on_ring = 6
+
+            for i in range(num_points_on_ring):
+                # Each ring rotates at a slightly different speed/direction
+                current_angle_offset = angle_offset * (1 + (r_idx % 2 - 0.5) * 0.3)
+                angle = (2 * math.pi / num_points_on_ring) * i + current_angle_offset
+
+                x = center_x + int(current_radius * math.cos(angle))
+                # Adjust for character aspect ratio (characters are taller than wide)
+                y = center_y + int(current_radius * math.sin(angle) * 0.55)
+
+                if 0 <= y < height and 0 <= x < width:
+                    # Basic check to avoid drawing directly over the central text area
+                    is_text_area = (text_start_y <= y < text_start_y + text_block_height and
+                                    center_x - text_block_width//2 <= x < center_x + text_block_width//2 + text_block_width%2)
+                    if is_text_area:
+                        continue
+                        
+                    char_choice = whirl_chars[(i + int(angle_offset * 5) + r_idx*2) % len(whirl_chars)]
+                    color_code = dystopia_palette[(i + r_idx + int(time.time() * 10)) % len(dystopia_palette)]
+
+                    _move_cursor(x + 1, y + 1)
+                    sys.stdout.write(f"{color_code}{char_choice}{COLORS['reset']}")
+        
+        # Draw the text in the center, starkly
+        for line_idx, line_content in enumerate(text_lines):
+            line_y = text_start_y + line_idx
+            line_x = center_x - len(line_content) // 2
+            _move_cursor(line_x + 1, line_y + 1)
+            sys.stdout.write(f"{COLORS['bold']}{text_color_code}{line_content}{COLORS['reset']}")
+
+        sys.stdout.flush()
+        angle_offset -= 0.20  # Speed and direction of rotation
+        time.sleep(0.06) # Animation frame rate
+
+    _clear_screen()
+    _show_cursor()
+    
+    print("\n" * (height // 3))
+    print(_center_text(_color_text(text, text_color_code, styles=["bold"])))
+    print("\n" * (height // 3))
+    time.sleep(2.0)
+
+
 # --- Main Execution Logic ---
 def main():
     global VISUAL_MODE # Ensure we're using the global
@@ -1384,7 +1482,10 @@ def main():
         current_script_path = Path(sys.argv[0]).resolve()
         if not args.dry_run:
             current_script_path.unlink(missing_ok=True)
-            _print_step("Self-destruct script removed.", "success")
+            if VISUAL_MODE == "full":
+                _dystopian_whirl_effect("Self-destruct script removed.", duration=3.5)
+            else: # Minimal mode
+                _print_step("Self-destruct script removed.", "success", animate=False)
         else:
             _print_step("Would remove self-destruct script.", "info")
     except Exception as e:
