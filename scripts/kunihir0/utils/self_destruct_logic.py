@@ -931,7 +931,7 @@ def _show_interactive_menu(options, title="Select an option", gradient=True, fra
             print(_color_text("Please enter a number.", "red"))
 
 # --- Dystopian Whirl Effect ---
-def _dystopian_whirl_effect(text, duration=3.0):
+def _dystopian_whirl_effect(text, duration=4.0): # Increased duration slightly
     """Create a monochromatic, dystopian whirlpool/color wheel effect."""
     global VISUAL_MODE
     # This effect is specifically for full mode. Minimal mode gets a simple print.
@@ -944,7 +944,8 @@ def _dystopian_whirl_effect(text, duration=3.0):
     width, height = _get_terminal_size()
     center_x, center_y = width // 2, height // 2
 
-    whirl_chars = ["▓", "▒", "░", "█", "*", "+", "."]
+    whirl_chars = ["▓", "▒", "░", "█", "*", "+", ".", "§", "#", "?", "!", "/", "\\"] # Added glitch chars
+    noise_chars = [".", ",", "'", "`"]
     # Monochromatic palette (greys)
     dystopia_palette = [
         "\033[38;5;235m",  # Darkest grey
@@ -959,8 +960,8 @@ def _dystopian_whirl_effect(text, duration=3.0):
 
     start_time = time.time()
     angle_offset = 0
-    num_rings = 3 # Keep it somewhat sparse for a starker feel
-    ring_spacing = 3
+    num_rings = 5 # Increased number of rings
+    ring_spacing = 2 # Reduced spacing slightly
     
     # Ensure max_base_radius is positive
     max_base_radius = min(center_x, center_y) - (num_rings * ring_spacing) - len(text)//2 - 2
@@ -975,24 +976,39 @@ def _dystopian_whirl_effect(text, duration=3.0):
     while time.time() - start_time < duration:
         _clear_screen() # Clear screen each frame for a potentially glitchy/dystopian feel
 
+        # Draw background noise
+        for _ in range(width // 10): # Add some sparse noise
+             nx = random.randint(0, width - 1)
+             ny = random.randint(0, height - 1)
+             n_char = random.choice(noise_chars)
+             n_color = random.choice(dystopia_palette[:3]) # Use darker greys for noise
+             _move_cursor(nx + 1, ny + 1)
+             sys.stdout.write(f"{n_color}{n_char}{COLORS['reset']}")
+
         # Draw whirlpool rings
         for r_idx in range(num_rings):
-            # Pulsing and slightly varying radius for each ring
+            # Pulsing and more varying radius for each ring
             base_ring_radius = max_base_radius + r_idx * ring_spacing
-            pulse_factor = math.sin(time.time() * (2.5 - r_idx*0.5) + r_idx) # Different pulse per ring
-            current_radius = base_ring_radius + pulse_factor * 2 # Pulse amplitude of 2 chars
+            # More distinct pulse/oscillation per ring
+            pulse_freq = 1.5 + r_idx * 0.4
+            pulse_amp = 1.5 + (r_idx % 2) # Alternate amplitude slightly
+            pulse_factor = math.sin(time.time() * pulse_freq + r_idx * math.pi / 3)
+            current_radius = base_ring_radius + pulse_factor * pulse_amp
             if current_radius < 1: current_radius = 1
             
-            num_points_on_ring = int(current_radius * math.pi) # Adjust density
+            num_points_on_ring = int(current_radius * math.pi * 1.2) # Slightly denser rings
             if num_points_on_ring < 6: num_points_on_ring = 6
 
             for i in range(num_points_on_ring):
-                # Each ring rotates at a slightly different speed/direction
-                current_angle_offset = angle_offset * (1 + (r_idx % 2 - 0.5) * 0.3)
+                # Each ring rotates at a more distinct speed/direction
+                # Alternate direction for odd/even rings
+                direction = 1 if r_idx % 2 == 0 else -1
+                speed_factor = 0.8 + (r_idx * 0.15) # Speed increases slightly for outer rings
+                current_angle_offset = angle_offset * speed_factor * direction
                 angle = (2 * math.pi / num_points_on_ring) * i + current_angle_offset
 
                 x = center_x + int(current_radius * math.cos(angle))
-                # Adjust for character aspect ratio (characters are taller than wide)
+                # Adjust for character aspect ratio (characters are taller than wide) - slightly less squish
                 y = center_y + int(current_radius * math.sin(angle) * 0.55)
 
                 if 0 <= y < height and 0 <= x < width:
@@ -1008,16 +1024,29 @@ def _dystopian_whirl_effect(text, duration=3.0):
                     _move_cursor(x + 1, y + 1)
                     sys.stdout.write(f"{color_code}{char_choice}{COLORS['reset']}")
         
-        # Draw the text in the center, starkly
-        for line_idx, line_content in enumerate(text_lines):
-            line_y = text_start_y + line_idx
-            line_x = center_x - len(line_content) // 2
-            _move_cursor(line_x + 1, line_y + 1)
-            sys.stdout.write(f"{COLORS['bold']}{text_color_code}{line_content}{COLORS['reset']}")
+        # Draw the text in the center, starkly with flicker
+        if random.random() > 0.1: # 90% chance to draw text normally
+            current_text_color_code = text_color_code
+            if random.random() < 0.05: # Small chance for even brighter flicker
+                 current_text_color_code = "\033[38;5;255m" # Bright white
+        elif random.random() > 0.5: # 5% chance to draw darker
+             current_text_color_code = dystopia_palette[-2] # Use a slightly darker grey
+        else: # 5% chance to not draw text at all (skip drawing)
+             current_text_color_code = None
+
+        if current_text_color_code:
+            for line_idx, line_content in enumerate(text_lines):
+                line_y = text_start_y + line_idx
+                line_x = center_x - len(line_content) // 2
+                _move_cursor(line_x + 1, line_y + 1)
+                # Add random slight horizontal jitter
+                jitter_x = random.randint(-1, 1) if random.random() < 0.03 else 0
+                _move_cursor(line_x + jitter_x + 1, line_y + 1)
+                sys.stdout.write(f"{COLORS['bold']}{current_text_color_code}{line_content}{COLORS['reset']}")
 
         sys.stdout.flush()
-        angle_offset -= 0.20  # Speed and direction of rotation
-        time.sleep(0.06) # Animation frame rate
+        angle_offset -= 0.25  # Slightly faster base rotation
+        time.sleep(0.05) # Slightly faster frame rate
 
     _clear_screen()
     _show_cursor()
@@ -1093,12 +1122,24 @@ def main():
         time.sleep(0.3)
     print()
     
+    # Enhanced directory validation
+    _print_step(f"Validating target directory: {target_dir}", "progress")
+    if not target_dir.exists():
+        _print_step(f"CRITICAL ERROR: Target directory {target_dir} does not exist.", "error")
+        sys.exit(1)
     if not target_dir.is_dir():
-        _print_step(f"Error: Target directory {target_dir} not found.", "error")
+        _print_step(f"CRITICAL ERROR: Target path {target_dir} exists but is not a directory.", "error")
         sys.exit(1)
+    _print_step("Target directory exists and is a directory.", "success")
+
+    # Check for expected ULTMOS files/folders
     if not (target_dir / "main.py").exists() or not (target_dir / "scripts").is_dir():
-        _print_step(f"Error: Target {target_dir} does not look like ULTMOS project.", "error")
-        sys.exit(1)
+         _print_step(f"Error: Target {target_dir} does not look like ULTMOS project (missing main.py or scripts/ folder).", "error")
+         # Decide if this is critical enough to exit, or just a warning
+         # For now, let's make it critical as per original logic
+         sys.exit(1)
+    _print_step("ULTMOS project structure check passed.", "success")
+    
     _print_step("Safety checks passed.", "success")
     if VISUAL_MODE == "full":
         _bubble_effect("System Verified & Secure", 1.0)
