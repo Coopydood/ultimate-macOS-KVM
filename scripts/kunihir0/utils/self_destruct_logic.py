@@ -978,9 +978,13 @@ def main():
     time.sleep(0.5)
 
     _print_step("Cleanup sequence initiated!", "info")
+    if VISUAL_MODE == "full":
+        _spinner("Preparing cleanup sequence...", 0.7, spin_type="dots")
     _countdown(3, "Beginning in", colors=["pink", "purple", "cyan", "blue", "lavender"])
 
     # --- Safety Checks with enhanced visuals ---
+    if VISUAL_MODE == "full":
+        _fade_transition(0.2) # Short transition
     _print_step("Performing safety checks...", "info")
     
     # Security verification progress with pulsing effect
@@ -998,6 +1002,9 @@ def main():
         _print_step(f"Error: Target {target_dir} does not look like ULTMOS project.", "error")
         sys.exit(1)
     _print_step("Safety checks passed.", "success")
+    if VISUAL_MODE == "full":
+        _bubble_effect("System Verified & Secure", 1.0)
+        time.sleep(0.3)
 
     # --- Interactive Simulation (Dry Run Mode) with enhanced UI ---
     if args.dry_run:
@@ -1198,6 +1205,8 @@ def main():
 
     # --- Undefine VMs with enhanced UI ---
     if vms_to_undefine:
+        if VISUAL_MODE == "full" and not args.dry_run: # Add transition only if not in dry_run
+            _fade_transition(0.4)
         _print_step("Attempting to undefine VMs from libvirt...", "info")
         undefine_flags = ["--nvram"]
         if not keep_disks_flag:
@@ -1312,7 +1321,10 @@ def main():
     
     # More dramatic countdown for deletion
     print()
-    _countdown(5, "Beginning deletion in", colors=["red", "orange", "yellow"])
+    if VISUAL_MODE == "full":
+        _countdown(6, "Beginning deletion in", colors=["red", "orange", "yellow"])
+    else:
+        _countdown(5, "Beginning deletion in", colors=["red", "orange", "yellow"])
     
     # Progress bar with pulsing effect during removal
     total_steps = 15
@@ -1353,16 +1365,22 @@ def main():
     
     # Final animation
     print()
-    _sparkle_effect("ULTMOS UNINSTALLATION COMPLETE", 2.0, density=5, 
+    _sparkle_effect("ULTMOS UNINSTALLATION COMPLETE", 2.0, density=5,
                    colors=["green", "cyan", "blue", "purple"])
     
+    if VISUAL_MODE == "full":
+        time.sleep(0.7) # Pause for completion message to sink in
+
     # Extra thank you message
     thank_you = "Thank you for using ULTMOS"
     _animate_text_reveal(thank_you, delay=0.05, gradient=["green", "cyan", "blue"], center=True)
 
     # --- Self Destruct with fancy animation ---
     try:
-        _wave_text("Removing self-destruct script...", cycles=15, rainbow=True)
+        if VISUAL_MODE == "full":
+            _wave_text("Removing self-destruct script...", cycles=20, speed=0.0015, amplitude=2, rainbow=True)
+        else: # Minimal mode wave
+            _wave_text("Removing self-destruct script...", cycles=15, rainbow=True) # Original minimal parameters
         current_script_path = Path(sys.argv[0]).resolve()
         if not args.dry_run:
             current_script_path.unlink(missing_ok=True)
