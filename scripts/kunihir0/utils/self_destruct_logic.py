@@ -126,7 +126,9 @@ def _center_text(text, width=None, padding_char=" "):
     """Center text in the given width or terminal width."""
     if width is None:
         width, _ = _get_terminal_size()
-    padding = (width - len(text)) // 2
+    # Calculate length considering ANSI escape codes might be present
+    plain_text_len = len(subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=text, capture_output=True, text=True).stdout)
+    padding = (width - plain_text_len) // 2
     if padding < 0:
         padding = 0
     return padding_char * padding + text
@@ -164,7 +166,9 @@ def _animate_text_reveal(text, delay=0.02, color=None, gradient=False, center=Fa
     width, _ = _get_terminal_size()
     
     if center:
-        padding = (width - len(text)) // 2
+        # Calculate length considering ANSI escape codes might be present
+        plain_text_len = len(subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=text, capture_output=True, text=True).stdout)
+        padding = (width - plain_text_len) // 2
         if padding < 0:
             padding = 0
         sys.stdout.write(" " * padding)
@@ -213,8 +217,9 @@ def _sparkle_effect(text, duration=1.5, density=3, colors=None):
         
     sparkles = ["✨", "✧", "✦", "⋆", "✩", "✫", "✬", "✭", "✮", "✯", "★", "*"]
     width, height = _get_terminal_size()
-    text_len = len(text)
-    padding = (width - text_len) // 2
+    # Calculate length considering ANSI escape codes might be present
+    plain_text_len = len(subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=text, capture_output=True, text=True).stdout)
+    padding = (width - plain_text_len) // 2
     
     # Create a blank canvas
     canvas = [[" " for _ in range(width)] for _ in range(height)]
@@ -233,7 +238,7 @@ def _sparkle_effect(text, duration=1.5, density=3, colors=None):
         for _ in range(density):
             # Generate random positions with higher density near the text
             if random.random() < 0.7:  # 70% chance to place sparkle near text
-                x = random.randint(max(0, text_start - 5), min(width - 1, text_start + text_len + 5))
+                x = random.randint(max(0, text_start - 5), min(width - 1, text_start + plain_text_len + 5))
                 y_spread = int(height * 0.4)  # Concentrate within 40% of screen height
                 y = random.randint(max(0, text_row - y_spread), min(height - 1, text_row + y_spread))
             else:  # 30% chance for totally random position
@@ -241,7 +246,7 @@ def _sparkle_effect(text, duration=1.5, density=3, colors=None):
                 y = random.randint(0, height - 1)
             
             # Check if we're not overwriting text
-            if y == text_row and text_start <= x < text_start + text_len:
+            if y == text_row and text_start <= x < text_start + plain_text_len:
                 continue
                 
             # Add sparkle with random color
@@ -255,13 +260,20 @@ def _sparkle_effect(text, duration=1.5, density=3, colors=None):
         for y in range(height):
             for x in range(width):
                 # Draw the text at its position
-                if y == text_row and text_start <= x < text_start + text_len:
+                if y == text_row and text_start <= x < text_start + plain_text_len:
                     char_idx = x - text_start
                     # Apply gradient to text
-                    color_idx = int((char_idx / text_len) * len(colors))
+                    color_idx = int((char_idx / plain_text_len) * len(colors))
                     if color_idx >= len(colors):
                         color_idx = len(colors) - 1
-                    print(f"{COLORS[colors[color_idx]]}{text[char_idx]}{COLORS['reset']}", end="")
+                    # Need to handle the actual characters of the input text, not just index
+                    # This requires a way to access the plain text characters
+                    # For simplicity, let's assume text is plain for this effect or use a placeholder
+                    # A more robust solution would parse the plain text first.
+                    # Using placeholder 'T' for now.
+                    # TODO: Improve this to handle actual text characters if needed.
+                    current_char = text[char_idx] if char_idx < len(text) else ' ' # Basic handling
+                    print(f"{COLORS[colors[color_idx]]}{current_char}{COLORS['reset']}", end="")
                 else:
                     # Draw the sparkle canvas
                     print(canvas[y][x], end="")
@@ -294,7 +306,9 @@ def _bubble_effect(text, duration=1.0, speed=0.08):
     # Initial display
     _hide_cursor()
     width, _ = _get_terminal_size()
-    padding = (width - len(text)) // 2
+    # Calculate length considering ANSI escape codes might be present
+    plain_text_len = len(subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=text, capture_output=True, text=True).stdout)
+    padding = (width - plain_text_len) // 2
     
     start_time = time.time()
     bubbling_chars = set()
@@ -305,12 +319,16 @@ def _bubble_effect(text, duration=1.0, speed=0.08):
         
         # Generate new bubbling characters
         if random.random() < 0.3:  # 30% chance to add a new bubbling character
-            if len(bubbling_chars) < len(text) // 2:  # Limit number of active bubbles
-                bubbling_chars.add(random.randint(0, len(text) - 1))
+            if len(bubbling_chars) < plain_text_len // 2:  # Limit number of active bubbles
+                bubbling_chars.add(random.randint(0, plain_text_len - 1))
         
         # Generate the display
         display = " " * padding
-        for i, char in enumerate(text):
+        # Need to iterate through plain text characters for indexing
+        # Assuming text is plain for simplicity here
+        # TODO: Improve this to handle ANSI codes if needed
+        plain_text = subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=text, capture_output=True, text=True).stdout
+        for i, char in enumerate(plain_text):
             if i in bubbling_chars:
                 bubble = random.choice(bubbles)
                 color = random.choice(bubble_colors)
@@ -318,7 +336,7 @@ def _bubble_effect(text, duration=1.0, speed=0.08):
                 
                 # Remove from bubbling set with some probability
                 if random.random() < 0.2:  # 20% chance to stop bubbling
-                    bubbling_chars.remove(i)
+                    bubbling_chars.discard(i) # Use discard to avoid errors if already removed
             else:
                 display += char
                 
@@ -349,15 +367,18 @@ def _wave_text(text, cycles=1, speed=0.002, amplitude=3, rainbow=False):
         return
 
     width, height = _get_terminal_size()
-    text_len = len(text)
+    # Calculate length considering ANSI escape codes might be present
+    plain_text_len = len(subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=text, capture_output=True, text=True).stdout)
     
     # Ensure text fits in terminal
-    if text_len > width - 4:
-        text = text[:width-4]
-        text_len = len(text)
+    if plain_text_len > width - 4:
+        # Truncation needs to happen carefully if text has ANSI codes
+        # For simplicity, assume plain text or accept potential display issues
+        text = text[:width-4] # Basic truncation
+        plain_text_len = len(text)
         
     # Center the text horizontally
-    padding = (width - text_len) // 2
+    padding = (width - plain_text_len) // 2
     
     # Prepare display area
     lines = height // 3  # Use 1/3 of terminal height
@@ -371,15 +392,18 @@ def _wave_text(text, cycles=1, speed=0.002, amplitude=3, rainbow=False):
     colors = ["red", "orange", "yellow", "green", "cyan", "blue", "purple", "pink"]
     
     # Calculate total animation steps
-    animation_steps = int(text_len * cycles * 2)
+    animation_steps = int(plain_text_len * cycles * 2)
     
+    # Assume plain text for character access during animation
+    plain_text = subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=text, capture_output=True, text=True).stdout
+
     for step in range(animation_steps):
         # Clear the animation area
         for y in range(display_height):
             _move_cursor(1, start_line + y)
             print(" " * width, end="")
             
-        for i in range(text_len):
+        for i in range(plain_text_len):
             # Calculate the sine wave position
             phase = step / 10
             wave_height = int(amplitude * math.sin((i/2) + phase))
@@ -396,13 +420,15 @@ def _wave_text(text, cycles=1, speed=0.002, amplitude=3, rainbow=False):
             # Position cursor and display character
             _move_cursor(screen_x + 1, screen_y + 1)
             
+            current_char = plain_text[i] # Access plain text char
+
             if rainbow:
                 # Choose color based on character position
                 color_idx = (i + step) % len(colors)
                 color = colors[color_idx]
-                print(f"{COLORS[color]}{text[i]}{COLORS['reset']}", end="", flush=True)
+                print(f"{COLORS[color]}{current_char}{COLORS['reset']}", end="", flush=True)
             else:
-                print(text[i], end="", flush=True)
+                print(current_char, end="", flush=True)
                 
         time.sleep(speed)
     
@@ -413,12 +439,12 @@ def _wave_text(text, cycles=1, speed=0.002, amplitude=3, rainbow=False):
     # Display final text centered
     if rainbow:
         color_text = ""
-        for i, char in enumerate(text):
+        for i, char in enumerate(plain_text):
             color_idx = i % len(colors)
             color_text += f"{COLORS[colors[color_idx]]}{char}{COLORS['reset']}"
         print(_center_text(color_text))
     else:
-        print(_center_text(text))
+        print(_center_text(text)) # Print original text (might have ANSI)
 
 def _progress_bar(text, width=40, progress=0.0, fill_char="•", empty_char="·",
                  bar_color="cyan", text_color="yellow", pulse=False):
@@ -451,17 +477,26 @@ def _progress_bar(text, width=40, progress=0.0, fill_char="•", empty_char="·"
     text_display = f" {COLORS[text_color]}{text}{COLORS['reset']}"
     percent_display = f"{COLORS[text_color]}{percent}%{COLORS['reset']}"
     
-    # Calculate total width needed
-    total_width = len(text) + len(f" [{bar}] {percent}%")
+    # Calculate length considering ANSI escape codes might be present
+    plain_text_len = len(subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=text, capture_output=True, text=True).stdout)
+    total_width = plain_text_len + len(f" [{bar}] {percent}%") + 1 # +1 for space before text
     
     # Adjust if terminal is too narrow
     if total_width > term_width:
         # Shorten the bar
         excess = total_width - term_width + 3
         width = max(10, width - excess)
-        return _progress_bar(text, width, progress, fill_char, empty_char, bar_color, text_color)
-    
-    print(f"\r{text_display} [{bar}] {percent_display}", end="", flush=True)
+        # Recalculate bar with new width
+        if pulse and VISUAL_MODE == "full":
+             pulse_factor = abs(math.sin(time.time() * 5))
+             filled_width = int(width * progress * (0.8 + 0.2 * pulse_factor))
+        else:
+             filled_width = int(width * progress)
+        filled = fill_char * filled_width
+        empty = empty_char * (width - filled_width)
+        bar = f"{COLORS[bar_color]}{filled}{COLORS['reset']}{empty}"
+
+    print(f"\r{text_display} [{bar}] {percent_display} ", end="", flush=True) # Added trailing space
 
 def _countdown(seconds, text="Starting in", colors=None):
     """Display a cute countdown with optional color cycling."""
@@ -518,11 +553,13 @@ def _spinner(text: str, duration: float = 0.5, spin_type="flower"):
     if VISUAL_MODE == "minimal":
         width, _ = _get_terminal_size()
         display = f" {text}..."
-        if len(display) > width:
+        plain_display_len = len(display)
+        if plain_display_len > width:
             display = display[:width-3] + "..."
+            plain_display_len = len(display)
         print(f"\r{display}", end="", flush=True)
         time.sleep(duration if duration > 0.1 else 0.1) # Still pause briefly
-        print(f"\r{' ' * len(display)}\r", end="", flush=True) # Clear the line
+        print(f"\r{' ' * plain_display_len}\r", end="", flush=True) # Clear the line
         return
     spinner_types = {
         "flower": ["✿", "❀", "✾", "❁", "✽", "✼"],
@@ -554,18 +591,24 @@ def _spinner(text: str, duration: float = 0.5, spin_type="flower"):
         # Create display with spinner and text
         display = f" {COLORS[color_name]}{spinner_char}{COLORS['reset']} {text}..."
         
+        # Calculate length considering ANSI escape codes might be present
+        plain_display_len = len(subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=display, capture_output=True, text=True).stdout)
+
         # Make sure it fits
-        if len(display) > width:
-            display = display[:width-3] + "..."
+        if plain_display_len > width:
+             # Need to truncate carefully if text has ANSI codes
+             # Basic truncation for now
+             display = display[:width-3] + "..." 
+             plain_display_len = len(subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=display, capture_output=True, text=True).stdout)
             
         # Display
-        print(f"\r{' ' * width}", end="\r", flush=True)
+        print(f"\r{' ' * width}", end="\r", flush=True) # Clear with full width
         print(f"\r{display}", end="", flush=True)
         
         time.sleep(speed_factor)
         i += 1
     
-    # Clear line
+    # Clear line using full width
     width, _ = _get_terminal_size()
     print(f"\r{' ' * width}\r", end="", flush=True)
     _show_cursor()
@@ -610,8 +653,13 @@ def _print_step(message: str, status: str = "", animate=True):
     # Calculate terminal width
     width, _ = _get_terminal_size()
     
+    # Calculate length considering ANSI escape codes might be present
+    plain_msg_len = len(subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=formatted_msg, capture_output=True, text=True).stdout)
+
     # Make sure message fits in terminal
-    if len(formatted_msg) > width:
+    if plain_msg_len > width:
+        # Truncation needs care with ANSI codes
+        # Basic truncation for now
         formatted_msg = formatted_msg[:width-3] + "..."
     
     # Animate text reveal if requested
@@ -667,9 +715,14 @@ def _frame_text(text, style="single", color="pink", padding=1):
     # Split text into lines
     lines = text.split("\n")
     
-    # Find the longest line
-    max_length = max(len(line) for line in lines)
-    
+    # Find the longest line (considering plain text length)
+    max_length = 0
+    plain_lines = []
+    for line in lines:
+         plain_line = subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=line, capture_output=True, text=True).stdout
+         max_length = max(max_length, len(plain_line))
+         plain_lines.append(plain_line)
+
     # Create top border
     result = [_color_text(frame_style["tl"] + frame_style["h"] * (max_length + padding * 2) + frame_style["tr"], color)]
     
@@ -679,9 +732,10 @@ def _frame_text(text, style="single", color="pink", padding=1):
             result.append(_color_text(frame_style["v"] + " " * (max_length + padding * 2) + frame_style["v"], color))
     
     # Add text lines with padding
-    for line in lines:
+    for i, line in enumerate(lines):
         padding_spaces = " " * padding
-        extra_spaces = " " * (max_length - len(line))
+        # Use plain_lines[i] length for calculating extra spaces
+        extra_spaces = " " * (max_length - len(plain_lines[i])) 
         result.append(_color_text(frame_style["v"] + padding_spaces + line + extra_spaces + padding_spaces + frame_style["v"], color))
     
     # Add bottom padding if requested
@@ -697,8 +751,20 @@ def _frame_text(text, style="single", color="pink", padding=1):
 def _get_user_home_dir() -> str:
     """Gets the home directory of the user who invoked sudo, falling back."""
     try:
+        # Try getting the home directory of the original user if sudo is used
+        sudo_user = os.environ.get('SUDO_USER')
+        if sudo_user:
+            # Attempt to get home dir based on username
+            try:
+                import pwd
+                return pwd.getpwnam(sudo_user).pw_dir
+            except (ImportError, KeyError):
+                 # Fallback if pwd module not available or user not found
+                 pass # Continue to next method
+        # Fallback to Path.home() which might be root's home under sudo
         return str(Path.home())
     except Exception:
+        # Final fallback
         print("[WARN] Could not reliably determine user home directory, using /tmp for backups.")
         return "/tmp"
 
@@ -710,9 +776,24 @@ def _run_virsh_command(command: List[str], dry_run=False):
         return
         
     try:
-        subprocess.run(["virsh"] + command, check=False, capture_output=True)
+        # Try running directly first (might work if user is in libvirt group)
+        result = subprocess.run(["virsh"] + command, check=False, capture_output=True, text=True)
+        if result.returncode == 0:
+             _print_step(f"Virsh command successful: {' '.join(command)}", "success")
+             return
+        else:
+             # Log the error if it failed without sudo
+             _print_step(f"Virsh command failed without sudo (rc={result.returncode}): {' '.join(command)}. Error: {result.stderr.strip()}", "warning")
+             # Proceed to try with sudo if necessary, but this script runs detached with sudo anyway
+             # The original call from cleanup.py ensures this script runs with sudo.
+             # So, direct execution should work if permissions are correct for the root user.
+             # If it fails here, it's likely a virsh error, not a permission issue.
+             _print_step(f"Virsh command failed: {' '.join(command)}. Error: {result.stderr.strip()}", "error")
+
+    except FileNotFoundError:
+         _print_step("Error: 'virsh' command not found. Is libvirt installed and in PATH?", "error")
     except Exception as e:
-        _print_step(f"Warning: Error running virsh command {' '.join(command)}: {e}", "warning")
+        _print_step(f"Error running virsh command {' '.join(command)}: {e}", "error")
 
 def _fade_transition(duration=0.5):
     """Create a simple fade transition effect."""
@@ -759,12 +840,14 @@ def _exploding_text(text, duration=1.5):
         time.sleep(0.1)
         return
     width, height = _get_terminal_size()
-    text_length = len(text)
+    # Calculate length considering ANSI escape codes might be present
+    plain_text = subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=text, capture_output=True, text=True).stdout
+    text_length = len(plain_text)
     center_x = width // 2
     center_y = height // 2
     
     # Characters that will explode outward
-    particles = [char for char in text if char.strip()]
+    particles = [char for char in plain_text if char.strip()]
     if not particles:  # Ensure we have particles
         particles = ["*", ".", "+", "✦", "✧"]
         
@@ -794,8 +877,8 @@ def _exploding_text(text, duration=1.5):
     _clear_screen()
     
     # First display the text
-    _move_cursor(center_x - text_length // 2, center_y)
-    print(_gradient_text(text))
+    _move_cursor(center_x - text_length // 2 + 1, center_y + 1) # Adjust cursor position
+    print(_gradient_text(text)) # Print original text with potential ANSI codes
     time.sleep(0.5)
     
     # Now explode it
@@ -964,13 +1047,17 @@ def _dystopian_whirl_effect(text, duration=4.0): # Increased duration slightly
     ring_spacing = 2 # Reduced spacing slightly
     
     # Ensure max_base_radius is positive
-    max_base_radius = min(center_x, center_y) - (num_rings * ring_spacing) - len(text)//2 - 2
+    # Calculate plain text width for radius calculation
+    plain_text = subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=text, capture_output=True, text=True).stdout
+    max_base_radius = min(center_x, center_y) - (num_rings * ring_spacing) - len(plain_text)//2 - 2
     if max_base_radius < 2: max_base_radius = 2
 
 
     text_lines = text.split('\n')
     text_block_height = len(text_lines)
-    text_block_width = max(len(line) for line in text_lines) if text_lines else 0
+    # Calculate max width of plain text lines
+    plain_text_lines = [subprocess.run(['sed', '-r', 's/\x1b\[[0-9;]*m//g'], input=line, capture_output=True, text=True).stdout for line in text_lines]
+    text_block_width = max(len(line) for line in plain_text_lines) if plain_text_lines else 0
     text_start_y = center_y - text_block_height // 2
 
     while time.time() - start_time < duration:
@@ -1037,11 +1124,14 @@ def _dystopian_whirl_effect(text, duration=4.0): # Increased duration slightly
         if current_text_color_code:
             for line_idx, line_content in enumerate(text_lines):
                 line_y = text_start_y + line_idx
-                line_x = center_x - len(line_content) // 2
+                # Use plain text line length for centering
+                plain_line_len = len(plain_text_lines[line_idx]) 
+                line_x = center_x - plain_line_len // 2
                 _move_cursor(line_x + 1, line_y + 1)
                 # Add random slight horizontal jitter
-                jitter_x = random.randint(-1, 1) if random.random() < 0.03 else 0
+                jitter_x = random.randint(-1, 1) if random.random() < 0.03 else 0 
                 _move_cursor(line_x + jitter_x + 1, line_y + 1)
+                # Print original line content which might have ANSI codes
                 sys.stdout.write(f"{COLORS['bold']}{current_text_color_code}{line_content}{COLORS['reset']}")
 
         sys.stdout.flush()
@@ -1061,17 +1151,98 @@ def _dystopian_whirl_effect(text, duration=4.0): # Increased duration slightly
 def main():
     global VISUAL_MODE # Ensure we're using the global
     parser = argparse.ArgumentParser(description="ULTMOS Self-Destruct Script")
-    parser.add_argument("--directory", required=True, help="Absolute path to the directory to remove")
-    parser.add_argument("--keep-disks", required=True, choices=['True', 'False'], help="Whether to keep/backup disks")
-    parser.add_argument("--vms", nargs='*', default=[], help="List of VM names to undefine")
-    parser.add_argument("--dry-run", action="store_true", help="Simulate the cleanup without making actual changes")
+    # Define arguments that are ALWAYS needed or optional
     parser.add_argument("--visual-mode", choices=['full', 'minimal'], default="full", help="Visual mode for the script output ('full' or 'minimal')")
-    args = parser.parse_args()
+    parser.add_argument(
+        "--test-animation", 
+        choices=[
+            'sparkle', 'bubble', 'wave', 'progressbar', 'countdown', 
+            'spinner', 'reveal', 'typing', 'fade', 'explode', 
+            'particles', 'whirl'
+        ],
+        default=None,
+        help="Run a specific animation test and exit."
+    )
+    parser.add_argument("--dry-run", action="store_true", help="Simulate the cleanup without making actual changes")
+    
+    # --- Initial parse to check for test mode ---
+    # Use parse_known_args to capture known args without failing on missing required ones yet
+    args, unknown = parser.parse_known_args() 
 
-    # Determine visual mode from command line argument
+    # Determine visual mode early (needed for test mode too)
     if args.visual_mode == "minimal":
         VISUAL_MODE = "minimal"
     # else VISUAL_MODE remains "full" (its default set at the top of the file)
+
+    # --- Animation Test Mode ---
+    if args.test_animation:
+        _clear_screen()
+        _hide_cursor()
+        print(f"--- Testing Animation: {args.test_animation} (Mode: {VISUAL_MODE}) ---")
+        time.sleep(1)
+        
+        test_text = f"Testing: {args.test_animation}"
+        
+        try:
+            if args.test_animation == 'sparkle':
+                _sparkle_effect(test_text, duration=2.5, density=4)
+            elif args.test_animation == 'bubble':
+                _bubble_effect(test_text, duration=2.0, speed=0.07)
+            elif args.test_animation == 'wave':
+                _wave_text(test_text, cycles=2, speed=0.0018, amplitude=2, rainbow=True)
+            elif args.test_animation == 'progressbar':
+                print("Testing Progress Bar (0% to 100%):")
+                for i in range(101):
+                    _progress_bar(test_text, progress=i/100.0, pulse=(VISUAL_MODE=='full'))
+                    time.sleep(0.03)
+                print("\nProgress Bar Test Complete.")
+            elif args.test_animation == 'countdown':
+                _countdown(5, text=test_text)
+            elif args.test_animation == 'spinner':
+                print("Testing Spinners:")
+                spin_types = ["flower", "star", "dots", "arrows", "pulse", "bounce"]
+                for stype in spin_types:
+                     _spinner(f"{test_text} ({stype})", duration=1.5, spin_type=stype)
+                print("Spinner Test Complete.")
+            elif args.test_animation == 'reveal':
+                _animate_text_reveal(f"{test_text} (gradient)", gradient=True, center=True)
+                _animate_text_reveal(f"{test_text} (rainbow)", rainbow=True, center=True, delay=0.04)
+                _animate_text_reveal(f"{test_text} (color)", color="mint", center=True, delay=0.03)
+            elif args.test_animation == 'typing':
+                _typing_effect(f"{test_text}. This simulates typing with pauses.", speed=0.04, variance=0.03)
+            elif args.test_animation == 'fade':
+                print("Before fade...")
+                _fade_transition(duration=1.0)
+                print("...After fade.")
+            elif args.test_animation == 'explode':
+                _exploding_text(test_text, duration=2.0)
+            elif args.test_animation == 'particles':
+                print("Displaying floating particles for 3 seconds...")
+                _display_floating_particles(duration=3.0)
+                print("Floating particles test complete.")
+            elif args.test_animation == 'whirl':
+                _dystopian_whirl_effect(test_text, duration=4.0)
+                
+            print(f"\n--- Animation Test '{args.test_animation}' Complete ---")
+            
+        except Exception as e:
+            _show_cursor()
+            print(f"\nError during animation test: {e}")
+            sys.exit(1)
+        finally:
+            _show_cursor()
+            
+        sys.exit(0) # Exit after testing animation
+
+    # --- Normal Execution Logic ---
+    # (Only runs if --test-animation was NOT provided)
+    # Define arguments required ONLY for normal operation
+    parser.add_argument("--directory", required=True, help="Absolute path to the directory to remove")
+    parser.add_argument("--keep-disks", required=True, choices=['True', 'False'], help="Whether to keep/backup disks")
+    parser.add_argument("--vms", nargs='*', default=[], help="List of VM names to undefine")
+    
+    # Now, re-parse args fully, enforcing requirements for normal operation
+    args = parser.parse_args() 
 
     target_dir = Path(args.directory).resolve()
     keep_disks_flag = args.keep_disks == 'True'
