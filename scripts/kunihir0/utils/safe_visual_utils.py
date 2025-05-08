@@ -228,8 +228,8 @@ class TerminalDisplay:
             status_symbol = "⚠"
             color = "bright_yellow"
         elif status == "info":
-            status_symbol = "ℹ"
-            color = "bright_blue"
+            # status_symbol = "ℹ" # Remove symbol for info status
+            color = "bright_blue" # Keep the color
             
         display_text = step
         if status_symbol:

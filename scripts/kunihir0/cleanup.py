@@ -44,8 +44,11 @@ from scripts.kunihir0.utils.safe_file_utils import (
 from scripts.kunihir0.utils.safe_command_utils import (
     get_user_home, check_command_exists, clear_terminal
 )
+# Import safe_visual_utils with an alias
+import scripts.kunihir0.utils.safe_visual_utils as svu
+# Keep other direct imports if needed, or import them via svu as well
 from scripts.kunihir0.utils.safe_visual_utils import (
-    TerminalDisplay, ProgressDisplay, TerminalColor
+    TerminalDisplay, ProgressDisplay
 )
 
 # Import refactored or existing utils (assuming they now use safe methods internally)
@@ -480,16 +483,16 @@ class SafeUninstaller:
         # For simplicity here, using direct input with color, assuming theme_manager might not have a direct 2-choice prompt.
         # A more integrated approach would use theme_manager.get_user_choice if it supports this format.
         
-        print("\n" + TerminalColor.colorize(prompt_title, "bright_yellow"))
+        print("\n" + svu.TerminalColor.colorize(prompt_title, "bright_yellow"))
         for line in prompt_lines:
-            print(TerminalColor.colorize(f"  {line}", "default"))
+            print(svu.TerminalColor.colorize(f"  {line}", "default"))
         
         visual_mode_choice = ""
         while visual_mode_choice not in ["1", "2"]:
             try:
-                visual_mode_choice = input(TerminalColor.colorize("Enter your choice (1/2): ", "bright_cyan")).strip()
+                visual_mode_choice = input(svu.TerminalColor.colorize("Enter your choice (1/2): ", "bright_cyan")).strip()
                 if visual_mode_choice not in ["1", "2"]:
-                    print(TerminalColor.colorize("Invalid choice. Please enter 1 or 2.", "bright_red"))
+                    print(svu.TerminalColor.colorize("Invalid choice. Please enter 1 or 2.", "bright_red"))
             except EOFError:
                 log.warning("EOF received, defaulting to Full Pretty Mode for self-destruct.")
                 visual_mode_choice = "1" # Default to full on EOF
@@ -624,7 +627,7 @@ class SafeUninstaller:
             full_prompt = extra_prompt
         else:
             # In standard theme, we'll use the combined prompt
-            full_prompt = TerminalColor.colorize(prompt, color) + extra_prompt
+            full_prompt = svu.TerminalColor.colorize(prompt, color) + extra_prompt
 
         # Basic timeout implementation (no select/async needed for simple CLI)
         start_time = time.time()
@@ -716,9 +719,18 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
             vms = uninstaller.find_vms() # Safe call
             if vms:
                 for vm in vms:
-                    theme_manager.display_step(f"  - {vm}", "info") # Relies on VM __str__
+                    # Format VM output for clarity, especially when state is unknown
+                    vm_details = f"{vm.name}"
+                    if vm.script_path:
+                        vm_details += f" (Script: {vm.script_path.name})"
+                    if vm.state and vm.state.lower() != 'unknown':
+                        vm_details += f" ({vm.state})"
+                    else:
+                        # Explicitly state if detected via fallback and state is unknown
+                        vm_details += " (Detected via boot script, state unknown)"
+                    theme_manager.display_step(f"  - {vm_details}", "info")
             else:
-                theme_manager.display_step("No macOS VMs found", "warning")
+                theme_manager.display_step("  No macOS VMs found.", "warning") # Added period
 
             # Show disk images
             theme_manager.display_step("\nDetected disk images:", "info")
