@@ -65,15 +65,6 @@ This utility provides several options for cleaning up temporary files or uninsta
 5.  **Uninstall but keep disks**: Initiates the self-destruct process to remove ULTMOS but backs up disk images first.
 6.  **Uninstall everything**: Initiates the self-destruct process to remove ULTMOS *and* all associated disk images.
 
-**Command-Line Flags:**
-
-The script [`scripts/kunihir0/cleanup.py`](scripts/kunihir0/cleanup.py) can be run directly with flags for specific non-interactive actions:
-- `./scripts/kunihir0/cleanup.py --temp-only`: Clean only temporary files and exit.
-- `./scripts/kunihir0/cleanup.py --vm-only`: Remove only VM definitions (will prompt about associated disks unless `--force` is used) and exit.
-- Add `--force` to skip confirmation prompts (Use with extreme caution!).
-- Add `--dry-run` to simulate actions without making changes.
-- The `--keep-disks` flag influences the behavior of the full uninstall options (interactive or future non-interactive flags) and the `--vm-only` flag when used with `--force`.
-
 > [!WARNING]
 > The uninstall functions (options 5 & 6 in the menu) are permanent and cannot be undone. They use a self-destructing mechanism that removes the entire ULTMOS directory.
 >
