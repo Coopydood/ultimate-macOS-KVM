@@ -879,17 +879,18 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
                     theme_manager.display_step(f"  - {vm.name}", "info")
 
             theme_manager.display_step("This operation cannot be undone!", "warning")
-            if uninstaller._confirm_action("Are you SURE you want to uninstall ULTMOS (keeping disks)?", is_critical=True):
-                log.info("Starting uninstallation (keeping disks)...")
-                uninstaller.config.keep_disks = True
-                success = uninstaller.uninstall_everything() # Safe call using self-destruct
-                if success:
-                    log.success("Self-destruct script initiated successfully in a new terminal window. Exiting.")
-                    return 0 # Exit after successful initiation
-                else:
-                    log.error("Uninstallation (keeping disks) failed to initiate.")
+            # Confirmation is now handled within uninstaller.uninstall_everything()
+            log.info("Preparing for uninstallation (keeping disks)...")
+            uninstaller.config.keep_disks = True # Ensure this is set before calling
+            success = uninstaller.uninstall_everything() # This will handle its own confirmation
+
+            if success:
+                log.success("Self-destruct script initiated successfully. Exiting.")
+                return 0 # Exit after successful initiation
             else:
-                log.info("Operation cancelled.")
+                # This branch is reached if uninstall_everything returns False (cancelled by user or failed).
+                # Specific reasons (cancelled/failed) are logged within uninstall_everything.
+                log.warning("Uninstallation (keeping disks) was not completed.")
             theme_manager.get_user_choice("Press Enter to continue")
 
         elif choice == "6":
@@ -914,17 +915,18 @@ def run_menu(uninstaller: SafeUninstaller) -> int:
                     theme_manager.display_step(f"  - ... and {len(disks) - 5} more", "error")
 
             theme_manager.display_step("THIS OPERATION CANNOT BE UNDONE!", "error")
-            if uninstaller._confirm_action("Are you ABSOLUTELY CERTAIN you want to DELETE EVERYTHING?", is_critical=True):
-                log.info("Starting complete uninstallation...")
-                uninstaller.config.keep_disks = False
-                success = uninstaller.uninstall_everything() # Safe call using self-destruct
-                if success:
-                    log.success("Self-destruct script initiated successfully in a new terminal window. Exiting.")
-                    return 0 # Exit after successful initiation
-                else:
-                    log.error("Complete uninstallation failed to initiate.")
+            # Confirmation is now handled within uninstaller.uninstall_everything()
+            log.info("Preparing for complete uninstallation...")
+            uninstaller.config.keep_disks = False # Ensure this is set before calling
+            success = uninstaller.uninstall_everything() # This will handle its own confirmation
+
+            if success:
+                log.success("Self-destruct script initiated successfully. Exiting.")
+                return 0 # Exit after successful initiation
             else:
-                log.info("Operation cancelled.")
+                # This branch is reached if uninstall_everything returns False (cancelled by user or failed).
+                # Specific reasons (cancelled/failed) are logged within uninstall_everything.
+                log.warning("Complete uninstallation was not completed.")
             theme_manager.get_user_choice("Press Enter to continue")
 
         elif choice == "7":
