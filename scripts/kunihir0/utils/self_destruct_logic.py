@@ -205,7 +205,7 @@ def _sparkle_effect(text, duration=1.5, density=3, colors=None):
         colors = ["pink", "purple", "cyan", "yellow", "green", "blue"]
 
     if VISUAL_MODE == "minimal":
-        _clear_screen() # Still clear for a clean print
+        # _clear_screen() # Removed for verbosity
         print(_center_text(_gradient_text(text, colors)), flush=True) # Gradient will be simplified by _gradient_text
         time.sleep(0.1) # Brief pause
         return
@@ -335,7 +335,7 @@ def _wave_text(text, cycles=1, speed=0.002, amplitude=3, rainbow=False):
     """Create a sine wave animation of text."""
     global VISUAL_MODE
     if VISUAL_MODE == "minimal":
-        _clear_screen()
+        # _clear_screen() # Removed for verbosity
         if rainbow:
             colors = ["red", "orange", "yellow", "green", "cyan", "blue", "purple", "pink"]
             color_text_minimal = ""
@@ -718,7 +718,8 @@ def _fade_transition(duration=0.5):
     """Create a simple fade transition effect."""
     global VISUAL_MODE
     if VISUAL_MODE == "minimal":
-        _clear_screen()
+        # _clear_screen() # Removed for verbosity
+        print() # Add a newline for separation instead of clearing
         time.sleep(0.05) # Brief pause
         return
     _hide_cursor()
@@ -751,9 +752,9 @@ def _exploding_text(text, duration=1.5):
     """Create an explosion animation with text."""
     global VISUAL_MODE
     if VISUAL_MODE == "minimal":
-        _clear_screen()
-        height, _ = _get_terminal_size()
-        print("\n" * (height // 2 - 1))
+        # _clear_screen() # Removed for verbosity
+        # height, _ = _get_terminal_size() # Not needed if not clearing and centering vertically
+        # print("\n" * (height // 2 - 1)) # Not needed
         print(_center_text(_color_text(text, "purple")))
         time.sleep(0.1)
         return
