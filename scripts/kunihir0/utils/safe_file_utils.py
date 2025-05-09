@@ -558,7 +558,7 @@ def create_self_destruct_script(
 
         # --- Find the source script ---
         # Assumes this script (safe_file_utils.py) is in scripts/kunihir0/utils
-        source_script_path = Path(__file__).parent / "self_destruct_logic.py"
+        source_script_path = Path(__file__).parent.parent / "cleanup/utils/self_destruct_logic.py"
         if not source_script_path.is_file():
             log.error(f"Source self-destruct script not found at: {source_script_path}")
             return None
