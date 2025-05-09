@@ -20,51 +20,75 @@ import os # For setting environment variables
 # This allows absolute imports like 'from scripts...' to work when the script is run directly.
 try:
     current_file = Path(__file__).resolve()
-    project_root = current_file.parents[2] # Navigate up from scripts/kunihir0/cleanup.py to project root
+    # cleanup.py is in scripts/kunihir0/cleanup/
+    # project_root is 3 levels up
+    project_root = current_file.parents[3]
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 except IndexError:
-    print("Error: Could not determine project root. Ensure script is run from within the project structure.", file=sys.stderr)
+    print("Error: Could not determine project root for scripts.kunihir0.cleanup.cleanup. Ensure script is run from within the project structure.", file=sys.stderr)
     sys.exit(1)
 # --- End sys.path modification ---
 
 # --- Project-Specific Imports (Using Safe Utils) ---
-# Import the centralized logger first
-from scripts.kunihir0.utils.logger import default_logger as log, LogLevel, set_log_level
-
-# Import theme manager
-from scripts.kunihir0.utils.theme_manager import get_theme_manager, ThemeConfig
-
-# Import safe utilities
-from scripts.kunihir0.utils.safe_file_utils import (
-    delete_file, ensure_directory_exists, delete_directory_tree,
-    read_file_text, is_valid_file, find_files, is_valid_directory,
-    create_self_destruct_script # Import the new function
-)
-from scripts.kunihir0.utils.safe_command_utils import (
-    get_user_home, check_command_exists, clear_terminal
-)
-# Import safe_visual_utils with an alias
-import scripts.kunihir0.utils.safe_visual_utils as svu
-# Direct imports of TerminalDisplay and ProgressDisplay removed as they are accessed via theme_manager or svu alias
-
-# Import refactored or existing utils (assuming they now use safe methods internally)
-from scripts.kunihir0.utils.config_utils import (
-    CleanupConfig, UninstallConfig, BlobData, get_critical_files,
-    get_cleanup_tiers # Assuming these are still relevant or adapted
-)
-from scripts.kunihir0.utils.vm_utils import (
-    VirtualMachine, find_vms_from_blob_data, remove_vm,
-    find_macos_vms # Assuming these are updated
-)
-from scripts.kunihir0.utils.disk_utils import (
-    DiskImage, get_disk_from_blob_data, backup_disk_image,
-    delete_disk_image, get_default_backup_dir # Assuming these are updated
-)
-# clean_config might still be needed for pattern definitions
-from scripts.kunihir0.utils.clean_config import (
-     CRITICAL_FILES # Import specific needed items
-)
+try:
+    # Attempt relative imports for when run as part of a package
+    from ..utils.logger import default_logger as log, LogLevel, set_log_level
+    from ..utils.theme_manager import get_theme_manager, ThemeConfig
+    from ..utils.safe_file_utils import (
+        delete_file, ensure_directory_exists, delete_directory_tree,
+        read_file_text, is_valid_file, find_files, is_valid_directory,
+        create_self_destruct_script
+    )
+    from ..utils.safe_command_utils import (
+        get_user_home, check_command_exists, clear_terminal
+    )
+    from ..utils import safe_visual_utils as svu
+    from ..utils.config_utils import (
+        CleanupConfig, UninstallConfig, BlobData, get_critical_files,
+        get_cleanup_tiers
+    )
+    from ..utils.vm_utils import (
+        VirtualMachine, find_vms_from_blob_data, remove_vm,
+        find_macos_vms
+    )
+    from ..utils.disk_utils import (
+        DiskImage, get_disk_from_blob_data, backup_disk_image,
+        delete_disk_image, get_default_backup_dir
+    )
+    # clean_config is specific to cleanup and remains in its utils
+    from .utils.clean_config import (
+         CRITICAL_FILES
+    )
+except ImportError:
+    # Fallback to absolute imports for direct execution
+    print("Relative import failed in cleanup.py, falling back to absolute imports. This is expected if running the script directly.", file=sys.stderr)
+    from scripts.kunihir0.utils.logger import default_logger as log, LogLevel, set_log_level
+    from scripts.kunihir0.utils.theme_manager import get_theme_manager, ThemeConfig
+    from scripts.kunihir0.utils.safe_file_utils import (
+        delete_file, ensure_directory_exists, delete_directory_tree,
+        read_file_text, is_valid_file, find_files, is_valid_directory,
+        create_self_destruct_script
+    )
+    from scripts.kunihir0.utils.safe_command_utils import (
+        get_user_home, check_command_exists, clear_terminal
+    )
+    from scripts.kunihir0.utils import safe_visual_utils as svu
+    from scripts.kunihir0.utils.config_utils import (
+        CleanupConfig, UninstallConfig, BlobData, get_critical_files,
+        get_cleanup_tiers
+    )
+    from scripts.kunihir0.utils.vm_utils import (
+        VirtualMachine, find_vms_from_blob_data, remove_vm,
+        find_macos_vms
+    )
+    from scripts.kunihir0.utils.disk_utils import (
+        DiskImage, get_disk_from_blob_data, backup_disk_image,
+        delete_disk_image, get_default_backup_dir
+    )
+    from scripts.kunihir0.cleanup.utils.clean_config import (
+         CRITICAL_FILES
+    )
 
 
 class SafeUninstaller:

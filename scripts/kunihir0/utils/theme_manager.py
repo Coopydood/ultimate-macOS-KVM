@@ -63,7 +63,7 @@ except ImportError:
 
 # --- Custom theme imports ---
 # Import all necessary components from safe_visual_utils at the top
-from scripts.kunihir0.utils.safe_visual_utils import TerminalDisplay, TerminalColor, ProgressDisplay
+from .safe_visual_utils import TerminalDisplay, TerminalColor, ProgressDisplay
 
 # --- Theme Configuration ---
 class ThemeConfig:

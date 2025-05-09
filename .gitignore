@@ -66,3 +66,9 @@ docs/.screenshots
 docs/.bundle
 docs/_sass
 docs/_layouts
+
+scripts/kunihir0/utils/__pycache__
+scripts/kunihir0/cleanup/utils/__pycache__
+scripts/kunihir0/cleanup/__pycache__
+scripts/kunihir0/__pycache__
+scripts/kunihir0/docs

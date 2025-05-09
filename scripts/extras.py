@@ -97,7 +97,7 @@ elif detectChoice == "4":
 elif detectChoice == "5":
     os.system('./resources/python/smbios/GenSMBIOS.py')
 elif detectChoice == "c" or detectChoice == "C":
-    os.system('./scripts/kunihir0/cleanup.py')
+    os.system('./scripts/kunihir0/mmenu.py')
 elif detectChoice == "i" or detectChoice == "I":
     
     print("\n\n   "+color.BOLD+color.GREEN+"✔  OPENING ISSUE CREATOR IN DEFAULT BROWSER"+color.END,"")

@@ -92,6 +92,9 @@ class TerminalColor:
         Returns:
             Colorized text string
         """
+        if color is None:
+            return text # No color to apply, return original text
+
         normalized_color = color.lower()
         if normalized_color == "default":
             # "default" color means no specific ANSI color code, effectively resetting to terminal default.
