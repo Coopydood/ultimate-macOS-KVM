@@ -45,10 +45,10 @@ You might be new to QEMU/KVM, or a long-time veteran - either way, this project 
 Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little help wrapping your head around this stuff, feel free to check out the [FAQs](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/FAQs) for some quick knowledge on the basics.
 
 <br>
-<img src="https://github.com/user-attachments/assets/baad55d5-2c3d-421c-9394-b5892211479a" alt="ultimate-macOS-KVM" width="1400"/>
+<img src="https://github.com/user-attachments/assets/b82df403-d767-4bce-be5a-9654d67aeef7" alt="ultimate-macOS-KVM" width="1400"/>
 
 <br>
-<p align="center"><i>The latest macOS Sequoia running on ULTMOS.</i></p>
+<p align="center"><i>The latest macOS Tahoe developer beta running on ULTMOS.</i></p>
 
 ***
 
@@ -56,7 +56,7 @@ Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little h
 
 <ul>
 <li><b>Modern macOS Support <a href="https://github.com/Coopydood/ultimate-macOS-KVM/wiki/Supported-Guest-OSes">⎋</a></b></li> 
-Experience the latest macOS has to offer with built-in support from macOS High Sierra to macOS Sequoia!
+Experience the latest macOS has to offer with built-in support from macOS High Sierra to macOS Sequoia! Even try what's next, now; with macOS Tahoe developer beta support!
 
 <li><b>AutoPilot <a href="https://github.com/Coopydood/ultimate-macOS-KVM/wiki/AutoPilot">⎋</a></b></li> 
 Automatically generates a valid, customised, and ready-to-use QEMU config script in seconds.
@@ -310,7 +310,7 @@ Any and all contributions are greatly appreciated and reviewed thoroughly, even 
 
 Here's a few screenshots showing **ultimate-macOS-KVM** in action!
 
-<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/34ef4e38-557b-491f-9c3b-a57c9f03b81d" width="90%"></img> <img src="https://github.com/user-attachments/assets/51f30f3a-2b77-4d31-b37b-4f1502f4cc64" width="45%"></img> <img src="https://github.com/user-attachments/assets/2bea6bf0-879e-4faf-b73c-c46314ea1870" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a7a60115-865a-4939-ab8f-e726a3d488a6" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1802c1d2-7d35-4e70-9ab2-13820ef7e3a9" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1fd0add5-c0c8-46a1-8897-3b80c37f98a1" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8380632b-dceb-41e7-acb0-b2bd15cbf575" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b32c2701-a934-42ce-ab69-06b1ae350f1b" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ee451491-35fa-436e-957b-888d2f7d488e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/c4e394c3-a666-4aab-9aa7-b40b1e84d977" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/feb19dce-7a9a-4527-884c-8b2f2d445e2f" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4a8b5249-3029-49d3-8539-229b3c179816" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4e7678f3-5ee4-4e69-93a7-d9ba9881cea7" width="45%"></img>
+<img src="https://github.com/user-attachments/assets/428e08b3-d03f-4425-b9c3-175256280a11" width="90%"></img> <img src="https://github.com/user-attachments/assets/51f30f3a-2b77-4d31-b37b-4f1502f4cc64" width="45%"></img> <img src="https://github.com/user-attachments/assets/1596b7f5-92b8-4ca8-bf6d-b7278e683b7d" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a7a60115-865a-4939-ab8f-e726a3d488a6" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1802c1d2-7d35-4e70-9ab2-13820ef7e3a9" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/1fd0add5-c0c8-46a1-8897-3b80c37f98a1" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8380632b-dceb-41e7-acb0-b2bd15cbf575" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b32c2701-a934-42ce-ab69-06b1ae350f1b" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ee451491-35fa-436e-957b-888d2f7d488e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/c4e394c3-a666-4aab-9aa7-b40b1e84d977" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/feb19dce-7a9a-4527-884c-8b2f2d445e2f" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4a8b5249-3029-49d3-8539-229b3c179816" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/4e7678f3-5ee4-4e69-93a7-d9ba9881cea7" width="45%"></img>
 <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/dd012a63-415a-4b87-b096-feabdd3f8a5e" width="45%"></img> <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/32d2992d-a39a-4b34-976b-5e7ee5d5c926" width="45%"></img> 
 
 
