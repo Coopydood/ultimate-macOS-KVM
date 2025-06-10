@@ -27,6 +27,12 @@ macOS Tahoe has not yet been tested extensively, but it has been **confirmed to 
 
 However, you should **NOT** use macOS Tahoe as your main virtual setup - and should be used for test purposes only. You have been warned!
 
+You can download the latest recovery image below for use with AutoPilot. The file is hosted on the [Archive.org website](https://archive.org/details/macos-tahoe).
+
+<br>
+
+<p align="center"><a href="https://archive.org/download/macos-tahoe/Latest/BaseSystem.dmg"><img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a8f1cb8f-5ddd-45cc-8598-032180035607" height="38"></a><br><sub> <b>BaseSystem.dmg</b> (1.4 GB)<br>Or, you can also download the <a href="https://archive.org/download/macos-tahoe/macos-tahoe_archive.torrent">torrent</a>.</sub></p>
+
 
 ***
 
