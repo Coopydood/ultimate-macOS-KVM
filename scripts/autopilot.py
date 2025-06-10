@@ -61,12 +61,12 @@ repoDir = os.path.abspath(os.curdir)
 args = parser.parse_args()
 
 detectChoice = 1
-latestOSName = "Sequoia"
-latestOSVer = "15"
+latestOSName = "Tahoe"
+latestOSVer = "26"
 runs = 0
 
 ###############################
-FEATURE_LEVEL = 9                   # DO NOT CHANGE - WILL BREAK THINGS!
+FEATURE_LEVEL = 10                   # DO NOT CHANGE - WILL BREAK THINGS!
 ###############################
 
 enableLog = True
@@ -1063,7 +1063,7 @@ def autopilot():
       
       if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
          print(color.YELLOW+"\n     ⚠"+color.END+color.BOLD+"   Download flow disabled for legacy versions.\n         You must download an image manually."+color.END)
-      elif USR_TARGET_OS >= 16 and USR_TARGET_OS <= 99:
+      elif USR_TARGET_OS >= 26 and USR_TARGET_OS <= 99:
          print(color.YELLOW+"\n     ⚠"+color.END+color.BOLD+"   Download flow disabled for beta versions.\n         You must download an image manually."+color.END)
 
 
@@ -1084,7 +1084,7 @@ def autopilot():
          blob.close()
          stage13()
       else:
-         if USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:
+         if USR_TARGET_OS >= 26 and USR_TARGET_OS <= 1012:
             print(color.END+color.GRAY+"\n      1. Download from Apple..."+color.END)
             print(color.BOLD+"      2. Select existing...")
          else:
@@ -1104,7 +1104,7 @@ def autopilot():
             cpydLog("info",str("Requesting notice display"))
             showNotice()
 
-         if stageSelect == "1" and USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012:# or stageSelect == "1" and USR_TARGET_OS >= 15 and USR_TARGET_OS <= 99:
+         if stageSelect == "1" and USR_TARGET_OS >= 100 and USR_TARGET_OS <= 1012 or stageSelect == "1" and USR_TARGET_OS >= 26 and USR_TARGET_OS <= 99:
             stage12()
          elif stageSelect == "1":
             cpydLog("info","Arming download mechanism")
@@ -2280,6 +2280,8 @@ def autopilot():
          USR_TARGET_OS_NAME = "Sonoma"
       elif USR_TARGET_OS == 15:
          USR_TARGET_OS_NAME = "Sequoia"
+      elif USR_TARGET_OS == 26:
+         USR_TARGET_OS_NAME = "Tahoe"
 
       global osIcon
 
@@ -2301,7 +2303,9 @@ def autopilot():
       blob.write(str(USR_TARGET_OS_NAME))
       blob.close()
 
-      if USR_TARGET_OS == 15:
+      if USR_TARGET_OS == 26:
+         USR_TARGET_OS_ID = "tahoe"
+      elif USR_TARGET_OS == 15:
          USR_TARGET_OS_ID = "sequoia"
       elif USR_TARGET_OS == 14:
          USR_TARGET_OS_ID = "sonoma"
@@ -2459,8 +2463,10 @@ def autopilot():
          print(color.END+"      6. Catalina (10.15)")
          print(color.END+"      7. Mojave (10.14)")
          print(color.END+"      8. High Sierra (10.13)\n")
+
+         print(color.END+"      9. Tahoe beta (26)\n")
          
-         print(color.END+"      9. Legacy versions...\n")
+         print(color.END+"      10. Legacy versions...\n")
          
          customInput = str(input(color.BOLD+"Select> "+color.END))
          
@@ -2481,6 +2487,8 @@ def autopilot():
          elif customInput == "8":
             customInput = 1013
          elif customInput == "9":
+            customInput = 26
+         elif customInput == "10":
             customValue = 2
             stage2()
 
