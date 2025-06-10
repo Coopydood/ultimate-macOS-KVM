@@ -93,7 +93,7 @@ if osOpt != "macos-highsierra" and osOpt != "macos-mojave" and osOpt != "macos-c
      osOpt = "macos-unknown" # arm large image to use the unknown asset if valid macOS version can't be detected
 
 if osName == "macOS Sequoia": osName = "macOS Sequoia"
-if osName == "macOS Tahoe": osName = "macOS Tahoe"
+if osName == "macOS Tahoe": osName = "macOS Tahoe Developer Beta"
 
 osName1 = osName
 
