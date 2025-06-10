@@ -44,7 +44,7 @@ You might be new to QEMU/KVM, or a long-time veteran - either way, this project 
 
 Scripts? Configs? QEMU arguments? A *"qcow"* file? *Moo?* If you need a little help wrapping your head around this stuff, feel free to check out the [FAQs](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/FAQs) for some quick knowledge on the basics.
 
-<br>
+<br><br>
 <img src="https://github.com/user-attachments/assets/b82df403-d767-4bce-be5a-9654d67aeef7" alt="ultimate-macOS-KVM" width="1400"/>
 
 <br>
