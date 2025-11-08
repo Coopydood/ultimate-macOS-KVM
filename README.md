@@ -25,7 +25,7 @@ macOS Tahoe has not yet been tested extensively, but it has been **confirmed to 
 
 **AutoPilot now has an additional option for macOS Tahoe beta!** <br>Please feel free to try out the macOS Tahoe beta with ULTMOS and leave feedback on how it went! 
 
-However, you should **NOT** use macOS Tahoe as your main virtual setup - and should be used for test purposes only. You have been warned!
+However, you should **NOT** use macOS Tahoe as your main virtual setup; it should be used for test purposes only. You have been warned!
 
 You can download the latest recovery image below for use with AutoPilot. The file is hosted on the [Archive.org website](https://archive.org/details/macos-tahoe).
 
@@ -158,7 +158,7 @@ The project requires several other packages to function properly, while others c
 All of the dependencies, both required and optional, are listed below.
 
 > [!IMPORTANT]
-> The package names listed below are examples on an Arch-based system. Your distro may be different!
+> The package names listed below are examples on an Arch-based system. Your distribution may be different!
 
 <b>Required</b>
 <ul>
@@ -195,10 +195,10 @@ All of the dependencies, both required and optional, are listed below.
 
 Shocker; KVM is a module built into the *Linux kernel*, not **Windows Subsystem for Linux** or some UNIX-like terminal. You need a <ins>full install</ins> of at least base Linux **on your host**. Don't try any of that VM inception shenanigans.
 
-The easiest way to do this is by grabbing some mainstream Linux distro, like **Ubuntu, Linux Mint, Manjaro, EndeavourOS** - among many, many others. You can theoretically pick any one you like. *I use Arch BTW.*
+The easiest way to do this is by grabbing some mainstream Linux distribution, like **Ubuntu, Linux Mint, Manjaro, EndeavourOS** - among many, many others. You can theoretically pick any one you like. *I use Arch BTW.*
 
 > [!NOTE]
-> Testing of ULTMOS on different distrobutions is underway - but please note that is has been primarily developed and tested on **Arch** and **Debian**-based systems.
+> Testing of ULTMOS on different distributions is underway - but please note that is has been primarily developed and tested on **Arch** and **Debian**-based systems.
 
 ***
 
@@ -383,7 +383,7 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 - **[Hyperchromiac](https://github.com/hyperchromiac)** 》 My personal constitution-munching American. Legend has it that I live in his attic, although even I'm not sure. Love this guy either way.
 - **[Kaz](https://github.com/Eaz11)** 》 Other than his brilliant English accent's pronunciations (including "macOS Syria"), he's done extensive testing. Say hi to your nephew for me.
 - **[GigantTech](https://twitter.com/TechGigant)** 》 Moderately annoying German guy that I convinced to install Linux subsequently letting him test my project. It's free real estate!
-- **[Hummenix](https://github.com/Hummenix)** 》Testing of ULTMOS across different Linux distros. 
+- **[Hummenix](https://github.com/Hummenix)** 》Testing of ULTMOS across different Linux distributions. 
 - **[CorpNewt](https://github.com/CorpNewt)** 》Creator of GenSMBIOS and many other Hackintosh essentials.
 - **[Acidanthera](https://github.com/Acidanthera)** 》The group behind OpenCore, Lilu, WhateverGreen, and MUCH more.
 - **[DarknessRafix]()** 》Extensive testing of the project and the author of some excellent ULTMOS guides! Oh, and was the very first person to install macOS Sequoia on ULTMOS - even before me.
@@ -406,3 +406,4 @@ While I am the creator of these automation/ease-of-use scripts, this project is 
 <p align="center">
   <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/39d78d4b-8ce8-44f4-bba7-fefdbf2f80db" width="10%"> </img>
 </p>
+
