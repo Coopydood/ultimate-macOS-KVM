@@ -109,7 +109,7 @@ print("Checking your system... (2/9)")
 
 
 # vfcLibvirtd
-output_stream = os.popen("systemctl status libvirtd")
+output_stream = os.popen("systemctl status libvirtd virtqemud")
 checkStream = output_stream.read()
 if "active (running)" in checkStream:
     vfcLibvirtd = 1
