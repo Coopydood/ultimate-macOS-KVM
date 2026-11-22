@@ -33,7 +33,7 @@ const removeTitleHeading = defineMdastPlugin({
 export default defineConfig({
   site: "https://coopydood.github.io",
   base: "ultimate-macOS-KVM",
-  redirects: { "/": "/ultimate-macOS-KVM/gettingstarted/" },
+  redirects: { "/": "/ultimate-macOS-KVM/start/gettingstarted/" },
   markdown: {
     processor: satteri({
       mdastPlugins: [
@@ -65,9 +65,9 @@ export default defineConfig({
         SiteTitle: "./src/components/SiteTitle.astro",
       },
       sidebar: [
-        { label: "Getting started", items: ["gettingstarted", "supportedhosts", "supportedguests", "kernel"] },
-        { label: "Guide", items: ["mainmenu", "autopilot", "passthroughassistant", "xmlconverter", "extras", "remotedesktop", "opencore"] },
-        { label: "Help", items: ["faqs", "issues", "usefullinks", "credits"] },
+        { label: "Getting started", items: ["start/gettingstarted", "start/supportedhosts", "start/supportedguests", "start/kernel"] },
+        { label: "Guide", items: ["guide/mainmenu", "guide/autopilot", "guide/passthroughassistant", "guide/xmlconverter", "guide/extras", "guide/remotedesktop", "guide/opencore"] },
+        { label: "Help", items: ["help/faqs", "help/issues", "help/usefullinks", "help/credits"] },
         {
           label: "Changelogs",
           items: changelogSlugs,

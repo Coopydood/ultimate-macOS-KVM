@@ -30,7 +30,7 @@ function withTitles(loader: Loader): Loader {
 
 export const collections = {
   docs: defineCollection({
-    loader: withTitles(glob({ base: "..", pattern: ["*.md", "!README.md", "changelogs/*.md"] })),
+    loader: withTitles(glob({ base: "..", pattern: "{start,guide,help,changelogs}/*.md" })),
     schema: docsSchema(),
   }),
 }
