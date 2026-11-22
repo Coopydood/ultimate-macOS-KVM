@@ -1,0 +1,83 @@
+:root {
+  --ultmos-window-padding: 1rem;
+
+  --ultmos-sidebar-opacity: 0.8;
+  --ultmos-content-opacity: 0.9;
+
+  --sl-color-bg-sidebar: rgba(36, 39, 47, var(--ultmos-sidebar-opacity));
+  --sl-color-bg-content: rgba(23, 24, 28, var(--ultmos-content-opacity));
+}
+
+:root[data-theme="light"] {
+  --sl-color-bg-sidebar: rgba(255, 255, 255, var(--ultmos-sidebar-opacity));
+  --sl-color-bg-content: rgba(255, 255, 255, var(--ultmos-content-opacity));
+}
+
+.ultmos-window-shadow {
+  box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.4);
+}
+
+nav[aria-labelledby="starlight__on-this-page--mobile"] {
+  position: relative;
+  top: 0;
+  inset-inline-start: 0;
+}
+
+.sl-menu-button {
+  position: absolute;
+}
+
+site-search > button {
+  margin-left: auto;
+}
+
+@media (min-width: 50rem) {
+  .header {
+    grid-template-columns:
+      /* 1 (site title): runs up until the main content column’s left edge or the width of the title, whichever is the largest  */
+      minmax(calc(max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))), auto)
+      /* 2 (search box): all free space that is available. */
+      1fr
+      /* 3 (right items): use the space that these need. */
+      auto !important;
+  }
+
+  :root {
+    --ultmos-window-padding: 2.5rem;
+  }
+}
+
+@media (min-width: 72rem) {
+  .right-sidebar-container {
+    order: 2;
+    position: relative;
+    width: calc(
+      var(--sl-sidebar-width) + (100% - var(--sl-content-width)) / 2 - 2 *
+        var(--ultmos-window-padding)
+    );
+  }
+
+  .right-sidebar {
+    position: sticky;
+    top: var(--sl-nav-height);
+    border-inline-start: 1px solid var(--sl-color-gray-6);
+    padding-top: 0;
+    width: 100%;
+    height: calc(
+      100vh - 2 * var(--ultmos-window-padding) - var(--sl-nav-height)
+    );
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  [data-has-sidebar][data-has-toc] .main-pane {
+    --sl-content-margin-inline: auto 0;
+
+    order: 1;
+    width: calc(
+      var(--sl-content-width) + (100% - var(--sl-content-width)) / 2 - 2 *
+        var(--ultmos-window-padding)
+    );
+  }
+}
+

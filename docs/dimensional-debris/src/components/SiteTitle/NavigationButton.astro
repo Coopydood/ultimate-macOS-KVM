@@ -1,0 +1,49 @@
+---
+import type { Direction } from "./types"
+
+interface Props {
+  disabled?: boolean
+  direction: Direction
+}
+
+const { disabled = false, direction } = Astro.props
+
+const color = disabled ? "var(--sl-color-gray-5)" : "var(--sl-color-gray-3)"
+---
+
+<navigation-button data-direction={direction}>
+  <a
+    class="px-3 py-2 flex justify-center items-center cursor-pointer rounded-md"
+    ><slot /></a
+  >
+</navigation-button>
+
+<style define:vars={{ color }}>
+  a {
+    color: var(--color);
+  }
+
+  a:hover {
+    background-color: var(--sl-color-gray-5);
+  }
+</style>
+
+<script>
+  import type { Direction } from "./types"
+
+  class NavigationButton extends HTMLElement {
+    connectedCallback() {
+      const direction = this.dataset.direction as Direction
+      const a = this.querySelector("a")!
+      a.addEventListener("click", () => {
+        if (direction === "forward") {
+          history.forward()
+        } else {
+          history.back()
+        }
+      })
+    }
+  }
+
+  customElements.define("navigation-button", NavigationButton)
+</script>

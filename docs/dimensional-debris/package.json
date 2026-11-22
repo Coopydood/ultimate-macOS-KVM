@@ -1,0 +1,31 @@
+{
+  "name": "dimensional-debris",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "check": "astro sync && tsc --noEmit --runExternalCode",
+    "build": "pnpm check && astro build --force",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/markdown-satteri": "^0.4.10",
+    "@astrojs/starlight": "^0.43.1",
+    "@astrojs/starlight-tailwind": "^5.0.0",
+    "@nullpinter/satteri-admonitions-to-directives": "^0.2.0",
+    "@tailwindcss/vite": "^4.3.5",
+    "astro": "^7.3.6",
+    "semver": "^7.8.6",
+    "sharp": "^0.35.3",
+    "tailwindcss": "^4.3.5"
+  },
+  "devDependencies": {
+    "@astrojs/ts-content-mapper": "^0.2.0",
+    "@types/semver": "^7.8.0",
+    "prettier": "^3.10.1",
+    "prettier-plugin-astro": "^1.1.2",
+    "typescript": "7.1.0-beta"
+  }
+}
