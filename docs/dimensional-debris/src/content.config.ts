@@ -7,9 +7,7 @@ import { docsSchema } from "@astrojs/starlight/schema"
 // The docs are also read on GitHub, which renders frontmatter, so the title is the leading `# Heading`.
 const titleHeading = /^(?:\s*<!--[\s\S]*?-->)*\s*# +([^\r\n]+?)[ #]*\r?(?:\n|$)/
 
-function titleFor(id: string, file: URL) {
-  const changelog = id.match(/^changelogs\/(v[\d-]+)$/)
-  if (changelog) return changelog[1].replaceAll("-", ".")
+function titleFor(file: URL) {
   return readFileSync(file, "utf8").match(titleHeading)?.[1]
 }
 
@@ -22,7 +20,7 @@ function withTitles(loader: Loader): Loader {
         parseData: (props) =>
           context.parseData({
             ...props,
-            data: { title: titleFor(props.id, new URL(props.filePath!, context.config.root)), ...props.data },
+            data: { title: titleFor(new URL(props.filePath!, context.config.root)), ...props.data },
           }),
       }),
   }
