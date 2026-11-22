@@ -1,3 +1,4 @@
+# Supported Guests
 ## macOS
 
 <img align="left" width="90" height="90" src="https://github.com/user-attachments/assets/7b9b72ee-5a89-49b4-ae17-7a188ed533ab">
@@ -10,7 +11,7 @@ This project currently supports the latest version of macOS Sequoia, as well as 
 
 The option to use legacy versions is available, but no support will be provided and any issues you encounter are your own to solve!<br>
 
-#### Supported
+### Supported
 
 <img align="left" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/aa49b5ba-6cca-4dab-bcfc-6bf21909e738"> 
 <h5>macOS Sonoma</h5>
@@ -28,7 +29,7 @@ The option to use legacy versions is available, but no support will be provided 
 <h5>macOS High Sierra</h5><br>
 
 
-#### Legacy
+### Legacy
 
 <img align="left" width="35" height="35" src="https://github.com/Coopydood/OpenCore-Z490E-CometLake/assets/39441479/788860d8-207a-4d15-928a-ed78f08962cf"> 
 <h5>macOS Sierra</h5>

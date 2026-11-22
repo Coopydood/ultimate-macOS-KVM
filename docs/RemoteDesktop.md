@@ -1,14 +1,8 @@
-## Remote Access and Desktop
-
-### Both to and from the guest
-
-#### Introduction
+# Remote Access and Desktop
 
 Various remote access and remote desktop methods provide a way to interact with both your host OS and guest OS, *to and from* either side. This document will go over a couple of methods you can use, and which are best for specific scenarios you may find yourself in. Let's go!
 
-***
-
-#### Access? Desktop? Wat?!
+## Access? Desktop? Wat?!
 
 First of all, I'll quickly define what I mean by "remote access" and "remote desktop". 
 
@@ -16,9 +10,7 @@ First of all, I'll quickly define what I mean by "remote access" and "remote des
 
 **Remote Desktop** refers to actually *viewing* what's being graphically displayed on the machine - through both physical and virtual display outputs. With this, you can also directly control the machine's mouse and keyboard inputs through your own, if permitted.
 
-***
-
-#### Secure Shell (SSH)
+## Secure Shell (SSH)
 
 The quickest and most simple way to remote access into a machine is through SSH. 
 
@@ -32,9 +24,7 @@ It's especially useful for those with only a single GPU or display - or when pas
 | Editing config files through the command line |      GUI applications      |
 |        Rebooting your host if necessary       |                            |
 
-***
-
-#### Samba File Sharing (SMB)
+## Samba File Sharing (SMB)
 
 Samba is the most simple and diverse way to access and share files between a variety of OSes. 
 
@@ -48,9 +38,7 @@ This is really useful for sharing a unified fileset between your host and guest,
 | Accessing files from any OS |          Bandwidth         |
 |      Wide compatibility     |         Bufferbloat        |
 
-***
-
-#### ShareMouse
+## ShareMouse
 
 This is a cross-platform program that lets you share your mouse cursor between machines and OSes seamlessly.
 
@@ -62,9 +50,7 @@ Many other tools also exist that have similar functionality.
 |         Ease of use        |         Performance        |
 | Share the same USB devices |          Stability         |
 
-***
-
-#### Virtual Network Computing (VNC)
+## Virtual Network Computing (VNC)
 
 VNC is a widely-used and reliable remote desktop protocol. It provides cross-platform desktop viewing and control, and has support built in to several OSes, with virtually all OSes having both a VNC client and server application developed for it.
 

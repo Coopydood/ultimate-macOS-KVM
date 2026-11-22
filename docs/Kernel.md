@@ -1,13 +1,8 @@
-## Preparing your host for passthrough
-### Set up your kernel and devices
-
-#### Introduction
+# Preparing your host for passthrough
 
 In order to use several passthrough-related features of ULTMOS, such as the [VFIO-PCI Passthrough Assistant](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/VFIO%E2%80%90PCI-Passthrough-Assistant), you must first prepare your host OS and devices.
 
 Depending on your setup, this is where our paths diverge...
-
-***
 
 ## 1. Single GPU passthrough
 
@@ -26,8 +21,6 @@ If you have determined that this matches your setup, you should follow **[this g
 > Please note that single GPU passthrough **is not currently supported natively by ULTMOS.** However, this is a planned feature for development in the near future.
 >
 > Despite being unsupported by ULTMOS, we are still more than happy to try and assist you with any issues you may encounter on the [Discord server](https://discord.gg/WzWkSsT). There are many people with ULTMOS single-GPU success stories in here!
-
-***
 
 ## 2. Dedicated passthrough (recommended)
 
@@ -56,8 +49,6 @@ This method is the officially supported method of passthrough in ULTMOS, and the
 > This method of passthrough **reserves** the entire device for exclusive use by the virtual machine. 
 >
 > **Your host will NOT be able to use the device!!!**
-
-***
 
 ### 2.1 Kernel modules
 
@@ -104,8 +95,6 @@ Save this file, and then rebuild your kernel image:
 sudo mkinitcpio -P
 ```
 You do not have to reboot yet.
-
-***
 
 ### 2.2 Kernel parameters
 
@@ -157,7 +146,5 @@ linux	/vmlinuz-linux-zen root=UUID=... rw rootfstype=ext4 intel_iommu=on iommu=p
 If using Grub Customizer, save the changes. If you are editing GRUB manually, run ``sudo grub-mkconfig -o /boot/grub/grub.cfg``.
 
 You should then reboot.
-
-***
 
 ### 2.3 IOMMU groups

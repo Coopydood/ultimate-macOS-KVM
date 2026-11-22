@@ -1,7 +1,4 @@
-## Issues and Troubleshooting
-### Common issues and how to fix them
-
-#### Introduction
+# Issues and Troubleshooting
 
 You know those computery things that make you facepalm and want to give up because you have no idea why it's happening to you, and all at 3AM running on no sleep? Yeah, I know I do, and I'll be referring to these god-forsaken moments as "gotchas". Because they gotcha. Then sprinkled on some sleep deprivation for good measure. 
 
@@ -10,9 +7,7 @@ This document contains numerous issues that you may encounter when using both th
 > [!NOTE]
 > This document will be updated frequently.
 
-***
-
-#### Main Menu
+## Main Menu
 
 These are issues you may encounter when first running the project via the ``main.py`` script.
 
@@ -61,9 +56,7 @@ $ ./main.py --skip-os-check
 
 </details>
 
-***
-
-#### AutoPilot
+## AutoPilot
 
 These are various issues you may encounter throughout the built-in AutoPilot tool.
 
@@ -90,9 +83,7 @@ Because my Python skillz are nothing short of terrible, extreme handling wasn't 
 
 </details>
 
-***
-
-#### Installing macOS
+## Installing macOS
 
 These are issues related to the macOS installation process.
 
@@ -163,9 +154,7 @@ Then, simply quit Disk Utility and return to the macOS installer. On the disk se
 
 </details>
 
-***
-
-#### macOS Post-Install
+## macOS Post-Install
 
 These are issues related to the macOS after it has been fully installed.
 
@@ -210,9 +199,7 @@ Found by @DomTrues.
 
 </details>
 
-***
-
-#### QEMU and virt-manager
+## QEMU and virt-manager
 
 These are issues you may run into when using both QEMU scripts and virt-manager (virsh) domains.
 
@@ -250,9 +237,7 @@ It's also worth noting that some cards are affected worse than others, so occura
 
 </details>
 
-***
-
-#### VFIO-PCI and Passthrough
+## VFIO-PCI and Passthrough
 
 These are issues related to PCI device passthrough using VFIO-PCI. This includes GPU issues.
 
@@ -274,9 +259,7 @@ Alternatively, such as on older versions, this can be done from within macOS usi
 </details>
 
 
-***
-
-#### Miscellaneous
+## Miscellaneous
 
 Other issues related to the project or macOS that don't fit into any of the other categories.
 

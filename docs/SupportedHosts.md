@@ -1,11 +1,11 @@
-## Host OSes
+# Supported Hosts
 
 There are many, *many* distros of Linux to choose from. While theoretically universal, ULTMOS has been tested on several mainstream distros. These are listed below with links for your convenience. 
 
 > [!NOTE]
 > This is NOT an exhaustive list, and simply a recommended selection. You are always free to use any distro you like, and don't worry - issues / reports **will always be investigated regardless of your distro or if it's listed here!**
 
-#### Recommended
+### Recommended
 
 <img align="left" width="80" height="80" src="https://github.com/user-attachments/assets/c1b2a299-7dd4-4a4d-a49c-36a89dd6fca7">
 <img align="left" src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/8f69f9b9-cf23-4e8b-adf3-95862a23e2ba" height=285 width=2 />

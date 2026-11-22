@@ -1,7 +1,4 @@
-## Frequently Asked Questions (FAQs)
-### Some of the most asked questions, including the basics
-
-#### Introduction
+# Frequently Asked Questions (FAQs)
 
 Scripts? Configs? QEMU arguments? A *"qcow"* file? Moo? If you need a little help wrapping your head around this stuff, this is the right document! Find a question from the list below and click the dropdown to see my expertly-crafted answer.
 

@@ -1,3 +1,4 @@
+# Getting Started
 ## Cloning and Permissions
 It's easy to get up and running. Simply clone the repo, fix permissions, and run.
 Make sure you have **all** [dependencies](https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/README.md#requirements) installed before getting started.
@@ -18,8 +19,6 @@ or, do all this with a one-liner:
 ```
 git clone https://github.com/Coopydood/ultimate-macOS-KVM && cd ultimate-macOS-KVM && chmod +x main.py
 ```
-
-***
 
 ## Starting Up
 To begin using the project, run the `main.py` file found in the root of the repo directory. It can be run using the following command:

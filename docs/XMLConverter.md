@@ -1,7 +1,5 @@
-## XML Conversion Tool
-### Convert and import AutoPilot boot scripts
+# XML Conversion Tool
 
-#### Introduction
 The **XML Conversion Tool** is an included utility script within the project.
 
 It can be found and run from the **Extras** menu.
@@ -35,9 +33,7 @@ When first running the tool, you'll be given two options:
 **2. Import XML file**
 
 This document will explain what each option does.
-
-***
-#### Convert AutoPilot config to XML
+## Convert AutoPilot config to XML
 
 For most people, this will be the only function needed in this tool.
 
@@ -75,8 +71,7 @@ the converted XML file would output to
 Your original script with the `.sh` extension is kept, and will not be removed after conversion.
 
 When conversion is complete, you'll be prompted to import your new XML file using `virsh`. See more in the section below.
-***
-#### Import XML file
+## Import XML file
 
 Whether this was skipped during conversion, or you simply have an existing XML you'd like to import - this option helps you define a domain XML file with virsh.
 

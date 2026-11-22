@@ -1,7 +1,5 @@
-## OpenCore
-### Important information about the included OpenCore image
+# OpenCore
 
-#### Introduction
 This project contains several customised OpenCore bootloader disk images, modified from kholia's OSX-KVM repo. The images have been set up in a way that should work out-of-the-box without any user modification.
 
 However, due to this one-size-fits-all configuration shared among all users of the project, you might *want* to manually edit some things.
@@ -13,7 +11,7 @@ The default OpenCore image included with **ultimate-macOS-KVM** presents the fol
 - **Processor**: Dual-Core Intel Core i7 @ 2.9GHz
 - **Serial Number**: C07W10D9JYVX
 
-#### Do NOT sign in to your Apple ID yet!
+## Do NOT sign in to your Apple ID yet!
 But don't worry, you can after some light tinkering.
 
 The problem lies with the *serial number*. The default Mac serial number that comes with the OpenCore image included in this project is **C07W10D9JYVX**. While this *is* in the correct format for a Mac Mini 2018, it's likely going to be shared by several users.
@@ -24,7 +22,7 @@ Basically, the serial number gets **busted**. Or, less dramatically - blackliste
 
 So, in order to sign in to your own Apple ID safely, you need your *own* serial number. Ya dig? Read on.
 
-#### Getting your own serial number
+## Getting your own serial number
 Now that you understand the *"why"*, it's time to learn the *"how"*.
 
 > [!IMPORTANT]

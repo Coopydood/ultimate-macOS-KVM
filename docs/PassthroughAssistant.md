@@ -1,7 +1,4 @@
-## VFIO-PCI Passthrough Assistant
-### Add physical PCI device passthrough with ease
-
-#### Introduction
+# VFIO-PCI Passthrough Assistant
 
 The *VFIO-PCI Passthrough Assistant* is an included utility script within the project.
 
@@ -9,17 +6,13 @@ It can be found and run from the **Passthrough Tools** menu.
 
 This tool allows you to automatically add your stubbed VFIO-PCI devices to your existing AutoPilot script, and walks you through each step of the process, including automatically detecting devices, and formatting the custom QEMU arguments for your specific devices.
 
-***
-
-#### Compatibility
+## Compatibility
 
 Before you begin this misadventure, you should ideally make sure that you and your system are ready. There is a built in check tool to assist you with this.
 
-***
-
 ## 🛑 STOP!
 
-#### This guide assumes you have fully set up your OS and devices for passthrough.
+**This guide assumes you have fully set up your OS and devices for passthrough.**
 
 You should return to this guide only when ALL of the following are complete:
 
@@ -30,8 +23,6 @@ You should return to this guide only when ALL of the following are complete:
 - The devices are bound to the ``vfio-pci`` kernel driver using the [VFIO kernel parameters]()
 
 Please see the [comprehensive passthrough guide]() for a full explanation of these tasks.
-
-***
 
 ## 1. Selecting devices
 
@@ -47,8 +38,6 @@ To deselect a device, type its corresponding number again to move it back.
 
 Once you have selected the devices you want, type the word ``done`` and press ENTER. 
 
-***
-
 ## 2. Confirm your selections
 
 After selecting your devices to pass through, you will be shown a summary screen allowing you to confirm your selections. The names of each device will be shown, along with a preview of the QEMU argument that will be generated for it.
@@ -56,8 +45,6 @@ After selecting your devices to pass through, you will be shown a summary screen
 IMAGE
 
 To confirm your selections, type ``Y`` and press ENTER. If you'd like to go back, type ``N`` and press ENTER.
-
-***
 
 ## 3. Add arguments to boot script
 
@@ -75,8 +62,6 @@ If you'd rather save the generated QEMU device arguments for a later time, you c
 </ol>
 
 Select an option when prompted and press ENTER. The assistant will perform your chosen method.
-
-***
 
 ## Other features
 

@@ -1,4 +1,4 @@
-## Useful Links
+# Useful Links
 
 Here are some external links to other resources that you might find useful.
 

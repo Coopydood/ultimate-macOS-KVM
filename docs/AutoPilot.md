@@ -1,4 +1,5 @@
-## Introduction
+# AutoPilot
+
 So, what is AutoPilot? Are we talking about an Airbus A320? Nope, just some random GitHub project on the internet. Regardless, here's the rundown. 
 
 AutoPilot is a script developed by me - Coopydood - to automate the creation of an executable QEMU script file. However, it doesn't just automate it, it also **personalises it based on your preferences.**
@@ -11,16 +12,12 @@ With the intro out of the way, I'll now go into more detail about each AutoPilot
 ***
 > [!IMPORTANT]
 > Any "Accepted" values with a **bold** suffix indicate that you must include it when inputting your custom value into AutoPilot, such as file extensions.
-
-***
 ## 1. Name your config file
 This really is as simple as it sounds. You can choose what you want the file name of the config script to be. This can be an **alphanumeric string** with no special characters except `_` and `-`.
 
 | **Default** |     Accepted    |                  _Examples_                  |
 |:-----------:|:---------------:|:--------------------------------------------:|
 |   boot.sh   | [string]**.sh** | macOS.sh<br>macOS-1015.sh<br>ultimate_kvm.sh |
-
-***
 ## 2. Set target OS
 As warned in an older version of this document, modern versions of ULTMOS now **do** rely on this setting quite a bit. It is responsible for the following:
 
@@ -35,8 +32,6 @@ As warned in an older version of this document, modern versions of ULTMOS now **
 You no longer need to type the target OS version. As of [v0.9.6](https://github.com/Coopydood/ultimate-macOS-KVM/releases/tag/v0.9.6), this stage presents a list of macOS versions to choose from, ranging from **macOS High Sierra** (10.13) to **macOS Sonoma** (14).
 
 You can even select legacy versions of OS X if you wish, ranging from **Mac OS X Lion** (10.7) to **macOS Sierra** (10.12).
-
-***
 ## 3. Set number of CPU cores
 Like any other virtual machine, the guest needs virtual cores to work with. 
 
@@ -45,8 +40,6 @@ As a general rule, use no more than **80%** of your _host's_ total cores. For ex
 | **Default** | Accepted |  _Examples_ |
 |:-----------:|:--------:|:-----------:|
 |      2      | [number] | 4<br>6<br>8 |
-
-***
 ## 4. Set number of CPU threads
 Similar to the previous step, your guest needs **virtual threads** to work with.
 
@@ -59,8 +52,6 @@ If this confuses you - and I don't blame you, I've confused myself - then leave 
 | **Default** | Accepted | _Examples_ |
 |:-----------:|:--------:|:----------:|
 |      2      | [number] |   1<br>2   |
-
-***
 ## 5. Set CPU model
 This sets the model of the virtual CPU, and subsequently what the guest OS recognizes it as. The default is now determined partly by your *target OS*.
 
@@ -73,8 +64,6 @@ If you _**know**_ your **host** CPU model is supported natively by macOS (i.e. I
 |:------------------:|:-----------:|:--------------------:|
 |    Haswell-noTSX   | [cpu_model] | Broadwell<br>IvyLake |
 |                    |     host    |                      |
-
-***
 ## 6. Set CPU feature arguments
 This lets you change the feature set of the virtual CPU. If you're a nerdy nerd nerd who nerds then you might find benefit in tinkering with this, but otherwise:
 
@@ -85,8 +74,6 @@ This lets you change the feature set of the virtual CPU. If you're a nerdy nerd 
 |:-------------------------------------------------------:|:-------------------:|:----------------:|
 | +ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check |        +[arg]       |       +kvm       |
 |                                                         | +[arg1],+[arg2] ... | +avx,+kvm,+ssse3 |
-
-***
 ## 7. Set amount of allocated RAM
 This one is very similar to the virtual CPU cores option in that it should be scaled relative to your host's hardware. macOS is surprisingly lenient when it comes to lesser RAM amounts, so you don't need to overdo it. 
 
@@ -98,8 +85,6 @@ Example: If your host has 16GB total RAM, your host uses 4GB of RAM when idle, d
 | **Default** |    Accepted   |    _Examples_   |
 |:-----------:|:-------------:|:---------------:|
 |      4G     | [number]**G** | 2G<br>8G<br>16G |
-
-***
 ## 8. Create or add virtual disk
 You should think carefully about this one as it might be hard to change later. This is the capacity of your primary virtual hard drive that will be used for your macOS installation. Keep in mind **macOS uses upwards of 40GB for the system**, so you should base your total on how much you think you'll need. 
 
@@ -133,8 +118,6 @@ Instead of a virtual disk, you can use a physical disk attached to your host. Be
 You must enter a valid disk ID. **Do NOT include the path**.
 e.g. "ata-SATA_SSD_55BD071B194500305381"
 
-
-***
 ## 9. Virtual disk type
 
 In **v0.10.5** and later, you can now select what type of storage you'd like the virtual drive to present itself as. 
@@ -148,8 +131,6 @@ Switching the virtual disk type to **SSD** can be beneficial if your virtual dis
 
 > [!NOTE]
 > Changing the virtual disk type to *SSD* or *NVMe* while storing the disk file on a host HDD yields no advantages and would be purely cosmetic.
-
-***
 ## 10. Set network adapter model
 This one is a bit more picky. macOS has a limited number of network drivers due to the limited hardware configurations that natively run macOS, therefore you need to pick a model with driver support. 
 
@@ -161,8 +142,6 @@ You can still override this if you'd like, but for most people, whatever is auto
 |:-------------:|:---------------:|:-----------------:|
 | e1000-82545em | [adapter_model] | e1000m<br>vmxnet3 |
 |    vmxnet3    |                 |                   |
-
-***
 ## 11. Network MAC address
 The virtual network adapter needs a virtual MAC address to identify it. 
 
@@ -173,8 +152,6 @@ In this case, you should use your own custom one, or you can even have the scrip
 |    **Default**    |                Accepted               |                          _Examples_                         |
 |:-----------------:|:-------------------------------------:|:-----------------------------------------------------------:|
 | 00:16:cb:00:21:09 | XX:XX:XX:XX:XX:XX | 00:16:cb:00:48:02<br>00:16:ca:00:27:09<br>00:16:cr:00:87:33 |
-
-***
 ## 12. macOS Recovery image file
 To install macOS, you'll need an image of the macOS Recovery. 
 
@@ -188,8 +165,6 @@ You can also choose to skip this step, such as if you are simply re-generating t
 |:--------------:|:---------------:|:-----------------------------------:|
 | BaseSystem.img | [file_name].img | BaseSystem.img<br>macOSRecovery.img |
 |                | [file_name].dmg |   BaseSystem.dmg<br>InstallESD.dmg  |
-
-***
 ## 13. Screen resolution
 As of [v0.9.2](https://github.com/Coopydood/ultimate-macOS-KVM/releases/tag/v0.9.2), you can now pre-select what screen resolution you'd like to use for the virtual screen.
 
@@ -205,8 +180,6 @@ Custom values are not supported. When inputting a value at this stage, you will 
 | **Default** |                                             Accepted                                            |       _Examples_      |
 |:-----------:|:-----------------------------------------------------------------------------------------------:|:---------------------:|
 |   1280x720  | 800x600<br>1024x768<br>1280x720<br>1280x1024<br>1440x900<br>1920x1080<br>2560x1440<br>3840x2160 | 1024x768<br>1920x1080 |
-
-***
 ## 14. Generate XML file
 As of [v0.9.3](https://github.com/Coopydood/ultimate-macOS-KVM/releases/tag/v0.9.3), XML files can be generated through conversion of a valid AutoPilot config file using the **XML Conversion tool**. This can be accessed through the **Extras** menu. 
 
@@ -215,16 +188,12 @@ However, with the [v0.9.5](https://github.com/Coopydood/ultimate-macOS-KVM/relea
 If you choose, you can have AutoPilot automatically create an XML file alongside your regular boot config script as part of the AutoPilot flow. You'll then be prompted to import it upon completion, for use within Virtual Machine Manager (virt-manager), for easy GUI access.
 
 This stage is completely optional and can be skipped. You can always use the standalone XML conversion tool to convert an AutoPilot script at any time, from the Extras menu.
-
-***
 ## Review your preferences
 You'll now get a chance to see your choices displayed in the form of a summary screen. An example of this screen can be found below:
 
 ![AutoPilot summary screen](https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/996fb2b5-28ef-4949-bbc3-4107193b1187)
 
 From here, you can confirm and continue, go back and change your settings, start over, or exit entirely.
-
-***
 ## Process checklist
 The process checklist is displayed upon confirming your preferences, in the form of a traffic light system.
 
@@ -235,8 +204,6 @@ The process checklist is displayed upon confirming your preferences, in the form
 ![AutoPilot progress screen, showing traffic light system](https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b6390adc-62ff-4a91-bf00-a9b911a5cb29)
 
 If a sub-operation is required, this will be indicated by a dropdown arrow underneath the current parent operation.
-
-***
 ## Summary
 After everything has been completed without issue, you will be presented with a small summary view of what your boot config script is called, the command you can use to run it, and the time it took to complete AutoPilot (speedrunning anyone?).
 

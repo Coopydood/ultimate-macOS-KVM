@@ -1,16 +1,13 @@
-## Extras
-### extras.py
+# Extras
 
 > [!WARNING]
-> This script should not be run on its own. 
+> The `extras.py` script should not be run on its own. 
 > 
 > It should be run through the `main.py` file instead. Use the **E** option at the main menu.
 
 <img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/3b68543b-553a-49f0-bc74-55fc6982fc11" width="70%"></img>
 
 This page will go over some of the features in the Extras menu, without too much detail.
-
-***
 
 ## 1. Create and import XML file
 
@@ -20,13 +17,9 @@ After conversion, you'll have the option to automatically import the XML file in
 
 To learn more about the XML Converter, visit [this page](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/XML-Converter).
 
-***
-
 ## 2. OpenCore Configuration Assistant
 
 This tool allows you to mount your virtual OpenCore image as a disk on your host system, allowing you to edit the contents without ever booting your VM.
-
-***
 
 ## 3. macOS Boot Argument Editor
 
@@ -36,21 +29,15 @@ It even includes a feature called **AutoPatch**, containing a list of known boot
 
 For more on this, and available patches, visit [this page](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/macOS-Boot-Argument-Editor).
 
-***
-
 ## 4. GRUB Argument Editor
 
 For users who use GRUB to boot their host's Linux install, setting the right kernel parameters can sometimes be a daunting mess. With this tool, most of this stress is taken care of automatically, through the auto-configuration of parameters **based on your specific system!**
 
 Created by @Hyperchromiac.
 
-***
-
 ## 5. Generate SMBIOS / Serial Number
 
 ULTMOS now has built-in support for CorpNewt's [GenSMBIOS](https://github.com/corpnewt/GenSMBIOS) script, allowing you to automatically change your OpenCore's SMBIOS model and serial number - so you can customise the virtual Mac model and log into iServices, etc.
-
-***
 
 ## C. Cleanup Tools...
 
@@ -75,15 +62,11 @@ The uninstaller can be run interactively with a user-friendly menu or via comman
 >
 > The uninstaller will automatically detect and offer to remove any Ultimate macOS KVM VMs that were imported into virt-manager.
 
-***
-
 ## R. Restore tools...
 
 This opens a seperate menu providing options to restore various parts of the repository to defaults.
 
 Great for troubleshooting common issues and covering up your mess.
-
-***
 
 ## I. Report an issue...
 

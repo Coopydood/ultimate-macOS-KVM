@@ -17,6 +17,7 @@
     "@nullpinter/satteri-admonitions-to-directives": "^0.2.0",
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^7.3.6",
+    "satteri": "^0.11.7",
     "semver": "^7.8.6",
     "sharp": "^0.35.3",
     "tailwindcss": "^4.3.5"
