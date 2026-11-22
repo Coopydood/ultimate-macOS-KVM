@@ -5,9 +5,11 @@ on:
   push:
     branches:
       - "main"
-    paths:
+    paths: &site
       - "docs/**"
       - "website/**"
+  pull_request:
+    paths: *site
 
 permissions:
   contents: read
@@ -15,7 +17,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -30,6 +32,7 @@ jobs:
           path: website
 
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

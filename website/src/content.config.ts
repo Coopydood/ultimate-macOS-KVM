@@ -3,13 +3,7 @@ import { defineCollection } from "astro:content"
 import type { Loader } from "astro/loaders"
 import { glob } from "astro/loaders"
 import { docsSchema } from "@astrojs/starlight/schema"
-
-// The docs are also read on GitHub, which renders frontmatter, so the title is the leading `# Heading`.
-const titleHeading = /^(?:\s*<!--[\s\S]*?-->)*\s*# +([^\r\n]+?)[ #]*\r?(?:\n|$)/
-
-function titleFor(file: URL) {
-  return readFileSync(file, "utf8").match(titleHeading)?.[1]
-}
+import { docTitle, docsDir } from "./docs"
 
 function withTitles(loader: Loader): Loader {
   return {
@@ -20,7 +14,7 @@ function withTitles(loader: Loader): Loader {
         parseData: (props) =>
           context.parseData({
             ...props,
-            data: { title: titleFor(new URL(props.filePath!, context.config.root)), ...props.data },
+            data: { title: docTitle(readFileSync(new URL(props.filePath!, context.config.root), "utf8")), ...props.data },
           }),
       }),
   }
@@ -28,7 +22,7 @@ function withTitles(loader: Loader): Loader {
 
 export const collections = {
   docs: defineCollection({
-    loader: withTitles(glob({ base: "../docs", pattern: "{start,guide,help,changelogs}/*.md" })),
+    loader: withTitles(glob({ base: docsDir, pattern: "{start,guide,help,changelogs}/*.md" })),
     schema: docsSchema(),
   }),
 }
