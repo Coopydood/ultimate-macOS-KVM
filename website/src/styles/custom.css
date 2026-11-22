@@ -82,9 +82,30 @@ site-search > button {
 }
 
 
-
 /* GitHub renders headings inside a <summary> inline with the disclosure marker; the docs rely on that. */
 .sl-markdown-content summary > :is(h1, h2, h3, h4, h5, h6) {
   display: inline;
   margin: 0;
+}
+
+/* SupportedHosts/Guests use GitHub HTML layout: floated logos and a 2px image as a vertical divider, sized for GitHub's spacing. */
+.sl-markdown-content img[align="left"] {
+  margin-inline-end: 1rem;
+}
+.sl-markdown-content img[align="left"][width="2"] {
+  display: none;
+}
+.sl-markdown-content :is(h3, h4, h5) sub {
+  display: block;
+  font-size: var(--sl-text-sm);
+  font-weight: normal;
+  color: var(--sl-color-gray-2);
+  vertical-align: baseline;
+}
+.sl-markdown-content :is(h3, h4, h5):has(sub) + * {
+  clear: left;
+}
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) img {
+  display: inline;
+  vertical-align: middle;
 }
