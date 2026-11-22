@@ -32,7 +32,7 @@ If ALL of the following statements are true **in one of the two scenarios below*
   
 **Example:** You have a system with an Intel CPU that has "UHD 630" integrated graphics, with accessible video outputs on your motherboard, AND you have a dedicated AMD graphics card.
   
-### OR
+**OR**
 
 - You **do NOT** have an integrated GPU (CPU Graphics / iGPU), it is disabled, or unsupported by your host
 - You have **at least two** dedicated GPUs, and at least **one** of them [is supported](https://dortania.github.io/GPU-Buyers-Guide/)
