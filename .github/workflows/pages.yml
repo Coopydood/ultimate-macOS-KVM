@@ -7,6 +7,7 @@ on:
       - "web"
     paths:
       - "docs/**"
+      - "website/**"
 
 permissions:
   contents: read
@@ -26,7 +27,7 @@ jobs:
       - name: Install, build, and upload site
         uses: withastro/action@v6
         with:
-          path: docs/dimensional-debris
+          path: website
 
   deploy:
     environment:

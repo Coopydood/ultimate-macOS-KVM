@@ -11,10 +11,10 @@ import tailwindcss from "@tailwindcss/vite"
 /** @param {string} directory */
 function sidebarSlugs(directory) {
   return fs
-    .readdirSync(`../${directory}`)
+    .readdirSync(`../docs/${directory}`)
     .filter((file) => file.endsWith(".md"))
     .map((file) => {
-      const order = fs.readFileSync(`../${directory}/${file}`, "utf8").match(/^\s*<!--\s*order:\s*(-?\d+)\s*-->/)?.[1]
+      const order = fs.readFileSync(`../docs/${directory}/${file}`, "utf8").match(/^\s*<!--\s*order:\s*(-?\d+)\s*-->/)?.[1]
       if (order === undefined) throw new Error(`docs/${directory}/${file} needs an <!-- order: N --> comment on its first line`)
       return { slug: `${directory}/${file.slice(0, -3).toLowerCase()}`, order: Number(order) }
     })
@@ -24,7 +24,7 @@ function sidebarSlugs(directory) {
 
 // Newest first; file names are versions like v0-14-1.
 const changelogSlugs = fs
-  .readdirSync("../changelogs")
+  .readdirSync("../docs/changelogs")
   .map((file) => file.slice(0, -3))
   .sort((a, b) => {
     const [x, y] = [a, b].map((name) => name.slice(1).split("-").map(Number))
@@ -67,7 +67,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "ULTMOS",
-      markdown: { processedDirs: [".."] },
+      markdown: { processedDirs: ["../docs"] },
       customCss: ["./src/tailwind.css", "./src/styles/custom.css"],
       social: [
         { icon: "github", label: "GitHub", href: "https://github.com/Coopydood/ultimate-macOS-KVM" },
