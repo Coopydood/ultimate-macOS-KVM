@@ -1,3 +1,4 @@
+<!-- order: 1 -->
 # Getting Started
 ## Cloning and Permissions
 It's easy to get up and running. Simply clone the repo, fix permissions, and run.

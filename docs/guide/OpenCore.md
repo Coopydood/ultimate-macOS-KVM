@@ -1,3 +1,4 @@
+<!-- order: 7 -->
 # OpenCore
 
 This project contains several customised OpenCore bootloader disk images, modified from kholia's OSX-KVM repo. The images have been set up in a way that should work out-of-the-box without any user modification.

@@ -1,3 +1,4 @@
+<!-- order: 3 -->
 # VFIO-PCI Passthrough Assistant
 
 The *VFIO-PCI Passthrough Assistant* is an included utility script within the project.

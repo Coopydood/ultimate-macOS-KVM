@@ -1,3 +1,4 @@
+<!-- order: 6 -->
 # Remote Access and Desktop
 
 Various remote access and remote desktop methods provide a way to interact with both your host OS and guest OS, *to and from* either side. This document will go over a couple of methods you can use, and which are best for specific scenarios you may find yourself in. Let's go!

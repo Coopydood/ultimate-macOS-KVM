@@ -29,9 +29,6 @@ importers:
       satteri:
         specifier: ^0.11.7
         version: 0.11.7
-      semver:
-        specifier: ^7.8.6
-        version: 7.8.6
       sharp:
         specifier: ^0.35.3
         version: 0.35.5(@types/node@26.6.6)
@@ -42,9 +39,6 @@ importers:
       '@astrojs/ts-content-mapper':
         specifier: ^0.2.0
         version: 0.2.0
-      '@types/semver':
-        specifier: ^7.8.0
-        version: 7.8.0
       prettier:
         specifier: ^3.10.1
         version: 3.10.1
@@ -987,9 +981,6 @@ packages:
 
   '@types/sax@1.2.7':
     resolution: {integrity: sha512-rO73L89PJxeYM3s3pPPjiPgVVcymqU490g0YO5n5By0k2Erzj6tay/4lr1CHAAU4JyOWd1rpQ8bCf6cZfHU96A==}
-
-  '@types/semver@7.8.0':
-    resolution: {integrity: sha512-1mAINjtQCXXeLkJ9ehXkwOcBpqtLxiVtKhpUf83DdRNdQKV0iXZpaHYqRr7nj+wvxuJzoAmAwXI+sCNMv1CzLQ==}
 
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
@@ -3184,8 +3175,6 @@ snapshots:
   '@types/sax@1.2.7':
     dependencies:
       '@types/node': 26.6.6
-
-  '@types/semver@7.8.0': {}
 
   '@types/unist@2.0.11': {}
 

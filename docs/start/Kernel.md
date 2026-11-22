@@ -1,3 +1,4 @@
+<!-- order: 4 -->
 # Preparing your host for passthrough
 
 In order to use several passthrough-related features of ULTMOS, such as the [VFIO-PCI Passthrough Assistant](https://github.com/Coopydood/ultimate-macOS-KVM/wiki/VFIO%E2%80%90PCI-Passthrough-Assistant), you must first prepare your host OS and devices.

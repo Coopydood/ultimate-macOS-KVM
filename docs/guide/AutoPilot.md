@@ -1,3 +1,4 @@
+<!-- order: 2 -->
 # AutoPilot
 
 So, what is AutoPilot? Are we talking about an Airbus A320? Nope, just some random GitHub project on the internet. Regardless, here's the rundown. 

@@ -5,7 +5,7 @@ import { glob } from "astro/loaders"
 import { docsSchema } from "@astrojs/starlight/schema"
 
 // The docs are also read on GitHub, which renders frontmatter, so the title is the leading `# Heading`.
-const titleHeading = /^\s*# +([^\r\n]+?)[ #]*\r?(?:\n|$)/
+const titleHeading = /^(?:\s*<!--[\s\S]*?-->)*\s*# +([^\r\n]+?)[ #]*\r?(?:\n|$)/
 
 function titleFor(id: string, file: URL) {
   const changelog = id.match(/^changelogs\/(v[\d-]+)$/)

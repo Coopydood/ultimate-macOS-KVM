@@ -1,31 +1,44 @@
 // @ts-check
 import { defineConfig } from "astro/config"
 import fs from "node:fs"
-import semver from "semver"
 import { satteri } from "@astrojs/markdown-satteri"
 import { defineMdastPlugin } from "satteri"
 import { admonitionsToDirectives } from "@nullpinter/satteri-admonitions-to-directives"
 import starlight from "@astrojs/starlight"
 import tailwindcss from "@tailwindcss/vite"
 
-const changelogSlugs = fs
-  .readdirSync("../changelogs/", { withFileTypes: true })
-  .filter((entry) => entry.isFile())
-  .map((entry) => entry.name.split(".").slice(0, -1).join("."))
-  .sort((a, b) => {
-    const aVersion = a.replaceAll("-", ".")
-    const bVersion = b.replaceAll("-", ".")
+// Sidebar position of a doc page: an `<!-- order: N -->` comment on its first line, hidden on GitHub.
+/** @param {string} directory */
+function sidebarSlugs(directory) {
+  return fs
+    .readdirSync(`../${directory}`)
+    .filter((file) => file.endsWith(".md"))
+    .map((file) => {
+      const order = fs.readFileSync(`../${directory}/${file}`, "utf8").match(/^\s*<!--\s*order:\s*(-?\d+)\s*-->/)?.[1]
+      if (order === undefined) throw new Error(`docs/${directory}/${file} needs an <!-- order: N --> comment on its first line`)
+      return { slug: `${directory}/${file.slice(0, -3).toLowerCase()}`, order: Number(order) }
+    })
+    .sort((a, b) => a.order - b.order)
+    .map(({ slug }) => slug)
+}
 
-    return semver.compare(bVersion, aVersion)
+// Newest first; file names are versions like v0-14-1.
+const changelogSlugs = fs
+  .readdirSync("../changelogs")
+  .map((file) => file.slice(0, -3))
+  .sort((a, b) => {
+    const [x, y] = [a, b].map((name) => name.slice(1).split("-").map(Number))
+    return y[0] - x[0] || y[1] - x[1] || y[2] - x[2]
   })
-  .map((slug) => `changelogs/${slug}`)
+  .map((name) => `changelogs/${name}`)
 
 // The leading `# Heading` is the page title (see content.config.ts), which Starlight already renders.
 const removeTitleHeading = defineMdastPlugin({
   name: "remove-title-heading",
   before(root, ctx) {
-    const first = root.children[0]
-    if (first?.type === "heading" && first.depth === 1) ctx.removeChildAt(root, 0)
+    const index = root.children.findIndex((node) => node.type !== "html")
+    const first = root.children[index]
+    if (first?.type === "heading" && first.depth === 1) ctx.removeChildAt(root, index)
   },
 })
 
@@ -65,9 +78,9 @@ export default defineConfig({
         SiteTitle: "./src/components/SiteTitle.astro",
       },
       sidebar: [
-        { label: "Getting started", items: ["start/gettingstarted", "start/supportedhosts", "start/supportedguests", "start/kernel"] },
-        { label: "Guide", items: ["guide/mainmenu", "guide/autopilot", "guide/passthroughassistant", "guide/xmlconverter", "guide/extras", "guide/remotedesktop", "guide/opencore"] },
-        { label: "Help", items: ["help/faqs", "help/issues", "help/usefullinks", "help/credits"] },
+        { label: "Getting started", items: sidebarSlugs("start") },
+        { label: "Guide", items: sidebarSlugs("guide") },
+        { label: "Help", items: sidebarSlugs("help") },
         {
           label: "Changelogs",
           items: changelogSlugs,

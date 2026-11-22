@@ -18,13 +18,11 @@
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^7.3.6",
     "satteri": "^0.11.7",
-    "semver": "^7.8.6",
     "sharp": "^0.35.3",
     "tailwindcss": "^4.3.5"
   },
   "devDependencies": {
     "@astrojs/ts-content-mapper": "^0.2.0",
-    "@types/semver": "^7.8.0",
     "prettier": "^3.10.1",
     "prettier-plugin-astro": "^1.1.2",
     "typescript": "7.1.0-beta"

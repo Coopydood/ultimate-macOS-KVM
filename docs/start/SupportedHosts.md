@@ -1,3 +1,4 @@
+<!-- order: 2 -->
 # Supported Hosts
 
 There are many, *many* distros of Linux to choose from. While theoretically universal, ULTMOS has been tested on several mainstream distros. These are listed below with links for your convenience. 

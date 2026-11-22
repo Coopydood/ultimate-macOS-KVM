@@ -1,3 +1,4 @@
+<!-- order: 2 -->
 # Issues and Troubleshooting
 
 You know those computery things that make you facepalm and want to give up because you have no idea why it's happening to you, and all at 3AM running on no sleep? Yeah, I know I do, and I'll be referring to these god-forsaken moments as "gotchas". Because they gotcha. Then sprinkled on some sleep deprivation for good measure. 

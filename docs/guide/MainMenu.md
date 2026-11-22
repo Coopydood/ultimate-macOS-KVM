@@ -1,3 +1,4 @@
+<!-- order: 1 -->
 # Main Menu
 
 The `main.py` file acts as the project's main menu and should be used for all of your endeavors. 
