@@ -80,6 +80,8 @@ export default defineConfig({
       title: "ULTMOS",
       markdown: { processedDirs: [docsDir] },
       customCss: ["./src/tailwind.css", "./src/styles/custom.css"],
+      // Expressive Code links its stylesheet from the first code block, which holds back or pops in everything below it while it loads.
+      expressiveCode: { emitExternalStylesheet: false },
       social: [
         { icon: "github", label: "GitHub", href: "https://github.com/Coopydood/ultimate-macOS-KVM" },
         { icon: "discord", label: "Discord", href: "https://discord.gg/WzWkSsT" },
