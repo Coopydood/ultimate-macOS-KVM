@@ -1,67 +1,85 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll site to Pages
+name: Deploy docs to Pages
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - "web"
-    paths:
+      - "main"
+      - "dev"
+    paths: &site
       - "docs/**"
-  
+      - "website/**"
+  pull_request:
+    paths: *site
 
-  # Allows you to run this workflow manually from the Actions tab
-  
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-# Allow one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
 
 jobs:
-  # Build job
-  build:
+  # Pushes made with GITHUB_TOKEN start no workflows, so the build below checks out the commit this job pushes.
+  images:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: docs
+    permissions:
+      contents: write
+    concurrency: &build
+      group: pages-build-${{ github.ref }}
+      cancel-in-progress: true
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
-          ruby-version: '3.2'
-          bundler-cache: true
-          cache-version: 0
-          working-directory: '${{ github.workspace }}/docs'
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-      - name: Build with Jekyll
-        # Outputs to the './_site' directory by default
-        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
-        env:
-          JEKYLL_ENV: production
-      - name: Upload artifact
-        # Automatically uploads an artifact from the './_site' directory by default
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: "docs/_site/"
+          node-version: 24
+      - name: Download images pasted in GitHub's editor
+        working-directory: website
+        run: |
+          npm install --global pnpm@12
+          pnpm install --frozen-lockfile
+          pnpm images
+      - name: Commit downloaded images
+        id: commit
+        # On failure the build falls back to the pushed commit, whose pasted images still render from GitHub.
+        continue-on-error: true
+        run: |
+          git add docs
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit --message "Download pasted doc images"
+            # A push outside the workflow's paths starts no run to replace this one, so build on top of it.
+            git pull --rebase
+            git push
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-  # Deployment job
+  build:
+    needs: images
+    if: ${{ !cancelled() && contains(fromJSON('["success", "skipped"]'), needs.images.result) }}
+    concurrency: *build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.images.outputs.sha || github.sha }}
+      - name: Install, build, and upload site
+        uses: withastro/action@a8b97df764791eb61fbf3338ef713b0e61ae05c5 # v6.1.4
+        with:
+          path: website
+
   deploy:
+    permissions:
+      pages: write
+      id-token: write
+    # A newer run waits for a started deployment; one cancelled midway can block the next.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+    if: ${{ !cancelled() && needs.build.result == 'success' && github.ref == 'refs/heads/main' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -70,4 +88,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

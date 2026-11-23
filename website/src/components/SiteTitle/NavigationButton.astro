@@ -1,0 +1,48 @@
+---
+import type { Direction } from "./types"
+
+interface Props {
+  direction: Direction
+}
+
+const { direction } = Astro.props
+---
+
+<navigation-button data-direction={direction}>
+  <button
+    type="button"
+    aria-label={direction === "back" ? "Back" : "Forward"}
+    class="size-8 flex justify-center items-center rounded-control border-0 bg-transparent p-0 hover-highlight focus-ring"
+    ><slot /></button
+  >
+</navigation-button>
+
+<style>
+  button {
+    color: var(--sl-color-gray-3);
+  }
+  button:disabled {
+    opacity: 0.5;
+    background: none;
+  }
+</style>
+
+<script>
+  import type { Direction } from "./types"
+
+  class NavigationButton extends HTMLElement {
+    connectedCallback() {
+      const forward = (this.dataset.direction as Direction) === "forward"
+      const button = this.querySelector("button")!
+      button.addEventListener("click", () => (forward ? history.forward() : history.back()))
+
+      // Browsers without the Navigation API keep both buttons enabled.
+      if (!("navigation" in window)) return
+      const update = () => (button.disabled = !(forward ? navigation.canGoForward : navigation.canGoBack))
+      update()
+      addEventListener("pageshow", update)
+    }
+  }
+
+  customElements.define("navigation-button", NavigationButton)
+</script>

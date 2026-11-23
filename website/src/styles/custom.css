@@ -1,0 +1,390 @@
+:root {
+  --ultmos-window-padding: 1rem;
+  --ultmos-dock-space: var(--ultmos-window-padding);
+  --ultmos-window-height: calc(
+    100vh - var(--ultmos-window-padding) - var(--ultmos-dock-space)
+  );
+
+  --sl-color-bg-sidebar: rgb(30 30 30 / 0.7);
+  --sl-color-bg-content: rgb(30 30 30 / 0.9);
+  --sl-color-bg-nav: rgb(46 46 46 / 0.85);
+}
+
+/* macOS sidebar labels are near-white so they stay legible over the wallpaper tint */
+:root:not([data-theme="light"]) .sidebar-pane {
+  --sl-color-gray-2: rgb(255 255 255 / 0.85);
+}
+
+:root[data-theme="light"] {
+  --sl-color-bg-sidebar: rgb(255 255 255 / 0.8);
+  --sl-color-bg-content: rgb(255 255 255 / 0.9);
+  --sl-color-bg-nav: rgb(246 246 246 / 0.85);
+}
+
+@reference "../tailwind.css";
+
+header.header :is(.social-icons a, starlight-theme-select select) {
+  border-radius: var(--radius-control);
+  @apply hover-highlight;
+}
+header.header starlight-theme-select select {
+  padding-block: 0.375rem;
+}
+
+.ultmos-window-shadow {
+  box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.4);
+}
+
+nav[aria-labelledby="starlight__on-this-page--mobile"] {
+  position: relative;
+  top: 0;
+  inset-inline-start: 0;
+  border-top: 0;
+  background:
+    linear-gradient(var(--sl-color-bg-nav), var(--sl-color-bg-nav)),
+    var(--ultmos-backdrop-image) center / cover fixed;
+}
+
+@media not (min-width: 72rem) {
+  .right-sidebar-container {
+    position: sticky;
+    top: var(--sl-nav-height);
+    z-index: var(--sl-z-index-toc);
+  }
+}
+
+#starlight__mobile-toc .toggle,
+#starlight__mobile-toc[open] .toggle {
+  border-color: rgb(255 255 255 / 0.1);
+  border-radius: var(--radius-control);
+  padding-block: 0.375rem;
+  background-color: rgb(255 255 255 / 0.08);
+}
+:root[data-theme="light"] #starlight__mobile-toc .toggle {
+  border-color: rgb(0 0 0 / 0.12);
+  background-color: rgb(255 255 255 / 0.8);
+}
+
+/* A macOS pop-up menu; the discrete content-visibility transition keeps it rendered while it fades out */
+#starlight__mobile-toc::details-content {
+  transition: content-visibility 0.2s allow-discrete;
+}
+#starlight__mobile-toc .dropdown {
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: calc(100% - 4px);
+  min-width: 14rem;
+  max-width: calc(100% - 2rem);
+  margin: 0;
+  border: 0;
+  border-radius: var(--radius-menu);
+  padding: 5px;
+  background-color: var(--color-menu);
+  backdrop-filter: blur(30px) saturate(1.6);
+  box-shadow:
+    inset 0 0 0 0.5px rgb(255 255 255 / 0.15),
+    0 0 0 0.5px rgb(0 0 0 / 0.6),
+    0 10px 30px rgb(0 0 0 / 0.35);
+  transform-origin: top left;
+  opacity: 0;
+  scale: 0.96;
+  transition:
+    opacity 0.2s ease,
+    scale 0.2s ease;
+}
+:root[data-theme="light"] #starlight__mobile-toc .dropdown {
+  box-shadow:
+    0 0 0 0.5px rgb(0 0 0 / 0.15),
+    0 10px 30px rgb(0 0 0 / 0.2);
+}
+#starlight__mobile-toc[open] .dropdown {
+  opacity: 1;
+  scale: 1;
+  transition-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1.05);
+}
+@starting-style {
+  #starlight__mobile-toc[open] .dropdown {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #starlight__mobile-toc::details-content,
+  #starlight__mobile-toc .dropdown {
+    transition: none;
+  }
+}
+#starlight__mobile-toc .dropdown a {
+  --pad-inline: 0.625rem;
+  border-top: 0;
+  border-radius: var(--radius-menu-item);
+  padding-block: 0.25rem;
+}
+#starlight__mobile-toc .dropdown a:is(:hover, :focus-visible) {
+  background-color: var(--sl-color-accent);
+  color: white;
+}
+#starlight__mobile-toc .dropdown a:is(:hover, :focus-visible)::after {
+  background-color: white;
+}
+
+/* macOS toolbars collapse the search field to its icon when space runs out */
+header.header {
+  container-type: inline-size;
+}
+@container (max-width: 40rem) {
+  :root header.header site-search button[data-open-modal] {
+    width: 2.5rem;
+    height: 2.5rem;
+    justify-content: center;
+    border-color: transparent;
+    border-radius: var(--radius-control);
+    background-color: transparent;
+    padding: 0;
+    transition: background-color 0.15s ease;
+  }
+  :root header.header site-search button[data-open-modal]:hover {
+    border-color: transparent;
+    background-color: var(--color-toolbar-hover);
+  }
+  :root header.header site-search button[data-open-modal]:active {
+    background-color: var(--color-toolbar-press);
+    transition: none;
+  }
+  site-search button[data-open-modal] > :not(svg) {
+    display: none !important;
+  }
+}
+/* The dock links to the same places */
+@container (max-width: 30rem) {
+  header.header .social-icons {
+    display: none;
+  }
+}
+
+.sl-menu-button {
+  position: absolute;
+}
+
+@media (min-width: 50rem) {
+  :root:not([data-theme="light"]) site-search button[data-open-modal] {
+    border-color: rgb(255 255 255 / 0.1);
+    background-color: rgb(255 255 255 / 0.08);
+  }
+  :root:not([data-theme="light"]) site-search button[data-open-modal]:hover {
+    border-color: rgb(255 255 255 / 0.25);
+  }
+  :root:not([data-theme="light"]) site-search button[data-open-modal] > kbd {
+    background-color: rgb(255 255 255 / 0.1);
+  }
+}
+
+site-search > button {
+  margin-inline-start: auto;
+}
+
+@media (min-width: 50rem) {
+  .header {
+    grid-template-columns:
+      /* 1 (site title): runs up until the main content column’s left edge or the width of the title, whichever is the largest  */
+      minmax(calc(max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))), auto)
+      /* 2 (search box): all free space that is available. */
+      1fr
+      /* 3 (right items): use the space that these need. */
+      auto !important;
+  }
+
+  :root {
+    --ultmos-window-padding: 2.5rem;
+    --ultmos-dock-icon: 50px;
+    /* The dock's height (icon + 14px padding), its 4px offset from the bottom, and a gap above it */
+    --ultmos-dock-space: calc(var(--ultmos-dock-icon) + 1.75rem);
+  }
+}
+
+:root[data-window-maximized]:not([data-window-state]) {
+  --ultmos-window-padding: 0px;
+  --ultmos-dock-space: 0px;
+}
+
+@media (min-width: 72rem) {
+  .right-sidebar {
+    position: sticky;
+    top: var(--sl-nav-height);
+    border-inline-start: 1px solid var(--sl-color-gray-6);
+    padding-top: 0;
+    width: 100%;
+    height: calc(var(--ultmos-window-height) - var(--sl-nav-height));
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+}
+
+
+/* GitHub renders headings inside a <summary> inline with the disclosure marker; the docs rely on that. */
+.sl-markdown-content summary > :is(h1, h2, h3, h4, h5, h6) {
+  display: inline;
+  margin: 0;
+}
+
+/* SupportedHosts/Guests use GitHub HTML layout: floated logos and a 2px image as a vertical divider, sized for GitHub's spacing. */
+.sl-markdown-content img[align="left"] {
+  margin-inline-end: 1rem;
+}
+.sl-markdown-content img[align="left"][width="2"] {
+  display: none;
+}
+.sl-markdown-content :is(h3, h4, h5) sub {
+  display: block;
+  font-size: var(--sl-text-sm);
+  font-weight: normal;
+  color: var(--sl-color-gray-2);
+  vertical-align: baseline;
+}
+.sl-markdown-content :is(h3, h4, h5):has(sub) + * {
+  clear: left;
+}
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) img {
+  display: inline;
+  vertical-align: middle;
+}
+
+/* Starlight's 50rem and 72rem breakpoints assume the page fills the viewport; the window frame takes space from the content column just past each */
+@media (50rem <= width < 64rem) {
+  :root {
+    --ultmos-window-padding: 1.5rem;
+    --sl-sidebar-width: 15rem;
+  }
+}
+@media (72rem <= width < 84rem) {
+  :root {
+    --sl-sidebar-width: 15rem;
+  }
+}
+
+/* A closing disclosure stays [open] until its slide ends */
+.sidebar-content details[data-closing] > summary .caret,
+.sl-markdown-content details[data-closing] > summary::before {
+  transform: none;
+}
+
+/* Browsers that can't transition `display` and `overlay` close it at once */
+site-search dialog,
+site-search dialog::backdrop {
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    scale 0.2s ease,
+    display 0.2s allow-discrete,
+    overlay 0.2s allow-discrete;
+}
+site-search dialog {
+  scale: 0.96;
+  transform-origin: top center;
+}
+site-search dialog[open],
+site-search dialog[open]::backdrop {
+  opacity: 1;
+  scale: 1;
+}
+@starting-style {
+  site-search dialog[open],
+  site-search dialog[open]::backdrop {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  site-search dialog,
+  site-search dialog::backdrop {
+    transition: none;
+  }
+}
+
+.sidebar-content :is(a:not([aria-current="page"]), summary),
+.right-sidebar-panel a,
+.pagination-links a {
+  @apply hover-highlight;
+}
+.sidebar-content :is(a, summary),
+.right-sidebar-panel a {
+  border-radius: var(--radius-control);
+}
+.pagination-links a:hover {
+  border-color: var(--sl-color-gray-5);
+}
+
+.starlight-aside {
+  background-color: color-mix(in srgb, var(--sl-color-asides-border) 20%, transparent);
+}
+:root[data-theme="light"] .starlight-aside {
+  background-color: color-mix(in srgb, var(--sl-color-asides-border) 10%, transparent);
+}
+
+.sl-link-button {
+  border: 0;
+  padding: 0.375rem 1.25rem;
+  font-size: var(--sl-text-base);
+  line-height: var(--sl-line-height);
+  font-weight: 600;
+  transition:
+    background-color 0.15s ease,
+    filter 0.15s ease;
+  @apply focus-ring;
+}
+.sl-link-button svg {
+  font-size: 1.1em;
+}
+.sl-link-button:active {
+  filter: brightness(0.9);
+  transition: none;
+}
+.sl-link-button.primary,
+.sl-link-button.primary:hover {
+  /* System blue is too light behind white text for WCAG AA */
+  background-color: var(--color-selection);
+  color: white;
+}
+.sl-link-button.primary:hover {
+  filter: brightness(1.1);
+}
+.sl-link-button.secondary {
+  background-color: var(--color-toolbar-hover);
+  color: var(--sl-color-white);
+}
+.sl-link-button.secondary:hover {
+  background-color: var(--color-toolbar-press);
+}
+
+/* Changelog screenshot sections space and caption their image with <br> and <sup>, which only suits GitHub */
+.sl-markdown-content details:has(> div[align="center"] > img) {
+  summary > h4 {
+    font-size: var(--sl-text-lg);
+  }
+  br,
+  > p:not(:has(> :not(br))) {
+    display: none;
+  }
+  sup {
+    font-size: var(--sl-text-sm);
+    font-style: normal;
+    vertical-align: baseline;
+    color: var(--sl-color-gray-3);
+  }
+  i {
+    font-style: normal;
+  }
+  > div[align="center"] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-block: 1.5rem 0.5rem;
+  }
+  > div[align="center"] > img {
+    border-radius: var(--radius-window);
+    box-shadow:
+      0 0 0 0.5px rgb(0 0 0 / 0.5),
+      0 12px 30px rgb(0 0 0 / 0.3);
+  }
+}

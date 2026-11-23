@@ -1,0 +1,198 @@
+---
+import { Image } from "astro:assets"
+import ultmos from "../../assets/ULTMOS.png"
+import GitHub from "../../assets/icons/github.svg"
+import Discord from "../../assets/icons/discord.svg"
+
+const start = import.meta.env.BASE_URL.replace(/\/?$/, "/")
+const links = [
+  { label: "GitHub", href: "https://github.com/Coopydood/ultimate-macOS-KVM", Logo: GitHub, tile: "#24292f" },
+  { label: "Discord", href: "https://discord.gg/WzWkSsT", Logo: Discord, tile: "#5865f2" },
+]
+---
+
+<nav class="dock" aria-label="Dock" data-start={start}>
+  <button type="button" id="dock-ultmos" class="dock-item" aria-label="ULTMOS">
+    <Image src={ultmos} width={160} alt="" class="dock-icon" loading="eager" />
+    <span class="dock-label" aria-hidden="true">ULTMOS</span>
+    <span class="dock-dot"></span>
+  </button>
+  <div class="dock-separator" role="separator"></div>
+  {
+    links.map(({ label, href, Logo, tile }) => (
+      <a class="dock-item" href={href} target="_blank" rel="noopener" aria-label={label} style={`--tile: ${tile}`}>
+        <span class="dock-icon dock-tile">
+          <Logo width="50%" height="50%" aria-hidden="true" />
+        </span>
+        <span class="dock-label" aria-hidden="true">{label}</span>
+      </a>
+    ))
+  }
+</nav>
+
+<script>
+  import { activateApp } from "./windowState"
+
+  const dock = document.querySelector<HTMLElement>(".dock")!
+  const items = [...dock.querySelectorAll<HTMLElement>(".dock-item")]
+
+  document
+    .getElementById("dock-ultmos")!
+    .addEventListener("click", () => activateApp(dock.dataset.start!))
+
+  const MAGNIFICATION = 1.7
+  const canMagnify = matchMedia("(hover: hover) and (prefers-reduced-motion: no-preference)")
+
+  dock.addEventListener("pointermove", (event) => {
+    if (!canMagnify.matches) return
+    const reach = items[0].offsetHeight * 2.5
+    for (const item of items) {
+      const rect = item.getBoundingClientRect()
+      const t = Math.max(0, 1 - Math.abs(event.clientX - (rect.left + rect.width / 2)) / reach)
+      item.style.setProperty("--scale", `${1 + ((MAGNIFICATION - 1) * (1 - Math.cos(t * Math.PI))) / 2}`)
+    }
+  })
+  dock.addEventListener("pointerleave", () => {
+    for (const item of items) item.style.removeProperty("--scale")
+  })
+</script>
+
+<style>
+  .dock {
+    --size: var(--ultmos-dock-icon);
+    position: fixed;
+    z-index: 50;
+    inset-block-end: 4px;
+    inset-inline-start: 50%;
+    translate: -50% 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 7px;
+    border-radius: calc(var(--size) * 0.32);
+    background-color: var(--color-dock);
+    box-shadow:
+      inset 0 0 0 1px rgb(26 26 26 / 0.6),
+      inset 0 0 0 1.5px rgb(255 255 255 / 0.12);
+    backdrop-filter: blur(30px) saturate(1.6);
+    transition: translate 0.3s ease;
+  }
+  :global(:root[data-theme="light"]) .dock {
+    box-shadow: inset 0 0 0 1px rgb(26 26 26 / 0.12);
+    backdrop-filter: blur(50px) saturate(1.8);
+  }
+  @media not (min-width: 50rem) {
+    .dock {
+      display: none;
+    }
+  }
+  :global(:root[data-window-maximized]:not([data-window-state])) .dock {
+    translate: -50% calc(100% + 8px);
+  }
+
+  .dock-item {
+    position: relative;
+    width: calc(var(--size) * var(--scale, 1));
+    height: var(--size);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: default;
+    transition: width 0.08s linear;
+  }
+  .dock:not(:hover) .dock-item {
+    transition-duration: 0.25s;
+  }
+
+  .dock-icon {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    padding: 6%;
+    max-width: none;
+  }
+
+  .dock-tile {
+    display: grid;
+    place-items: center;
+    background-clip: content-box;
+    background-color: var(--tile);
+    border-radius: 26%;
+    color: white;
+  }
+
+  .dock-separator {
+    align-self: center;
+    width: 1px;
+    height: calc(var(--size) * 0.9);
+    margin-inline: 10px;
+    border-radius: 1px;
+    background-color: var(--color-dock-separator);
+  }
+
+  .dock-dot {
+    position: absolute;
+    inset-block-end: -6px;
+    inset-inline-start: calc(50% - 2px);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--color-dock-dot);
+    transition: opacity 0.2s;
+  }
+  :global(:root[data-window-state="closed"]) .dock-dot {
+    opacity: 0;
+  }
+
+  .dock-label {
+    position: absolute;
+    inset-block-end: calc(var(--size) * var(--scale, 1) + 10px);
+    inset-inline-start: 50%;
+    translate: -50% 0;
+    padding: 3px 10px;
+    border-radius: var(--radius-control);
+    background-color: var(--color-tooltip);
+    box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.15);
+    backdrop-filter: blur(20px);
+    color: white;
+    font-size: 13px;
+    line-height: 1.3;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .dock-label::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: calc(50% - 6px);
+    border: 6px solid transparent;
+    border-block-start-color: var(--color-tooltip);
+  }
+  :global(:root[data-theme="light"]) .dock-label {
+    box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.15);
+    color: black;
+  }
+  .dock-item:is(:hover, :focus-visible) .dock-label {
+    opacity: 1;
+  }
+
+  .dock-item:focus-visible {
+    outline: none;
+  }
+  .dock-item:focus-visible .dock-icon {
+    outline: 2px solid var(--sl-color-text-accent);
+    outline-offset: -2px;
+    border-radius: 26%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dock,
+    .dock-item {
+      transition: none;
+    }
+  }
+</style>

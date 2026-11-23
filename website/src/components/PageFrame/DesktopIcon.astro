@@ -1,0 +1,76 @@
+---
+import { Image } from "astro:assets"
+import ultmos from "../../assets/ULTMOS.png"
+---
+
+<button type="button" class="desktop-icon" aria-label="Open ULTMOS">
+  <Image src={ultmos} width={160} alt="" class="desktop-icon-image" />
+  <span class="desktop-icon-label">ULTMOS</span>
+</button>
+
+<script>
+  import { activateApp } from "./windowState"
+
+  const icon = document.querySelector<HTMLElement>(".desktop-icon")!
+  const start = document.querySelector<HTMLElement>(".dock")!.dataset.start!
+
+  // Like Finder: a click selects, a double-click opens. Keyboard activation (detail 0) and touch open straight away.
+  icon.addEventListener("click", (event) => {
+    icon.classList.add("selected")
+    if (event.detail === 0 || event.detail === 2 || (event as PointerEvent).pointerType === "touch") activateApp(start)
+  })
+  icon.addEventListener("blur", () => icon.classList.remove("selected"))
+</script>
+
+<style>
+  .desktop-icon {
+    position: fixed;
+    /* Tucked inside the window's bounds, so the open window covers it whole */
+    inset-block-start: calc(var(--ultmos-window-padding) + 0.5rem);
+    inset-inline-end: calc(var(--ultmos-window-padding) + 0.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: default;
+    /* The delay matches the window's restore, which covers the icon */
+    visibility: hidden;
+    transition: visibility 0s 0.35s;
+  }
+  :global(:root[data-window-state]) .desktop-icon {
+    visibility: visible;
+    transition: none;
+  }
+
+  .desktop-icon-image {
+    width: 72px;
+    height: 72px;
+    padding: 4px;
+    border-radius: var(--radius-control);
+  }
+
+  .desktop-icon-label {
+    padding: 0 4px;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
+  }
+
+  /* Script-moved focus doesn't select it */
+  .desktop-icon:is(.selected, :focus-visible) .desktop-icon-image {
+    background-color: rgb(0 0 0 / 0.25);
+    outline: 1px solid rgb(255 255 255 / 0.25);
+  }
+  .desktop-icon:is(.selected, :focus-visible) .desktop-icon-label {
+    background-color: var(--color-selection);
+    text-shadow: none;
+  }
+  .desktop-icon:focus-visible {
+    outline: none;
+  }
+</style>
