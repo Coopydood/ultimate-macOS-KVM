@@ -316,3 +316,36 @@ site-search > button {
 .sl-link-button.secondary:hover {
   background-color: var(--color-toolbar-press);
 }
+
+/* Changelog screenshot sections space and caption their image with <br> and <sup>, which only suits GitHub */
+.sl-markdown-content details:has(> div[align="center"] > img) {
+  summary > h4 {
+    font-size: var(--sl-text-lg);
+  }
+  br,
+  > p:not(:has(> :not(br))) {
+    display: none;
+  }
+  sup {
+    font-size: var(--sl-text-sm);
+    font-style: normal;
+    vertical-align: baseline;
+    color: var(--sl-color-gray-3);
+  }
+  i {
+    font-style: normal;
+  }
+  > div[align="center"] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-block: 1.5rem 0.5rem;
+  }
+  > div[align="center"] > img {
+    border-radius: var(--radius-window);
+    box-shadow:
+      0 0 0 0.5px rgb(0 0 0 / 0.5),
+      0 12px 30px rgb(0 0 0 / 0.3);
+  }
+}
