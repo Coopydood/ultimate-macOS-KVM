@@ -180,7 +180,7 @@ header.header {
 }
 
 site-search > button {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 @media (min-width: 50rem) {
