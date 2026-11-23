@@ -4,7 +4,7 @@ import ultmos from "../../assets/ULTMOS.png"
 import GitHub from "../../assets/icons/github.svg"
 import Discord from "../../assets/icons/discord.svg"
 
-const start = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/start/gettingstarted/`
+const start = import.meta.env.BASE_URL.replace(/\/?$/, "/")
 const links = [
   { label: "GitHub", href: "https://github.com/Coopydood/ultimate-macOS-KVM", Logo: GitHub, tile: "#24292f" },
   { label: "Discord", href: "https://discord.gg/WzWkSsT", Logo: Discord, tile: "#5865f2" },

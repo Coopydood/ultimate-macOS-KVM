@@ -1,12 +1,21 @@
 ---
 import NavigationButtons from "./SiteTitle/NavigationButtons.astro";
+import WindowControls from "./PageFrame/WindowControls.astro";
 
-const { entry } = Astro.locals.starlightRoute;
+const { entry, hasSidebar } = Astro.locals.starlightRoute;
 
 const title = entry.data.title ?? "ULTMOS";
 ---
 
 <div class="flex min-w-0 items-center justify-between gap-[10px]">
+  {
+    // Without a sidebar the controls have no home; mobile has no window controls at all
+    !hasSidebar && (
+      <div class="-ms-1 me-2 hidden min-[50rem]:flex">
+        <WindowControls />
+      </div>
+    )
+  }
   <NavigationButtons />
   <span class="truncate" title={title}>
     {title}

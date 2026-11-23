@@ -331,9 +331,11 @@ const darkPlaceholder = await wallpaperPlaceholder("SequoiaDark.jpg")
     }
   }
 
+  /* macOS centres the traffic lights on the toolbar, 20px from the window edge */
   .sidebar-controls {
     display: none;
-    padding: 1rem var(--sl-sidebar-pad-x);
+    height: var(--sl-nav-height);
+    padding-inline: 20px;
   }
 
   .sidebar-content {
@@ -369,7 +371,8 @@ const darkPlaceholder = await wallpaperPlaceholder("SequoiaDark.jpg")
       padding-inline-end: var(--sl-nav-pad-x);
     }
     .sidebar-controls {
-      display: block;
+      display: flex;
+      align-items: center;
     }
     .sidebar-content {
       padding-block-start: 0;

@@ -1,0 +1,138 @@
+---
+import { readFileSync } from "node:fs"
+import { Image } from "astro:assets"
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro"
+import { Icon, LinkButton } from "@astrojs/starlight/components"
+import { changelogSlugs, docsDir } from "../docs"
+import appIcon from "../assets/ULTMOS.png"
+
+const version = readFileSync(`${docsDir}/../.version`, "utf8").trim()
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/")
+const doc = (slug: string) => `${base}${slug}/`
+
+const copy = {
+  name: "ULTMOS",
+  tagline: "Build a macOS virtual machine on Linux, powered by KVM.",
+  getStarted: "Get started",
+  github: "GitHub",
+  preview: "Preview",
+  previewLabel: "The ULTMOS main menu in a terminal",
+  tools: "What it does",
+}
+
+const facts = [
+  { label: "Version", value: version, caption: "What's new", href: doc(changelogSlugs()[0]) },
+  { label: "macOS", value: "10.13–26", caption: "High Sierra to Tahoe", href: doc("start/supportedguests") },
+  { label: "Host", icon: "linux", caption: "Linux with KVM", href: doc("start/supportedhosts") },
+  { label: "Licence", value: "GPL", caption: "Version 3", href: "https://github.com/Coopydood/ultimate-macOS-KVM/blob/main/LICENSE" },
+  { label: "Community", icon: "discord", caption: "Discord", href: "https://discord.gg/WzWkSsT" },
+] as const
+
+const tools = [
+  { icon: "rocket", tint: "#0a84ff", title: "AutoPilot", text: "Answer a few questions and get a ready-to-boot QEMU script.", href: doc("guide/autopilot") },
+  { icon: "puzzle", tint: "#bf5af2", title: "Passthrough", text: "Hand a GPU, audio card or USB device to macOS, with guided setup.", href: doc("guide/passthroughassistant") },
+  { icon: "setting", tint: "#8e8e93", title: "OpenCore", text: "Edit boot arguments and generate an SMBIOS from the host.", href: doc("guide/opencore") },
+  { icon: "approve-check", tint: "#30d158", title: "Compatibility checks", text: "Check KVM, IOMMU groups and your GPU before you start.", href: doc("start/kernel") },
+  { icon: "document", tint: "#ff9f0a", title: "virt-manager export", text: "Turn an AutoPilot script into XML you can import, passthrough included.", href: doc("guide/xmlconverter") },
+] as const
+
+const heading = "m-0 mb-3 text-(length:--sl-text-xl) font-bold text-(--sl-color-white)"
+---
+
+<StarlightPage frontmatter={{ title: copy.name, description: copy.tagline, template: "splash", next: false, head: [{ tag: "title", content: copy.name }] }}>
+  <div class="home not-content mx-auto grid max-w-184 grid-cols-[minmax(0,1fr)] gap-10 pt-10 pb-16">
+    <section class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-7">
+      <Image src={appIcon} alt="" width={160} height={160} loading="eager" class="h-auto w-24 flex-none drop-shadow-[0_6px_14px_rgb(0_0_0/0.35)] sm:w-40" />
+      <div>
+        <h1 class="m-0 text-[clamp(2rem,5vw,2.75rem)] leading-[1.1] font-bold tracking-[-0.02em] text-(--sl-color-white)">{copy.name}</h1>
+        <p class="mt-1.5 mb-5 text-(length:--sl-text-lg) text-(--sl-color-gray-2)">{copy.tagline}</p>
+        <div class="flex flex-wrap items-center gap-3 [&_.sl-link-button]:m-0">
+          <LinkButton href={doc("start/gettingstarted")}>{copy.getStarted}</LinkButton>
+          <LinkButton href="https://github.com/Coopydood/ultimate-macOS-KVM" variant="secondary" icon="github" iconPlacement="start">{copy.github}</LinkButton>
+        </div>
+      </div>
+    </section>
+
+    <ul class="-mx-4 -mt-4 flex list-none snap-x overflow-x-auto border-t border-group-line p-0 pt-4 scrollbar-none sm:mx-0">
+      {
+        facts.map((fact) => (
+          <li class="relative px-1 w-32 flex-none snap-start sm:w-auto sm:flex-1 not-first:before:absolute not-first:before:inset-y-3 not-first:before:inset-s-0 not-first:before:border-s not-first:before:border-group-line">
+            <a href={fact.href} class="flex flex-col items-center gap-1 rounded-control px-3 py-1.5 text-center no-underline hover-highlight focus-ring">
+              <span class="text-(length:--sl-text-xs) text-(--sl-color-gray-3)">{fact.label}</span>
+              <span class="flex h-8 items-center text-(length:--sl-text-2xl) whitespace-nowrap leading-none font-bold text-(--sl-color-gray-2)">
+                {"icon" in fact ? <Icon name={fact.icon} size="1.75rem" /> : fact.value}
+              </span>
+              <span class="text-(length:--sl-text-xs) whitespace-nowrap text-(--sl-color-gray-3)">{fact.caption}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <section>
+      <h2 class={heading}>{copy.preview}</h2>
+      <figure aria-label={copy.previewLabel} class="m-0 overflow-hidden rounded-window bg-[#1e1e1e] shadow-[0_0_0_0.5px_rgb(0_0_0/0.6),inset_0_0_0_0.5px_rgb(255_255_255/0.12),0_18px_40px_rgb(0_0_0/0.35)]">
+        <div aria-hidden="true" class="flex items-center gap-2 border-b border-black bg-[#2d2d2d] px-3 py-2.5">
+          <span class="size-3 rounded-full bg-traffic-close"></span>
+          <span class="size-3 rounded-full bg-traffic-minimize"></span>
+          <span class="size-3 rounded-full bg-traffic-zoom"></span>
+          <b class="me-13 flex-1 truncate text-center text-(length:--sl-text-xs) font-semibold text-[#a8a8a8]">ultimate-macOS-KVM — ./main.py</b>
+        </div>
+        <pre tabindex="0" class="focus-ring m-0 overflow-x-auto px-5 pt-4 pb-5 font-[ui-monospace,'SF_Mono',Menlo,monospace] text-[0.8125rem] leading-normal text-[#e2e2e2] [&_b]:text-white"><span class="text-[#8a8a8a]">$</span> ./main.py
+
+   Welcome to <b class="text-[#5ad8ff]!">ULTMOS</b> <span class="text-[#8a8a8a]">v{version}</span>
+   <span class="text-[#8a8a8a]">by Coopydood</span>
+
+   This project can assist you in some often-tedious setup, including
+   processes like checking your GPU, checking your system, downloading macOS,
+   and more. Think of it like your personal KVM swiss army knife.
+
+      <b>1. AutoPilot</b>
+         Quickly and easily set up a macOS
+         virtual machine in just a few steps
+
+      <b>2. Download macOS...</b>
+      <b>3. Compatibility checks...</b>
+      <b>4. Passthrough tools...</b>
+
+      <b>E. Extras...</b>
+      <b>W. What's new?</b>
+      <b>U. Check for updates...</b>
+
+<b>Select&gt;</b> <span class="bg-[#e2e2e2] motion-safe:animate-blink"> </span></pre>
+      </figure>
+    </section>
+
+    <section>
+      <h2 class={heading}>{copy.tools}</h2>
+      <ul class="m-0 list-none rounded-window bg-group p-0 shadow-[inset_0_0_0_0.5px_var(--color-group-line)]">
+        {
+          tools.map(({ icon, tint, title, text, href }) => (
+            <li class="group/row">
+              <a
+                href={href}
+                class={`relative flex items-center gap-3.5 px-3.5 py-3 text-inherit no-underline hover-highlight focus-ring group-first/row:rounded-t-window group-last/row:rounded-b-window group-not-first/row:before:absolute group-not-first/row:before:inset-s-14 group-not-first/row:before:inset-e-0 group-not-first/row:before:top-0 group-not-first/row:before:border-t group-not-first/row:before:border-group-line`}
+              >
+                <span class="grid size-7 flex-none place-items-center rounded-[7px] text-white" style={`background-color: ${tint}`}>
+                  <Icon name={icon} size="1.1rem" />
+                </span>
+                <span class="grid flex-1 gap-0.5">
+                  <strong class="font-semibold text-(--sl-color-white)">{title}</strong>
+                  <span class="text-(length:--sl-text-sm) text-(--sl-color-gray-3)">{text}</span>
+                </span>
+                <Icon name="right-caret" class="flex-none text-(--sl-color-gray-4)" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</StarlightPage>
+
+<style is:global>
+  /* Starlight's page title panel; the product header carries the title */
+  main > .content-panel:first-child:has(+ .content-panel .home) {
+    display: none;
+  }
+</style>

@@ -21,19 +21,14 @@
   --sl-color-bg-nav: rgb(246 246 246 / 0.85);
 }
 
+@reference "../tailwind.css";
+
 header.header :is(.social-icons a, starlight-theme-select select) {
   border-radius: var(--radius-control);
-  transition: background-color 0.15s ease;
+  @apply hover-highlight;
 }
 header.header starlight-theme-select select {
   padding-block: 0.375rem;
-}
-header.header :is(.social-icons a, starlight-theme-select select):hover {
-  background-color: var(--color-toolbar-hover);
-}
-header.header :is(.social-icons a, starlight-theme-select select):active {
-  background-color: var(--color-toolbar-press);
-  transition: none;
 }
 
 .ultmos-window-shadow {
@@ -267,27 +262,14 @@ site-search > button {
   }
 }
 
-.sidebar-content :is(a, summary),
+.sidebar-content :is(a:not([aria-current="page"]), summary),
 .right-sidebar-panel a,
 .pagination-links a {
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+  @apply hover-highlight;
 }
 .sidebar-content :is(a, summary),
 .right-sidebar-panel a {
   border-radius: var(--radius-control);
-}
-.sidebar-content :is(a:not([aria-current="page"]), summary):hover,
-.right-sidebar-panel a:hover,
-.pagination-links a:hover {
-  background-color: var(--color-toolbar-hover);
-}
-.sidebar-content :is(a:not([aria-current="page"]), summary):active,
-.right-sidebar-panel a:active,
-.pagination-links a:active {
-  background-color: var(--color-toolbar-press);
-  transition: none;
 }
 .pagination-links a:hover {
   border-color: var(--sl-color-gray-5);
@@ -298,4 +280,39 @@ site-search > button {
 }
 :root[data-theme="light"] .starlight-aside {
   background-color: color-mix(in srgb, var(--sl-color-asides-border) 10%, transparent);
+}
+
+.sl-link-button {
+  border: 0;
+  padding: 0.375rem 1.25rem;
+  font-size: var(--sl-text-base);
+  line-height: var(--sl-line-height);
+  font-weight: 600;
+  transition:
+    background-color 0.15s ease,
+    filter 0.15s ease;
+  @apply focus-ring;
+}
+.sl-link-button svg {
+  font-size: 1.1em;
+}
+.sl-link-button:active {
+  filter: brightness(0.9);
+  transition: none;
+}
+.sl-link-button.primary,
+.sl-link-button.primary:hover {
+  /* System blue is too light behind white text for WCAG AA */
+  background-color: var(--color-selection);
+  color: white;
+}
+.sl-link-button.primary:hover {
+  filter: brightness(1.1);
+}
+.sl-link-button.secondary {
+  background-color: var(--color-toolbar-hover);
+  color: var(--sl-color-white);
+}
+.sl-link-button.secondary:hover {
+  background-color: var(--color-toolbar-press);
 }

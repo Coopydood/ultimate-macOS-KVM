@@ -13,7 +13,7 @@ const color = disabled ? "var(--sl-color-gray-5)" : "var(--sl-color-gray-3)"
 
 <navigation-button data-direction={direction}>
   <a
-    class="size-8 flex justify-center items-center cursor-pointer rounded-control"
+    class="size-8 flex justify-center items-center cursor-pointer rounded-control hover-highlight focus-ring"
     ><slot /></a
   >
 </navigation-button>
@@ -21,15 +21,6 @@ const color = disabled ? "var(--sl-color-gray-5)" : "var(--sl-color-gray-3)"
 <style define:vars={{ color }}>
   a {
     color: var(--color);
-    transition: background-color 0.15s ease;
-  }
-
-  a:hover {
-    background-color: var(--color-toolbar-hover);
-  }
-  a:active {
-    background-color: var(--color-toolbar-press);
-    transition: none;
   }
 </style>
 
