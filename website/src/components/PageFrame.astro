@@ -35,6 +35,38 @@ const darkPlaceholder = await wallpaperPlaceholder("SequoiaDark.jpg")
   } catch {}
 </script>
 
+<script>
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)")
+  const running = new WeakMap<HTMLDetailsElement, Animation>()
+
+  document.addEventListener("click", (event) => {
+    const target = event.target as Element
+    const summary = target.closest(":is(.sidebar-content, .sl-markdown-content) details > summary")
+    if (target.closest("summary a")) return
+    const details = summary?.parentElement as HTMLDetailsElement | undefined
+    if (!summary || !details || reducedMotion.matches) return
+    event.preventDefault()
+
+    const from = details.offsetHeight
+    running.get(details)?.cancel()
+    const opening = !details.open || running.get(details)?.id === "closing"
+    details.open = true
+    const to = opening ? details.offsetHeight : (summary as HTMLElement).offsetHeight
+
+    details.style.overflow = "clip"
+    const animation = details.animate({ height: [`${from}px`, `${to}px`] }, { duration: 200, easing: "ease" })
+    animation.id = opening ? "opening" : "closing"
+    details.toggleAttribute("data-closing", !opening)
+    running.set(details, animation)
+    animation.onfinish = () => {
+      if (!opening) details.open = false
+      details.removeAttribute("data-closing")
+      details.style.overflow = ""
+      running.delete(details)
+    }
+  })
+</script>
+
 <div
   class="page-wrapper h-screen"
   style={`--darkBackdrop: ${darkBackdrop}; --lightBackdrop: ${lightBackdrop}`}

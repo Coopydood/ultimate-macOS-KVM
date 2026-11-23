@@ -262,6 +262,12 @@ site-search > button {
   }
 }
 
+/* A closing disclosure stays [open] until its slide ends */
+.sidebar-content details[data-closing] > summary .caret,
+.sl-markdown-content details[data-closing] > summary::before {
+  transform: none;
+}
+
 .sidebar-content :is(a:not([aria-current="page"]), summary),
 .right-sidebar-panel a,
 .pagination-links a {
