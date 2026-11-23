@@ -57,11 +57,3 @@ resources/.nrsMode
 resources/BaseSystem.dmg
 resources/BaseSystem.img
 testVM/
-docs/_site
-docs/.history
-docs/docs
-docs/assets
-docs/.screenshots
-docs/.bundle
-docs/_sass
-docs/_layouts
