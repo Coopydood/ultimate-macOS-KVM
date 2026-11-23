@@ -268,6 +268,39 @@ site-search > button {
   transform: none;
 }
 
+/* Browsers that can't transition `display` and `overlay` close it at once */
+site-search dialog,
+site-search dialog::backdrop {
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    scale 0.2s ease,
+    display 0.2s allow-discrete,
+    overlay 0.2s allow-discrete;
+}
+site-search dialog {
+  scale: 0.96;
+  transform-origin: top center;
+}
+site-search dialog[open],
+site-search dialog[open]::backdrop {
+  opacity: 1;
+  scale: 1;
+}
+@starting-style {
+  site-search dialog[open],
+  site-search dialog[open]::backdrop {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  site-search dialog,
+  site-search dialog::backdrop {
+    transition: none;
+  }
+}
+
 .sidebar-content :is(a:not([aria-current="page"]), summary),
 .right-sidebar-panel a,
 .pagination-links a {
