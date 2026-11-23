@@ -21,6 +21,7 @@ export default defineConfig({
   site: "https://coopydood.github.io",
   base: "ultimate-macOS-KVM",
   redirects: { "/": "/ultimate-macOS-KVM/start/gettingstarted/" },
+  devToolbar: { enabled: true, placement: "bottom-left" },
   markdown: {
     processor: satteri({
       mdastPlugins: [

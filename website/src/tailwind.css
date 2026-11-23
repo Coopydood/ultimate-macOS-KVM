@@ -4,3 +4,37 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
 
+@theme {
+  --color-toolbar-hover: rgb(255 255 255 / 0.1);
+  --color-toolbar-press: rgb(255 255 255 / 0.18);
+  --color-menu: rgb(40 40 40 / 0.75);
+  --color-dock: rgb(40 40 40 / 0.4);
+  --color-tooltip: rgb(40 40 40 / 0.85);
+  --color-dock-separator: #414141;
+  --color-dock-dot: #7c7c7c;
+  --color-traffic-inactive: #4d4d4d;
+  --color-traffic-close: #ff5f57;
+  --color-traffic-close-glyph: #4c0102;
+  --color-traffic-minimize: #febc2e;
+  --color-traffic-minimize-glyph: #985712;
+  --color-traffic-zoom: #28c840;
+  --color-traffic-zoom-glyph: #0a630c;
+  --color-selection: #0058d0;
+
+  --radius-window: 10px;
+  --radius-control: 6px;
+  --radius-menu: 10px;
+  --radius-menu-item: 5px;
+}
+
+/* Unlayered: Tailwind emits the @theme defaults into the utilities layer, which a layered override would lose to */
+:root[data-theme="light"] {
+  --color-toolbar-hover: rgb(0 0 0 / 0.06);
+  --color-toolbar-press: rgb(0 0 0 / 0.12);
+  --color-menu: rgb(246 246 246 / 0.8);
+  --color-dock: rgb(246 246 246 / 0.36);
+  --color-tooltip: rgb(236 236 236 / 0.9);
+  --color-dock-separator: rgb(0 0 0 / 0.15);
+  --color-dock-dot: #808080;
+  --color-traffic-inactive: #cecece;
+}

@@ -6,9 +6,9 @@ const { entry } = Astro.locals.starlightRoute;
 const title = entry.data.title ?? "ULTMOS";
 ---
 
-<div class="flex justify-between gap-[10px]">
+<div class="flex min-w-0 items-center justify-between gap-[10px]">
   <NavigationButtons />
-  <span>
+  <span class="truncate" title={title}>
     {title}
   </span>
 </div>
@@ -17,5 +17,6 @@ const title = entry.data.title ?? "ULTMOS";
   span {
     font-size: var(--sl-text-h4);
     font-weight: 600;
+    min-width: 4em;
   }
 </style>

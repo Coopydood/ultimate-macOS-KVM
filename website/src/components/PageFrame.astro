@@ -3,16 +3,59 @@ import { getImage } from "astro:assets"
 import MobileMenuToggle from "@astrojs/starlight/components/MobileMenuToggle.astro"
 import sequoiaLight from "../assets/SequoiaLight.jpg"
 import sequoiaDark from "../assets/SequoiaDark.jpg"
+import { blurredWallpaper, wallpaperPlaceholder } from "./PageFrame/blurredWallpaper"
 import WindowControls from "./PageFrame/WindowControls.astro"
+import Dock from "./PageFrame/Dock.astro"
+import DesktopIcon from "./PageFrame/DesktopIcon.astro"
 
 const { hasSidebar } = Astro.locals.starlightRoute
 
-const sequoiaLightOptimized = await getImage({ src: sequoiaLight })
-const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
+const sequoiaLightOptimized = await getImage({ src: sequoiaLight, width: 3840 })
+const sequoiaDarkOptimized = await getImage({ src: sequoiaDark, width: 3840 })
+const lightBackdrop = await blurredWallpaper("SequoiaLight.jpg")
+const darkBackdrop = await blurredWallpaper("SequoiaDark.jpg")
+const lightPlaceholder = await wallpaperPlaceholder("SequoiaLight.jpg")
+const darkPlaceholder = await wallpaperPlaceholder("SequoiaDark.jpg")
 ---
 
-<div class="page-wrapper h-screen">
-  <div class="page sl-flex ultmos-window-shadow rounded-xl overflow-hidden">
+<script is:inline>
+  try {
+    const saved = JSON.parse(sessionStorage.getItem("ultmos-window") ?? "null")
+    if (saved?.path === location.pathname && ["closed", "minimized"].includes(saved.state)) {
+      // A link back to the page opens it fresh; only a reload or history step brings the hidden window back.
+      const { type } = performance.getEntriesByType("navigation")[0] ?? {}
+      if (type === "reload" || type === "back_forward") document.documentElement.dataset.windowState = saved.state
+      else sessionStorage.removeItem("ultmos-window")
+    }
+    if (localStorage.getItem("ultmos-maximized")) document.documentElement.dataset.windowMaximized = ""
+    if (sessionStorage.getItem("ultmos-launch")) {
+      sessionStorage.removeItem("ultmos-launch")
+      document.documentElement.dataset.windowLaunching = ""
+    }
+  } catch {}
+</script>
+
+<div
+  class="page-wrapper h-screen"
+  style={`--darkBackdrop: ${darkBackdrop}; --lightBackdrop: ${lightBackdrop}`}
+>
+  {/* decoding="sync" puts the cached wallpaper in the first frame of each page load, so navigating doesn't flash */}
+  <div class="wallpaper wallpaper-dark" style={`background-image: ${darkPlaceholder}`}>
+    <img src={sequoiaDarkOptimized.src} width={sequoiaDarkOptimized.attributes.width} height={sequoiaDarkOptimized.attributes.height} alt="" decoding="sync" fetchpriority="high" />
+  </div>
+  <div class="wallpaper wallpaper-light" style={`background-image: ${lightPlaceholder}`}>
+    <img src={sequoiaLightOptimized.src} width={sequoiaLightOptimized.attributes.width} height={sequoiaLightOptimized.attributes.height} alt="" decoding="sync" fetchpriority="high" />
+  </div>
+  <script is:inline>
+    // A wallpaper still downloading fades in over the placeholder; a failed one leaves the placeholder showing
+    for (const img of document.querySelectorAll(".wallpaper img")) {
+      if (img.complete && img.naturalWidth) continue
+      img.dataset.loading = ""
+      img.addEventListener("load", () => delete img.dataset.loading)
+    }
+  </script>
+  <DesktopIcon />
+  <div class="page sl-flex ultmos-window-shadow rounded-window overflow-hidden">
     <div class="page-content">
       <header class="header">
         <slot name="header" />
@@ -43,6 +86,20 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
                   this.addEventListener("toggle", (event) =>
                     this.trapFocus((event as ToggleEvent).newState === "open"),
                   )
+
+                  // Browsers that can't transition `overlay` (Firefox) hide the popover at once; keep it shown until it fades out.
+                  this.addEventListener("beforetoggle", (event) =>
+                    this.classList.toggle(
+                      "closing",
+                      (event as ToggleEvent).newState === "closed",
+                    ),
+                  )
+                  const closed = (event: TransitionEvent) => {
+                    if (event.target === this && event.propertyName === "opacity")
+                      this.classList.remove("closing")
+                  }
+                  this.addEventListener("transitionend", closed)
+                  this.addEventListener("transitioncancel", closed)
                 }
 
                 trapFocus(shouldTrap: boolean) {
@@ -76,37 +133,117 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
       </div>
     </div>
   </div>
+  <Dock />
 </div>
 
-<style
-  define:vars={{
-    darkBackground: `url("${sequoiaDarkOptimized.src}")`,
-    lightBackground: `url("${sequoiaLightOptimized.src}")`,
-  }}
->
+<style>
   :global(:root) .page-wrapper {
-    --ultmos-background-image: var(--darkBackground);
+    --ultmos-backdrop-image: var(--darkBackdrop);
   }
   :global(:root[data-theme="light"]) .page-wrapper {
-    --ultmos-background-image: var(--lightBackground);
+    --ultmos-backdrop-image: var(--lightBackdrop);
+  }
+
+  .wallpaper {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: center / cover;
+  }
+  .wallpaper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.6s ease;
+  }
+  .wallpaper img[data-loading] {
+    opacity: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wallpaper img {
+      transition: none;
+    }
+  }
+  :global(:root[data-theme="light"]) .wallpaper-dark,
+  :global(:root:not([data-theme="light"])) .wallpaper-light {
+    display: none;
   }
 
   .page-wrapper {
     padding: var(--ultmos-window-padding);
-    background-image: var(--ultmos-background-image);
-    background-size: cover;
+    padding-block-end: var(--ultmos-dock-space);
+    transition: padding 0.3s ease;
   }
 
   .page {
     flex-direction: column;
     position: relative;
-    height: calc(100vh - 2 * var(--ultmos-window-padding));
+    height: 100%;
+    transition:
+      transform 0.35s cubic-bezier(0.4, 0, 0.9, 0.6),
+      opacity 0.35s ease-in,
+      border-radius 0.3s ease;
+  }
+
+  :global(:root[data-window-maximized]:not([data-window-state])) .page {
+    border-radius: 0;
+  }
+
+  :global(:root[data-window-state]) .page {
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      transform 0.35s cubic-bezier(0.4, 0, 0.9, 0.6),
+      opacity 0.35s ease-in,
+      visibility 0s 0.35s;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(:root[data-window-launching]) .page {
+      animation: launch 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+  }
+  @keyframes launch {
+    from {
+      opacity: 0;
+      scale: 0.94;
+    }
+  }
+
+  :global(:root[data-window-state] .sl-skip-link) {
+    display: none;
+  }
+  :global(:root[data-window-state="minimized"]) .page {
+    transform: scale(0.04);
+  }
+  :global(:root[data-window-state="closed"]) .page {
+    transform: scale(0.94);
+    transition-duration: 0.2s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-wrapper,
+    .page,
+    :global(:root[data-window-state]) .page {
+      transition: none;
+    }
   }
 
   .page-content {
     overflow-y: auto;
     height: 100%;
     scroll-padding-top: calc(var(--sl-nav-height) + 1.5rem);
+  }
+  @media not (min-width: 72rem) {
+    .page-content:has(:global(mobile-starlight-toc)) {
+      scroll-padding-top: calc(
+        var(--sl-nav-height) + var(--sl-mobile-toc-height) + 1.5rem
+      );
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .page-content {
+      scroll-behavior: smooth;
+    }
   }
 
   .header {
@@ -119,7 +256,9 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
     border-bottom: 1px solid var(--sl-color-hairline-shade);
     padding: var(--sl-nav-pad-y) var(--sl-nav-pad-x);
     padding-inline-end: var(--sl-nav-pad-x);
-    background-color: var(--sl-color-bg-nav);
+    background:
+      linear-gradient(var(--sl-color-bg-nav), var(--sl-color-bg-nav)),
+      var(--ultmos-backdrop-image) center / cover fixed;
   }
 
   @media (min-width: 50rem) {
@@ -149,29 +288,65 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
     inset-block-start: calc(
       var(--ultmos-window-padding) + var(--sl-nav-height)
     );
-    inset-block-end: var(--ultmos-window-padding);
+    inset-block-end: var(--ultmos-dock-space);
     width: auto;
-    border-end-start-radius: 0.75rem;
-    border-end-end-radius: 0.75rem;
+    border-end-start-radius: var(--radius-window);
+    border-end-end-radius: var(--radius-window);
     background-color: var(--ultmos-black-translucent);
     backdrop-filter: blur(50px);
     flex-direction: column;
   }
 
+  /* Grows out of the menu button like an NSPopover; discrete display/overlay transitions keep it visible while it fades out */
+  .sidebar-pane {
+    transform-origin: top right;
+    opacity: 0;
+    scale: 0.96;
+    transition:
+      opacity 0.2s ease,
+      scale 0.2s ease,
+      display 0.2s allow-discrete,
+      overlay 0.2s allow-discrete;
+  }
   .sidebar-pane:popover-open {
     display: flex;
+    opacity: 1;
+    scale: 1;
+    transition-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1.05);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .sidebar-pane:global(.closing) {
+      display: flex;
+    }
+  }
+  @starting-style {
+    .sidebar-pane:popover-open {
+      opacity: 0;
+      scale: 0.96;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sidebar-pane {
+      transition: none;
+    }
   }
 
   .sidebar-controls {
+    display: none;
     padding: 1rem var(--sl-sidebar-pad-x);
   }
 
   .sidebar-content {
     overflow-y: auto;
     flex-grow: 1;
-    padding: 0 var(--sl-sidebar-pad-x);
+    padding: 1rem var(--sl-sidebar-pad-x) 0;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  /* Pins Starlight's mobile footer (social links, theme) to the bottom when the list is short */
+  .sidebar-content > :global(:last-child) {
+    margin-block-start: auto;
   }
 
   @media (min-width: 50rem) {
@@ -183,8 +358,9 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
 
   .main-frame {
     min-height: calc(100% - var(--sl-nav-height));
-    background-color: var(--sl-color-bg-content);
-    backdrop-filter: blur(150px);
+    background:
+      linear-gradient(var(--sl-color-bg-content), var(--sl-color-bg-content)),
+      var(--ultmos-backdrop-image) center / cover fixed;
     margin-inline-start: var(--sl-content-inline-start);
   }
 
@@ -192,14 +368,24 @@ const sequoiaDarkOptimized = await getImage({ src: sequoiaDark })
     :global([data-has-sidebar]) .header {
       padding-inline-end: var(--sl-nav-pad-x);
     }
+    .sidebar-controls {
+      display: block;
+    }
+    .sidebar-content {
+      padding-block-start: 0;
+    }
     .sidebar-pane {
       display: flex;
+      opacity: 1;
+      scale: none;
+      transition: none;
       position: absolute;
       inset-inline-start: 0;
       inset-block: 0;
       width: var(--sl-sidebar-width);
       border-radius: 0;
       background-color: var(--sl-color-bg-sidebar);
+      backdrop-filter: blur(40px) saturate(1.5);
       border-inline-end: 1px solid var(--sl-color-hairline-shade);
     }
   }

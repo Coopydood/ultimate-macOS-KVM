@@ -1,9 +1,121 @@
----
-import WindowControl from "./WindowControl.astro";
----
-
-<div class="flex justify-start gap-[8px] px-[0.5rem] pb-1">
-  <WindowControl color="#FF5F57" />
-  <WindowControl color="#FEBC2E" />
-  <WindowControl color="#28C840" />
+<div class="window-controls" role="group" aria-label="Window controls">
+  <button type="button" class="light close" data-action="close" aria-label="Close window">
+    <svg viewBox="0 0 12 12" aria-hidden="true">
+      <path d="M3.5 3.5L8.5 8.5M8.5 3.5L3.5 8.5" stroke-width="1.3" stroke-linecap="round"></path>
+    </svg>
+  </button>
+  <button type="button" class="light minimize" data-action="minimize" aria-label="Minimize window">
+    <svg viewBox="0 0 12 12" aria-hidden="true">
+      <rect x="2.5" y="5.5" width="7" height="1" rx=".5"></rect>
+    </svg>
+  </button>
+  <button type="button" class="light zoom" data-action="zoom" aria-label="Maximize window">
+    <svg viewBox="0 0 12 12" aria-hidden="true">
+      <path
+        class="enter"
+        d="M3.5 5V8.5H7ZM8.5 7V3.5H5Z"
+        stroke-width=".8"
+        stroke-linejoin="round"
+      ></path>
+      <path
+        class="exit"
+        d="M5.6 6.4V9L3 6.4H5.6ZM6.4 5.6V3L9 5.6H6.4Z"
+        stroke-width=".8"
+        stroke-linejoin="round"
+      ></path>
+    </svg>
+  </button>
 </div>
+
+<script>
+  import { closeWindow, minimizeWindow, toggleMaximized } from "./windowState"
+
+  const actions: Record<string, () => void> = {
+    close: closeWindow,
+    minimize: minimizeWindow,
+    zoom: toggleMaximized,
+  }
+
+  document.querySelector(".window-controls")?.addEventListener("click", (event) => {
+    const action = (event.target as Element).closest<HTMLElement>("[data-action]")?.dataset.action
+    if (!action) return
+    const pane = document.getElementById("starlight__sidebar")
+    if (action !== "zoom" && pane?.matches(":popover-open")) pane.hidePopover()
+    actions[action]()
+  })
+</script>
+
+<style>
+  .window-controls {
+    display: flex;
+    width: fit-content;
+    gap: 8px;
+    padding: 0 0.5rem 0.25rem;
+  }
+
+  .light {
+    --glyph: transparent;
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: var(--fill);
+    box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.2);
+    cursor: default;
+  }
+  .close {
+    --fill: var(--color-traffic-close);
+    --glyph-color: var(--color-traffic-close-glyph);
+  }
+  .minimize {
+    --fill: var(--color-traffic-minimize);
+    --glyph-color: var(--color-traffic-minimize-glyph);
+  }
+  .zoom {
+    --fill: var(--color-traffic-zoom);
+    --glyph-color: var(--color-traffic-zoom-glyph);
+  }
+
+  :global(:root[data-window-inactive]) .window-controls:not(:hover, :focus-within) .light {
+    --fill: var(--color-traffic-inactive);
+  }
+
+  .window-controls:is(:hover, :focus-within) .light {
+    --glyph: var(--glyph-color);
+  }
+
+  .light::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+
+  .light:active {
+    background-image: linear-gradient(rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.2));
+  }
+
+  .light:focus-visible {
+    outline: 2px solid var(--sl-color-text-accent);
+    outline-offset: 1px;
+  }
+
+  svg {
+    width: 12px;
+    height: 12px;
+    fill: var(--glyph);
+    stroke: var(--glyph);
+    stroke-width: 0;
+  }
+
+  .exit,
+  :global(:root[data-window-maximized]) .enter {
+    display: none;
+  }
+  :global(:root[data-window-maximized]) .exit {
+    display: inline;
+  }
+</style>
