@@ -8,6 +8,7 @@
     "check": "astro sync && tsc --noEmit --runExternalCode",
     "build": "pnpm check && astro build --force",
     "preview": "astro preview",
+    "images": "node scripts/localize-images.ts",
     "astro": "astro"
   },
   "dependencies": {

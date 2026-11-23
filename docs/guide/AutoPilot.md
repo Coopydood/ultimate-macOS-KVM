@@ -192,7 +192,7 @@ This stage is completely optional and can be skipped. You can always use the sta
 ## Review your preferences
 You'll now get a chance to see your choices displayed in the form of a summary screen. An example of this screen can be found below:
 
-![AutoPilot summary screen](https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/996fb2b5-28ef-4949-bbc3-4107193b1187)
+![AutoPilot summary screen](../images/996fb2b5.png)
 
 From here, you can confirm and continue, go back and change your settings, start over, or exit entirely.
 ## Process checklist
@@ -202,13 +202,13 @@ The process checklist is displayed upon confirming your preferences, in the form
 |:---------------:|:-----------:|:---------:|
 | Not yet started | In progress |  Complete |
 
-![AutoPilot progress screen, showing traffic light system](https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/b6390adc-62ff-4a91-bf00-a9b911a5cb29)
+![AutoPilot progress screen, showing traffic light system](../images/b6390adc.png)
 
 If a sub-operation is required, this will be indicated by a dropdown arrow underneath the current parent operation.
 ## Summary
 After everything has been completed without issue, you will be presented with a small summary view of what your boot config script is called, the command you can use to run it, and the time it took to complete AutoPilot (speedrunning anyone?).
 
-![AutoPilot post-success screen.](https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/a95f7741-b029-4596-be99-c9fa8b51bb9f)
+![AutoPilot post-success screen.](../images/a95f7741.png)
 
 You'll also receive the option to boot the file straight away, open it in your default text handler (v0.9.2 or later), or exit the program.
 

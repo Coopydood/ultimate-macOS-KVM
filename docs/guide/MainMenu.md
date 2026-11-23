@@ -3,7 +3,7 @@
 
 The `main.py` file acts as the project's main menu and should be used for all of your endeavors. 
 
-<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/de4d5eb5-d7fd-45cc-9631-f12c75a1f42c" width="70%"></img>
+<img src="../images/de4d5eb5.png" width="70%"></img>
 
 This section will highlight each option and briefly explain what it does without going into detail.
 ## 1. AutoPilot
@@ -66,7 +66,7 @@ Of course, if you're just testing the project, then a "clean install" is probabl
 
 ***
 
-<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ef278407-a14f-4ae7-bc23-3f635687db65" width="25%"> 
+<img src="../images/ef278407.png" width="25%"> 
 
 <sub>Written and maintained by **Coopydood**. </sub>
 <br><sub>You can [contribute](https://github.com/Coopydood/ultimate-macOS-KVM/new/dev/docs) to documentation, too!</sub>

@@ -6,7 +6,7 @@
 > 
 > It should be run through the `main.py` file instead. Use the **E** option at the main menu.
 
-<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/3b68543b-553a-49f0-bc74-55fc6982fc11" width="70%"></img>
+<img src="../images/3b68543b.png" width="70%"></img>
 
 This page will go over some of the features in the Extras menu, without too much detail.
 
@@ -75,7 +75,7 @@ Opens a new issue page on the GitHub repo in your default browser.
 
 ***
 
-<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ef278407-a14f-4ae7-bc23-3f635687db65" width="25%"> 
+<img src="../images/ef278407.png" width="25%"> 
 
 <sub>Written and maintained by **Coopydood**. </sub>
 <br><sub>You can [contribute](https://github.com/Coopydood/ultimate-macOS-KVM/new/dev/docs) to documentation, too!</sub>

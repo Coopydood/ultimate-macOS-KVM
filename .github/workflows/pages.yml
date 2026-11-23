@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - "main"
+      - "dev"
     paths: &site
       - "docs/**"
       - "website/**"
@@ -16,23 +17,68 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
+  # Pushes made with GITHUB_TOKEN start no workflows, so the build below checks out the commit this job pushes.
+  images:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency: &build
+      group: pages-build-${{ github.ref }}
+      cancel-in-progress: true
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Download images pasted in GitHub's editor
+        working-directory: website
+        run: |
+          npm install --global pnpm@12
+          pnpm install --frozen-lockfile
+          pnpm images
+      - name: Commit downloaded images
+        id: commit
+        # On failure the build falls back to the pushed commit, whose pasted images still render from GitHub.
+        continue-on-error: true
+        run: |
+          git add docs
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit --message "Download pasted doc images"
+            # A push outside the workflow's paths starts no run to replace this one, so build on top of it.
+            git pull --rebase
+            git push
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: images
+    if: ${{ !cancelled() && contains(fromJSON('["success", "skipped"]'), needs.images.result) }}
+    concurrency: *build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.images.outputs.sha || github.sha }}
       - name: Install, build, and upload site
         uses: withastro/action@v6
         with:
           path: website
 
   deploy:
-    if: github.event_name != 'pull_request'
+    # A newer run waits for a started deployment; one cancelled midway can block the next.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+    if: ${{ !cancelled() && needs.build.result == 'success' && github.ref == 'refs/heads/main' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

@@ -96,7 +96,7 @@ As always, this is optional, and the USB passthrough assistant can be run at any
 
 ***
 
-<img src="https://github.com/Coopydood/ultimate-macOS-KVM/assets/39441479/ef278407-a14f-4ae7-bc23-3f635687db65" width="25%"> 
+<img src="../images/ef278407.png" width="25%"> 
 
 <sub>Written and maintained by **Coopydood**. </sub>
 <br><sub>You can [contribute](https://github.com/Coopydood/ultimate-macOS-KVM/new/dev/docs) to documentation, too!</sub>
