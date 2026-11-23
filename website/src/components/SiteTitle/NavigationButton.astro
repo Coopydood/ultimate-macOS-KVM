@@ -2,25 +2,28 @@
 import type { Direction } from "./types"
 
 interface Props {
-  disabled?: boolean
   direction: Direction
 }
 
-const { disabled = false, direction } = Astro.props
-
-const color = disabled ? "var(--sl-color-gray-5)" : "var(--sl-color-gray-3)"
+const { direction } = Astro.props
 ---
 
 <navigation-button data-direction={direction}>
-  <a
-    class="size-8 flex justify-center items-center cursor-pointer rounded-control hover-highlight focus-ring"
-    ><slot /></a
+  <button
+    type="button"
+    aria-label={direction === "back" ? "Back" : "Forward"}
+    class="size-8 flex justify-center items-center rounded-control border-0 bg-transparent p-0 hover-highlight focus-ring"
+    ><slot /></button
   >
 </navigation-button>
 
-<style define:vars={{ color }}>
-  a {
-    color: var(--color);
+<style>
+  button {
+    color: var(--sl-color-gray-3);
+  }
+  button:disabled {
+    opacity: 0.5;
+    background: none;
   }
 </style>
 
@@ -29,15 +32,15 @@ const color = disabled ? "var(--sl-color-gray-5)" : "var(--sl-color-gray-3)"
 
   class NavigationButton extends HTMLElement {
     connectedCallback() {
-      const direction = this.dataset.direction as Direction
-      const a = this.querySelector("a")!
-      a.addEventListener("click", () => {
-        if (direction === "forward") {
-          history.forward()
-        } else {
-          history.back()
-        }
-      })
+      const forward = (this.dataset.direction as Direction) === "forward"
+      const button = this.querySelector("button")!
+      button.addEventListener("click", () => (forward ? history.forward() : history.back()))
+
+      // Browsers without the Navigation API keep both buttons enabled.
+      if (!("navigation" in window)) return
+      const update = () => (button.disabled = !(forward ? navigation.canGoForward : navigation.canGoBack))
+      update()
+      addEventListener("pageshow", update)
     }
   }
 
